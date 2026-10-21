@@ -1,0 +1,54 @@
+# Alan: yatirim — E. Sabit açılış maliyeti (spec 4.2, 4.4-E)
+# Regresyon denemesi: pipeline/14_investment_program.py → data/processed/sabit_maliyet_regresyon.json / .png
+
+- key: cost.fixed_per_hospital
+  label: "Hastane başına sabit açılış maliyeti (F_sabit)"
+  value: 250000000
+  unit: "TL / hastane (2026 fiyatları, KDV dahil)"
+  status: varsayim
+  source_ids: [yatirim_kyp2026, yatirim_hesap_regresyon]
+  rationale: >-
+    Spec 4.2'deki kalibrasyon denendi ancak sabit maliyet veriden tanımlanamadı: 2026 Kamu Yatırım Programındaki
+    61 Sağlık Bakanlığı yeni hastane projesinde (aynı yıl fiyatları) 'tutar = F0 + v·yatak' kesişimi
+    F0 = −142 mn TL (%95 GA −1,03 … +0,74 milyar TL; p = 0,75) çıktı ve dokuz farklı örneklem/tanımın hiçbirinde
+    %5 düzeyinde sıfırdan ayırt edilemedi (nokta tahminleri −658 mn … +233 mn TL). Log-log esneklik 1,05
+    (%95 GA 0,96 … 1,15): programdaki tutarlar yatak sayısıyla orantılı. Bunun ana nedeni, tutarların plan
+    normlarıyla üretilmesi (61 projenin 21'inde alan tam 200 ya da 250 m²/yatak, 11'inde tutar tam 60.000/70.000 TL/m² ×
+    alan); yani veri 'sabit maliyet yok' demiyor, programdaki tutarlar onu ayrıca göstermiyor. Bu yüzden F_sabit
+    varsayımdır. 250 mn TL temkinli (düşük) seçildi: genel hastane alt örnekleminin nokta tahmini (233 mn TL) ile
+    uyumlu, tüm tanımların %95 güven aralıkları içinde ve çekirdek alan (A0) inşaat maliyetiyle toplandığında
+    veriyle tutarlı üst sınırı (ana örneklemde ≈0,74, genel hastanelerde ≈0,94 milyar TL) aşmayacak kadar küçük.
+  range: [0, 1500000000]
+  alternatives:
+    - {label: "0 — regresyon kesişimi sıfırdan ayırt edilemiyor (veriyle en uyumlu alt sınır)", value: 0, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "Regresyon F0, yalnız genel hastaneler (n = 47; p = 0,51; anlamlı değil)", value: 233318127, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "F0 %95 GA üst sınırı, ana örneklem (n = 61)", value: 742340771, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "F0 %95 GA üst sınırı, yalnız genel hastaneler (n = 47)", value: 942589903, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "Hastane kavşak ve bağlantı yolları, il başına ortalama (5,69 milyar TL ÷ 4 il; KYP 2025I00-280965)", value: 1422500000, source_ids: [yatirim_kyp2026]}
+  notes: >-
+    REGRESYON (statsmodels OLS, ana örneklem n = 61, Sağlık Bakanlığı tek binalı yeni hastane projeleri, bütçe
+    finansmanlı şehir hastaneleri dahil): F0 = −142.000.683 TL (SE 441.950.773; HC3-SE 1.310.083.204),
+    v = 14.784.989 TL/yatak (SE 544.985; %95 GA 13.694.478 … 15.875.501), R² = 0,926 (düz. 0,925).
+    Etkili gözlem: İstanbul Sancaktepe Şehir Hastanesi 1. Etap (4.050 yatak; Cook D = 11,7). Sağlamlık:
+    aykırılar hariç (n = 56) F0 = −658 mn (p = 0,085); yalnız genel (n = 47) F0 = +233 mn (p = 0,51), v = 12,31 mn;
+    başlama 2025–2026 (n = 7) F0 = −575 mn; başlama ≤2024 (n = 54) F0 = −106 mn; formül satırları hariç (n = 50)
+    F0 = −230 mn; üniversiteler dahil (n = 75) F0 = −74 mn; ek binalar dahil (n = 70) F0 = −135 mn — hepsi p > 0,05.
+    Dışlananlar ve gerekçeleri: data/reference/yatirim_programi_2026_saglik.csv (dislama_nedeni sütunu; ek bina/
+    yenileme 12, paket proje 8, etüd-proje aşaması 6, toplu/çok yerli 3, kurum dışı 3, pandemi/acil durum 2, birden
+    çok tesis 1, yalnız etüt bedeli 2; KÖİ 'Şehir Hastanesi Kullanım Bedeli' satırında yatak yok).
+    v'NİN MAKULLÜĞÜ: tebliğe göre yatak başı inşaat 130 m² × 40.500–48.750 TL/m² = 5,27–6,34 mn TL (KDV, altyapı,
+    donanım hariç); programdaki v bunun 2,3–2,8 katı. Fark açıklanabiliyor: programdaki projelerde alan ≈ 257,5
+    m²/yatak (eğim; medyan 250, aralık 171–380), yani 130 m² asgarisinin ≈2 katı; birim maliyet eğimi 56.604 TL/m²
+    KDV dahil (tebliğ 40.500–53.500 TL/m² KDV hariç aralığıyla KDV eklenince uyumlu). v makul, F0 makul değil
+    (negatif ve anlamsız).
+    A0 İLE ETKİLEŞİM (çift sayımı önleme): modelde Fixed_jk = (1+kdv)·(1+φ_alt+φ_don)·u_k·A0 + p_j·L0 + F_sabit.
+    Regresyon kesişimi F0, KDV dahil proje tutarı cinsinden yataktan bağımsız TÜM kısmı (çekirdek alan inşaatı
+    dahil) temsil eder; bu nedenle veriyle tutarlılık için (1+kdv)·(1+φ)·u_k·A0 + F_sabit toplamı F0'ın %95 GA üst
+    sınırını (≈0,74–0,94 milyar TL) aşmamalı. F_sabit yalnız alana bağlı olmayan kalemler içindir (etüt-proje,
+    bağlantı yolu/kavşak, altyapı bağlantıları, ruhsat vb.); bunları A0 inşaatına ya da φ_alt oranına ikinci kez
+    eklemeyin. F_sabit KDV dahil kabul edilir (KYP tutarları KDV dahil — yatirim_rehber_2026_2028 md. 19); modelde
+    F_sabit'e ayrıca (1+kdv) uygulanmamalı. Kaynaklı örnekler: KYP'de kavşak/bağlantı yolu 5,69 milyar TL / 4 il
+    (≈1,42 milyar TL/il; satırda hastane sayısı yazmıyor, il başına bir hastane varsayımıyla) — büyük şehir
+    hastaneleri için üst uç; üniversite hastanelerinin etüt-proje satırları 20 mn TL (250 yatak, 50.000 m²) ile
+    48–60 mn TL (800 yatak, 120.000 m²) arasında — alana bağlı, küçük. Kaydırıcı aralığı [0; 1,5 milyar TL] bu iki
+    uç arasını kapsar; sunumda duyarlılık (tornado) analizinde mutlaka gösterilmeli.

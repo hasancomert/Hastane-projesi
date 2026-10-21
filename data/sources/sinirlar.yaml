@@ -1,0 +1,135 @@
+# Alan: sinirlar — Ankara il sınırı ve 25 ilçe (spec 4.3 madde 1)
+# Betik: pipeline/11_boundaries.py ; ham belgeler: data/raw/sinirlar/ (git dışı; _manifest.jsonl'de url/tarih/sha256)
+# Çıktılar: data/processed/ankara_il.geojson, ankara_ilceler.geojson, web/*.geojson, sinir_karsilastirma.csv
+# Ana küme: geoBoundaries gbOpen (gerekçe: sinirlar_secim_hesap kaydının notlarında)
+
+- id: sinirlar_geoboundaries_tur_adm1
+  title: "geoBoundaries gbOpen — Türkiye ADM1 (province), geoBoundaries-TUR-ADM1.geojson"
+  publisher: "geoBoundaries (William & Mary geoLab); kaynak veri: OpenStreetMap / osm-boundaries.com"
+  url: "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/main/releaseData/gbOpen/TUR/ADM1/geoBoundaries-TUR-ADM1.geojson"
+  accessed: 2026-10-21
+  published: 2023-12-12
+  kind: veri
+  archived: data/raw/sinirlar/geoboundaries/ADM1--geoBoundaries-TUR-ADM1.geojson
+  sha256: "01697a1722cf62db3b5f4e78ae73e7972edae52d2254ccfffa9163fc6cdbc918"
+  used_for:
+    - "Ankara il sınırı: shapeISO TR-06 (81 il içinden) -> data/processed/ankara_il.geojson"
+    - "İlçelerin mekânsal seçimi için il poligonu (ilçe dosyasında il özniteliği yok)"
+  notes: >-
+    Üst veri (ADM1--geoBoundaries-TUR-ADM1-metaData.txt, aynı klasörde): Boundary Source 'Open Street Map', Data Source
+    osm-boundaries.com, Source Data Updated On 'Thu Aug 31 09:55:30 2023', File Built On 'Dec 12, 2023',
+    Boundary Representative of Year 2021, License 'Creative Commons Attribution-ShareAlike 2.0' (üst veride böyle yazıyor;
+    OSM'nin kendi lisansı ODbL). Atıf (CITATION-AND-USE dosyası): Runfola D. ve ark. (2020) geoBoundaries: A global database
+    of political administrative boundaries. PLoS ONE 15(4): e0231866, doi:10.1371/journal.pone.0231866.
+    Dosya, GitHub git-LFS işaretçisindeki sha256 (raw.githubusercontent.com, data/raw/sinirlar/geoboundaries/lfs/) ile
+    birebir doğrulandı; Faz 0 kopyası aynıdır.
+
+- id: sinirlar_geoboundaries_tur_adm2
+  title: "geoBoundaries gbOpen — Türkiye ADM2 (Districts), geoBoundaries-TUR-ADM2.geojson"
+  publisher: "geoBoundaries (William & Mary geoLab); kaynak veri: OpenStreetMap, OSM Boundaries"
+  url: "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/main/releaseData/gbOpen/TUR/ADM2/geoBoundaries-TUR-ADM2.geojson"
+  accessed: 2026-10-21
+  published: 2023-12-12
+  kind: veri
+  archived: data/raw/sinirlar/geoboundaries/ADM2--geoBoundaries-TUR-ADM2.geojson
+  sha256: "8e7594ab12d916e3b93f920475a300c364dfb94a0e40bfa6d55f43aff0c7fd97"
+  used_for:
+    - "Ankara'nın 25 ilçesi (ANA KÜME) -> data/processed/ankara_ilceler.geojson ve web/ankara_ilceler.geojson"
+    - "İlçe adları (Türkçe karakterli; ilce_key = common.norm_name)"
+  notes: >-
+    Üst veri (ADM2--...-metaData.txt): Source Data Updated On 'Thu Jan 19 07:31:04 2023', File Built On 'Dec 12, 2023',
+    License 'Open Data Commons Open Database License 1.0', Boundary Representative of Year 2021. Üst veri 999 birim diyor,
+    dosyada 973 öğe var (Türkiye'nin 973 ilçesi). İlçeler il poligonuna MEKÂNSAL bağlandı (alanının >%50'si TR-06 içinde):
+    25 ilçenin hepsi %100 içeride, kısmen kesişen komşu yok; 'Gölbaşı' adlı iki öğeden yalnız Ankara'daki seçildi.
+    25 ilçenin birleşimi ile ADM1 poligonu örtüşüyor (IoU 0,999999998; fark < 0,0001 km²; ilçe çiftleri arasında bindirme 0).
+    LFS sha256 ile doğrulandı.
+
+- id: sinirlar_kontur_boundaries_tr_20230628
+  title: "Kontur Boundaries — Türkiye: Administrative Division with Aggregated Population (kontur_boundaries_TR_20230628.gpkg.gz)"
+  publisher: "Kontur (HDX üzerinden)"
+  url: "https://geodata-eu-central-1-kontur-public.s3.amazonaws.com/kontur_datasets/kontur_boundaries_TR_20230628.gpkg.gz"
+  accessed: 2026-10-21
+  published: 2023-06-28
+  kind: veri
+  archived: data/raw/sinirlar/kontur/kontur_boundaries_TR_20230628.gpkg.gz
+  sha256: "ab5b9859b5fa2d86ce7ce3cee9de8bbdc55ac0125b80041130fac8eb53122373"
+  used_for:
+    - "Karşılaştırma: il (osm_admin_level '4', name 'Ankara') ve 25 ilçe (osm_admin_level '6') -> sinir_karsilastirma.csv"
+    - "Kontur'un Ankara il poligonuna atadığı nüfus özniteliği: 6.122.062 (Kontur Population'dan toplanmış; bilgi amaçlı)"
+  notes: >-
+    Açılmış gpkg (data/raw/sinirlar/kontur/kontur_boundaries_TR_20230628.gpkg, sha256 208655c8…a046) gz içeriğiyle aynı
+    (Faz 0 kopyası doğrulandı). Lisans ve tarih HDX paket üst verisinden: sinirlar_hdx_kontur_boundaries_meta.
+    EPSG:4326; 11.682 öğe; admin_level/osm_admin_level ayrı alanlar.
+
+- id: sinirlar_hdx_kontur_boundaries_meta
+  title: "HDX — Türkiye: Administrative Division with Aggregated Population (CKAN package_show üst verisi)"
+  publisher: "Humanitarian Data Exchange (OCHA) / Kontur"
+  url: "https://data.humdata.org/api/3/action/package_show?id=ee13e01d-edee-47d2-a5fc-1a658227d879"
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/sinirlar/hdx/hdx_kontur_boundaries_tur.json
+  sha256: "cb2268c12335488a18301581660e9af91752dc5f2a01dfa3c900a1f1edb0b5ca"
+  used_for:
+    - "Kontur sınırlarının lisansı (Open Database License, ODC-ODbL) ve sürüm listesi (Release 2023-06-28)"
+  notes: >-
+    HDX sayfası: https://data.humdata.org/dataset/ee13e01d-edee-47d2-a5fc-1a658227d879 (spec [25]). Yöntem: OSM idari
+    sınırları + Kontur Population'dan toplanmış nüfus; HASC kodları Wikidata'dan.
+
+- id: sinirlar_hdx_codab_tur
+  title: "Türkiye - Subnational Administrative Boundaries (COD-AB), tur_admin_boundaries.geojson.zip"
+  publisher: "OCHA Field Information Services Section (FISS) / HDX; kaynak: Harita Genel Komutanlığı (General Command of Mapping)"
+  url: "https://data.humdata.org/dataset/d74086a0-f398-4474-9e12-1b9a70907bd0/resource/470bd810-2240-4ce0-b5c4-17434112ce41/download/tur_admin_boundaries.geojson.zip"
+  accessed: 2026-10-21
+  published: 2026-01-26
+  kind: veri
+  archived: data/raw/sinirlar/hdx_codab/tur_admin_boundaries.geojson.zip
+  sha256: "6d45f15de76d53da057312dfaedb60248141a1828ce6a5c7cbfeedc7f51714c3"
+  used_for:
+    - "Karşılaştırma: Ankara (adm1_pcode TUR006) ve 25 ilçe (TUR006001–TUR006025) -> sinir_karsilastirma.csv"
+    - "COD-AB'nin kendi alan özniteliği: Ankara area_sqkm = 25.631,757831 km² (tur_admin1.geojson)"
+  notes: >-
+    Zip içinde tur_admin0/1/2.geojson, tur_adminlines, tur_adminpoints. Öznitelik valid_on 2022-01-01, version v01.
+    Türkçe adlarda i/ı karakterleri bozuk (ör. 'Altindağ', 'Eti̇mesgut'); eşleştirme norm_name ile yapıldı ve 25 adın
+    hepsi geoBoundaries ile eşleşti. Lisans, ölçek ve tarih: sinirlar_hdx_codab_tur_meta.
+
+- id: sinirlar_hdx_codab_tur_meta
+  title: "HDX — Türkiye - Subnational Administrative Boundaries (cod-ab-tur), CKAN package_show üst verisi"
+  publisher: "Humanitarian Data Exchange (OCHA FISS)"
+  url: "https://data.humdata.org/api/3/action/package_show?id=cod-ab-tur"
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/sinirlar/hdx/hdx_cod_ab_tur.json
+  sha256: "c221c30ba332301b2c74cced6bb860eff9a606de01bb80e32c386133a26872c9"
+  used_for:
+    - "COD-AB kaynağı: Harita Genel Komutanlığı, 1:1.000.000 ölçek; 81 il, 973 ilçe"
+    - "COD-AB lisansı: CC BY-IGO; tarihler: sınırlar 30.03.2014'te oluşturulmuş/son düzenleme, 01.01.2022'den beri geçerli, 16.01.2025'te gözden geçirilmiş"
+  notes: >-
+    methodology_other alanı: 'Administrative Divisions dataset was prepared at 1:1,000,000 scale and is the property of
+    General Command of Mapping, Turkey. This dataset was shared through http://www.hgk.msb.gov.tr/... for humanitarian use
+    only.' Asıl veri çizgi olarak paylaşılmış, UNHCR ve OCHA poligona çevirip PCODE atamış. HDX sayfası:
+    https://data.humdata.org/dataset/cod-ab-tur
+
+- id: sinirlar_secim_hesap
+  title: "Sınır kümelerinin karşılaştırması ve ana küme seçimi (EPSG:6933 alanlar, IoU, UTM 36N sınır sapması)"
+  publisher: "Bu proje (pipeline/11_boundaries.py)"
+  url: "data/processed/sinir_karsilastirma.csv"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: data/raw/sinirlar/sinir_ozet.json
+  used_for:
+    - "Ankara il alanı (EPSG:6933 eşit alan): geoBoundaries 25.647,90 km²; Kontur 25.568,17 km²; COD-AB 25.631,76 km²"
+    - "25 ilçe alanları (ankara_ilceler.geojson 'area_km2'; toplam 25.647,90 km²)"
+    - "İl poligonu IoU (geoBoundaries'e göre): Kontur 0,9915; COD-AB 0,9524"
+    - "İlçe IoU: Kontur medyan 0,989 (en düşük Şereflikoçhisar 0,927); COD-AB medyan 0,847 (en düşük Güdül 0,720)"
+    - "İl sınırı sapması (COD-AB sınırından geoBoundaries sınırına, UTM 36N): medyan 431 m, %90'lık 2.222 m; çevre 1.132 km (geoBoundaries 1.590 km)"
+    - "Web sürümü: 302.616 bayt (il 64.826 + ilçeler 237.790), 11.742 köşe, IoU en düşük 0,9974"
+  notes: >-
+    ANA KÜME: geoBoundaries gbOpen. Gerekçe: (1) güncellik — OSM kaynaklı, 2023 (ADM2 2023-01-19, ADM1 2023-08-31);
+    (2) ayrıntı — il çevresi 1.590 km, COD-AB'nin 1:1.000.000 genellemesinde 1.132 km ve sınır sapması medyan 431 m;
+    (3) tutarlılık — 25 ilçenin birleşimi il poligonuyla örtüşüyor (boşluk/bindirme yok), adlar Türkçe karakterli;
+    (4) açık lisans (ODbL/CC BY; COD-AB üst verisinde 'yalnız insani kullanım' notu var). Resmî otorite açısından COD-AB
+    (HGK) üstündür, ama ölçek ve tarih (2014) nedeniyle ızgara hesabı için kaba; il alanı özniteliği 25.631,76 km² spec
+    [5]'teki 25.632 km² ile aynıdır. Kontur aynı OSM kaynağından (2023-06-28) ve geoBoundaries'e çok yakın (sınır sapması
+    medyan ≈0 m); farkların çoğu Tuz Gölü kıyısında (Şereflikoçhisar −111,5 km²). Alanlar EPSG:6933'te (common.CRS_EQUAL_AREA).
+    Web sadeleştirmesi: ortak sınırlar tek yay olarak Douglas–Peucker (0,0004°) ile sadeleştirildi, 5 ondalığa yuvarlandı,
+    poligonlar yeniden kuruldu (komşular arasında boşluk/bindirme yok).

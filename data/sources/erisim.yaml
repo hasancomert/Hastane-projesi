@@ -1,0 +1,380 @@
+# Alan: erisim — G. Erişim maliyeti (yakıt, tüketim, zaman değeri, hız, ufuk, iskonto, R), D. Arsa fiyatı, F. İşletme
+# Arşiv: data/raw/erisim/ (git dışı; _manifest.jsonl url/tarih/sha256 içerir). Türetmeler: data/reference/erisim_turetim.md
+# Bu ortamdan ERİŞİLEMEYEN (vekil sunucu 403/bağlantı reddi; yeniden denenmedi): bildirim.epdk.gov.tr, lisans(ws).epdk.gov.tr,
+# petrolofisi.com.tr, opet.com.tr, shell.com.tr, bp/aytemiz/totalenergies, dunya.com, tomtom.com, theicct.org, iea.org,
+# ec.europa.eu, gov.uk, transportation.gov, worldbank.org, sayistay.gov.tr, sgk.gov.tr, csgb.gov.tr, kgm.gov.tr, uab.gov.tr,
+# ankara.bel.tr, toki.gov.tr, tkgm.gov.tr, unfccc.int, arxiv.org.
+
+# --- Otomobil filosu (yakıt payları) ------------------------------------------------------------------------------
+
+- id: erisim_tuik_mkt_eylul2026_bulten
+  title: "Motorlu Kara Taşıtları, Eylül 2026 (haber bülteni no 58046)"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/58046"
+  accessed: 2026-10-21
+  published: 2026-10-15
+  kind: resmi
+  archived: data/raw/erisim/tuik_press_58046_mkt_eylul2026.json
+  sha256: "9abb6a8326761484bd834abb1aee62cf1290ddf6b54c7acbdfff43eddb190080"
+  used_for:
+    - "'Eylül ayı sonu itibarıyla trafiğe kayıtlı 18 milyon 115 bin 875 adet otomobilin %32,0'ı dizel, %31,0'ı benzinli, %29,1'i LPG'li, %5,1'i hibrit ve %2,7'si elektriklidir. Yakıt türü bilinmeyen otomobillerin oranı ise %0,2'dir.'"
+  notes: "Bülten metni (JSON 'content' alanı, HTML). Kesin adetler aynı bültenin yakıt cinsi tablosundan alındı (erisim_tuik_mkt_eylul2026_yakit)."
+
+- id: erisim_tuik_mkt_eylul2026_yakit
+  title: "Trafiğe kayıtlı otomobillerin yakıt cinsine göre dağılımı, 2004-2026 (Motorlu Kara Taşıtları, Eylül 2026 bülten tablosu)"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=58046&p=QbnDV82P2BgapDdu3Zb99ku6MrEvCDVPzp%2BJPcaDcXOD691b5hAWgxEXLpgM9ZaVsiFA%2FbBcmWdKTb4ykXpJubV5qal3eNAk1GhC95WxvYqQWpofXCe4tg67Dx%2FkBAmsrl6bAb1rYNPUcoNi1ViFVqoeHETvjjgMbwz1gPF9nCQ%3D"
+  accessed: 2026-10-21
+  published: 2026-10-15
+  kind: resmi
+  archived: data/raw/erisim/tuik_mkt_eylul2026_otomobil_yakit.xls
+  sha256: "0ebec973a4989d58381c9993e97eed0fb8d7b42b8162d35d19fd46ecc856ee9f"
+  used_for:
+    - "2026 (Eylül sonu) satırı: toplam 18.115.875; benzin 5.616.803; dizel 5.793.543; LPG 5.268.278; hibrit 915.892; elektrik 486.359; bilinmeyen 35.000 otomobil"
+    - "Sıvı yakıt payları (hesap; hibrit benzine, elektrik ve bilinmeyen dışarıda): benzin+hibrit %37,129 · motorin %32,928 · LPG %29,943"
+  notes: "Sayfa 't6', satır 26 '2026(1)'; dipnot (1) 'Veriler Eylül ayı sonu itibarıyladır', (2) hibrit benzin-elektrik ve dizel-elektrik otomobilleri kapsar. Yakıt payı il bazında yayımlanmıyor; Türkiye payı Ankara için kullanıldı."
+
+- id: erisim_tuik_mkt_eylul2026_iller
+  title: "İllere göre motorlu kara taşıtları sayısı, 2026 (Motorlu Kara Taşıtları, Eylül 2026 bülten tablosu)"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=58046&p=GgZLaFTAcNZyXV6IndZr7s9zUTyWyamP%2FIEPx%2FXUlS8vgS6KHwitZuwpfywkhVPpgbFKrclYOqZMMi6ZkFfCr5%2BwYIvqpbpyyUECt%2FTObbuC%2BARxhOeLZ7MduTlFQ3ymAL1dQQjF%2FWghS85HQkXKLg%3D%3D"
+  accessed: 2026-10-21
+  published: 2026-10-15
+  kind: resmi
+  archived: data/raw/erisim/tuik_mkt_eylul2026_iller.xls
+  sha256: "678cce987a7851c9358ae82a04f1a37850197d0ef557c9d62b6ed12d5466f35c"
+  used_for:
+    - "Ankara (Eylül 2026 sonu): toplam taşıt 3.152.567 (%8,99); otomobil 2.271.129 — bağlam bilgisi"
+  notes: "Tabloda il bazında yakıt türü kırılımı yok."
+
+# --- Akaryakıt fiyatları ------------------------------------------------------------------------------------------
+
+- id: erisim_epdk_fiyatlandirma_2026_09
+  title: "Petrol ve LPG Piyasası Fiyatlandırma Raporu, Eylül 2026"
+  publisher: "Enerji Piyasası Düzenleme Kurumu (EPDK)"
+  url: "https://www.epdk.gov.tr/Detay/DownloadDocument?id=93FETDA2vvw="
+  accessed: 2026-10-21
+  published: 2026-10
+  kind: resmi
+  archived: data/raw/erisim/epdk_fiyatlandirma_raporu_2026_09.pdf
+  sha256: "54ac035e2d1d9381c096b35a27d98a8f20514fb5f5ad8ca97d4a71f20ee35224"
+  used_for:
+    - "Eylül 2026 aylık ortalama nihai satış fiyatı, İstanbul Avrupa Yakası: K. Benzin 95 Oktan 78,826 TL/lt (Tablo-1, s. 4); Motorin 91,543 TL/lt (Tablo-2, s. 5); LPG (Otogaz) 35,780 TL/lt (Tablo-5, s. 10)"
+    - "Ağustos 2026: benzin 70,686; motorin 79,768; otogaz 34,421 TL/lt (aynı tablolar)"
+  notes: >-
+    Resmî, fakat İstanbul Avrupa yakası (gösterge) ve aylık ortalama; Ankara/Ekim değil. Rapor listesi:
+    https://www.epdk.gov.tr/Detay/Icerik/3-0-143/fiyatlandirma-raporu (arşiv: data/raw/erisim/epdk_3-0-143_fiyatlandirma_raporu_liste.html).
+    Rapor, ÖTV tutarlarının 04/03/2026 tarihli ve 10995 sayılı Cumhurbaşkanı Kararı gereği rafineri fiyatına bağlı değiştiğini belirtiyor (s. 8, 12).
+
+- id: erisim_epdk_akaryakit_fiyatlari_sayfa
+  title: "Akaryakıt Fiyatları (EPDK bilgi sayfası)"
+  publisher: "EPDK"
+  url: "https://www.epdk.gov.tr/Detay/Icerik/3-0-158/akaryak%C4%B1tfiyat"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/erisim/epdk_3-0-158_akaryakit_fiyatlari.html
+  sha256: "9263407bbd25caeacea939d3d9936e6af80e09975f724ea03535ec71cf3e002d"
+  used_for:
+    - "Resmî il bazında bayi fiyatı sorgusu ve günlük bültenler bildirim.epdk.gov.tr / lisansws.epdk.gov.tr üzerinde — bu ortamdan erişilemedi (vekil 403); bu yüzden Ankara günlük fiyatı haber kaynaklarından alındı"
+  notes: "Yalnız erişim durumunun belgesi; sayısal değer alınmadı."
+
+- id: erisim_haber_birgun_akaryakit_20261021
+  title: "21 Ekim 2026 Benzin ve Motorin Fiyatlarında İndirim, Zam Var mı? Güncel Akaryakıt Fiyatları"
+  publisher: "BirGün"
+  url: "https://www.birgun.net/haber/21-ekim-2026-benzin-ve-motorin-fiyatlarinda-indirim-zam-var-mi-guncel-akaryakit-fiyatlari-741622"
+  accessed: 2026-10-21
+  published: 2026-10-21
+  kind: haber
+  archived: data/raw/erisim/haber_birgun_741622_akaryakit_21ekim2026.html
+  sha256: "34c44ef84655a46d617bb26fc29abce02d7fa0343d8ca670cd2e884d88a71683"
+  used_for:
+    - "Ankara, 21.10.2026: benzin 80,60 TL/L; motorin 97,80 TL/L; LPG 41,29 TL/L"
+    - "İstanbul Avrupa 79,60/96,70/41,20; Anadolu 79,40/96,50/40,60; İzmir 80,80/98,00/41,20"
+    - "Benzinde 20.10.2026'da 4,30 TL indirim yansıdı; 22.10.2026'dan itibaren 3,35 TL ek indirim bekleniyor"
+  notes: "Dağıtıcı adı belirtilmiyor ('paylaşılan güncel litre fiyatları'). Resmî il bazında günlük kaynak (EPDK bildirim portalı, dağıtıcı siteleri) bu ortamdan erişilemediği için kullanıldı; iki haber kaynağıyla çapraz kontrol edildi."
+
+- id: erisim_haber_birgun_akaryakit_20261020
+  title: "20 Ekim 2026 Benzin ve Motorin Fiyatlarında İndirim, Zam Var mı? Güncel Akaryakıt Fiyatları"
+  publisher: "BirGün"
+  url: "https://www.birgun.net/haber/20-ekim-2026-benzin-ve-motorin-fiyatlarinda-indirim-zam-var-mi-guncel-akaryakit-fiyatlari-741363"
+  accessed: 2026-10-21
+  published: 2026-10-20
+  kind: haber
+  archived: data/raw/erisim/haber_birgun_741363_akaryakit_20ekim2026.html
+  sha256: "ed306c53b76b1dcf1d59ef68be5b7a701e0ebe3d45eeb9dd8c8c2ef32d3bac39"
+  used_for:
+    - "Çapraz kontrol: Ankara 20.10.2026 benzin 80,60 · motorin 97,80 · LPG 41,29 TL/L (21 Ekim ile aynı)"
+
+- id: erisim_haber_yeniankara_akaryakit_20261021
+  title: "21 Ekim 2026 akaryakıt fiyatları: Benzine indirim var mı? Ankara, İstanbul, İzmir güncel liste"
+  publisher: "Yeni Ankara"
+  url: "https://www.yeniankara.com.tr/ekonomi/21-ekim-2026-akaryakit-fiyatlari-benzine-indirim-var-mi-ankara-istanbul-izmir-guncel-liste-187070"
+  accessed: 2026-10-21
+  published: 2026-10-21
+  kind: haber
+  archived: data/raw/erisim/haber_yeniankara_187070_akaryakit_21ekim2026.html
+  sha256: "ebc1df8d2635da7fe89a67ffe45e38e71cc92274b185a32bf72ba25353cac1f7"
+  used_for:
+    - "Çapraz kontrol: Ankara 21.10.2026 benzin 80,60 · motorin 97,80 · LPG 41,29 TL/L (BirGün ile birebir)"
+
+# --- Yakıt tüketimi ve taşıt işletme maliyeti ---------------------------------------------------------------------
+
+- id: erisim_yalilikilic_2021
+  title: "Karayolu ulaşımında yakıt tüketimine bağlı karbon ayak izi değişimi: Çanakkale örneği"
+  publisher: "Yalılı Kılıç, M.; Dönmez, T.; Adalı, S. — Gümüşhane Üniversitesi Fen Bilimleri Dergisi 11(3), 943–955 (2021), doi:10.17714/gumusfenbil.848016"
+  url: "https://dergipark.org.tr/tr/download/article-file/1472050"
+  accessed: 2026-10-21
+  published: 2021
+  kind: akademik
+  archived: data/raw/erisim/dergipark_1472050_karayolu_karbon_ayak_izi.pdf
+  sha256: "0b7295452a6f4ed97dfa2c495db72b01a6a94ed6c7f355a1576687172acfa982"
+  used_for:
+    - "Tablo 7 (s. 950): otomobil yakıt tüketimi benzin 8,5 · dizel 7,3 · LPG 11,2 litre/100 km ('IPCC Kılavuzunda araç gruplarının ülkemiz için uygunluğu belirlenmiş olan yakıt tüketim değerleri'; IPCC/UNEP/OECD/IEA 1997–2006)"
+  notes: "Hakemli; değerler IPCC kılavuzunun varsayılanları (eski filo, gerçek kullanım). Yeni araçlarda daha düşük olabilir; resmî Türkiye filo ortalaması (TÜİK/Bakanlık) bulunamadı."
+
+- id: erisim_bagdatli_akbiyikli_2015
+  title: "Ulaştırma yapıları ekonomik analizlerinde iskonto oranı: bir durum çalışması"
+  publisher: "Bağdatlı, M. E. C.; Akbıyıklı, R. — Sakarya Üniversitesi Fen Bilimleri Enstitüsü Dergisi 19(1), 67–74 (2015)"
+  url: "https://dergipark.org.tr/en/download/article-file/193241"
+  accessed: 2026-10-21
+  published: 2015
+  kind: akademik
+  archived: data/raw/erisim/dergipark_193241_ulastirma_iskonto_orani.pdf
+  sha256: "24bbb9127c5f6fa74787e484f4c1ad63c604cac3f4c9ce8c9e53a892fd71104b"
+  used_for:
+    - "s. 71: taşıt işletme maliyeti 'Karayolları Genel Müdürlüğünün (KGM) 2013 yılı hesaplamalarından alınan bilgiler doğrultusunda 0.26029 TL/km' (birim otomobil)"
+    - "s. 70: ulaştırma yapılarında kullanılan iskonto oranı %15 → %12 → 'son yıllarda … %8 mertebesi'"
+    - "s. 69: 'Ulaştırma yapılarının ekonomik analizinde esas alınan en yaygın değerlendirme dönemi 20 yıldır'"
+  notes: "KGM değeri ikincil aktarım (KGM sitesi bu ortamdan erişilemiyor)."
+
+- id: erisim_tuik_tufe_tt10
+  title: "Tüketici fiyat endeksi ve değişim oranları (2025=100), veri akışı DF_TUFE_SDMX_TT10"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/dataflows/DF_TUFE_SDMX_TT10+V1.0/file/csv"
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/erisim/tuik_df_tufe_sdmx_tt10.csv
+  sha256: "557fd11df9005540ad5b0d941557b984fb388b302c17bd0f9d617bcc650127a5"
+  used_for:
+    - "TÜFE (2025=100): 2026-09 = 137,23; 2024 ortalaması 74,1393; 2013 ortalaması 6,9845; 2023-11 = 56,7505"
+    - "Fiyat güncelleme çarpanları: 2024 ort. → Eylül 2026 = 1,8510; 2013 ort. → Eylül 2026 = 19,648"
+  notes: "Bülten: 'Tüketici Fiyat Endeksi, Eylül 2026' (no 58298, 05.10.2026; arşiv tuik_press_58298_tufe_eylul2026.json): yıllık %29,73."
+
+# --- Zaman değeri -------------------------------------------------------------------------------------------------
+
+- id: erisim_rg_asgari_ucret_2026
+  title: "Asgari Ücret Tespit Komisyonu Kararı (Karar No: 2025/1, 23/12/2025)"
+  publisher: "Çalışma ve Sosyal Güvenlik Bakanlığı — Resmî Gazete, 26 Aralık 2025, sayı 33119"
+  url: "https://www.resmigazete.gov.tr/eskiler/2025/12/20251226-6.pdf"
+  accessed: 2026-10-21
+  published: 2025-12-26
+  kind: resmi
+  archived: data/raw/erisim/RG_20251226-6_asgari_ucret_karari_2026.pdf
+  sha256: "1b9d89d66d80fdbd3620c8c3a89383b1817551cca64f89676483ab70777b57ba"
+  used_for:
+    - "Md. 2: 'İşçinin bir günlük normal çalışma karşılığı asgari ücretinin; 1/1/2026 - 31/12/2026 tarihleri arasında 1101 Türk Lirası … olarak tespitine'"
+    - "Hesap: aylık brüt 30 × 1.101 = 33.030 TL; saatlik brüt 1.101 / 7,5 = 146,80 TL/sa"
+  notes: "Karar metni görüntü (PDF metin katmanı yok); görsel olarak okundu. Fihrist: data/raw/erisim/RG_20251226_fihrist.htm. Net asgari ücret kararda yok."
+
+- id: erisim_mevzuat_4857_is_kanunu
+  title: "4857 sayılı İş Kanunu (RG 10/6/2003, sayı 25134)"
+  publisher: "mevzuat.gov.tr"
+  url: "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4857.pdf"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/erisim/mevzuat_1.5.4857_is_kanunu.pdf
+  sha256: "cd75c7fe92bd438443549c3e973e7ea6d03137e9a6bb2652aded52a8ca95e84e"
+  used_for:
+    - "Md. 63: 'Genel bakımdan çalışma süresi haftada en çok kırkbeş saattir. Aksi kararlaştırılmamışsa bu süre, işyerlerinde haftanın çalışılan günlerine eşit ölçüde bölünerek uygulanır.' → 6 iş günü × 7,5 saat (PDF s. 32)"
+
+- id: erisim_tuik_kya_2023
+  title: "Kazanç Yapısı İstatistikleri, 2023 (haber bülteni no 53700)"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/53700"
+  accessed: 2026-10-21
+  published: 2024-12-25
+  kind: resmi
+  archived: data/raw/erisim/tuik_press_53700_kazanc_yapisi_2023.json
+  sha256: "d372cec6eecfe273d446e4efa129254b09f7355ea1df4b61b79ebf745f103c79"
+  used_for:
+    - "'Saatlik ortalama brüt ücret-maaş 119 TL'; 'referans dönemi olan 2023 Kasım ayında aylık brüt asgari ücret 13 bin 414,5 TL'; 'Aylık ücretli çalışılan saat 200'"
+    - "Hesap: ortalama/asgari saatlik oran 119 / (13.414,5/225) = 1,996 → 2026 ortalama saatlik brüt ≈ 146,80 × 1,996 = 293,0 TL/sa"
+
+- id: erisim_demirci_2025
+  title: "Sakaltutan Geçidi Yerine Önerilen Eğimsiz Tünelin Emisyon, Yakıt Tüketimi ve Ekonomik Analizi"
+  publisher: "Demirci, O. K. — Fırat Üniversitesi Mühendislik Bilimleri Dergisi 37(2), 919–933 (2025), doi:10.35234/fumbd.1739008"
+  url: "https://dergipark.org.tr/tr/download/article-file/5040620"
+  accessed: 2026-10-21
+  published: 2025
+  kind: akademik
+  archived: data/raw/erisim/dergipark_5040620_sakaltutan_tunel.pdf
+  sha256: "74ce52e227dbd8e02fb17c6da977cde0520b32cfbe165ac2f7d4d2aa97baac0f"
+  used_for:
+    - "s. 923: 'Zaman değeri, Karayolu Ulaştırma Ana Planı'nda yolcu için 100 TL saat-1 kabul edilmiştir (orta senaryo)' [34: Ulaştırma ve Altyapı Bakanlığı, Türkiye karayolu ulaştırma ana planı nihai raporu: Ekonomik parametreler bölümü]"
+    - "s. 923, Tablo 2: şehirlerarası devlet yolunda otomobil ortalama seyir hızı 95 km/sa (geçit) / 108 km/sa (tünel) — 'karayolları hız istasyonlarındaki veriler temel alınarak varsayım olarak'"
+  notes: "KUAP değerinin fiyat yılı makalede yazmıyor; KUAP raporunun kendisi bu ortamdan erişilemedi (uab.gov.tr engelli)."
+
+# --- Hız ----------------------------------------------------------------------------------------------------------
+
+- id: erisim_haber_yeniankara_tomtom_2025
+  title: "Ankara'da sürücüler bir yılda kaç saatini trafikte geçiriyor? (TomTom Trafik Endeksi 2025)"
+  publisher: "Yeni Ankara"
+  url: "https://www.yeniankara.com.tr/ankara/ankara-trafik-suresi-suruculer-yilda-kac-saat-trafikte-kaliyor-185439"
+  accessed: 2026-10-21
+  published: 2026-10-07
+  kind: haber
+  archived: data/raw/erisim/haber_yeniankara_185439_tomtom_trafik.html
+  sha256: "f009d93c637ada90482111ed3b1997752afba7cfb7acf55ae557726a6f05a52d"
+  used_for:
+    - "TomTom 2025, Ankara: '10 kilometrelik ortalama bir yolculuğun süresi … 21 dakika 3 saniye'; 'Yoğun saatlerde ortalama hız … 20,9 kilometre/saat'; akşam yoğunluğunda 19,5 km/sa; ortalama trafik sıkışıklığı %55,8; sabah yoğun saatte 10 km 26 dk 40 sn, akşam 30 dk 46 sn"
+  notes: "TomTom sitesi bu ortamdan erişilemedi (vekil reddi); değerler haber aktarımı. Hesap: 10 km / 21,05 dk = 28,50 km/sa."
+
+# --- Planlama ufku ve iskonto oranı ---------------------------------------------------------------------------------
+
+- id: erisim_tbmm_haber_saglik_butce_2024
+  title: "Sağlık Bakanlığının 2024 Yılı Bütçesi TBMM Plan ve Bütçe Komisyonunda Kabul Edildi (Meclis Haberleri, 10.11.2023)"
+  publisher: "TBMM"
+  url: "https://www.tbmm.gov.tr/Haber/Detay?Id=0092bb1b-0174-46b9-8cf3-018bb76df0af"
+  accessed: 2026-10-21
+  published: 2023-11-10
+  kind: resmi
+  archived: data/raw/erisim/tbmm_haber_saglik_butce_2024_pbk.html
+  sha256: "25ef2906d51f71aa0420b07ad5348093109fe5d86970b13021379c2fa34d1683"
+  used_for:
+    - "Sağlık Bakanı Koca: '25 yıllık sözleşme sürelerini kesmediğimiz bir şehir hastanesi olmadı. Örnek veriyorum: Yeni açılan İzmir Şehir Hastanesi, 25 yıldan 10 yıl 3 ay kesildi.'"
+    - "Kesintiler: Çam ve Sakura 6 yıl 7 ay; Kocaeli 9 yıl 9 ay; Etlik 7 yıl 8 ay (kalan 16 yıl 1 ay); Bilkent 3 yıl 1 ay (kalan 17 yıl 5 ay); 'Şehir hastanelerinin ortalaması, şu an 17 yılı geçmiyor 15-16 yıl arasında'"
+
+- id: erisim_haber_diken_536163
+  title: "Çiğdem Toker: Ankara'nın merkezindeki köklü hastaneler kapatılacak"
+  publisher: "Diken (Günün 11'i özeti)"
+  url: "https://www.diken.com.tr/?p=536163"
+  accessed: 2026-10-21
+  published: 2018-02-09
+  kind: haber
+  archived: data/raw/erisim/haber_diken_536163_bilkent_koi.html
+  sha256: "6b93031a2951204eb237d3e7d1d4b8c440cce5cc4d4d4070fb4e46a30e1bfbec"
+  used_for:
+    - "Bilkent Şehir Hastanesi KÖİ ödemeleri: '2019 yılından itibaren 419.2 milyon TL ile başlıyor'; '25 yıl bittiğinde yani 2043'e gelindiğinde … 23.4 milyar TL'"
+  notes: "Şartname kaynağı [27]."
+
+- id: erisim_mevzuat_6428
+  title: "6428 sayılı Sağlık Bakanlığınca Kamu Özel İş Birliği Modeli ile Tesis Yaptırılması, Yenilenmesi ve Hizmet Alınması ile Bazı Kanun ve KHK'lerde Değişiklik Yapılması Hakkında Kanun (RG 9/3/2013, sayı 28582)"
+  publisher: "mevzuat.gov.tr"
+  url: "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6428.pdf"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/erisim/mevzuat_1.5.6428_koi_saglik_kanunu.pdf
+  sha256: "cad2e96eed6b9fe349c8754e0f397743bcf1b12c6a22f8ed82c1dd06293b8eda"
+  used_for:
+    - "Md. 4(1): sözleşme süresi '… sözleşmede belirtilen sabit yatırım dönemi hariç otuz yılı geçmemek üzere idarece belirlenir' (PDF s. 6)"
+    - "Md. 1(1): tesisler 'Hazinenin özel mülkiyetindeki taşınmazlar üzerinde … üst hakkı tesis edilmek suretiyle' yaptırılır (PDF s. 1) — kamu arazisi varsayımının dayanağı"
+
+- id: erisim_kalayci_oflaz_2022
+  title: "Sağlık Ekonomisi Perspektifinden Fayda-Maliyet Analizlerinde Sosyal İskonto Oranının Seçiminin Analizi"
+  publisher: "Kalaycı Oflaz, N. — Pamukkale Üniversitesi Sosyal Bilimler Enstitüsü Dergisi 53, 391–408 (2022), doi:10.30794/pausbed.1115230"
+  url: "https://dergipark.org.tr/tr/download/article-file/2421920"
+  accessed: 2026-10-21
+  published: 2022-10-28
+  kind: akademik
+  archived: data/raw/erisim/dergipark_2421920_kalayci_oflaz_2022_sosyal_iskonto.pdf
+  sha256: "23cbab4232d63cac1c6b555b778437bbc6541b75b615ef65230d172074b5eb1d"
+  used_for:
+    - "s. 398: 'Guide to Cost-Benefit Analysis of Investment Projects … 2014-2020' (Sartori vd., 2014:55) kılavuzunda Avrupa Komisyonu 'uyum ülkelerindeki büyük projeler için sosyal indirgeme oranı olarak %5, diğer üye devletler için %3' önerir"
+    - "s. 396: Halıcıoğlu ve Karataş (2011), sosyal zaman tercihi yöntemiyle 'sosyal iskonto oranı Türkiye için %5,06'"
+    - "s. 403: WHO kılavuzu (WHO, 2019) maliyetler için %3 iskonto oranı, duyarlılığın %6'ya kadar test edilmesini öneriyor"
+  notes: "AB CBA rehberinin aslı (ec.europa.eu) bu ortamdan erişilemedi; değer bu hakemli derlemedeki aktarımdan alındı. Makale sayfası: https://dergipark.org.tr/tr/pub/pausbed/article/1115230 (arşiv dergipark_pausbed_1115230.html)."
+
+- id: erisim_uzunkaya_2012
+  title: "Türkiye İçin Ekonomik İndirgeme Oranı Tahmini"
+  publisher: "Uzunkaya, Z. C.; Uzunkaya, M. — T.C. Kalkınma Bakanlığı Yatırım Programlama, İzleme ve Değerlendirme Genel Müdürlüğü, Kasım 2012"
+  url: "https://www.sbb.gov.tr/wp-content/uploads/2018/11/Turkiye_Icin_Ekonomik_Indirgeme_Orani_Tahmini.pdf"
+  accessed: 2026-10-21
+  published: 2012-11
+  kind: resmi
+  archived: data/raw/erisim/sbb_uzunkaya_2012_ekonomik_indirgeme_orani.pdf
+  sha256: "630fb0026906f2fa0a6aaf30ad00a21187ccf0b40db2ca53db30e6b1ba1904c7"
+  used_for:
+    - "Özet (s. iii) ve Sonuç (s. 43): 'Türkiye için 1987-2006 yılları ortalama ekonomik indirgeme oranı yüzde 9,8'; duyarlılık 'yüzde 9,0 ile 11,9 aralığında'; yurt içi tasarrufların ortalama getirisi yüzde 6,0; özel kesim yatırımlarının getirisi yüzde 11,0"
+  notes: "Taranmış PDF (metin katmanı yok); sayfalar görsel olarak okundu. Bakanlık yayını ama bağlayıcı yönerge değil; 2026-2028 Yatırım Programı Hazırlama Rehberi (yatirim_rehber_2026_2028, md. 54) sabit bir oran vermiyor, 'güncel veriler kullanılarak hesaplanacaktır' diyor."
+
+# --- Azami mesafe (R) — standart arama kayıtları ---------------------------------------------------------------------
+
+- id: erisim_mevzuat_33805_ruhsatlandirma
+  title: "Kamu Sağlık Tesisleri Ruhsatlandırma Yönetmeliği (RG 20/9/2019)"
+  publisher: "Sağlık Bakanlığı — mevzuat.gov.tr"
+  url: "https://www.mevzuat.gov.tr/File/GeneratePdf?mevzuatNo=33805&mevzuatTur=KurumVeKurulusYonetmeligi&mevzuatTertip=5"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/erisim/mevzuat_33805_kamu_saglik_tesisleri_ruhsatlandirma_yonetmeligi.pdf
+  sha256: "a33ab2bc8abb169bbf2d839b8a0d392683441483be4b78af5aa90cc14763a64f"
+  used_for:
+    - "Kontrol: hastaneler için erişim süresi/mesafesi standardı içermiyor (metinde 'dakika', 'km', 'mesafe' geçmiyor) → R varsayımdır"
+
+# --- Arsa -----------------------------------------------------------------------------------------------------------
+
+- id: erisim_rg_emlak_vergisi_teblig_89
+  title: "Emlak Vergisi Kanunu Genel Tebliği (Seri No: 89)"
+  publisher: "Hazine ve Maliye Bakanlığı (Gelir İdaresi Başkanlığı) — Resmî Gazete, 31 Aralık 2025, sayı 33124 (5. Mükerrer)"
+  url: "https://www.resmigazete.gov.tr/eskiler/2025/12/20251231M5-27.pdf"
+  accessed: 2026-10-21
+  published: 2025-12-31
+  kind: resmi
+  archived: data/raw/erisim/RG_20251231M5-27_emlak_vergisi_teblig.pdf
+  sha256: "aaa0a654db49d2417dff274b311d2e23f076cc49f6435677a574ec23c98bf1c1"
+  used_for:
+    - "Md. 3(6)–(7): asgari ölçüde arsa ve arazi m² birim değerleri takdir komisyonlarınca dört yılda bir; arsalarda 'her mahalle için cadde, sokak veya değer bakımından farklı bölgeler itibarıyla', arazilerde 'her il veya ilçe için arazinin cinsi (kıraç, taban, sulak) itibarıyla' tespit edilir"
+    - "Md. 4(1): 2025 yılında 2026 yılı için takdirler yapılmıştır; geçici 23. madde: 2026 vergi değerleri 2025 değerlerinin iki katını geçemez"
+  notes: "İlçe ortalaması için resmî ve açık bir derleme yok: değerler sokak bazında ve belediyelerce ilan ediliyor (ankara.bel.tr, ilçe belediyeleri, defterdarlık bu ortamdan erişilemedi). Vergi değerleri 'asgari ölçüde' olup piyasa değerinin altında kalır."
+
+- id: erisim_haber_yeniankara_toki_arsa_2026
+  title: "TOKİ'nin Ankara arsa satışında hangi bölgeler var? İşte 76 taşınmazın bulunduğu ilçeler"
+  publisher: "Yeni Ankara"
+  url: "https://www.yeniankara.com.tr/ankara/tokinin-arsa-acik-artirmasinda-ankarada-nereler-satista-184430"
+  accessed: 2026-10-21
+  published: 2026-09-29
+  kind: haber
+  archived: data/raw/erisim/haber_yeniankara_184430_toki_arsa.html
+  sha256: "b7dae8e85ef879148e293c0c9540406672d7bec9194c146450294ac5e65c3cf6"
+  used_for:
+    - "TOKİ muhammen bedelleri (29–30 Eylül 2026 açık artırma): Gölbaşı İncek 4.415 m² ≈ 169,9 mn TL (≈38.482 TL/m², hesap); Yenimahalle Susuz 4.538,61 m² kentsel servis alanı ≈ 140,7 mn TL (≈31.001 TL/m², hesap)"
+    - "Sincan Temelli/Alcı: ≈5 bin m² parseller, bazıları 30 mn TL'nin üzerinde (≈6.000 TL/m² ve üstü); Yeni Peçenek: 7.000–9.600 m², ≈90 mn TL'ye yaklaşan/aşan (≈9.400–12.900 TL/m², kaba)"
+  notes: "TOKİ resmî listesi (toki.gov.tr) bu ortamdan erişilemedi; değerler haber aktarımı. Muhammen bedel satış fiyatı değildir."
+
+- id: erisim_haber_yeniankara_evren_arsa_2026
+  title: "Ankara'nın saklı bahçesi değerleniyor: 2026 yılı Evren arsa fiyatları"
+  publisher: "Yeni Ankara"
+  url: "https://www.yeniankara.com.tr/evren/ankaranin-sakli-bahcesi-degerleniyor-2026-yili-evren-arsa-fiyatlari-167274"
+  accessed: 2026-10-21
+  published: 2026-05-02
+  kind: haber
+  archived: data/raw/erisim/haber_yeniankara_167274_evren_arsa_2026.html
+  sha256: "034ce77e68d287971ad48369b319c0cb88063b6a7ee87c86305f1e0e2110e9f6"
+  used_for:
+    - "Evren (kırsal ilçe): konut imarlı arsa ortalama 1.379 TL/m²; tarla vasıflı arazi 100–300 TL/m² ('emlak piyasası verilerine göre')"
+
+# --- İşletme gideri -------------------------------------------------------------------------------------------------
+
+- id: erisim_tuik_saglik_harcamalari_2024
+  title: "Sağlık Harcamaları İstatistikleri, 2024 (haber bülteni no 54188)"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/54188"
+  accessed: 2026-10-21
+  published: 2025-12-04
+  kind: resmi
+  archived: data/raw/erisim/tuik_press_54188_saglik_harcamalari_2024.json
+  sha256: "e813f16d8c28e03d342d34fc410db1ed823fd14325c3f9cc0d56ea742b7de6e3"
+  used_for:
+    - "'Toplam sağlık harcamasının %54,6'sı hastanelerde yapıldı'; toplam sağlık harcaması 2.359.151 mn TL; cari sağlık harcaması 2.186.802 mn TL; yatırım 172.349 mn TL (2024)"
+
+- id: erisim_tuik_saglik_harcamalari_2024_sunucu
+  title: "Sağlık hizmeti sunucularına göre sağlık harcamaları, 2023, 2024 (Sağlık Harcamaları İstatistikleri 2024 bülten tablosu)"
+  publisher: "TÜİK"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=54188&p=3cHvVwntSQbVw%2BWpt0AAOK64WYQU%2BIi%2FQFaoiCE%2F4JBwCLBGORIs0AqgCvsXXmWjA8FInMk%2Bpc%2B6C8dxb1dfGhsMlwwdq4%2Fkaa%2B%2BNbJl8wuZWrPaf5fTIVesp%2FhMjSSG8NMIuU5rAP1Hd6scvRWe4rFDzMGWJP43qLSK8%2FAhQCo%3D"
+  accessed: 2026-10-21
+  published: 2025-12-04
+  kind: resmi
+  archived: data/raw/erisim/tuik_saglik_harcamalari_2024_sunuculara_gore.xls
+  sha256: "fc14b3ef2950e769affdac3a69a462d6610957b22e55a7399f2e35cedb241025"
+  used_for:
+    - "Cari sağlık harcaması, 'Hastaneler / Hospitals', genel toplam: 2023 = 652.876,9 mn TL; 2024 = 1.288.472,3 mn TL (genel devlet 1.027.428,5; özel sektör 261.043,9)"
+  notes: "Sayfa t1, satır 14 (milyon TL). Hastane harcaması ayakta tedavi hizmetlerini de içerir (yalnız yatak kaynaklı değil)."

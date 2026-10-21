@@ -1,0 +1,206 @@
+# Alan: erisim — G. Erişim maliyeti parametreleri (spec 4.4 G, 4.5 λ)
+# Kaynaklar: data/sources/erisim.yaml ; tüm türetmeler: data/reference/erisim_turetim.md
+# λ = PV(T, r) · v · round_trip_factor · (cost_tl_per_km + value_of_time_tl_per_h / speed_kmh)   [TL / (kişi·km)]
+# v = access.hospital_visits_per_capita (saglik alanı). Dolambaç katsayısı access.circuity arazi-osm alanındadır.
+# Tüm parasal değerler Ekim 2026 (yakıt) / 2026 (ücret) fiyatlarıyla, KDV dahil pompa fiyatı; iskonto oranı reeldir.
+
+- key: access.round_trip_factor
+  label: "Gidiş-dönüş çarpanı"
+  value: 2
+  unit: "yolculuk / başvuru"
+  status: model_secimi
+  rationale: >-
+    Her hastane başvurusu evden hastaneye gidiş ve dönüş olmak üzere iki yolculuktur (şartname 4.4 G ve 4.5'teki λ
+    formülündeki 2). Refakatçi, aynı başvuru için ikinci gidiş (tahlil sonucu vb.) ve ambulansla geliş modellenmedi.
+  range: [1, 4]
+  notes: "1 = yalnız gidiş; >2 refakatçi/tekrar ziyaret etkisini kabaca temsil eder (duyarlılık için)."
+
+- key: access.fuel_price_tl_per_l
+  label: "Ağırlıklı akaryakıt pompa fiyatı (Ankara, 21.10.2026)"
+  value: 70.45
+  unit: "TL / litre (KDV dahil)"
+  status: hesap
+  source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_haber_yeniankara_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]
+  derivation: >-
+    Litre ağırlıklı ortalama: p = Σ s_f·q_f·p_f / Σ s_f·q_f. Fiyatlar p (Ankara, 21.10.2026): benzin 80,60 · motorin 97,80
+    · LPG 41,29 TL/L. Filo payları s (TÜİK, Eylül 2026 sonu trafiğe kayıtlı otomobil; hibrit benzine katıldı, elektrik
+    %2,7 ve bilinmeyen %0,2 dışarıda): benzin 6.532.695/17.594.516 = 0,37129 · motorin 5.793.543/17.594.516 = 0,32928 ·
+    LPG 5.268.278/17.594.516 = 0,29943. Tüketimler q: 8,5 / 7,3 / 11,2 L/100 km. Σ s·q·p = 627,93; Σ s·q = 8,9133
+    → p = 627,93 / 8,9133 = 70,448 ≈ 70,45 TL/L.
+  range: [40, 120]
+  alternatives:
+    - {label: "Filo payı ağırlıklı (Σ s_f·p_f; görev tanımındaki basit ağırlık)", value: 74.49, status: hesap, source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit]}
+    - {label: "EPDK resmî Eylül 2026 ortalaması (İstanbul Avrupa), litre ağırlıklı", value: 66.06, status: hesap, source_ids: [erisim_epdk_fiyatlandirma_2026_09, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
+    - {label: "EPDK resmî Eylül 2026 ortalaması (İstanbul Avrupa), filo payı ağırlıklı", value: 70.12, status: hesap, source_ids: [erisim_epdk_fiyatlandirma_2026_09, erisim_tuik_mkt_eylul2026_yakit]}
+    - {label: "Yalnız benzin, Ankara 21.10.2026", value: 80.60, status: kaynakli, source_ids: [erisim_haber_birgun_akaryakit_20261021]}
+    - {label: "Yalnız motorin, Ankara 21.10.2026", value: 97.80, status: kaynakli, source_ids: [erisim_haber_birgun_akaryakit_20261021]}
+    - {label: "Yalnız LPG (otogaz), Ankara 21.10.2026", value: 41.29, status: kaynakli, source_ids: [erisim_haber_birgun_akaryakit_20261021]}
+  notes: >-
+    NEDEN LİTRE AĞIRLIKLI: LPG'li araç litre başına ucuz ama daha çok litre yakıyor (11,2 vs 8,5 L/100 km). Basit filo
+    payı ağırlıklı fiyat (74,49) ortalama tüketimle (8,91) çarpılınca km maliyeti 6,64 TL çıkıyor; yakıt türüne özgü doğru
+    toplam 6,28 TL/km. Litre ağırlıklı fiyat, fiyat × tüketim = km maliyeti eşitliğini korur (arayüz kaydırıcıları tutarlı).
+    KAYNAK UYARISI: Ankara günlük fiyatı haber kaynağı (kind: haber; iki bağımsız haber birebir aynı). Resmî il bazında
+    EPDK sorgusu (bildirim.epdk.gov.tr) ve dağıtıcı siteleri (Petrol Ofisi, Opet, Shell) bu ortamdan erişilemedi. Resmî
+    EPDK Eylül 2026 aylık ortalaması (İstanbul Avrupa: 78,826 / 91,543 / 35,780) alternatif olarak verildi. Fiyatlar çok
+    oynak: benzine 20.10.2026'da 4,30 TL indirim geldi, 22.10.2026'dan itibaren 3,35 TL ek indirim bekleniyor (BirGün);
+    Brent Eylül 2026 ortalaması ≈115,8 $/varil (EPDK raporu s. 2). Yakıt payları Türkiye geneli (il kırılımı yok).
+
+- key: access.fuel_l_per_100km
+  label: "Ortalama yakıt tüketimi (otomobil filosu)"
+  value: 8.91
+  unit: "litre / 100 km"
+  status: hesap
+  source_ids: [erisim_yalilikilic_2021, erisim_tuik_mkt_eylul2026_yakit]
+  derivation: >-
+    Σ s_f·q_f = 0,37129 × 8,5 + 0,32928 × 7,3 + 0,29943 × 11,2 = 3,156 + 2,404 + 3,354 = 8,913 ≈ 8,91 L/100 km
+    (q_f: Yalılı Kılıç vd. 2021, Tablo 7; s_f: TÜİK Eylül 2026 filo payları).
+  range: [4, 12]
+  alternatives:
+    - {label: "Benzinli otomobil (IPCC kılavuz değeri)", value: 8.5, status: kaynakli, source_ids: [erisim_yalilikilic_2021]}
+    - {label: "Dizel otomobil", value: 7.3, status: kaynakli, source_ids: [erisim_yalilikilic_2021]}
+    - {label: "LPG'li otomobil", value: 11.2, status: kaynakli, source_ids: [erisim_yalilikilic_2021]}
+  notes: >-
+    Resmî bir Türkiye filo ortalaması (TÜİK, Ulaştırma Bakanlığı) bulunamadı; ICCT/IEA/EEA gerçek kullanım raporları bu
+    ortamdan erişilemedi. Değerler IPCC kılavuzunun varsayılanları olup hakemli bir Türkiye çalışmasında kullanılmıştır;
+    eski filoyu temsil eder, yeni (hibrit ağırlıklı) araçlar için yüksek kalabilir. Hibrit otomobiller (%5,1) benzinli
+    tüketimiyle hesaba katıldı (üst sınır yönünde). Kent içi sıkışık trafik tüketimi artırır.
+
+- key: access.cost_tl_per_km
+  label: "Araç kilometre başına yakıt maliyeti (c)"
+  value: 6.28
+  unit: "TL / araç·km"
+  status: hesap
+  source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]
+  derivation: >-
+    c = Σ s_f·p_f·q_f / 100 = (0,37129 × 80,60 × 8,5 + 0,32928 × 97,80 × 7,3 + 0,29943 × 41,29 × 11,2) / 100
+    = 2,544 + 2,351 + 1,385 = 6,279 ≈ 6,28 TL/km  (= access.fuel_price_tl_per_l × access.fuel_l_per_100km / 100
+    = 70,45 × 8,91 / 100).
+  range: [2, 15]
+  alternatives:
+    - {label: "Filo payı ağırlıklı fiyat × ortalama tüketim (74,49 × 8,91 / 100)", value: 6.64, status: hesap, source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
+    - {label: "EPDK Eylül 2026 resmî ortalama fiyatlarla (İstanbul Avrupa)", value: 5.89, status: hesap, source_ids: [erisim_epdk_fiyatlandirma_2026_09, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
+    - {label: "KGM taşıt işletme maliyeti 2013 (0,26029 TL/km; yakıt dışı giderler dahil) × TÜFE 2013→Eylül 2026 (19,648)", value: 5.11, status: hesap, source_ids: [erisim_bagdatli_akbiyikli_2015, erisim_tuik_tufe_tt10]}
+  notes: >-
+    YALNIZ YAKIT: lastik, bakım, amortisman, sigorta, otopark ve köprü/otoyol ücretleri hariç (resmî güncel bir 'km başı'
+    taşıt işletme maliyeti bulunamadı; KGM sitesi erişilemedi). Alternatifteki KGM 2013 değeri bütün işletme
+    giderlerini kapsar ama TÜFE ile güncellendiğinde yakıt-yalnız değerin altında kalıyor, çünkü 2026'da akaryakıt
+    fiyatları genel fiyat düzeyinden hızlı arttı. Toplu taşıma, taksi, ambulans ve yürüyüş modellenmedi (tüm yolculuklar
+    otomobille varsayılır). Kişi başına yük paylaşımı (araç doluluğu) uygulanmadı: 1 başvuru = 1 araç yolculuğu.
+
+- key: access.value_of_time_tl_per_h
+  label: "Yolculuk zamanı değeri (kişi başı)"
+  value: 73.4
+  unit: "TL / kişi·saat"
+  status: varsayim
+  source_ids: [erisim_rg_asgari_ucret_2026, erisim_mevzuat_4857_is_kanunu]
+  derivation: "f × saatlik brüt asgari ücret = 0,5 × (1.101 TL/gün ÷ 7,5 sa/gün) = 0,5 × 146,80 = 73,40 TL/sa"
+  rationale: >-
+    Ücret tabanı kaynaklı (2026 günlük brüt asgari ücret 1.101 TL, RG 26.12.2025/33119; 4857 sayılı Kanun md. 63:
+    haftada 45 saat → 6 gün × 7,5 saat). İş dışı (sağlık) yolculuklarında zamanın ücretin bir kesri olarak değerlendirilmesi
+    yerleşik bir yaklaşımdır; ancak bu kesri veren rehberlere (AB HEATCO, İngiltere TAG, ABD DOT, Dünya Bankası) bu ortamdan
+    erişilemediği ve Türkiye için resmî bir oran bulunamadığı için f = 0,5 VARSAYIMDIR (doğrulanmamış; ders kaynağından
+    teyit edilmeli). Asgari ücret tabanı bilinçli olarak temkinli: hastaların önemli bir kısmı çalışmayan (yaşlı, çocuk)
+    kişilerdir. Aralık 0 (zaman maliyeti yok) ile ortalama ücretin ≈1 katı arası.
+  range: [0, 300]
+  alternatives:
+    - {label: "Zaman maliyeti dahil değil (yalnız yakıt)", value: 0, status: model_secimi}
+    - {label: "Saatlik brüt asgari ücretin tamamı (f = 1)", value: 146.8, status: hesap, source_ids: [erisim_rg_asgari_ucret_2026, erisim_mevzuat_4857_is_kanunu]}
+    - {label: "2026 ortalama saatlik brüt ücret tahmini (KYA 2023 ortalama/asgari oranı 1,996 × 146,80)", value: 293.0, status: hesap, source_ids: [erisim_tuik_kya_2023, erisim_rg_asgari_ucret_2026]}
+    - {label: "Karayolu Ulaştırma Ana Planı yolcu zaman değeri (orta senaryo; fiyat yılı belirsiz, Demirci 2025 aktarımı)", value: 100, status: kaynakli, source_ids: [erisim_demirci_2025]}
+  notes: >-
+    Brüt ücret kullanıldı (net asgari ücret RG kararında yok). KUAP değeri (100 TL/sa) ikincil aktarım; fiyat yılı
+    bilinmediği için güncellenmedi. Erişim maliyetinde zaman bileşeni km başına VOT / hız = 73,4 / 28,5 = 2,58 TL/km.
+
+- key: access.speed_kmh
+  label: "Ortalama yolculuk hızı (Ankara)"
+  value: 28.5
+  unit: "km / saat"
+  status: hesap
+  source_ids: [erisim_haber_yeniankara_tomtom_2025]
+  derivation: "TomTom Trafik Endeksi 2025, Ankara: 10 km ortalama yolculuk 21 dk 3 sn → 10 / (21,05/60) = 28,50 km/sa"
+  range: [15, 80]
+  alternatives:
+    - {label: "Yoğun saat ortalama hızı (TomTom 2025)", value: 20.9, status: kaynakli, source_ids: [erisim_haber_yeniankara_tomtom_2025]}
+    - {label: "Akşam yoğun saat ortalama hızı (TomTom 2025)", value: 19.5, status: kaynakli, source_ids: [erisim_haber_yeniankara_tomtom_2025]}
+    - {label: "Serbest akış tahmini: 28,50 × (1 + 0,558) — sıkışıklık %55,8'in TomTom tanımıyla (serbest akışa göre ek süre) yorumlanmasıyla", value: 44.4, status: hesap, source_ids: [erisim_haber_yeniankara_tomtom_2025]}
+    - {label: "Şehirlerarası devlet yolu otomobil hızı (Sakaltutan, KGM hız istasyonlarına dayalı varsayım; kırsal referans)", value: 95, status: kaynakli, source_ids: [erisim_demirci_2025]}
+  notes: >-
+    Haber aktarımı (kind: haber); TomTom sitesi ve Ankara Büyükşehir Ulaşım Ana Planı bu ortamdan erişilemedi. TomTom
+    değeri kent (metropol) yol ağında tüm saatlerin ortalamasıdır; il geneli uzun kırsal yolculuklar daha hızlıdır. Tek
+    hız kullanımı uzun mesafelerde zaman maliyetini yükseltir (temkinli). İyileştirme: mesafeye bağlı hız (kent içi/kırsal).
+
+- key: access.horizon_years
+  label: "Planlama ufku (T)"
+  value: 25
+  unit: "yıl"
+  status: kaynakli
+  source_ids: [erisim_tbmm_haber_saglik_butce_2024, erisim_haber_diken_536163, erisim_mevzuat_6428, maliyet_savas_2020]
+  range: [5, 50]
+  alternatives:
+    - {label: "6428 sayılı Kanun md. 4: KÖİ sözleşmesi üst sınırı (yatırım dönemi hariç)", value: 30, status: kaynakli, source_ids: [erisim_mevzuat_6428]}
+    - {label: "Ulaştırma projelerinde en yaygın değerlendirme dönemi", value: 20, status: kaynakli, source_ids: [erisim_bagdatli_akbiyikli_2015]}
+    - {label: "Şehir hastanelerinde kesintiler sonrası ortalama kalan ödeme süresi ('15-16 yıl', 2023)", value: 15.5, status: hesap, source_ids: [erisim_tbmm_haber_saglik_butce_2024]}
+  notes: >-
+    DOĞRULANDI: şehir hastanesi KÖİ sözleşmeleri 25 yıl — Sağlık Bakanı, TBMM PBK 10.11.2023: '25 yıllık sözleşme
+    sürelerini kesmediğimiz bir şehir hastanesi olmadı'; Diken [27]: Bilkent ödemeleri 2019–2043 (25 yıl); Savaş vd. 2020
+    (maliyet_savas_2020, s. 2): '25 yıl sonra işletme kamuya kalır'. Yasal üst sınır 30 yıl + yatırım dönemi (6428 md. 4).
+    Bakanın aynı konuşmasına göre sözleşmeler sonradan kısaltıldı (İzmir −10 yıl 3 ay, Etlik −7 yıl 8 ay, Bilkent −3 yıl
+    1 ay; ortalama kalan 15–16 yıl). Bu değeri planlama ufku olarak kullanmak bir modelleme tercihidir (hastane binasının
+    fiziksel ömrü daha uzundur).
+
+- key: access.discount_rate
+  label: "Sosyal iskonto oranı (r, reel)"
+  value: 0.05
+  unit: "oran / yıl (reel)"
+  status: kaynakli
+  source_ids: [erisim_kalayci_oflaz_2022]
+  range: [0.0, 0.12]
+  alternatives:
+    - {label: "AB CBA rehberi 2014–2020, uyum ülkesi olmayan üye devletler; WHO sağlık değerlendirmeleri", value: 0.03, status: kaynakli, source_ids: [erisim_kalayci_oflaz_2022]}
+    - {label: "Türkiye sosyal zaman tercihi oranı (Halıcıoğlu ve Karataş 2011)", value: 0.0506, status: kaynakli, source_ids: [erisim_kalayci_oflaz_2022]}
+    - {label: "Yurt içi tasarrufların ortalama getirisi 1987–2006 (Kalkınma Bakanlığı)", value: 0.06, status: kaynakli, source_ids: [erisim_uzunkaya_2012]}
+    - {label: "Türkiye ulaştırma projelerinde son uygulama (≈%8)", value: 0.08, status: kaynakli, source_ids: [erisim_bagdatli_akbiyikli_2015]}
+    - {label: "Türkiye ekonomik indirgeme oranı 1987–2006 (Kalkınma Bakanlığı; duyarlılık %9,0–11,9)", value: 0.098, status: kaynakli, source_ids: [erisim_uzunkaya_2012]}
+  notes: >-
+    Varsayılan %5: Avrupa Komisyonu 'Guide to Cost-Benefit Analysis of Investment Projects 2014–2020' uyum ülkeleri için
+    önerdiği sosyal iskonto oranı (hakemli derlemedeki aktarım; rehberin aslı ec.europa.eu bu ortamdan erişilemedi) ve
+    Türkiye için tahmin edilen sosyal zaman tercihi oranı %5,06 ile uyumlu. Türkiye'de BAĞLAYICI resmî bir sosyal iskonto
+    oranı bulunamadı: SBB 2026-2028 Yatırım Programı Hazırlama Rehberi (yatirim_rehber_2026_2028, md. 54) 'ekonomik
+    analizde kullanılacak iskonto oranı … güncel veriler kullanılarak hesaplanacaktır' diyor. Kalkınma Bakanlığı'nın tek
+    resmî tahmini (Uzunkaya ve Uzunkaya 2012) sermayenin fırsat maliyetine dayalı %9,8'dir → ÖĞRENCİ KARARI: %5 (sosyal
+    zaman tercihi) mi, %9,8 (Türkiye ekonomik indirgeme oranı) mı? PV(25 yıl) = 14,09 (%5) / 9,22 (%9,8) / 17,41 (%3).
+    Oran reel olduğundan tüm maliyetler sabit 2026 fiyatlarıyla kullanılmalı.
+
+- key: access.alpha
+  label: "Mesafe üssü (α)"
+  value: 1
+  unit: "boyutsuz"
+  status: model_secimi
+  rationale: >-
+    α = 1 erişim maliyetini mesafeyle doğrusal kılar (toplam yolculuk maliyeti = verimlilik ölçütü; λ'nın TL/kişi·km
+    birimi ancak α = 1'de doğrudan para cinsindendir). α > 1 uzak mesafeleri orantısız cezalandırır (eşitlik ayarı,
+    şartname 4.1 ve 4.4 G); bu durumda amaç terimi artık TL değil, 'eşitlik ağırlıklı' bir ölçüdür.
+  range: [1.0, 3.0]
+
+- key: access.max_distance_km
+  label: "Azami erişim mesafesi (R, yol mesafesi)"
+  value: 30
+  unit: "km (yol; d_ij = kuş uçuşu × access.circuity)"
+  status: varsayim
+  rationale: >-
+    İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık
+    Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği
+    EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık
+    Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur.
+    Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu
+    karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Ön kontrol (oturum çalışma alanında, kalibre edilmemiş GHS-POP
+    2025 1 km'den 3 km bloklar): P_min = 250 ile tüm nüfuslu hücrelerin R içinde en az bir adayı var; P_min = 500'de
+    ≈71 hücre (≈4.900 kişi) R dışında kalıyor — R ile P_min birlikte seçilmeli.
+  range: [10, 100]
+  alternatives:
+    - {label: "Kentsel alt sınır (varsayım; kaynak yok)", value: 15, status: varsayim}
+    - {label: "Kırsal üst sınır (varsayım; kaynak yok)", value: 50, status: varsayim}
+  notes: >-
+    Kentsel/kırsal ayrı R destekleyen resmî bir kaynak bulunamadı; ayrım istenirse ilçe/hücre yoğunluğuna göre iki
+    değer (ör. 15/50 km) varsayım olarak etiketlenmeli. R kapsama alt sınırını (LSCP) doğrudan belirler; küçük R çok
+    hastane gerektirir.

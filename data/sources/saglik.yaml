@@ -1,0 +1,240 @@
+# Alan: saglik — talep (spec 4.4 A) ve başvuru oranı (spec 4.4 G: v) için sağlık istatistikleri
+# Ham belgeler: data/raw/saglik/ (git dışı; _manifest.jsonl'de url/tarih/sha256)
+# Tablo: data/reference/saglik_istatistikleri.csv ; parametreler: data/reference/params/talep.yaml, muracaat.yaml
+
+- id: saglik_sbsgm_bulten2025
+  title: "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)"
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf"
+  accessed: 2026-10-21
+  published: 2026-09-30
+  kind: resmi
+  archived: data/raw/saglik/haber-bulteni-2025-tr.pdf
+  sha256: "3a39bcdf77ccb05c0e38552aab0232c714189bae14aede70bacf47bd7f2542b9"
+  used_for:
+    - "Hastane sayısı 2025: 1.553 (Sağlık Bakanlığı 943, üniversite 70, özel 540) — Tablo 6"
+    - "Hastane yatağı 2025: 270.829 (SB 172.079, üniversite 45.740, özel 53.010) — Tablo 7"
+    - "Nitelikli yatak 184.965 (%83,1; yoğun bakım hariç) — Tablo 8; yoğun bakım yatağı 48.360 — Tablo 9"
+    - "10.000 kişiye düşen hastane yatağı 2025: 31,5 — Tablo 11"
+    - "Toplam hekime müracaat 1.138.060.185; kişi başı 13,2; birinci basamak %41,3, ikinci+üçüncü basamak %58,7 — Tablo 15 ve PDF s. 9 metni"
+    - "Hastanelerde hekime müracaat 656.167.336 (kişi başı 7,6); ikinci+üçüncü basamak toplamı 667.703.533 (kişi başı 7,8) — Tablo 15"
+    - "Yatak doluluk %54,5; ortalama kalış 4,0 gün; yatak devir hızı 50,3; devir aralığı 3,3 gün (Türkiye) — Tablo 16"
+    - "Batı Anadolu (TR5) 2025: 138 hastane, 33.159 yatak, kişi başı müracaat 14,0, doluluk %59,5, kalış 4,3 gün, devir hızı 50,8 — Tablo 6, 7, 16"
+  notes: >-
+    13 sayfalık PDF; bülten içi sayfa numarası 'Sayfa n' = PDF sayfası − 1. Tablo 6: PDF s. 4; Tablo 7–8: PDF s. 5;
+    Tablo 9: PDF s. 6; Tablo 11: PDF s. 7; Tablo 15 ve müracaat payları metni: PDF s. 9; Tablo 16: PDF s. 10.
+    Bülten tarihi 30 Eylül 2026, saat 17:00 (her sayfanın başlığında; SBSGM duyurusu da 30 Eylül 2026); haberlerde
+    01.10.2026 olarak geçiyor. Bülten il düzeyinde veri VERMİYOR (yalnız Türkiye ve İBBS-1 bölgeleri) ve yatan hasta
+    sayısı / yatılan gün sayısı yayımlamıyor; bu nedenle 2025 yatan hasta sayısı devir hızı × yatak sayısından hesaplandı.
+    Son sayfa notu: 'istatistikler TÜİK 2025 nüfusu baz alınarak uluslararası tanımlara göre hesaplandı'. İç tutarlılık:
+    Tablo 14'teki acil yardım istasyonu başına nüfus (23.974) × istasyon sayısı (3.591, Tablo 12) = 86,09 milyon, yani
+    bülten paydası TÜİK 31.12.2025 nüfusu 86.092.168 ile yuvarlama içinde tutarlı. UYARI: 2024'e göre doluluk 59,8 →
+    54,5 ve ortalama kalış 4,2 → 4,0'a düştü (yatılan gün ≈ −%8); bültende yöntem değişikliği notu yok; Sağlık
+    İstatistikleri Yıllığı 2025 (tam metin, il tabloları) henüz yayımlanmadı (21.10.2026 itibarıyla SBSGM yıllık listesi
+    2024'te bitiyor). Tam yıllık çıkınca yeniden kontrol edilmeli.
+
+- id: saglik_sbsgm_bulten2025_duyuru
+  title: "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni Yayımlanmıştır."
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM)"
+  url: "https://sbsgm.saglik.gov.tr/TR-121059/saglik-istatistikleri-yilligi-2025-haber-bulteni-yayimlanmistir.html"
+  accessed: 2026-10-21
+  published: 2026-09-30
+  kind: resmi
+  archived: data/raw/saglik/sbsgm_TR-121059_bulten2025_duyuru.html
+  sha256: "e6957dc77fd9a453a9e41a236f55fe751ec813bab0ac88cead48b3a2f3d47c53"
+  used_for:
+    - "2025 bülteninin resmî yayım kanıtı ve tarihi (30 Eylül 2026) ile Türkçe PDF bağlantısı"
+  notes: >-
+    Bülten sayfası TR-121058 (data/raw/saglik/sbsgm_TR-121058_bulten2025.html) Türkçe ve İngilizce PDF bağlantılarını
+    veriyor. Yıllık listesi (TR-93566) 21.10.2026 itibarıyla en son 'Sağlık İstatistikleri Yıllığı 2024'ü içeriyor
+    (data/raw/saglik/sbsgm_TR-93566_yilliklar_listesi.html): tam 2025 yıllığı henüz yok.
+
+- id: saglik_sbsgm_bulten2024
+  title: "Sağlık İstatistikleri Yıllığı 2024 Haber Bülteni (Sayı: 13)"
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/51942/0/haber-bulteni-2024-trpdf.pdf"
+  accessed: 2026-10-21
+  published: 2025-09-30
+  kind: resmi
+  archived: data/raw/saglik/haber-bulteni-2024-tr.pdf
+  sha256: "97a837999725db981b21a647d34e8cd83007607353270501c8369e0b16435296"
+  used_for:
+    - "Hastane sayısı 2024: 1.562 (SB 941, üniversite 69, özel 552) — Tablo 6"
+    - "Hastane yatağı 2024: 268.359 (SB 169.834, üniversite 44.131, özel 54.394) — Tablo 7"
+    - "10.000 kişiye düşen hastane yatağı 2024: 31,3 — Tablo 12"
+    - "Toplam hekime müracaat 1.047.877.901; kişi başı 12,2; birinci basamak %43,3, ikinci+üçüncü %56,7 — Tablo 16 ve PDF s. 9 metni"
+    - "Hastanelerde kişi başı müracaat 6,8; ikinci+üçüncü basamak kişi başı 6,9 — Tablo 16"
+    - "Doluluk %59,8; ortalama kalış 4,2 gün; devir hızı 51,7 (Türkiye) — Tablo 17"
+  notes: >-
+    Spec [26] sayfasından (TR-111039) bağlanan Türkçe PDF. Tablo 6: PDF s. 4; Tablo 7–8: PDF s. 5; Tablo 9: PDF s. 6;
+    Tablo 12: PDF s. 7; Tablo 16 ve müracaat payları: PDF s. 9; Tablo 17: PDF s. 10. Spec Bölüm 3'teki 2024 değerleri
+    (268.359 yatak; 1.562 hastane = 941/69/552; 12,2 müracaat; %43,3/%56,7) bu resmî bültenle birebir aynı.
+
+- id: saglik_sbsgm_bulten2024_duyuru
+  title: "Sağlık İstatistikleri Yıllığı 2024 Haber Bülteni Yayımlanmıştır."
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM)"
+  url: "https://sbsgm.saglik.gov.tr/TR-111039/saglik-istatistikleri-yilligi-2024-haber-bulteni-yayimlanmistir.html"
+  accessed: 2026-10-21
+  published: 2025-09-30
+  kind: resmi
+  archived: data/raw/saglik/sbsgm_TR-111039_bulten2024_duyuru.html
+  sha256: "1f7b18588cf70d4601670858c93b2c6e270eea27250478f4ee2934a721972889"
+  used_for:
+    - "2024 bülteninin resmî yayım kanıtı (30 Eylül 2025) ve PDF bağlantıları (spec [26])"
+
+- id: saglik_sbsgm_bulten2023
+  title: "Sağlık İstatistikleri Yıllığı 2023 Haber Bülteni (Sayı: 12)"
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/49429/0/haber-bulteni-2023-30092024pdf.pdf"
+  accessed: 2026-10-21
+  published: 2024-09-30
+  kind: resmi
+  archived: data/raw/saglik/haber-bulteni-2023-tr.pdf
+  sha256: "f7d1cd98b1d767c6ea927302e178e6672b34554dc2d183b267f6bfb282286c3a"
+  used_for:
+    - "Hastane sayısı 2023: 1.566 (SB 933, üniversite 68, özel 565) — Tablo 5; hastane yatağı 266.594 — Tablo 6"
+    - "Hekime müracaat 2023: toplam 973.519.087 (kişi başı 11,4); aile hekimliği 416.806.846; SB hastaneleri 424.550.715; üniversite 45.534.172; özel 67.440.929; birinci basamak %43,3, ikinci+üçüncü %56,7 — Tablo 14"
+    - "Doluluk %58,2; ortalama kalış 4,2; devir hızı 50,2 (Türkiye) — Tablo 15"
+  notes: >-
+    Sayfa bağlantısı: https://sbsgm.saglik.gov.tr/TR-105979/saglik-istatistikleri-yilligi-2023-haber-bulteni.html
+    (arşiv: data/raw/saglik/sbsgm_TR-105979_bulten2023.html). Tablo 5–6: PDF s. 4; Tablo 7–8: PDF s. 5; Tablo 14–15: PDF s. 8.
+    Spec [14] (CNN Türk) 2023 müracaat değerleri (973,52 M; 424,55 M; 67,44 M; 45,53 M; 416,81 M; 11,4) bu resmî
+    tabloyla aynı. Bu bülten 10.000 kişiye düşen yatağı vermiyor (31,2 değeri SİY 2023 Tablo 7.19'dan).
+    SİY 2024 Tablo 8.1, 2023 toplamını 973.518.842 olarak revize ediyor (fark 245; ÇEKÜS satırı).
+
+- id: saglik_sbsgm_siy2024
+  title: "Sağlık İstatistikleri Yıllığı 2024"
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM)"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/52859/0/siy2024tr31122025pdf.pdf"
+  accessed: 2026-10-21
+  published: 2025-12-31
+  kind: resmi
+  archived: data/raw/saglik/siy2024tr.pdf
+  sha256: "0687db84583b17d9a2566749ff9c4cd81740476b1b339479aa7e209870d58890"
+  used_for:
+    - "Nüfus 2024 (TÜİK ADNKS): Ankara 5.864.049, Türkiye 85.664.944 — Tablo 1.3"
+    - "Ankara 2024: 85 hastane, 24.909 yatak, 42,5 yatak/10.000 kişi, nitelikli 15.422, yoğun bakım 4.137 — Tablo 7.20"
+    - "Ankara 2024: birinci basamak 28.920.274, ikinci+üçüncü basamak 47.073.855 müracaat, kişi başı 13,0 — Tablo 8.26"
+    - "Ankara 2024: yatan hasta 1.063.851, yatılan gün 5.409.136, doluluk %59,5, ortalama kalış 5,1, devir hızı 42,7 — Tablo 8.26"
+    - "Türkiye 2024: yatan hasta 13.881.750, yatılan gün 58.593.340, doluluk %59,8, kalış 4,2 — Tablo 8.26, 8.3, 8.10"
+    - "Tanımlar: hastane yatağı (yoğun bakım, prematüre/yenidoğan, yanık yatakları dahil), nitelikli yatak, doluluk, kalış, devir hızı, yatan hasta"
+  notes: >-
+    345 sayfa; basılı sayfa = PDF sayfası − 29. Tablo 1.3: PDF s. 45–46 (basılı 16–17); Tablo 7.19: PDF s. 190 (161);
+    Tablo 7.20: PDF s. 191–192 (162–163); Bölüm 7 açıklamaları ('Hastane yatağı' ve 'Nitelikli yatak' tanımı):
+    PDF s. 193 (164); Tablo 8.1: PDF s. 195 (166); Tablo 8.2: PDF s. 201 (172); Tablo 8.3: PDF s. 205 (176);
+    Tablo 8.10: PDF s. 208 (179); Tablo 8.26: PDF s. 233–236 (204–207); Bölüm 8 açıklamaları (Yatan hasta = taburcu +
+    ölen; Doluluk = yatılan gün×100/(yatak×365); Kalış = yatılan gün/(taburcu+ölen); Devir hızı = (taburcu+ölen)/yatak):
+    PDF s. 237–238 (208–209). TANIM UYARISI: 'hastane yatağı' yoğun bakım, prematüre ve yenidoğan ünitesi yataklarını
+    (kuvöz, açık bebek yatağı), yanık yataklarını ve nitelikli yatakları içerir; 'nitelikli yatak oranı' yoğun bakım
+    yatakları hariç tutularak hesaplanır (Ankara 15.422/(24.909−4.137) = %74,2). Nüfus kaynağı: TÜİK ADNKS 2024
+    bülteni (6 Şubat 2025, sayı 53783; Bölüm 1 açıklamaları, PDF s. 47). İl tabloları hizmetin verildiği ile göre;
+    Ankara üçüncü basamak/şehir hastanesi merkezi olduğundan diğer illerden gelen hastaları da içerir (yorum).
+
+- id: saglik_sbsgm_siy2024_duyuru
+  title: "Sağlık İstatistikleri Yıllığı 2024 Yayımlanmıştır."
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM)"
+  url: "https://sbsgm.saglik.gov.tr/TR-114954/saglik-istatistikleri-yilligi-2024.html"
+  accessed: 2026-10-21
+  published: 2025-12-31
+  kind: resmi
+  archived: data/raw/saglik/sbsgm_TR-114954_yillik2024.html
+  sha256: "f8f70bbf5616d6d9cc37fce9048450516069f6d595f346fa09924cee44c4847b"
+  used_for:
+    - "SİY 2024 tam metin PDF bağlantısı ve yayım tarihi (31 Aralık 2025)"
+
+- id: saglik_sbsgm_siy2023
+  title: "Sağlık İstatistikleri Yıllığı 2023"
+  publisher: "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM)"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/50500/0/siy202307032025pdf.pdf"
+  accessed: 2026-10-21
+  published: 2025-03-07
+  kind: resmi
+  archived: data/raw/saglik/siy2023tr.pdf
+  sha256: "8fbf5b96d900fd5156bfaba61f08ebf94c5b789e7820473876a01ed0ae87b319"
+  used_for:
+    - "10.000 kişiye düşen hastane yatağı, Türkiye 2023: 31,2 (spec [7] değeri) — Tablo 7.19"
+    - "Nüfus 2023: Ankara 5.803.482, Türkiye 85.372.377 — Tablo 1.3"
+    - "Ankara 2023: 85 hastane, 25.020 yatak, 43,1 yatak/10.000; yatan hasta 998.148, yatılan gün 5.170.606, doluluk %56,6, kalış 5,2 — Tablo 7.19, 8.25"
+    - "Türkiye 2023: yatan hasta 13.391.434, yatılan gün 56.594.852 — Tablo 8.25"
+  notes: >-
+    318 sayfa; basılı sayfa = PDF sayfası − 27. Tablo 1.3: PDF s. 41–42 (14–15); Tablo 7.19 (bu yıllıkta il tablosu
+    7.19): PDF s. 181–182 (154–155); Tablo 8.25 (il tablosu): PDF s. 223–226 (196–199). Sayfa bağlantısı:
+    https://sbsgm.saglik.gov.tr/TR-107087/saglik-istatistikleri-yilligi-2023.html (arşiv: sbsgm_TR-107087_yillik2023.html).
+
+- id: saglik_aydemir2019
+  title: "Bir Kamu Hastanesinde Yatak Kullanım Etkinliğinin Değerlendirilmesi (Assessment of Bed Utilization Efficiency in a Public Hospital)"
+  publisher: "İzzet Aydemir — Uluslararası Sağlık Yönetimi ve Stratejileri Araştırma Dergisi (USAYSAD), 2019; 5(2): 230–242 (DergiPark)"
+  url: "https://dergipark.org.tr/tr/download/article-file/795199"
+  accessed: 2026-10-21
+  published: 2019
+  kind: akademik
+  archived: data/raw/saglik/dergipark_795199_aydemir2019_usaysad.pdf
+  sha256: "f3be3a86e01b37b06bd6c9680d94d087662b2539bb175bff92cad8ee2f03d597"
+  used_for:
+    - "Planlama hedef doluluk: 'Yatak doluluk oranının genel hastanelerde %80-85 ... olması olumlu olarak değerlendirilir' (Ağırbaş 2016'ya atıfla)"
+    - "Bagust vd. (1999): kabul görmüş standart %85; aşılınca erişim engeli, uzun bekleme ve yüksek mortalite; %80'in altı tesislerin boşta kalması"
+    - "Sağlık Bakanlığı eğitim-araştırma hastanelerinde verimlilik göstergesi olarak kabul edilen doluluk %72 (Ağırbaş 2016: 31'e atıfla)"
+  notes: >-
+    Alıntılar PDF s. 4 (dergi s. 233, '1.1. Yatak Doluluk Oranı') ve PDF s. 10 (dergi s. 239); kaynakça PDF s. 12.
+    Hakemli ikincil akademik kaynak: %80–85 ve %72 değerleri Ağırbaş, İ. (2016) 'Hastane Yönetimi ve Organizasyon'
+    (Siyasal Kitabevi) ders kitabından aktarılmış; kitabın kendisi okunmadı.
+
+- id: saglik_cirakli2019
+  title: "Türkiye'de Yataklı Sağlık Kurumlarında Poliklinik ve Klinik Hizmetlerinin 2008-2017 Yılları Arası Gelişimi ve Mevcut Durumu"
+  publisher: "Ümit Çıraklı — Sağlıkta Kalite ve Akreditasyon Dergisi, 2019, s. 37–46 (DergiPark)"
+  url: "https://dergipark.org.tr/tr/download/article-file/747322"
+  accessed: 2026-10-21
+  published: 2019
+  kind: akademik
+  archived: data/raw/saglik/dergipark_747322_cirakli2019_skad.pdf
+  sha256: "87543a6784a8ac7f753f6f6ddf3d3d52cabad2adb9cb17f420734c1404d49273"
+  used_for:
+    - "Teyit: 'yatak doluluk oranının genel hastanelerde % 80–85 ve kronik hastanelerde % 95-100 olması olumlu olarak değerlendirilmektedir (Ağırbaş, 2012)'"
+  notes: "PDF s. 7 (dergi s. 43) ve s. 9; ikinci bağımsız akademik teyit, aynı ders kitabı kaynağına (Ağırbaş) dayanıyor."
+
+- id: saglik_bagust1999
+  title: "Dynamics of bed use in accommodating emergency admissions: stochastic simulation model"
+  publisher: "Bagust A., Place M., Posnett J.W. — BMJ 1999; 319(7203): 155–158. doi:10.1136/bmj.319.7203.155"
+  url: "https://doi.org/10.1136/bmj.319.7203.155"
+  accessed: 2026-10-21
+  published: 1999-07-17
+  kind: akademik
+  archived: data/raw/saglik/crossref_bagust1999.json
+  sha256: "e27940a36801644642dfbd9dddb9283eb11b14e9abcc9959e2c69c1006dd71ef"
+  used_for:
+    - "Yalnız künye (Crossref üst verisiyle doğrulandı: başlık, yazarlar, cilt 319, sayı 7203, s. 155–158, 17.07.1999). Bu kaynaktan doğrudan değer ALINMADI."
+  notes: >-
+    Tam metin okunamadı: bmj.com, pmc.ncbi.nlm.nih.gov, www.ebi.ac.uk ve europepmc.org vekil sunucuda 403 (politika
+    reddi). %85 eşiği Aydemir (2019) üzerinden aktarılıyor (saglik_aydemir2019). Arşivlenen dosya yalnız Crossref JSON'u.
+
+- id: saglik_karar_adnks2025
+  title: "TÜİK açıkladı: Türkiye'nin nüfusu 86 milyon 92 bin 168'e yükseldi"
+  publisher: "Karar (gazete)"
+  url: "https://www.karar.com/guncel-haberler/son-dakika-tuik-acikladi-turkiye-nufusu-86-milyon-92-bin-168e-yukseldi-2027851"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: haber
+  archived: data/raw/saglik/karar_tuik_adnks2025.html
+  sha256: "b335df874c934399111d3db1ce06b738b5904edd42fad6e6098484d41d1f81f8"
+  used_for:
+    - "Türkiye nüfusu 31.12.2025 (TÜİK ADNKS): 86.092.168 — 2025 kişi başı/1000 kişi başı oranların paydası"
+    - "Ankara nüfusu 31.12.2025: 5.910.320 (spec [3]; nüfus alanının TÜİK teyidiyle değiştirilmeli)"
+  notes: >-
+    Haber kaynağı; resmî TÜİK bülteni (https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899)
+    veriportali.tuik.gov.tr'ye yönleniyor ve yalnız JavaScript ile açılıyor; betikle okunamadı. Çapraz kontrol: SİY 2025
+    bülteni Tablo 12+14'ten türeyen nüfus (≈86,09 milyon) bu değerle tutarlı. Resmî nüfus kaynağı 'nufus' alanına aittir;
+    o alan TÜİK kaynağını kaydedince bu satırın source_id'si onunla değiştirilebilir.
+
+- id: saglik_zenodo_kaya2026
+  title: "Türkiye Sağlık İstatistikleri Arşivi: Sağlık Bakanlığı yıllıklarından derlenmiş il ve ulusal veri seti, 1964–2024 (v1.1.0)"
+  publisher: "Emin Kaya (Isparta Uygulamalı Bilimler Üniversitesi) — Zenodo, doi:10.5281/zenodo.23325100, CC BY 4.0"
+  url: "https://zenodo.org/records/23325100"
+  accessed: 2026-10-21
+  published: 2026-10-12
+  kind: ikincil
+  used_for:
+    - "YALNIZ ÇAPRAZ KONTROL (atıf kaynağı değil): 2023–2024 Ankara ve Türkiye satırları (yatak, yatak/10.000, yatan hasta, yatılan gün, doluluk, kalış, müracaat, nüfus) resmî yıllıklardan okunan değerlerle birebir aynı"
+  notes: >-
+    Üçüncü taraf derleme; dosyalar oturumun geçici klasöründe incelendi (il_verileri_yilliklardan.csv), repoya
+    arşivlenmedi. Sağladığı tablo/sayfa referansları (SİY2024 Tablo 7.20 PDF s. 191–192, Tablo 8.26 PDF s. 233–236;
+    SİY2023 Tablo 7.19 PDF s. 181–182, Tablo 8.25 PDF s. 223–226) bizim okumamızla aynı. 2025 verisi içermiyor.

@@ -1,0 +1,121 @@
+# Alan: saglik — A. Talep (spec 4.4 A): oran yöntemi ve Hill-Burton girdileri
+# Kaynaklar: data/sources/saglik.yaml ; ayrıntılı tablo: data/reference/saglik_istatistikleri.csv
+# Varsayılan yıl 2025 (öğrenci kararı: SİY 2025 Haber Bülteni); 2024 ve 2023 alternatif.
+# Oranlar 0–1 arası kesir olarak tutulur (arayüz % gösterebilir).
+
+- key: demand.beds_per_1000
+  label: "1000 kişiye düşen hastane yatağı (oran yöntemi)"
+  value: 3.15
+  unit: "yatak / 1000 kişi"
+  status: hesap
+  source_ids: [saglik_sbsgm_bulten2025]
+  derivation: "Türkiye 2025: 31,5 yatak / 10.000 kişi (SİY 2025 Haber Bülteni, Tablo 11, PDF s. 7) ÷ 10 = 3,15"
+  range: [2.0, 5.0]
+  alternatives:
+    - {label: "2025, sayılardan tam değer: 270.829 yatak / 86.092.168 kişi × 1000", value: 3.1458, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, saglik_karar_adnks2025]}
+    - {label: "2024: 31,3 / 10 (Haber Bülteni 2024 Tablo 12; SİY 2024 Tablo 7.20)", value: 3.13, status: hesap, source_ids: [saglik_sbsgm_bulten2024, saglik_sbsgm_siy2024]}
+    - {label: "2023: 31,2 / 10 — şartname Bölüm 3 değeri (SİY 2023 Tablo 7.19)", value: 3.12, status: hesap, source_ids: [saglik_sbsgm_siy2023]}
+    - {label: "2025, yoğun bakım yatakları hariç: (270.829 − 48.360) / 86.092.168 × 1000", value: 2.5841, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, saglik_karar_adnks2025]}
+    - {label: "Ankara 2024: 42,5 / 10 (SİY 2024 Tablo 7.20; il dışından gelen hastaları da karşılıyor)", value: 4.25, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Ankara 2023: 43,1 / 10 (SİY 2023 Tablo 7.19)", value: 4.31, status: hesap, source_ids: [saglik_sbsgm_siy2023]}
+  notes: >-
+    Şartname 4.4 A varsayılanı 3,12 (2023) idi; öğrencinin kararıyla varsayılan 2025'e (3,15) geçti, 3,12 resmî
+    yıllıkla doğrulandı ve alternatif olarak duruyor. Tanım: SİY'de 'hastane yatağı' yoğun bakım, prematüre/yenidoğan
+    (kuvöz, açık bebek yatağı), yanık ve nitelikli yatakları İÇERİR (SİY 2024 Bölüm 7 açıklamaları, PDF s. 193).
+    Aralık gerekçesi: Türkiye yoğun bakım hariç (2,58) ile Ankara (4,25–4,31) değerlerini kapsar.
+    Ankara 5.910.320 kişi ile oran yöntemi: 3,15 → 18.618 yatak (3,12 → 18.440).
+
+- key: demand.safety_margin
+  label: "Kapasite emniyet payı"
+  value: 0.0
+  unit: "oran (0–1; 0,10 = %10 ek yatak)"
+  status: varsayim
+  rationale: >-
+    Kaynaklı bir emniyet payı bulunamadı. Varsayılan 0: Hill-Burton modunda hedef doluluk (%85) zaten yatakların
+    %15'ini boş tutarak dalgalanma payı bırakıyor; oran modunda ise gözlenen yatak/nüfus oranı Türkiye'nin mevcut
+    düşük doluluğunu (%54,5) içerdiği için ayrıca pay eklemek talebi iki kez şişirir. Kaydırıcı duyarlılık analizi için.
+  range: [0.0, 0.3]
+  notes: "Aralık (0–%30) varsayımdır; tornado analizinde ±%20 yerine mutlak 0 → 0,2 denenebilir."
+
+- key: demand.hb.admissions_per_1000
+  label: "Yatış oranı (1000 kişi başına yıllık yatan hasta)"
+  value: 158.23
+  unit: "yatan hasta / 1000 kişi / yıl"
+  status: hesap
+  source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, saglik_karar_adnks2025]
+  derivation: >-
+    Türkiye 2025: yatan hasta ≈ yatak devir hızı 50,3 (SİY 2025 Haber Bülteni Tablo 16, PDF s. 10) × hastane yatağı
+    270.829 (Tablo 7, PDF s. 5) = 13.622.699; ÷ nüfus 86.092.168 (TÜİK ADNKS 31.12.2025) × 1000 = 158,23.
+    Tanım (SİY 2024 Bölüm 8 açıklamaları): devir hızı = (taburcu + ölen) / yatak; yatan hasta = taburcu + ölen.
+  range: [100, 250]
+  alternatives:
+    - {label: "Türkiye 2024: 13.881.750 / 85.664.944 × 1000 (SİY 2024 Tablo 8.26 ve 1.3)", value: 162.05, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Türkiye 2023: 13.391.434 / 85.372.377 × 1000 (SİY 2023 Tablo 8.25 ve 1.3)", value: 156.86, status: hesap, source_ids: [saglik_sbsgm_siy2023]}
+    - {label: "Ankara 2024: 1.063.851 / 5.864.049 × 1000 (SİY 2024 Tablo 8.26 ve 1.3)", value: 181.42, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Ankara 2023: 998.148 / 5.803.482 × 1000 (SİY 2023 Tablo 8.25 ve 1.3)", value: 171.99, status: hesap, source_ids: [saglik_sbsgm_siy2023]}
+  notes: >-
+    2025 bülteni yatan hasta sayısını doğrudan vermiyor; devir hızı (50,3; ±0,05 yuvarlama → ±%0,1) ile türetildi.
+    Doluluk/kalış üzerinden türetme (0,545 × 270.829 × 365 / 4,0 = 13,47 M) yuvarlama nedeniyle daha belirsiz (±%1,3).
+    Ankara değerleri hizmetin verildiği ile göre: başka illerden gelen yatışları da içerir (Ankara üçüncü basamak
+    merkezi; yorum), bu yüzden Ankara sakinlerinin talebini olduğundan yüksek gösterebilir → varsayılan Türkiye.
+    Aralık (100–250) varsayımdır: kaynaklı değerlerin (156,9–181,4) her iki yanına geniş pay.
+
+- key: demand.hb.alos_days
+  label: "Ortalama kalış süresi"
+  value: 4.0
+  unit: "gün"
+  status: kaynakli
+  source_ids: [saglik_sbsgm_bulten2025]
+  range: [3.0, 7.0]
+  alternatives:
+    - {label: "2025, doluluk ve devir hızından: 0,545 × 365 / 50,3 (yuvarlama kontrolü)", value: 3.955, status: hesap, source_ids: [saglik_sbsgm_bulten2025]}
+    - {label: "Türkiye 2024 (Haber Bülteni 2024 Tablo 17; SİY 2024 Tablo 8.26)", value: 4.2, status: kaynakli, source_ids: [saglik_sbsgm_bulten2024, saglik_sbsgm_siy2024]}
+    - {label: "Türkiye 2024, sayılardan: 58.593.340 / 13.881.750", value: 4.221, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Türkiye 2023 (SİY 2023 Tablo 8.25)", value: 4.2, status: kaynakli, source_ids: [saglik_sbsgm_siy2023]}
+    - {label: "Ankara 2024 (SİY 2024 Tablo 8.26)", value: 5.1, status: kaynakli, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Ankara 2024, sayılardan: 5.409.136 / 1.063.851", value: 5.084, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Ankara 2023 (SİY 2023 Tablo 8.25)", value: 5.2, status: kaynakli, source_ids: [saglik_sbsgm_siy2023]}
+    - {label: "Batı Anadolu (TR5: Ankara, Konya, Karaman) 2025 (Haber Bülteni 2025 Tablo 16)", value: 4.3, status: kaynakli, source_ids: [saglik_sbsgm_bulten2025]}
+  notes: >-
+    Kaynak: SİY 2025 Haber Bülteni Tablo 16, Türkiye satırı (PDF s. 10). Tanım: yatılan gün / (taburcu + ölen).
+    UYARI: 2024'te 4,2 olan değer 2025'te 4,0'a, Batı Anadolu'da 4,9 → 4,3'e düştü; bültende yöntem notu yok.
+    Aralık (3–7 gün) varsayımdır: Türkiye (≈4) ile Ankara (≈5,1) değerlerini rahatça kapsar.
+
+- key: demand.hb.target_occupancy
+  label: "Hedef yatak doluluk oranı (planlama)"
+  value: 0.85
+  unit: "oran (0–1)"
+  status: kaynakli
+  source_ids: [saglik_aydemir2019, saglik_cirakli2019]
+  range: [0.5, 0.95]
+  alternatives:
+    - {label: "Genel hastaneler için kabul edilen aralığın alt ucu (%80; Aydemir 2019, Çıraklı 2019)", value: 0.80, status: kaynakli, source_ids: [saglik_aydemir2019, saglik_cirakli2019]}
+    - {label: "SB eğitim-araştırma hastanelerinde verimlilik göstergesi %72 (Aydemir 2019, Ağırbaş 2016'ya atıfla)", value: 0.72, status: kaynakli, source_ids: [saglik_aydemir2019]}
+    - {label: "Türkiye'nin 2025 gerçekleşen doluluğu (%54,5; mevcut yatak/nüfus oranını yeniden üretir)", value: 0.545, status: kaynakli, source_ids: [saglik_sbsgm_bulten2025]}
+  notes: >-
+    Aydemir (2019, USAYSAD 5(2), dergi s. 233 / PDF s. 4): 'Yatak doluluk oranının genel hastanelerde %80-85 ... olması
+    olumlu olarak değerlendirilir'; aynı sayfada Bagust vd. (1999, BMJ 319:155–8) için 'kabul görmüş standart (%85)'
+    aşıldığında erişim engeli, uzun bekleme ve yüksek mortalite, %80'in altında ise tesislerin boşta kaldığı aktarılıyor.
+    Çıraklı (2019, s. 43) aynı %80–85 aralığını teyit ediyor. Bagust vd. tam metni okunamadı (bmj.com/PMC vekil
+    sunucuda engelli); künyesi Crossref ile doğrulandı. Sağlık Bakanlığı stratejik planı/hedef gösterge belgeleri
+    (sgb.saglik.gov.tr, khgm.saglik.gov.tr, khgmickontrol.saglik.gov.tr) vekil sunucuda 403 verdiği için okunamadı.
+    ÖNEMLİ: 2025'te gerçekleşen doluluk %54,5 olduğundan Hill-Burton (%85) oran yöntemine göre ≈%36 daha az yatak verir.
+    Aralık (0,50–0,95) varsayımdır.
+
+- key: demand.hb.current_occupancy
+  label: "Mevcut yatak doluluk oranı (bilgi amaçlı)"
+  value: 0.545
+  unit: "oran (0–1)"
+  status: kaynakli
+  source_ids: [saglik_sbsgm_bulten2025]
+  range: [0.4, 0.9]
+  alternatives:
+    - {label: "Türkiye 2024 (Haber Bülteni 2024 Tablo 17; SİY 2024 Tablo 8.26)", value: 0.598, status: kaynakli, source_ids: [saglik_sbsgm_bulten2024, saglik_sbsgm_siy2024]}
+    - {label: "Türkiye 2023 (SİY 2023 Tablo 8.25)", value: 0.582, status: kaynakli, source_ids: [saglik_sbsgm_siy2023]}
+    - {label: "Ankara 2024 (SİY 2024 Tablo 8.26)", value: 0.595, status: kaynakli, source_ids: [saglik_sbsgm_siy2024]}
+    - {label: "Ankara 2023 (SİY 2023 Tablo 8.25)", value: 0.566, status: kaynakli, source_ids: [saglik_sbsgm_siy2023]}
+    - {label: "Batı Anadolu (TR5) 2025 (Haber Bülteni 2025 Tablo 16)", value: 0.595, status: kaynakli, source_ids: [saglik_sbsgm_bulten2025]}
+  notes: >-
+    SİY 2025 Haber Bülteni Tablo 16, Türkiye (PDF s. 10). Tanım: yatılan gün × 100 / (yatak × 365); payda tüm hastane
+    yatakları (yoğun bakım dahil). Kontrol: Hill-Burton bu doluluk ile Ankara için 5.910.320 × 0,15823 × 4,0 /
+    (365 × 0,545) = 18.805 yatak verir; oran yöntemi (3,15) 18.618 → fark yuvarlamadan (%1). Aralık varsayımdır.

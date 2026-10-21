@@ -1,0 +1,356 @@
+# Kaynakça (spec Bölüm 7 madde 14) — alan: alan-literatur
+# Her künye arşivlenmiş üst veriden okunur (Crossref / Zenodo / JRC kataloğu / ABD kanun dizini); elle yazılmadı.
+# Ham üst veri: data/raw/literatur/ (git dışı). Kaynak kayıtları: data/sources/alan_literatur.yaml
+# Doğrulama tarihi: 2026-10-21
+# Görev künyesinden farklar:
+#   - ahmadi_javid2017: journal = 'Computers & Operations Research' (beklenen 'European Journal of Operational Research')
+#   - schiavina2023_ghs_pop: JRC kataloğunun önerdiği atıf yılı 2026 ve ek DOI 10.2905/JRC.CXKEDRR (spec: 2023)
+
+- id: hakimi1964
+  authors:
+  - Hakimi, S. L.
+  year: 1964
+  title: Optimum Locations of Switching Centers and the Absolute Centers and Medians of a Graph
+  journal: Operations Research
+  publisher: Institute for Operations Research and the Management Sciences (INFORMS)
+  volume: '12'
+  issue: '3'
+  pages: 450–459
+  doi: 10.1287/opre.12.3.450
+  url: https://doi.org/10.1287/opre.12.3.450
+  verified_via: Crossref REST API (api.crossref.org/works/10.1287/opre.12.3.450); tür journal-article; basılı 1964-06, çevrimiçi
+    —
+  notes: p-medyan ve mutlak merkez probleminin klasik kaynağı.
+  source_ids:
+  - alan_literatur_lit_hakimi1964
+- id: revelle_swain1970
+  authors:
+  - ReVelle, Charles S.
+  - Swain, Ralph W.
+  year: 1970
+  title: Central Facilities Location
+  journal: Geographical Analysis
+  publisher: Wiley
+  volume: '2'
+  issue: '1'
+  pages: 30–42
+  doi: 10.1111/j.1538-4632.1970.tb00142.x
+  url: https://doi.org/10.1111/j.1538-4632.1970.tb00142.x
+  verified_via: Crossref REST API (api.crossref.org/works/10.1111/j.1538-4632.1970.tb00142.x); tür journal-article; basılı
+    1970-01, çevrimiçi 2010-09-03
+  notes: p-medyanın tamsayılı programlama formülasyonu.
+  source_ids:
+  - alan_literatur_lit_revelle_swain1970
+- id: toregas1971
+  authors:
+  - Toregas, Constantine
+  - Swain, Ralph
+  - ReVelle, Charles
+  - Bergman, Lawrence
+  year: 1971
+  title: The Location of Emergency Service Facilities
+  journal: Operations Research
+  publisher: Institute for Operations Research and the Management Sciences (INFORMS)
+  volume: '19'
+  issue: '6'
+  pages: 1363–1373
+  doi: 10.1287/opre.19.6.1363
+  url: https://doi.org/10.1287/opre.19.6.1363
+  verified_via: Crossref REST API (api.crossref.org/works/10.1287/opre.19.6.1363); tür journal-article; basılı 1971-10,
+    çevrimiçi —
+  notes: Küme kapsama (LSCP) problemi.
+  source_ids:
+  - alan_literatur_lit_toregas1971
+- id: church_revelle1974
+  authors:
+  - Church, Richard
+  - ReVelle, Charles
+  year: 1974
+  title: The maximal covering location problem
+  journal: Papers of the Regional Science Association
+  publisher: Elsevier BV
+  volume: '32'
+  issue: '1'
+  pages: 101–118
+  doi: 10.1007/BF01942293
+  url: https://doi.org/10.1007/BF01942293
+  verified_via: Crossref REST API (api.crossref.org/works/10.1007/bf01942293); tür journal-article; basılı 1974-12, çevrimiçi
+    —
+  notes: Maksimal kapsama (MCLP) problemi. Crossref yayıncı alanı 'Elsevier BV' (dergi bugün Papers in Regional Science
+    adıyla yayımlanıyor); sayı 1.
+  source_ids:
+  - alan_literatur_lit_church_revelle1974
+- id: hill_burton1946
+  authors:
+  - 79th United States Congress
+  year: 1946
+  title: Hospital Survey and Construction Act — AN ACT To amend the Public Health Service Act to authorize grants to the
+    States for surveying their hospitals and public health centers and for planning construction of additional facilities,
+    and to authorize grants to assist in such construction
+  journal: null
+  publisher: United States Statutes at Large, vol. 60
+  volume: '60'
+  issue: null
+  pages: 1040–1049
+  doi: null
+  url: https://www.govinfo.gov/content/pkg/STATUTE-60/pdf/STATUTE-60-Pg1040.pdf
+  citation: Pub. Law 79-725 (Hospital Survey and Construction Act), Aug. 13, 1946, ch. 958, 60 Stat. 1040
+  verified_via: unitedstates/legisworks-historical-statutes data/060.yaml (Statutes at Large künye dizini) + ABD Kanunu
+    (OLRC) 42 U.S.C. 1592c 'References in Text' notunun GitHub yansısı; govinfo.gov vekil sunucuda engelli, kanun PDF'i
+    okunamadı
+  notes: 'ABD Hospital Survey and Construction Act (Hill-Burton Act). OLRC notu: "Public Law 725, Seventy-ninth Congress,
+    approved Aug. 13, 1946, as amended, referred to in text, means act Aug. 13, 1946, ch. 958, 60 Stat. 1041, known as the
+    Hospital Survey and Construction Act. For complete classification of this Act to the Code, see Tables." — dikkat: legisworks
+    dizininde yasa 60 Stat. 1040''da başlıyor (10 sayfa, STATUTE-60-Pg1040.pdf); OLRC notları 60 Stat. 1041 yazıyor. Kanun
+    metni okunamadığı için yatak formülünü içerip içermediği DOĞRULANMADI.'
+  source_ids:
+  - alan_literatur_lit_hill_burton1946
+- id: ravaghi2020
+  authors:
+  - Ravaghi, Hamid
+  - Alidoost, Saeide
+  - Mannion, Russell
+  - Bélorgeot, Victoria D.
+  year: 2020
+  title: 'Models and methods for determining the optimal number of beds in hospitals and regions: a systematic scoping review'
+  journal: BMC Health Services Research
+  publisher: Springer Science and Business Media LLC
+  volume: '20'
+  issue: '1'
+  pages: '186'
+  doi: 10.1186/s12913-020-5023-z
+  url: https://doi.org/10.1186/s12913-020-5023-z
+  verified_via: Crossref REST API (api.crossref.org/works/10.1186/s12913-020-5023-z); tür journal-article; basılı 2020-12,
+    çevrimiçi 2020-03-06
+  notes: 'Yatak ihtiyacı modellerinin sistematik taraması (Hill-Burton formülünün girdileri için). Crossref özetinden birebir:
+    "Common determinants of the required number of hospital beds in these models included demographic changes, average length
+    of stay, admission rates, and bed occupancy rates." Tam metin (link.springer.com, PMC) vekil sunucuda engelli → makalenin
+    Hill-Burton formülünü adıyla anıp anmadığı DOĞRULANAMADI. Formülün kendisi (yatak = nüfus × yatış oranı × ort. kalış
+    / (365 × hedef doluluk)) bu nedenle okunmuş bir akademik kaynağa bağlanamadı; formül, yatılan gün = yatak × 365 × doluluk
+    tanımının (SİY bülteni tanımı, saglik alanı) cebirsel tersidir.'
+  source_ids:
+  - alan_literatur_lit_ravaghi2020
+- id: boscoe2012
+  authors:
+  - Boscoe, Francis P.
+  - Henry, Kevin A.
+  - Zdeb, Michael S.
+  year: 2012
+  title: A Nationwide Comparison of Driving Distance Versus Straight-Line Distance to Hospitals
+  journal: The Professional Geographer
+  publisher: Informa UK Limited
+  volume: '64'
+  issue: '2'
+  pages: 188–196
+  doi: 10.1080/00330124.2011.583586
+  url: https://doi.org/10.1080/00330124.2011.583586
+  verified_via: Crossref REST API (api.crossref.org/works/10.1080/00330124.2011.583586); tür journal-article; basılı 2012-05,
+    çevrimiçi —
+  notes: Kuş uçuşu ve karayolu mesafesi karşılaştırması (dolambaç katsayısı).
+  source_ids:
+  - alan_literatur_lit_boscoe2012
+- id: ballou2002
+  authors:
+  - Ballou, Ronald H
+  - Rahardja, Handoko
+  - Sakai, Noriaki
+  year: 2002
+  title: Selected country circuity factors for road travel distance estimation
+  journal: 'Transportation Research Part A: Policy and Practice'
+  publisher: Elsevier BV
+  volume: '36'
+  issue: '9'
+  pages: 843–848
+  doi: 10.1016/S0965-8564(01)00044-1
+  url: https://doi.org/10.1016/S0965-8564(01)00044-1
+  verified_via: Crossref REST API (api.crossref.org/works/10.1016/s0965-8564(01)00044-1); tür journal-article; basılı 2002-11,
+    çevrimiçi —
+  notes: Ülke bazında dolambaç (circuity) katsayıları.
+  source_ids:
+  - alan_literatur_lit_ballou2002
+- id: daskin2013
+  authors:
+  - Daskin, Mark S.
+  year: 2013
+  title: 'Network and Discrete Location: Models, Algorithms, and Applications, Second Edition'
+  journal: null
+  publisher: Wiley
+  volume: null
+  issue: null
+  pages: null
+  doi: 10.1002/9781118537015
+  url: https://doi.org/10.1002/9781118537015
+  verified_via: Crossref REST API (api.crossref.org/works/10.1002/9781118537015); tür edited-book; basılı 2013-09-03, çevrimiçi
+    2013-06-25
+  notes: 'Ders kitabı: ağ ve kesikli yerleşim modelleri. Crossref türü ''edited-book'' ve kişi ''editor'' alanında; kitap
+    tek yazarlıdır (Mark S. Daskin) — atıfta yazar olarak verilir.'
+  source_ids:
+  - alan_literatur_lit_daskin2013
+  isbn:
+  - '9780470905364'
+  - '9781118537015'
+- id: ahmadi_javid2017
+  authors:
+  - Ahmadi-Javid, Amir
+  - Seyedi, Pardis
+  - Syam, Siddhartha S.
+  year: 2017
+  title: A survey of healthcare facility location
+  journal: Computers & Operations Research
+  publisher: Elsevier BV
+  volume: '79'
+  issue: null
+  pages: 223–263
+  doi: 10.1016/j.cor.2016.05.018
+  url: https://doi.org/10.1016/j.cor.2016.05.018
+  verified_via: Crossref REST API (api.crossref.org/works/10.1016/j.cor.2016.05.018); tür journal-article; basılı 2017-03,
+    çevrimiçi —
+  notes: Sağlık tesisi yerleşimi literatür taraması.
+  source_ids:
+  - alan_literatur_lit_ahmadi_javid2017
+- id: huangfu_hall2018
+  authors:
+  - Huangfu, Q.
+  - Hall, J. A. J.
+  year: 2018
+  title: Parallelizing the dual revised simplex method
+  journal: Mathematical Programming Computation
+  publisher: Springer Science and Business Media LLC
+  volume: '10'
+  issue: '1'
+  pages: 119–142
+  doi: 10.1007/s12532-017-0130-5
+  url: https://doi.org/10.1007/s12532-017-0130-5
+  verified_via: Crossref REST API (api.crossref.org/works/10.1007/s12532-017-0130-5); tür journal-article; basılı 2018-03,
+    çevrimiçi 2017-12-14
+  notes: HiGHS'in ikili (dual) simpleks çekirdeği; HiGHS'in önerdiği atıf. Çevrimiçi yayım 2017-12-14, basılı sayı 2018-03
+    → künye yılı 2018.
+  source_ids:
+  - alan_literatur_lit_huangfu_hall2018
+- id: schiavina2023_ghs_pop
+  authors:
+  - Schiavina, Marcello
+  - Freire, Sergio
+  - Carioli, Alessandra
+  - MacManus, Kytt
+  year: 2023
+  title: GHS-POP R2023A - GHS population grid multitemporal (1975-2030)
+  journal: null
+  publisher: European Commission, Joint Research Centre (JRC) [Dataset]
+  volume: null
+  issue: null
+  pages: null
+  doi: 10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE
+  url: https://data.jrc.ec.europa.eu/dataset/2ff68a52-5b5b-4a22-8f40-c41da8332cfe
+  verified_via: JRC Veri Kataloğu DCAT-RDF (dct:issued 2023-05-08) + doi.org handle kaydı (URL http://data.europa.eu/89h/2ff68a52-5b5b-4a22-8f40-c41da8332cfe,
+    2023-04-18)
+  notes: 'Nüfus ızgarası (ana kaynak). Katalog bugün şu atfı öneriyor: "Schiavina, Marcello;  Freire, Sergio;  Alessandra
+    Carioli;  MacManus, Kytt (2026): GHS-POP R2023A - GHS population grid multitemporal (1975-2030). European Commission,
+    Joint Research Centre [Dataset] doi: 10.2905/JRC.CXKEDRR; 10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE PID: http://data.europa.eu/89h/2ff68a52-5b5b-4a22-8f40-c41da8332cfe"
+    — yani yıl 2026 ve ek DOI 10.2905/JRC.CXKEDRR; veri seti yayım tarihi 2023-05-08, DOI 2023''te kaydedilmiş. Spec''teki
+    ''Schiavina vd. 2023'' korunur. Crossref''te kayıt yok (DataCite DOI); api.datacite.org ve data.crosscite.org vekil
+    sunucuda engelli.'
+  source_ids:
+  - alan_literatur_lit_schiavina2023
+- id: pesaresi2024
+  authors:
+  - Pesaresi, Martino
+  - Schiavina, Marcello
+  - Politis, Panagiotis
+  - Freire, Sergio
+  - Krasnodębska, Katarzyna
+  - Uhl, Johannes H.
+  - Carioli, Alessandra
+  - Corbane, Christina
+  - Dijkstra, Lewis
+  - Florio, Pietro
+  - Friedrich, Hannah K.
+  - Gao, Jing
+  - Leyk, Stefan
+  - Lu, Linlin
+  - Maffenini, Luca
+  - Mari-Rivero, Ines
+  - Melchiorri, Michele
+  - Syrris, Vasileios
+  - Van Den Hoek, Jamon
+  - Kemper, Thomas
+  year: 2024
+  title: Advances on the Global Human Settlement Layer by joint assessment of Earth Observation and population survey data
+  journal: International Journal of Digital Earth
+  publisher: Informa UK Limited
+  volume: '17'
+  issue: '1'
+  pages: '2390454'
+  doi: 10.1080/17538947.2024.2390454
+  url: https://doi.org/10.1080/17538947.2024.2390454
+  verified_via: Crossref REST API (api.crossref.org/works/10.1080/17538947.2024.2390454); tür journal-article; basılı 2024-12-31,
+    çevrimiçi 2024-08-30
+  notes: GHSL yöntem makalesi.
+  source_ids:
+  - alan_literatur_lit_pesaresi2024
+- id: runfola2020
+  authors:
+  - Runfola, Daniel
+  - Anderson, Austin
+  - Baier, Heather
+  - Crittenden, Matt
+  - Dowker, Elizabeth
+  - Fuhrig, Sydney
+  - Goodman, Seth
+  - Grimsley, Grace
+  - Layko, Rachel
+  - Melville, Graham
+  - Mulder, Maddy
+  - Oberman, Rachel
+  - Panganiban, Joshua
+  - Peck, Andrew
+  - Seitz, Leigh
+  - Shea, Sylvia
+  - Slevin, Hannah
+  - Youngerman, Rebecca
+  - Hobbs, Lauren
+  year: 2020
+  title: 'geoBoundaries: A global database of political administrative boundaries'
+  journal: PLOS ONE
+  publisher: Public Library of Science (PLoS)
+  volume: '15'
+  issue: '4'
+  pages: e0231866
+  doi: 10.1371/journal.pone.0231866
+  url: https://doi.org/10.1371/journal.pone.0231866
+  verified_via: Crossref REST API (api.crossref.org/works/10.1371/journal.pone.0231866); tür journal-article; basılı —,
+    çevrimiçi 2020-04-24
+  notes: geoBoundaries idari sınırlar (ana sınır kümesi).
+  source_ids:
+  - alan_literatur_lit_runfola2020
+- id: zanaga2022
+  authors:
+  - Zanaga, Daniele
+  - Van De Kerchove, Ruben
+  - Daems, Dirk
+  - De Keersmaecker, Wanda
+  - Brockmann, Carsten
+  - Kirches, Grit
+  - Wevers, Jan
+  - Cartus, Oliver
+  - Santoro, Maurizio
+  - Fritz, Steffen
+  - Lesiv, Myroslava
+  - Herold, Martin
+  - Tsendbazar, Nandin-Erdene
+  - Xu, Panpan
+  - Ramoino, Fabrizio
+  - Arino, Olivier
+  year: 2022
+  title: ESA WorldCover 10 m 2021 v200
+  journal: null
+  publisher: Zenodo (ESA WorldCover konsorsiyumu)
+  volume: null
+  issue: null
+  pages: null
+  doi: 10.5281/zenodo.7254221
+  url: https://doi.org/10.5281/zenodo.7254221
+  verified_via: Zenodo REST API kaydı 7254221 (yayım 2022-10-28, sürüm v200, lisans cc-by-4.0)
+  notes: ESA WorldCover 10 m 2021 v200 (su maskesi). 16 yazar.
+  source_ids:
+  - alan_literatur_lit_zanaga2022

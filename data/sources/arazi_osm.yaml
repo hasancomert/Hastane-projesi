@@ -1,0 +1,163 @@
+# Alan: arazi-osm — su/arazi örtüsü maskesi, OSM yol ağı (dolambaç katsayısı), Kızılay referans noktası.
+# Betikler: pipeline/13_landcover.py, pipeline/15_circuity.py. Ham kopyalar: data/raw/arazi/, data/raw/osm/ (git dışı;
+# her indirme yanındaki _manifest.jsonl dosyasında url/tarih/sha256 ile kayıtlı).
+
+- id: arazi_osm_worldcover_2021_v200
+  title: "ESA WorldCover 10 m 2021 v200"
+  publisher: "ESA WorldCover konsorsiyumu (VITO, Brockmann Consult, Gamma Remote Sensing, IIASA, Wageningen Üniv.); Zenodo"
+  url: "https://zenodo.org/api/records/7254221"
+  accessed: 2026-10-21
+  published: 2022-10-28
+  kind: veri
+  archived: data/raw/arazi/zenodo_7254221_record.json
+  sha256: "5a4c8c5f203fd182dfd9e0029a403d37cb27b549c6854e7bf9d74fb1328e9a32"
+  used_for:
+    - "Arazi örtüsü sınıfları 80 (kalıcı su), 90 (otsu sulak alan), 50 (yapılaşmış alan) — aday hücre su filtresi"
+    - "Künye: Zanaga, D., Van De Kerchove, R., Daems, D., De Keersmaecker, W., Brockmann, C., Kirches, G., Wevers, J., Cartus, O., Santoro, M., Fritz, S., Lesiv, M., Herold, M., Tsendbazar, N.-E., Xu, P., Ramoino, F., Arino, O. (2022). ESA WorldCover 10 m 2021 v200. Zenodo. doi:10.5281/zenodo.7254221"
+  notes: >-
+    DOI 10.5281/zenodo.7254221 Zenodo API kaydından doğrulandı (başlık, 16 yazar, yayım 2022-10-28, sürüm v200,
+    lisans cc-by-4.0). Kayıt açıklaması: 2020 (v100) ve 2021 (v200) haritaları farklı algoritma sürümleriyle
+    üretildiği için yıllar arası farklar dikkatle yorumlanmalı. Lisans karo GeoTIFF etiketlerinde de yazıyor
+    ("CC-BY 4.0"). Gösterimde atıf: "© ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data
+    (2021) processed by ESA WorldCover consortium" (karo 'copyright' etiketi).
+
+- id: arazi_osm_worldcover_tiles_s3
+  title: "ESA WorldCover 10 m 2021 v200 — 3°×3° harita karoları N39E030, N39E033, N36E033, N36E030 (COG)"
+  publisher: "ESA WorldCover projesi (AWS S3 açık veri kovası esa-worldcover)"
+  url: "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/"
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/arazi/
+  used_for:
+    - "data/processed/landcover/worldcover_ankara_100m.tif: GHS-POP 100 m ızgarasında (ESRI:54009, common.GHS_WINDOW, 2920×2390 hücre) bant1 = %su(80), bant2 = %sulak alan(90), bant3 = %yapılaşma(50)"
+    - "Ankara il geneli (geoBoundaries il poligonu, hücre merkezi içinde = 25.679,25 km²): kalıcı su 749,5 km² (%2,92); otsu sulak alan 2,4 km² (%0,01); yapılaşmış alan 649,2 km² (%2,53)"
+    - "Sağlama, Ankara içindeki su alanı (100 m ürün / 10 m jeodezik): Tuz Gölü 450,8 / 450,0 km²; Hirfanlı 143,1 / 142,9; Sarıyar 43,5 / 43,3; Kesikköprü 0,99 / 0,99; Mogan 5,69 / 5,67; Eymir 1,24 / 1,23 km²"
+  notes: >-
+    Karo dosyaları ve sha256: N39E030 6983e9f66fcd8685f1dd161cb304bb0530f05a879fee8be95c33a474b429ffaf;
+    N39E033 e2f53b734e0fcecff6660061573b4f9b804b5dbe6920c1d476b75cb9af1f070f;
+    N36E033 6009be27026a4782800629c38a490cae8573c20d1e602805bdbe0c17ca1872d3;
+    N36E030 37b4c62415a5f81d54a19d8b907a84cbae7aa4aaf148de049f7fc7d55ad9b5ff (S3 Last-Modified 2022-10-26).
+    Yöntem: her sınıf için 10 m ikili maske, GDAL 'average' (kısmi piksel ağırlıklı) ile 100 m Mollweide'e
+    yeniden örneklendi; Mollweide eşit alanlı olduğundan her hücre 1 ha. Alan doğruluğu: 6 gölde 100 m ürün ile
+    10 m piksellerin elipsoit alanı farkı ≤ %0,35 (en küçük göl Eymir'de %0,8). Göl poligonları OSM'den (Tuz Gölü relation/2411676, Hirfanlı
+    relation/1028112, Sarıyar relation/385113, Kesikköprü relation/2280078, Mogan relation/2280277, Eymir
+    way/729243281), 300 m tamponlu; "Ankara içi" = geoBoundaries ADM1 ile kesişim. OSM göl alanları (tamamı /
+    Ankara içi, km²): Tuz Gölü 939,8 / 450,3; Hirfanlı 222,0 / 140,7; Sarıyar 64,7 / 43,8; Kesikköprü 5,8 / 0,95;
+    Mogan 5,69 / 5,69; Eymir 1,24 / 1,24. Ayrıntı: data/raw/arazi/worldcover_lake_check.csv.
+
+- id: arazi_osm_osm_turkey_pbf
+  title: "OpenStreetMap — Geofabrik Türkiye özütü turkey-latest.osm.pbf (çoğaltma zaman damgası 2026-06-26T20:21:00Z)"
+  publisher: "© OpenStreetMap katkıcıları; özüt Geofabrik; ayna Hugging Face (NoeFlandre/osm-geofabrik-raw-pbf-extracts)"
+  url: "https://huggingface.co/datasets/NoeFlandre/osm-geofabrik-raw-pbf-extracts/resolve/main/turkey-latest.osm.pbf"
+  accessed: 2026-10-21
+  published: 2026-06-26
+  kind: veri
+  archived: data/raw/osm/turkey-latest.osm.pbf
+  sha256: "27b95137c540d367fc9296495a30cf58bbe6dfd2bd7703b46c43f58c0dbe6ccb"
+  used_for:
+    - "Ankara kutusundaki araç yolu ağı (128 bin yol; 1.338.106 düğüm; en büyük güçlü bağlı bileşen %98,9) — dolambaç katsayısı"
+    - "Kızılay Meydanı: node/9456598160 (place=square, '15 Temmuz Kızılay Millî İrade Meydanı', wikidata Q6046415), 32,8540176 D; 39,9209927 K"
+    - "Göl poligonları (WorldCover sağlaması için)"
+  notes: >-
+    PBF başlığı: generator osmium/1.16.0, osmosis_replication_timestamp 2026-06-26T20:21:00Z, sequence 4830,
+    base_url https://download.geofabrik.de/europe/turkey-updates. Önce https://download.geofabrik.de/europe/turkey-latest.osm.pbf
+    denendi: bağlantı sıfırlandı (curl 35 "Connection reset by peer"; vekil kaydı ws_closed_mid_exchange), bu yüzden
+    Hugging Face aynası kullanıldı; sha256 HF x-linked-etag ile aynı. Lisans: ODbL 1.0 (HF veri kartı, arşiv:
+    data/raw/osm/hf_osm-geofabrik-raw-pbf-extracts_README.md, sha256 6c7ee93dd7fbffe5c69573ed7c650b86d79d2607736d902a5f7a797bf495f0e3).
+    Atıf: "© OpenStreetMap katkıcıları". Sınıflar: motorway, trunk, primary, secondary, tertiary, unclassified,
+    residential, living_street ve *_link; service/track/path/footway hariç; access=no/private hariç.
+
+- id: arazi_osm_ghs_pop_e2025_1km
+  title: "GHS-POP R2023A, E2025, 1 km, Mollweide (GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.tif) — Ankara penceresi"
+  publisher: "Avrupa Komisyonu Ortak Araştırma Merkezi (JRC), Global Human Settlement Layer"
+  url: "https://jrc-ghsl.s3.amazonaws.com/ghs-pop/r2023a/54009/1000m/2025/GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.tif"
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/osm/GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0_ankara_window.tif
+  sha256: "6ed0bb8deb41dbcf7d5c6e26a8839a312e9ddd34b1404aab8c4dee8820946ddd"
+  used_for:
+    - "Dolambaç örnekleminde köken/hedef seçimi ve nüfus ağırlıkları (Ankara içi 6.112 nüfuslu 1 km hücre)"
+  notes: >-
+    Tüm dosya indirilmedi; /vsicurl ile common.GHS_WINDOW penceresi (col_off 20655, row_off 4124, 292×239) okunup
+    yerel kopya olarak saklandı (S3 Last-Modified 2026-10-06, ETag 3edb208f9c3074b5d887c2cd56adf9af-34,
+    float64, nodata -200). Pencere içi Ankara toplamı (hücre merkezi il poligonunda) 6.350.696 — ham GHS
+    projeksiyonu; TÜİK 2025 (5.910.320) ile kalibrasyon nüfus alanının işidir, burada yalnız göreli ağırlık
+    olarak kullanıldı. Veri seti künyesi/DOI'si bu alanda doğrulanamadı: data.jrc.ec.europa.eu sayfası
+    "Request Rejected" döndürdü, data.crosscite.org vekil tarafından reddedildi (403).
+
+- id: arazi_osm_geoboundaries_tur
+  title: "geoBoundaries gbOpen TUR ADM1 (TUR-ADM1-25984515) ve ADM2 (TUR-ADM2-54988432), sürüm 9469f09"
+  publisher: "geoBoundaries (William & Mary geoLab); kaynak: OpenStreetMap / OSM Boundaries"
+  url: "https://www.geoboundaries.org/api/current/gbOpen/TUR/ADM1/"
+  accessed: 2026-10-21
+  published: 2023-12-12
+  kind: veri
+  archived: data/raw/arazi/geoboundaries_api_TUR_ADM1.json
+  sha256: "f440f45d72fa349d0d722362933b51bdf095329cc21f197f110ef27df587fee9"
+  used_for:
+    - "Ankara il poligonu (WorldCover il geneli özet, göllerin Ankara içi kısmı, nüfus hücresi seçimi)"
+    - "25 ilçe poligonu: kentsel (9 merkez ilçe) / kırsal ayrımı"
+  notes: >-
+    API kayıtları: ADM1 (data/raw/arazi/geoboundaries_api_TUR_ADM1.json) ve ADM2
+    (data/raw/arazi/geoboundaries_api_TUR_ADM2.json, sha256 e2fd0347933a65f68260dfd83694587cf6d48d071c1be5a3128072671e142df4);
+    staticDownloadLink https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/TUR/ADM1/geoBoundaries-TUR-ADM1-all.zip
+    (ADM2 için aynı yol). Kullanılan geometri dosyaları sinirlar alanının arşivinden okundu:
+    data/raw/sinirlar/geoboundaries/ADM1--geoBoundaries-TUR-ADM1.geojson (sha256 01697a1722cf62db3b5f4e78ae73e7972edae52d2254ccfffa9163fc6cdbc918),
+    ADM2--geoBoundaries-TUR-ADM2.geojson (sha256 8e7594ab12d916e3b93f920475a300c364dfb94a0e40bfa6d55f43aff0c7fd97).
+    Lisans (üst veriye göre): ADM1 "Creative Commons Attribution-ShareAlike 2.0", ADM2 ODbL 1.0; kaynak OSM.
+    Akademik atıf (CITATION dosyası): Runfola D. vd. (2020) geoBoundaries, PLoS ONE 15(4): e0231866,
+    doi:10.1371/journal.pone.0231866.
+
+- id: arazi_osm_boscoe_2012
+  title: "A Nationwide Comparison of Driving Distance Versus Straight-Line Distance to Hospitals"
+  publisher: "Boscoe, F. P., Henry, K. A., Zdeb, M. S. — The Professional Geographer 64(2):188–196 (Informa UK / Taylor & Francis)"
+  url: "https://doi.org/10.1080/00330124.2011.583586"
+  accessed: 2026-10-21
+  published: 2012-05
+  kind: akademik
+  archived: data/raw/osm/crossref_boscoe_2012.json
+  sha256: "841d85e71d8151dccb7af078b22ac4733b17559f4c7f9e86d1366864fe435cc4"
+  used_for:
+    - "Kaynakça: hastaneye sürüş mesafesi ile kuş uçuşu mesafe karşılaştırması (dolambaç katsayısı literatürü)"
+  notes: >-
+    Künye (başlık, yazarlar, cilt 64, sayı 2, s. 188–196, 2012) Crossref API'den doğrulandı. Tam metne
+    erişilemedi: pmc.ncbi.nlm.nih.gov (PMC3835347), www.ebi.ac.uk (Europe PMC), api.openalex.org,
+    api.semanticscholar.org vekil tarafından reddedildi (403); doi.org yönlendirmesi http://www.tandfonline.com
+    çözümlenemedi. Bu nedenle makalenin raporladığı oran/katsayı DEĞERİ KAYDEDİLMEDİ (uydurma yok).
+
+- id: arazi_osm_ballou_2002
+  title: "Selected country circuity factors for road travel distance estimation"
+  publisher: "Ballou, R. H., Rahardja, H., Sakai, N. — Transportation Research Part A: Policy and Practice 36(9):843–848 (Elsevier)"
+  url: "https://doi.org/10.1016/S0965-8564(01)00044-1"
+  accessed: 2026-10-21
+  published: 2002-11
+  kind: akademik
+  archived: data/raw/osm/crossref_ballou_2002.json
+  sha256: "5d2f00bd857f4364b6b87f4e04e2cf549089e8d4545b8881d8473ea14c05342a"
+  used_for:
+    - "Kaynakça: ülke bazında dolambaç katsayıları (circuity factor) kavramı"
+  notes: >-
+    Künye Crossref API'den doğrulandı (DOI 10.1016/s0965-8564(01)00044-1; cilt 36, sayı 9, s. 843–848, Kasım 2002).
+    Tam metin açık erişimde bulunamadı; linkinghub.elsevier.com, arxiv.org (ikincil kaynak olarak Boeing 2019),
+    dspace.mit.edu, hcup-us.ahrq.gov vekil tarafından reddedildi (403). Katsayı DEĞERİ KAYDEDİLMEDİ.
+
+- id: arazi_osm_circuity_hesap
+  title: "Ankara yol ağı dolambaç katsayısı ölçümü (OSM + GHS-POP; bu proje, pipeline/15_circuity.py)"
+  publisher: "Proje hesabı"
+  url: "pipeline/15_circuity.py"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: data/reference/circuity_ankara.csv
+  used_for:
+    - "access.circuity varsayılanı 1,223 = kuş uçuşu 5–40 km çiftlerinin nüfus ağırlıklı ortalaması (n = 2.394)"
+    - "Bant bazında nüfus ağırlıklı ortalamalar: 0–5 km 1,384; 5–10 km 1,281; 10–20 km 1,232; 20–40 km 1,185; 40–80 km 1,204; 80+ km 1,181; tüm çiftler 1,236"
+    - "5–40 km köken kentsel (9 merkez ilçe) 1,222 (n = 2.177); köken kırsal (16 ilçe) 1,262 (n = 217)"
+  notes: >-
+    4.800 çift çekildi, 4.761'i geçerli (bağlantı > 1 km veya bağlanan düğümler arası < 500 m olanlar atıldı).
+    Köken ∝ nüfus (800 çekiliş, tohum 20261021); her köken için 6 mesafe bandının her birinden bir hedef ∝ nüfus;
+    ağırlık w = kökenin o banttaki toplam nüfusu (ters olasılık ağırlığı → rastgele iki kişi arası yolculuk).
+    Yönlü graf (tek yön kuralları), derece-2 düğümler daraltıldı (218.578 düğüm). Hücreler en yakın
+    motorway/trunk dışı düğüme bağlandı (otoyola bağlanma yapay dolambaç üretiyordu). Nüfuslu hücrelerin %12,8'i
+    (nüfusun %0,21'i) 1 km içinde araç yoluna bağlanamadı. Kentsel = Altındağ, Çankaya, Etimesgut, Gölbaşı,
+    Keçiören, Mamak, Pursaklar, Sincan, Yenimahalle (model seçimi). Grafik: data/processed/circuity_ankara.png;
+    çift listesi: data/raw/osm/circuity_pairs.csv.

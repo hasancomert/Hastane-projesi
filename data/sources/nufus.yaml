@@ -1,0 +1,360 @@
+# Alan: tuik (nüfus) — resmî ADNKS il/ilçe nüfusları, nüfus yoğunluğu ve 2030 il projeksiyonu
+# Ham belgeler: data/raw/nufus/tuik/ (git dışı; _manifest.jsonl'de url/tarih/sha256)
+# Üretim: pipeline/10_tuik_population.py → data/reference/tuik_adnks_ankara.csv ; parametreler: data/reference/params/nufus.yaml
+# Satır numaraları Excel'deki 1 tabanlı satırlardır. "bt_" = bültene özgü tablo (yıl bazında sabit),
+# "st_" = istatistiksel tablo (TÜİK her yıl yeniler; arşivdeki sürüm 2025), "df_" = veri akışı CSV'si.
+
+# ------------------------------------------------------------------ ADNKS 2025
+
+- id: tuik_adnks2025_bulten
+  title: "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025"
+  publisher: "TÜİK (Türkiye İstatistik Kurumu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/53899"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: resmi
+  archived: data/raw/nufus/tuik/veriportali_press_53899_adnks2025.json
+  sha256: "d37f61c2f4ad10e8e57e0bf82e9ce4b61488507a4f77457866d34a660477b19a"
+  used_for:
+    - "Ankara il nüfusu 31.12.2025: 5.910.320 (metin: '… 5 milyon 910 bin 320 kişi ile Ankara …')"
+    - "Çankaya 952.198 ve Keçiören 931.722 (metin: '952 bin 198 kişi ile Ankara ili Çankaya ilçesi, 931 bin 722 kişi ile Ankara ili Keçiören ilçesi')"
+    - "Nüfus yoğunluğu tanımı: HGM 1/1.000.000 ölçekli harita baz alınarak; doğal göller ve baraj gölleri hariç alan (metaveri)"
+  notes: >-
+    Bülten sayfası https://veriportali.tuik.gov.tr/tr/press/53899 (tek sayfalık SPA); arşivlenen dosya portalın JSON
+    API yanıtıdır (bülten metni 'content', tablolar, metaveri). Ankara cümlesi "İstanbul'un nüfusu 15 milyon 754 bin 53
+    kişi oldu" başlığı altında; Çankaya/Keçiören "Türkiye'de nüfusu 1 milyonu aşan ilk ilçe Esenyurt oldu" başlığı
+    altında. Metaveri hâlâ "doğal göller ve baraj gölleri hariç Türkiye'nin yüzölçümü 769.604 km²" diyor; oysa 2024 ve
+    2025 bülten tablolarındaki Türkiye yoğunluğu 768.948,6 km²'ye karşılık geliyor (bkz. tuik_bt_adnks2023_yogunluk).
+    API 'X-Requested-With: XMLHttpRequest' başlığı olmadan 404 döner.
+
+- id: tuik_st_il_ilce_2025
+  title: "İl ve ilçelere göre il/ilçe merkezi, belde/köy nüfusu ve yıllık nüfus artış hızı, 2025"
+  publisher: "TÜİK — İstatistik Veri Portalı (ADNKS istatistiksel tablosu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=i&pid=53899&p=iaDVSxWPOIRMECEfuVxJFNYrsM7bLnQ7p84iH9yAu%2FlOb5dhAB%2BXAQGhsjfWYO1ccShtz9NdKeVvojCL01DMNJW6prSVVOZb5V0c8Uv%2FAE%2B52V6MAaOwZUwAIHSnd%2B1jZwXjOu6ptWFakRJI8AFcAeU4nevGQJxXBM6pXsvSyMg%3D"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: resmi
+  archived: data/raw/nufus/tuik/st_il_ilce_nufus_artis_hizi_2025.xls
+  sha256: "6c526ce9f2167e99904ea888c7bb4eada650f66dcc0e101f6ca4ff870d4ff6cc"
+  used_for:
+    - "Ankara il nüfusu 2025: 5.910.320 (satır 70) ve 25 ilçenin 2025 nüfusu (satır 71–95); ilçe toplamı = il toplamı"
+    - "TÜİK resmî ilçe yazımları (ör. 'Bala' — şapkasız; 'Gölbaşı', 'Şereflikoçhisar', 'Kahramankazan')"
+    - "İlçe yıllık nüfus artış hızı 2024→2025 (‰, sütun F); Ankara ‰7,86"
+  notes: >-
+    Sayfa '2305'. Ankara'nın tamamı il/ilçe merkezi sayılıyor (büyükşehir; belde/köy nüfusu '-'). Dipnot (1): nüfuslar
+    31 Aralık itibarıyla UAVT kayıtlarındaki idari bağlılığa göre; (2) artış hızlarında son yıl idari bölünüşü esas.
+    UYARI: bu bağlantı her zaman tablonun GÜNCEL sürümünü verir; 2024 ve 2023 bültenlerindeki aynı adlı bağlantılar da
+    2025 tablosunu indiriyor (sha256 aynı). Eski yılların ilçe değerleri bu yüzden tuik_df_adnks_t22/t38'den alındı.
+
+- id: tuik_df_adnks_t22
+  title: "İl ve İlçelere Göre İl/İlçe Merkezi, Belde/Köy Nüfusu (veri akışı DF_ADNKS_T22, sürüm 1.1)"
+  publisher: "TÜİK — İstatistik Veri Portalı"
+  url: "https://veriportali.tuik.gov.tr/api/tr/dataflows/DF_ADNKS_T22+V1.1/file/csv"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: veri
+  archived: data/raw/nufus/tuik/df_DF_ADNKS_T22_il_ilce_nufus_2024_2025.csv
+  sha256: "f7d49a1a654f97a36df4472875c178f31095400cdc631853f02b4b4d48fba27c"
+  used_for:
+    - "Ankara il ve 25 ilçe nüfusu, 31.12.2024 (resmî): il 5.864.049; ör. Çankaya 947.330, Keçiören 932.128"
+    - "2025 değerlerinin ikinci resmî kopyası (xls tablosuyla 25 ilçede birebir aynı)"
+  notes: >-
+    ';' ayraçlı CSV, ilk satır başlık. Ankara bloğu satır 692–743 ('Yerleşim Yeri türü' = Toplam; her birim için 2024
+    ve 2025 satırı). Veri akışı açıklaması: "son yıl için" il ve ilçe nüfusu; pratikte son iki yılı içeriyor.
+    Aynı adlı ilçeler il önekiyle yazılıyor ('Ankara Gölbaşı'); betik öneki atıp xls'teki resmî adı ('Gölbaşı') kullanır.
+    Portal listesi: https://veriportali.tuik.gov.tr/api/tr/dataflows (DF_ADNKS_T22+V1.1, dönem 2026-Q1 güncellemesi).
+
+- id: tuik_df_adnks_t38
+  title: "İl ve İlçelere Göre Yıllık Nüfus Artış Hızı (veri akışı DF_ADNKS_T38, sürüm 1.1)"
+  publisher: "TÜİK — İstatistik Veri Portalı"
+  url: "https://veriportali.tuik.gov.tr/api/tr/dataflows/DF_ADNKS_T38+V1.1/file/csv"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: veri
+  archived: data/raw/nufus/tuik/df_DF_ADNKS_T38_il_ilce_artis_hizi_2024_2025.csv
+  sha256: "eac40434e1f36aeb3c151d7f6528822eeaf337d06c1f7aaf9b5f3cabbbf7cf06"
+  used_for:
+    - "İlçe yıllık nüfus artış hızları 2024 ve 2025 (‰, 15 anlamlı basamak; Ankara 2024: ‰10,3822; 2025: ‰7,8597)"
+    - "2023 ilçe nüfusunun hesabı: P2023 = P2024 / exp(r2024 / 1000) (TÜİK tanımı r = 1000·ln(Pt/Pt-1))"
+  notes: >-
+    Ankara bloğu satır 692–743. Doğrulama (pipeline/10_tuik_population.py): aynı formül 2025 → 2024 yönünde 25 ilçenin
+    resmî T22 değerini birebir veriyor; 2023 sonuçları tam sayıdan en çok 1,2·10⁻¹⁰ sapıyor ve toplamları resmî 2023 il
+    nüfusu 5.803.482'ye eşit. Artış hızları 'son yıl idari bölünüşü' ile hesaplanıyor; Ankara'da 2023–2025 arasında
+    ilçe değişikliği yok (25 ilçe).
+
+- id: tuik_st_il_yogunluk_2007_2025
+  title: "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2007-2025"
+  publisher: "TÜİK — İstatistik Veri Portalı (ADNKS istatistiksel tablosu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=i&pid=53899&p=bLsA3d%2B445r2ocsyP4EO735RNWhZ1u97EkDAkFjkju41euSGRlhfsFSI%2Fn7LhX08yk0tzTJ3axcMCS1FXTgBGe41gelkKJKMOKjL3v6013yfxeTjleYJ4HwqNrOal5VuB30bjVLC3JA68abmcnG6Uw%3D%3D"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: resmi
+  archived: data/raw/nufus/tuik/st_il_cinsiyet_nufus_yogunluk_2007_2025.xls
+  sha256: "aa0b1d5a1a62f7fff3322c0628d51ddd779c94834890fb33205c96220af86a17"
+  used_for:
+    - "Ankara nüfus yoğunluğu 2025: 237,9104 kişi/km² (satır 11, sütun N)"
+    - "Ankara il nüfusu serisi: 2024 5.864.049 (satır 93), 2023 5.803.482 (satır 175) — önceki bültenlerle aynı (revizyon yok)"
+    - "Örtük alan (hesap): nüfus / yoğunluk = 24.842,63 km², 2007–2025'in TÜMÜ için sabit (seri yeni alanla yeniden hesaplanmış)"
+  notes: >-
+    Sayfa '943'. Yıl sütunu Excel tarihi (31.12.YYYY). TÜİK il yüzölçümünü ayrıca yayımlamıyor; alan değeri bizim
+    hesabımızdır (yoğunluk tam duyarlıkla verildiği için 0,01 km² içinde kesin).
+
+- id: tuik_bt_adnks2025_yogunluk
+  title: "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2025 (bülten tablosu)"
+  publisher: "TÜİK — ADNKS 2025 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53899&p=rIUCdqMFrDbR9G16%2FzYrHvoeLnOJX2qwGHv%2FnTbYYVW7oVwGxCEndgsxq6yEtAaGIUnZOlAkIXvpgWsOf3YaaiWXxZNSSJWQjXdpGCuhBhHhrYCW058G4mZ7wZDZMryRvs71Bo8KbDkEyyr95daD92b1doudnS9QLr48tftQJyUBIOiI8rMRJpsLCnTOIWLb"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_adnks2025_il_cinsiyet_nufus_yogunluk.xls
+  sha256: "d498853835df0ae43bc0fc478592ae87a8a15d238b28d73e4d77f21b57a1d55e"
+  used_for:
+    - "Ankara 2025: nüfus 5.910.320 (erkek 2.911.853, kadın 2.998.467), yoğunluk 237,9104 kişi/km² (satır 11)"
+    - "Örtük alan (hesap): 5.910.320 / 237,9104 = 24.842,63 km²; Türkiye 86.092.168 / 111,9609 = 768.948,6 km²"
+  notes: "Sayfa 't3'. Bülten metnindeki yuvarlanmış değer 238 kişi/km² değil; tabloda 237,91 (NİP il kartında 237,9)."
+
+- id: tuik_bt_adnks2025_artis
+  title: "İllere göre il/ilçe merkezi, belde/köy nüfusu ve yıllık nüfus artış hızı, 2024, 2025 (bülten tablosu)"
+  publisher: "TÜİK — ADNKS 2025 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53899&p=SUJE0wzKOzJ%2BHR7T0nnV%2Fg7%2BizTeRaqTUzAQ3%2BYSbMJkTvSZ8WxY5UxiJF3UeZtqqMQDSDgom74GHtlnjR4JlkZFLd2LU4aOkUbgFQ9i4Wckw8u7oOMKPCmBBGmxU7pymDkyEnmIArAc1x%2BAo3Jisr%2FteTDn6OG3QPxIWTEcrdpFzy0ReC0e9aA6usBQHXlt"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_adnks2025_il_nufus_artis_hizi.xls
+  sha256: "6a3380dd0694909afd4f2b6a0a51fac1303f07d499e378881a107c467d114b3d"
+  used_for:
+    - "Ankara 2024 → 2025: 5.864.049 → 5.910.320; yıllık artış hızı 2024 ‰10,38, 2025 ‰7,86 (satır 11)"
+  notes: "Sayfa 't1'. Yalnız il düzeyi."
+
+# ------------------------------------------------------------------ ADNKS 2024
+
+- id: tuik_adnks2024_bulten
+  title: "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2024"
+  publisher: "TÜİK (Türkiye İstatistik Kurumu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/53783"
+  accessed: 2026-10-21
+  published: 2025-02-06
+  kind: resmi
+  archived: data/raw/nufus/tuik/veriportali_press_53783_adnks2024.json
+  sha256: "dcb58f21e48c81b49de21267950d723a0130c7969ae93afc84d0026de7e24a4e"
+  used_for:
+    - "2024 bülten tablolarının kaynağı (tuik_bt_adnks2024_yogunluk, tuik_bt_adnks2024_artis)"
+  notes: >-
+    Bülten sayfası https://veriportali.tuik.gov.tr/tr/press/53783. Bültenin 'statisticalTables' bağlantıları güncel
+    (2025) tabloları indiriyor; bu yüzden 2024 ilçe değerleri tuik_df_adnks_t22'den alındı.
+
+- id: tuik_bt_adnks2024_yogunluk
+  title: "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2024 (bülten tablosu)"
+  publisher: "TÜİK — ADNKS 2024 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53783&p=pbp5jatBsdLhjAmF2Qi9RgNzkn9VmT7zvjei7gbOMRleDSbWREiSjeoAl3f0qHETApJHs9FrBOuX3XRYTO0M0A9z%2Bx0i8Z%2F8cx78GJ9JUt9xRJZOGkxjAfsG46%2F3x7GxVHy%2BJ8ade%2BIxCurs9DKVJlqX2t3RxkVGmdyGc%2F%2BU2ultXJ82wED67f2zzhIa14oy"
+  accessed: 2026-10-21
+  published: 2025-02-06
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_adnks2024_il_cinsiyet_nufus_yogunluk.xls
+  sha256: "def95541262148a95ff33af143c397e63dc47b8d7426ed01fb9a1c3aee118849"
+  used_for:
+    - "Ankara il nüfusu 31.12.2024: 5.864.049; yoğunluk 236,0478 kişi/km² (satır 11)"
+    - "Örtük alan (hesap): 24.842,63 km² — yeni alan esası bu bültende başlıyor"
+  notes: "Sayfa 't3'."
+
+- id: tuik_bt_adnks2024_artis
+  title: "İllere göre il/ilçe merkezi, belde/köy nüfusu ve yıllık nüfus artış hızı, 2023, 2024 (bülten tablosu)"
+  publisher: "TÜİK — ADNKS 2024 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53783&p=afTDOG0TA9o9%2FgdInDfIuDnOslBCkI3PxT8OgP6GID9%2B4lXOKiXSWPHGNOsM%2F5Ea71ta6fWcDEM7MnMJCSCDD9QOGm6AdP6uDBOWrwetIR8jIv2em7neMMl18Dm4mQJaZW2LwOSB3bkkxU8Fx8I0yFTPeiJ2yJi%2FeFMY3VfNfCW3wRm7iDNpfBo64PCt5pFl"
+  accessed: 2026-10-21
+  published: 2025-02-06
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_adnks2024_il_nufus_artis_hizi.xls
+  sha256: "39b4ef3de40d9b7282be0401143de2cd10d16bf21f69b06f45ae1785c4bab496"
+  used_for:
+    - "Ankara 2023 → 2024: 5.803.482 → 5.864.049; yıllık artış hızı 2024 ‰10,38 (satır 11)"
+  notes: "Sayfa 't1'."
+
+# ------------------------------------------------------------------ ADNKS 2023
+
+- id: tuik_adnks2023_bulten
+  title: "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2023"
+  publisher: "TÜİK (Türkiye İstatistik Kurumu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/49684"
+  accessed: 2026-10-21
+  published: 2024-02-06
+  kind: resmi
+  archived: data/raw/nufus/tuik/veriportali_press_49684_adnks2023.json
+  sha256: "489aaac2cc577047556ab442ca591a734f5b779a586bbe27b396fc30c3d5f0dc"
+  used_for:
+    - "2023 bülten tablolarının kaynağı (tuik_bt_adnks2023_yogunluk, tuik_bt_adnks2023_artis)"
+  notes: "Bülten sayfası https://veriportali.tuik.gov.tr/tr/press/49684."
+
+- id: tuik_bt_adnks2023_yogunluk
+  title: "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2023 (bülten tablosu)"
+  publisher: "TÜİK — ADNKS 2023 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=49684&p=dCO1t9HFdWmc6Ed5YiP83%2FImptD7eR%2Bn82nVJVeLL1Dtump94AF0ISAy5ZurAoAp4%2FQeNMSL23oxRFezS6%2BMnsTy8pgu%2BiP46qNhKe5Dhg19lVGgvucdk5c%2Bs6bMbQGsahmCawyU%2FKsnkdIJBC%2B8tR0UYIbx13Jv8uoHRBqg6avlTRVxUgn6qWuqynV%2FknP%2F"
+  accessed: 2026-10-21
+  published: 2024-02-06
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_adnks2023_il_cinsiyet_nufus_yogunluk.xls
+  sha256: "9eda7232f7fc2c121accd45e34b5b4a2b9aef5ff6e530fba3a30cf512b578644"
+  used_for:
+    - "Ankara il nüfusu 31.12.2023: 5.803.482; yoğunluk 236,6740 kişi/km² (satır 11)"
+    - "Örtük alan (hesap): 5.803.482 / 236,6740 = 24.521,00 km² (eski esas); Türkiye 85.372.377 / 110,9303 = 769.604 km² (metaverideki değer)"
+  notes: >-
+    Sayfa 't3'. 2023 bülteninde Ankara alanı 24.521 km² (şartname [4]'teki 'göller hariç 24.521 km²' ile aynı);
+    2024 bülteninden itibaren 24.842,63 km² (+321,6 km²) ve Türkiye 769.604 → 768.948,6 km². TÜİK değişikliği
+    açıklamıyor; 2025 metaverisi hâlâ 769.604 km² yazıyor. NİP (nip.tuik.gov.tr) 2023 için eski esasla 236,7 gösteriyor.
+
+- id: tuik_bt_adnks2023_artis
+  title: "İllere göre il/ilçe merkezi, belde/köy nüfusu ve yıllık nüfus artış hızı, 2022, 2023 (bülten tablosu)"
+  publisher: "TÜİK — ADNKS 2023 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=49684&p=bkTYKpPy2jN79ebxmbMznbe%2BfiWppcuFK3adQS8RbHMBnJKIx0Ccg3LGxbCUHVDVrfRQGbooDl%2Fki0hoO8%2BFJulzsmBByG5EH4YnKAwHe%2BrIMatD%2BYxOcF5t6eZYCXiWBmEwL2krxqILYIxBFi3cpsD%2FjWMdFGMIW%2B2hUh2QQpW76hTn9u7rghSo5Ccp6isZ"
+  accessed: 2026-10-21
+  published: 2024-02-06
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_adnks2023_il_nufus_artis_hizi.xls
+  sha256: "9ed8c63789940ed965b00d14d4d868af1e5fab88f6bb0070cedb19f2aea1ac62"
+  used_for:
+    - "Ankara 2022 → 2023: 5.782.285 → 5.803.482; yıllık artış hızı 2023 ‰3,66 (satır 11)"
+  notes: "Sayfa 't1'."
+
+# ------------------------------------------------------------------ Nüfus projeksiyonları
+
+- id: tuik_projeksiyon_2023_2100_bulten
+  title: "Nüfus Projeksiyonları, 2023-2100"
+  publisher: "TÜİK (Türkiye İstatistik Kurumu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/press/53699"
+  accessed: 2026-10-21
+  published: 2024-07-30
+  kind: resmi
+  archived: data/raw/nufus/tuik/veriportali_press_53699_projeksiyon_2023_2100.json
+  sha256: "6f052555f46c4544d68c4082a1d77f2e70d0f8b078759421c2ceaf4ab0a6156f"
+  used_for:
+    - "Projeksiyonlar 2023 ADNKS sonuçları temel alınarak; ana, düşük ve yüksek senaryo (metin)"
+    - "'Projeksiyonlar Türkiye toplamı için 2100, iller için ise 2030 yılına kadar üretilmiştir' (Açıklamalar)"
+    - "'yıllık ADNKS sonuçları ile karşılaştırılabilir olmaları için yıl sonu projeksiyon değerleri verilmiştir' (Açıklamalar)"
+    - "Türkiye ana senaryo: 2030'da 88.188.221"
+  notes: >-
+    Bülten sayfası https://veriportali.tuik.gov.tr/tr/press/53699. İl tabloları yalnız ANA senaryoyu veriyor (tablo
+    dipnotu); il düzeyinde düşük/yüksek senaryo yayımlanmamış. 21.10.2026 itibarıyla portalda daha yeni bir nüfus
+    projeksiyonu bülteni yok (yayın listesi: https://veriportali.tuik.gov.tr/api/tr/press).
+
+- id: tuik_st_projeksiyon_il_2023_2030
+  title: "Yıllara göre il nüfusları, 2023-2030 (Nüfus Projeksiyonları, ana senaryo)"
+  publisher: "TÜİK — İstatistik Veri Portalı (Nüfus Projeksiyonları istatistiksel tablosu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=i&pid=53699&p=C9mUzDWjmoP4VVCPuo0RbRf%2FKNQiTTR1F1ydKQ3CHtMcJ%2B34%2BDymeKC2v9RBW%2F8NL%2BQ1v9D1lu520801JyDWDg%3D%3D"
+  accessed: 2026-10-21
+  published: 2024-07-30
+  kind: resmi
+  archived: data/raw/nufus/tuik/st_projeksiyon_yillara_gore_il_nufuslari_2023_2030.xls
+  sha256: "672461dd743d34bf279c562109d0744841f6839d7815bc0d720bd249ed989f62"
+  used_for:
+    - "Ankara 31.12.2030 projeksiyonu (ana senaryo): 6.062.005 (satır 10, sütun I)"
+    - "Ankara yıllık seri: 2023 5.803.482 (ADNKS) · 2024 5.849.348 · 2025 5.886.877 · 2026 5.923.283 · 2027 5.958.758 · 2028 5.994.001 · 2029 6.028.258 · 2030 6.062.005"
+  notes: >-
+    Sayfa '1633-t5'. Dipnot: 'Nüfus projeksiyonları ana senaryosuna ait sonuçlardır'; '(1) ADNKS 2023 sonuçlarıdır'.
+    Bülten ekindeki aynı tablo (tuik_bt_projeksiyon_il_2023_2030) birebir aynı değerleri veriyor. Projeksiyonun 2025
+    değeri (5.886.877) gerçekleşen ADNKS 2025'in (5.910.320) %0,40 altında.
+
+- id: tuik_bt_projeksiyon_il_2023_2030
+  title: "Yıllara göre il nüfusları, 2023-2030 (Nüfus Projeksiyonları bülten tablosu)"
+  publisher: "TÜİK — Nüfus Projeksiyonları 2023-2100 haber bülteni ekli tablosu"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53699&p=7%2Fm8vNWx08MXVPqp7wqcyZBOMtvL1juP8MkeoAJ%2BGzQeJs%2B%2B3x9uDvRqVzVm%2F5YtcdW6n2mK7mU4E%2BmihiviySB6PMJSLJ4zG8kNeStaOe7QaoSPgyWeBrluN8KJKej%2F"
+  accessed: 2026-10-21
+  published: 2024-07-30
+  kind: resmi
+  archived: data/raw/nufus/tuik/bt_projeksiyon_yillara_gore_il_nufuslari_2023_2030.xls
+  sha256: "e95e5fe59cd1bca91ad6d0e8d0d93871719a55226fc40ad4bde87f39df39e5f5"
+  used_for:
+    - "Ankara 2030: 6.062.005 (satır 10) — istatistiksel tabloyla aynı (çapraz kontrol)"
+  notes: "Sayfa 't5'."
+
+- id: tuik_st_projeksiyon_il_artis_2023_2030
+  title: "İllere göre nüfus ve yıllık ortalama nüfus artış hızları, 2023-2030"
+  publisher: "TÜİK — İstatistik Veri Portalı (Nüfus Projeksiyonları istatistiksel tablosu)"
+  url: "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=i&pid=53699&p=TLY1%2FI7%2F2%2FGSTjpQGJJV%2ByMXmWZMELFE%2F9KWtnyaAdhbmEDOPchSV9aLHjJzkMysADKZwwVZiB1VewxljAxMAgWocPorumBS1h0p1Gls9AM7KkGo0fi1bqtZL9jfTlmJj2ZPIK5vA2q5EpSb2%2FJm%2BQ%3D%3D"
+  accessed: 2026-10-21
+  published: 2024-07-30
+  kind: resmi
+  archived: data/raw/nufus/tuik/st_projeksiyon_illere_gore_nufus_artis_hizi_2023_2030.xls
+  sha256: "eb61361bce6e94c1bc293c780f5b9a5a1460a9e728d9b906b8e3825ffbf6ae50"
+  used_for:
+    - "Ankara 2023 5.803.482 → 2030 6.062.005; 2023–2030 yıllık ortalama artış hızı ‰6,23 (satır 11)"
+  notes: "Sayfa '1634'."
+
+# ------------------------------------------------------------------ Nüfus İstatistikleri Portalı (çapraz kontrol)
+
+- id: tuik_nip_ankara_nufus
+  title: "Nüfus İstatistikleri Portalı — Cinsiyete Göre Nüfus, Ankara (Excel dışa aktarımı)"
+  publisher: "TÜİK — Nüfus İstatistikleri Portalı"
+  url: "https://nip.tuik.gov.tr/Export/ExportExcel?name=CinsiyeteGoreNufus&value=ANKARA"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/nufus/tuik/nip_ankara_cinsiyete_gore_nufus.xlsx
+  sha256: "42567daa0d2ae3afbddad234e74f947e576dcc529fadb91d0277bd596b04ab01"
+  used_for:
+    - "Ankara 2025 5.910.320 · 2024 5.864.049 · 2023 5.803.482 (bülten tablolarıyla aynı)"
+  notes: "1927–2025 serisi; kaynak satırı 'Genel Nüfus Sayımı 1927-2000 ve ADNKS 2007-2025'. Dinamik dışa aktarım."
+
+- id: tuik_nip_ankara_yogunluk
+  title: "Nüfus İstatistikleri Portalı — Nüfus Yoğunluğu, Ankara (Excel dışa aktarımı)"
+  publisher: "TÜİK — Nüfus İstatistikleri Portalı"
+  url: "https://nip.tuik.gov.tr/Export/ExportExcel?name=NufusYogunlugu&value=ANKARA"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/nufus/tuik/nip_ankara_nufus_yogunlugu.xlsx
+  sha256: "51609bca6915e19e3e00f0e3e818862b4f93b038d1df8dd16c97cd2a3a11a7df"
+  used_for:
+    - "Ankara yoğunluğu (bir ondalık): 2025 237,9 · 2024 236,0 · 2023 236,7"
+  notes: >-
+    2023 değeri eski alan esasıyla (24.521 km²) kalmış, 2024–2025 yeni esasla (24.842,63 km²): seri kendi içinde
+    tutarsız. Ekrandaki HTML tablosu tam sayıya yuvarlıyor (2025: 237).
+
+- id: tuik_nip_ankara_il_karti
+  title: "Nüfus İstatistikleri Portalı — İl Gösterge Kartı: Ankara (PDF)"
+  publisher: "TÜİK — Nüfus İstatistikleri Portalı"
+  url: "https://nip.tuik.gov.tr/Export/ExportPdf?name=IlGostergeKartlari&value=ANKARA"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/nufus/tuik/nip_ankara_il_gosterge_karti.pdf
+  sha256: "9cba7af86da116e5cd20e85ad9025894f0ea63a33dae1f86cb3d272ce466bfcb"
+  used_for:
+    - "Ankara 2025: toplam 5.910.320, nüfus yoğunluğu 237,9 kişi/km², nüfus artış hızı ‰7,9"
+  notes: "Tek sayfa. Önceki taramalardaki '238 kişi/km²' bu 237,9'un yuvarlanmışı."
+
+# ------------------------------------------------------------------ Şartname haber kaynakları (çapraz kontrol)
+
+- id: tuik_haber_yeniankara_adnks2025
+  title: "Türkiye'nin nüfus tablosu değişti: Ankara rekora koşuyor"
+  publisher: "Yeni Ankara"
+  url: "https://www.yeniankara.com.tr/guncel/turkiyenin-nufus-tablosu-degisti-ankara-rekora-kosuyor-155001"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: haber
+  archived: data/raw/nufus/tuik/haber_yeniankara_155001.html
+  sha256: "2057a9d3b3b82096ef62bd24b3f57286ed4240949b37208e85d1aab3e574a7fd"
+  used_for:
+    - "Çapraz kontrol: 'ANKARA : 5 milyon 910 bin 320' (şartname [1]) — TÜİK ile aynı"
+  notes: "Çankaya ve Keçiören'i sayı vermeden anıyor. Yayım 09.02.2026 10:42."
+
+- id: tuik_haber_karar_adnks2025
+  title: "TÜİK açıkladı: Türkiye'nin nüfusu 86 milyon 92 bin 168'e yükseldi"
+  publisher: "Karar"
+  url: "https://www.karar.com/guncel-haberler/son-dakika-tuik-acikladi-turkiye-nufusu-86-milyon-92-bin-168e-yukseldi-2027851"
+  accessed: 2026-10-21
+  published: 2026-02-09
+  kind: haber
+  archived: data/raw/nufus/tuik/haber_karar_2027851.html
+  sha256: "7d46aedb926f0451424be5367f8e11170fd6cf3ec9ee07ea8e9f808f79458486"
+  used_for:
+    - "Çapraz kontrol: Ankara 5.910.320, Çankaya 952.198, Keçiören 931.722 (şartname [3]) — TÜİK ile aynı"
+  notes: "Aynı sayfa saglik alanında 'saglik_karar_adnks2025' olarak da kayıtlı (Türkiye nüfusu için)."
+
+- id: tuik_ato_rakamlarla_ankara_2026
+  title: "Rakamlarla Ankara (03.08.2026)"
+  publisher: "Ankara Ticaret Odası (ATO)"
+  url: "https://atonet.org.tr/Uploads/Birimler/Internet/Flash%20Tan%C4%B1t%C4%B1m%20Alan%C4%B1/2026-08-04-RakamlarlaAnkara/2026-08-03-Rakamlarla-Ankara.pdf"
+  accessed: 2026-10-21
+  kind: ikincil
+  used_for: []
+  notes: >-
+    Şartname [2]. Bu ortamdan ERİŞİLEMEDİ: atonet.org.tr bağlantıyı sıfırlıyor (curl: 'Connection reset by peer'),
+    www.atonet.org.tr vekil sunucuda reddediliyor (CONNECT 403). Bu kaynaktan hiçbir değer alınmadı; ilçe nüfusları
+    doğrudan TÜİK'ten alındı (tuik_st_il_ilce_2025, tuik_df_adnks_t22).

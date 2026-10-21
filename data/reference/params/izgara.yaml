@@ -1,0 +1,77 @@
+# Alan: erisim — H. Izgara ve çözücü (spec 4.3, 4.4 H, 4.6). Hepsi modelleme tercihi (model_secimi).
+# Ön istatistikler oturum çalışma alanında, kalibre edilmemiş GHS-POP 2025 1 km ızgarasının il içi 2/3/5 km bloklarından
+# hesaplandı (Faz 2 ızgarası değildir; UTM 36N hücreleri ve TÜİK kalibrasyonu ile değerler biraz değişecektir).
+
+- key: grid.cell_km
+  label: "Hücre boyutu"
+  value: 3
+  unit: "km"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.3/4.6: 2, 3 ve 5 km ızgaralar üretilecek; canlı çözüm hedefi 3 km'de ≲15 sn, 2 km'de ≲60 sn. Varsayılan
+    3 km: sunum dizüstünde canlı çözüm hedefine uygun ve 300 yataklı bir hastanenin ≈0,04 km² inşaat alanına göre hücre
+    (9 km²) arazi bakımından bağlayıcı değil. Ön sayım: il içinde ≈2.856 hücre (3 km), nüfuslu ≈1.876.
+  range: [2, 5]
+  alternatives:
+    - {label: "2 km (ayrıntılı; il içi ≈6.498 hücre, nüfuslu ≈2.969)", value: 2, status: model_secimi}
+    - {label: "5 km (hızlı; il içi ≈1.025 hücre, nüfuslu ≈911)", value: 5, status: model_secimi}
+
+- key: grid.candidate_min_pop
+  label: "Aday hücre için asgari nüfus (P_min)"
+  value: 250
+  unit: "kişi / hücre"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal
+    varsayılan verilmemiş. 3 km ön sayım (kalibre edilmemiş GHS-POP 2025): P_min ≥ 1 → |J| ≈ 1.876; 100 → 899 (nüfusun
+    %99,6'sı); 250 → 551 (%98,7); 500 → 356 (%97,6); 1.000 → 244 (%96,4). 250 seçildi çünkü R = 30 km (yol; kuş uçuşu
+    ≈24,5 km) ile her nüfuslu hücrenin R içinde en az bir adayı kalıyor (P_min = 500'de ≈71 hücre/≈4.900 kişi R dışında),
+    aday sayısı da çözüm süresi için makul. Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı
+    (2 km'de 250 → ≈727 aday; 5 km'de ≈414).
+  range: [0, 5000]
+  alternatives:
+    - {label: "Tüm nüfuslu hücreler", value: 1, status: model_secimi}
+    - {label: "Daha geniş aday kümesi", value: 100, status: model_secimi}
+    - {label: "Daha dar aday kümesi (R = 30 km ile bazı kırsal hücreler kapsanamıyor)", value: 500, status: model_secimi}
+
+- key: grid.k_nearest
+  label: "Her talep hücresi için tutulan en yakın aday sayısı (k)"
+  value: 50
+  unit: "aday / talep hücresi"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). 3 km ve P_min = 250 ön sayımında
+    R (24,5 km kuş uçuşu) içindeki aday sayısı medyan ≈30, nüfus ağırlıklı ortalama ≈137: k = 50 kırsal hücrelerde R içi
+    adayların tamamını, kent çekirdeğinde ≈12 km yarıçaplı en yakın 50 adayı tutar. Atama değişkeni sayısı ≈ |I|·k ≈
+    1.876 × 50 ≈ 94 bin (3 km) — canlı çözüm için makul. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı
+    (k'nın etkisi Faz 3'te raporlanacak).
+  range: [5, 300]
+  alternatives:
+    - {label: "Hızlı (daha az değişken, kısıtlayıcı olabilir)", value: 20, status: model_secimi}
+    - {label: "Geniş (R içindeki adayların neredeyse tamamı)", value: 150, status: model_secimi}
+
+- key: solver.time_limit_s
+  label: "Çözücü süre sınırı"
+  value: 15
+  unit: "saniye"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.6 hedefi: 3 km'de canlı çözüm ≲15 sn (2 km'de ≲60 sn). Süre dolarsa en iyi bulunan çözüm, alt sınır ve
+    gap ile birlikte gösterilir; varsayılan senaryolar önceden (süre sınırı olmadan) çözülür.
+  range: [5, 600]
+  alternatives:
+    - {label: "2 km ızgara hedefi", value: 60, status: model_secimi}
+
+- key: solver.mip_gap
+  label: "Hedef MIP gap (göreli)"
+  value: 0.01
+  unit: "oran (0–1)"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.6 gap'i parametrik bırakıyor, sayı vermiyor. %1: parametre belirsizliklerinin (ör. iskonto oranı, zaman
+    değeri) etkisinden çok küçük bir optimallik toleransı; canlı çözümün süre hedefini tutturmasına yardım eder. Önceden
+    çözülen varsayılan senaryolar ve kaba kuvvet testleri için 0 / 1e-4 kullanılmalı.
+  range: [0.0, 0.1]
+  alternatives:
+    - {label: "Sıkı (raporlama/önceden çözüm)", value: 0.0001, status: model_secimi}
+    - {label: "Gevşek (çok hızlı keşif)", value: 0.05, status: model_secimi}

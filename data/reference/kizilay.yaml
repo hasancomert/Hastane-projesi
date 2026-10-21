@@ -1,0 +1,16 @@
+# Kızılay referans noktası. Üreten: pipeline/15_circuity.py
+name: Kızılay Meydanı
+osm_name: 15 Temmuz Kızılay Millî İrade Meydanı
+lon: 32.8540176
+lat: 39.9209927
+x_utm36n: 487524.6
+y_utm36n: 4418998.4
+osm_type: node
+osm_id: 9456598160
+osm_tags:
+  place: square
+  wikidata: Q6046415
+source_id: arazi_osm_osm_turkey_pbf
+osm_snapshot: '2026-06-26T20:21:00Z'
+notes: OSM'de place=square düğümü; 'Kızılay'dan en uzak nokta' hesabının referansı.
+  https://www.openstreetmap.org/node/9456598160

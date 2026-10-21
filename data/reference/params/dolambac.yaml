@@ -1,0 +1,79 @@
+# Alan: arazi-osm — dolambaç katsayısı. Üreten: pipeline/15_circuity.py (elle düzenlemeyin)
+- key: access.circuity
+  label: Dolambaç katsayısı (yol ağı mesafesi / kuş uçuşu mesafe)
+  value: 1.223
+  unit: oran (boyutsuz)
+  status: hesap
+  source_ids:
+  - arazi_osm_circuity_hesap
+  - arazi_osm_osm_turkey_pbf
+  - arazi_osm_ghs_pop_e2025_1km
+  - arazi_osm_geoboundaries_tur
+  derivation: OSM (2026-06-26T20:21:00Z) araç yolu ağında 4.761 köken–hedef çifti; köken ∝ GHS-POP 2025 nüfusu,
+    her mesafe bandından bir hedef ∝ nüfus; ağ mesafesi (Dijkstra, yönlü, tek yön kuralları) / bağlanan düğümler
+    arası kuş uçuşu (EPSG:32636); hücreler en yakın motorway/trunk dışı yol düğümüne bağlandı. Değer = kuş uçuşu
+    5–40 km çiftlerinin nüfus ağırlıklı ortalaması (n = 2.394, w = kökenin bant içi nüfusu). Aynı bantta ortanca
+    1,218, ağırlıksız ortalama 1,247, nüfus ağırlıklı oranlar toplamı Σw·ağ/Σw·kuş = 1,206, kapıdan kapıya (bağlantı
+    mesafeleri dahil, hücre merkezine göre) 1,229.
+  rationale: Hastane yolculuklarının çoğu hücreden en yakın hastaneye 5–40 km aralığında (R varsayılanı 30 km);
+    çok kısa (<5 km) çiftlerde katsayı kent içi blok yapısı nedeniyle yüksek, uzun çiftlerde düşük. Model d_ij =
+    kuş uçuşu × k kullandığı için bu banttaki nüfus ağırlıklı ortalama seçildi.
+  range:
+  - 1.0
+  - 1.5
+  alternatives:
+  - label: Şartname varsayılanı (Bölüm 4.3/4.4; kaynaksız)
+    value: 1.3
+    status: varsayim
+    source_ids: []
+  - label: OSM ölçümü, tüm çiftler (nüfus ağırlıklı)
+    value: 1.236
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 5–40 km, köken kentsel (9 merkez ilçe)
+    value: 1.222
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 5–40 km, köken kırsal (16 ilçe)
+    value: 1.262
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 0–5 km (nüfus ağırlıklı)
+    value: 1.384
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 5–10 km (nüfus ağırlıklı)
+    value: 1.281
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 10–20 km (nüfus ağırlıklı)
+    value: 1.232
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 20–40 km (nüfus ağırlıklı)
+    value: 1.185
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 40–80 km (nüfus ağırlıklı)
+    value: 1.204
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  - label: OSM ölçümü, 80+ km (nüfus ağırlıklı)
+    value: 1.181
+    status: hesap
+    source_ids:
+    - arazi_osm_circuity_hesap
+  notes: 'Aralık: 1,0 = kuş uçuşu (fiziksel alt sınır); üst sınır = ölçülen en yüksek bant ortalaması + pay. Tablo:
+    data/reference/circuity_ankara.csv; grafik: data/processed/circuity_ankara.png. Çekilen 4.800 çiftten 4.761
+    geçerli (bağlantı > 1000 m veya düğümler arası < 500 m olanlar atıldı). Nüfuslu hücrelerin %12,8''i (nüfusun
+    %0,21''i) 1 km içinde araç yoluna bağlanamadı. Literatür: Boscoe, Henry & Zdeb 2012 ve Ballou, Rahardja & Sakai
+    2002 künyeleri Crossref''ten doğrulandı; tam metinlere erişilemediği (vekil sunucu 403) için katsayı değerleri
+    kaydedilmedi.'

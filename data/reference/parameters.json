@@ -1,0 +1,2876 @@
+{
+  "population.province_2025": {
+    "label": "Ankara nüfusu, 31.12.2025 (TÜİK ADNKS) = 2026 başı",
+    "value": 5910320,
+    "unit": "kişi",
+    "status": "kaynakli",
+    "source_ids": [
+      "tuik_st_il_ilce_2025",
+      "tuik_bt_adnks2025_yogunluk",
+      "tuik_adnks2025_bulten"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": null,
+    "alternatives": [
+      {
+        "label": "31.12.2024 (ADNKS 2024)",
+        "value": 5864049,
+        "status": "kaynakli",
+        "source_ids": [
+          "tuik_bt_adnks2024_yogunluk",
+          "tuik_df_adnks_t22"
+        ]
+      },
+      {
+        "label": "31.12.2023 (ADNKS 2023)",
+        "value": 5803482,
+        "status": "kaynakli",
+        "source_ids": [
+          "tuik_bt_adnks2023_yogunluk"
+        ]
+      },
+      {
+        "label": "31.12.2026, TÜİK projeksiyonu (ana senaryo, ADNKS 2023 tabanlı)",
+        "value": 5923283,
+        "status": "kaynakli",
+        "source_ids": [
+          "tuik_st_projeksiyon_il_2023_2030"
+        ]
+      },
+      {
+        "label": "31.12.2026, projeksiyon ADNKS 2025'e yeniden tabanlanmış: 5.910.320 × 5.923.283 / 5.886.877",
+        "value": 5946871,
+        "status": "hesap",
+        "source_ids": [
+          "tuik_st_il_ilce_2025",
+          "tuik_st_projeksiyon_il_2023_2030"
+        ]
+      }
+    ],
+    "notes": "Şartname Bölüm 3 değeriyle (5.910.320) birebir aynı; 25 ilçenin toplamı da tam bu değer. Aynı sayı: istatistiksel tablo (satır 70), bülten tablosu (satır 11), bülten metni, veri akışı DF_ADNKS_T22, NİP dışa aktarımı ve il gösterge kartı; haber kaynakları [1] ve [3] de aynı. Yıllık artış hızı 2024→2025 ‰7,86. Nüfus kapsamı: Türkiye'de ikamet eden yabancılar dahil (Ankara 128.633, NİP il kartı); kurumsal nüfus kurumun bulunduğu yerde sayılır. Kaydırıcı değil, senaryo değeridir (aralık verilmedi).",
+    "group": "Nüfus",
+    "domain": "nufus",
+    "sources": [
+      {
+        "id": "tuik_st_il_ilce_2025",
+        "title": "İl ve ilçelere göre il/ilçe merkezi, belde/köy nüfusu ve yıllık nüfus artış hızı, 2025",
+        "publisher": "TÜİK — İstatistik Veri Portalı (ADNKS istatistiksel tablosu)",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=i&pid=53899&p=iaDVSxWPOIRMECEfuVxJFNYrsM7bLnQ7p84iH9yAu%2FlOb5dhAB%2BXAQGhsjfWYO1ccShtz9NdKeVvojCL01DMNJW6prSVVOZb5V0c8Uv%2FAE%2B52V6MAaOwZUwAIHSnd%2B1jZwXjOu6ptWFakRJI8AFcAeU4nevGQJxXBM6pXsvSyMg%3D",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "tuik_bt_adnks2025_yogunluk",
+        "title": "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2025 (bülten tablosu)",
+        "publisher": "TÜİK — ADNKS 2025 haber bülteni ekli tablosu",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53899&p=rIUCdqMFrDbR9G16%2FzYrHvoeLnOJX2qwGHv%2FnTbYYVW7oVwGxCEndgsxq6yEtAaGIUnZOlAkIXvpgWsOf3YaaiWXxZNSSJWQjXdpGCuhBhHhrYCW058G4mZ7wZDZMryRvs71Bo8KbDkEyyr95daD92b1doudnS9QLr48tftQJyUBIOiI8rMRJpsLCnTOIWLb",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "tuik_adnks2025_bulten",
+        "title": "Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları, 2025",
+        "publisher": "TÜİK (Türkiye İstatistik Kurumu)",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/press/53899",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "population.province_2030": {
+    "label": "Ankara nüfusu, 31.12.2030 (TÜİK projeksiyonu, ana senaryo)",
+    "value": 6062005,
+    "unit": "kişi",
+    "status": "kaynakli",
+    "source_ids": [
+      "tuik_st_projeksiyon_il_2023_2030",
+      "tuik_projeksiyon_2023_2100_bulten"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": null,
+    "alternatives": [
+      {
+        "label": "Projeksiyon ADNKS 2025'e yeniden tabanlanmış: 5.910.320 × 6.062.005 / 5.886.877",
+        "value": 6086145,
+        "status": "hesap",
+        "source_ids": [
+          "tuik_st_il_ilce_2025",
+          "tuik_st_projeksiyon_il_2023_2030"
+        ]
+      },
+      {
+        "label": "Büyümesiz karşılaştırma: 2025 nüfusu (5.910.320)",
+        "value": 5910320,
+        "status": "kaynakli",
+        "source_ids": [
+          "tuik_st_il_ilce_2025"
+        ]
+      }
+    ],
+    "notes": "TÜİK \"Nüfus Projeksiyonları, 2023-2100\" (30.07.2024): ADNKS 2023 tabanlı, yıl sonu değeri; iller için yalnız ana senaryo ve yalnız 2030'a kadar yayımlanıyor (düşük/yüksek senaryo il düzeyinde yok). 2023–2030 yıllık ortalama artış ‰6,23. Projeksiyonun 2025 değeri 5.886.877, gerçekleşen 5.910.320'nin %0,40 altında: bu varsayılanla 2025→2030 artışı %2,57; projeksiyonun kendi 2025→2030 artışı %2,97 (yeniden tabanlanmış alternatif bunu kullanır). Şartname 4.4 A, 2030 senaryosu için \"GHS-POP 2030 dağılımı + varsayımsal büyüme\" diyordu; il toplamı için artık resmî değer var, büyüme varsayımı gerekmiyor. GHS-POP E2030/E2025 oranına dayalı bir alternatif burada sayısal olarak verilmedi: GHS toplamlarını bu alanda okumadık (nüfus ızgarası alanı hesaplayacak; Faz 0 yoklamasının geçici toplamları kullanılmadı). Kaydırıcı değil, senaryo değeridir (aralık verilmedi).",
+    "group": "Nüfus",
+    "domain": "nufus",
+    "sources": [
+      {
+        "id": "tuik_st_projeksiyon_il_2023_2030",
+        "title": "Yıllara göre il nüfusları, 2023-2030 (Nüfus Projeksiyonları, ana senaryo)",
+        "publisher": "TÜİK — İstatistik Veri Portalı (Nüfus Projeksiyonları istatistiksel tablosu)",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=i&pid=53699&p=C9mUzDWjmoP4VVCPuo0RbRf%2FKNQiTTR1F1ydKQ3CHtMcJ%2B34%2BDymeKC2v9RBW%2F8NL%2BQ1v9D1lu520801JyDWDg%3D%3D",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "tuik_projeksiyon_2023_2100_bulten",
+        "title": "Nüfus Projeksiyonları, 2023-2100",
+        "publisher": "TÜİK (Türkiye İstatistik Kurumu)",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/press/53699",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "demand.beds_per_1000": {
+    "label": "1000 kişiye düşen hastane yatağı (oran yöntemi)",
+    "value": 3.15,
+    "unit": "yatak / 1000 kişi",
+    "status": "hesap",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025"
+    ],
+    "derivation": "Türkiye 2025: 31,5 yatak / 10.000 kişi (SİY 2025 Haber Bülteni, Tablo 11, PDF s. 7) ÷ 10 = 3,15",
+    "rationale": null,
+    "range": [
+      2.0,
+      5.0
+    ],
+    "alternatives": [
+      {
+        "label": "2025, sayılardan tam değer: 270.829 yatak / 86.092.168 kişi × 1000",
+        "value": 3.1458,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025",
+          "tuik_bt_adnks2025_yogunluk",
+          "saglik_karar_adnks2025"
+        ]
+      },
+      {
+        "label": "2024: 31,3 / 10 (Haber Bülteni 2024 Tablo 12; SİY 2024 Tablo 7.20)",
+        "value": 3.13,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024",
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "2023: 31,2 / 10 — şartname Bölüm 3 değeri (SİY 2023 Tablo 7.19)",
+        "value": 3.12,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "2025, yoğun bakım yatakları hariç: (270.829 − 48.360) / 86.092.168 × 1000",
+        "value": 2.5841,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025",
+          "tuik_bt_adnks2025_yogunluk",
+          "saglik_karar_adnks2025"
+        ]
+      },
+      {
+        "label": "Ankara 2024: 42,5 / 10 (SİY 2024 Tablo 7.20; il dışından gelen hastaları da karşılıyor)",
+        "value": 4.25,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2023: 43,1 / 10 (SİY 2023 Tablo 7.19)",
+        "value": 4.31,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      }
+    ],
+    "notes": "Şartname 4.4 A varsayılanı 3,12 (2023) idi; öğrencinin kararıyla varsayılan 2025'e (3,15) geçti, 3,12 resmî yıllıkla doğrulandı ve alternatif olarak duruyor. Tanım: SİY'de 'hastane yatağı' yoğun bakım, prematüre/yenidoğan (kuvöz, açık bebek yatağı), yanık ve nitelikli yatakları İÇERİR (SİY 2024 Bölüm 7 açıklamaları, PDF s. 193). Aralık gerekçesi: Türkiye yoğun bakım hariç (2,58) ile Ankara (4,25–4,31) değerlerini kapsar. Ankara 5.910.320 kişi ile oran yöntemi: 3,15 → 18.618 yatak (3,12 → 18.440).",
+    "group": "A. Talep",
+    "domain": "talep",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "demand.safety_margin": {
+    "label": "Kapasite emniyet payı",
+    "value": 0.0,
+    "unit": "oran (0–1; 0,10 = %10 ek yatak)",
+    "status": "varsayim",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Kaynaklı bir emniyet payı bulunamadı. Varsayılan 0: Hill-Burton modunda hedef doluluk (%85) zaten yatakların %15'ini boş tutarak dalgalanma payı bırakıyor; oran modunda ise gözlenen yatak/nüfus oranı Türkiye'nin mevcut düşük doluluğunu (%54,5) içerdiği için ayrıca pay eklemek talebi iki kez şişirir. Kaydırıcı duyarlılık analizi için.",
+    "range": [
+      0.0,
+      0.3
+    ],
+    "alternatives": [],
+    "notes": "Aralık (0–%30) varsayımdır; tornado analizinde ±%20 yerine mutlak 0 → 0,2 denenebilir.",
+    "group": "A. Talep",
+    "domain": "talep",
+    "sources": []
+  },
+  "demand.hb.admissions_per_1000": {
+    "label": "Yatış oranı (1000 kişi başına yıllık yatan hasta)",
+    "value": 158.23,
+    "unit": "yatan hasta / 1000 kişi / yıl",
+    "status": "hesap",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025",
+      "tuik_bt_adnks2025_yogunluk",
+      "saglik_karar_adnks2025"
+    ],
+    "derivation": "Türkiye 2025: yatan hasta ≈ yatak devir hızı 50,3 (SİY 2025 Haber Bülteni Tablo 16, PDF s. 10) × hastane yatağı 270.829 (Tablo 7, PDF s. 5) = 13.622.699; ÷ nüfus 86.092.168 (TÜİK ADNKS 31.12.2025) × 1000 = 158,23. Tanım (SİY 2024 Bölüm 8 açıklamaları): devir hızı = (taburcu + ölen) / yatak; yatan hasta = taburcu + ölen.",
+    "rationale": null,
+    "range": [
+      100,
+      250
+    ],
+    "alternatives": [
+      {
+        "label": "Türkiye 2024: 13.881.750 / 85.664.944 × 1000 (SİY 2024 Tablo 8.26 ve 1.3)",
+        "value": 162.05,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Türkiye 2023: 13.391.434 / 85.372.377 × 1000 (SİY 2023 Tablo 8.25 ve 1.3)",
+        "value": 156.86,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "Ankara 2024: 1.063.851 / 5.864.049 × 1000 (SİY 2024 Tablo 8.26 ve 1.3)",
+        "value": 181.42,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2023: 998.148 / 5.803.482 × 1000 (SİY 2023 Tablo 8.25 ve 1.3)",
+        "value": 171.99,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      }
+    ],
+    "notes": "2025 bülteni yatan hasta sayısını doğrudan vermiyor; devir hızı (50,3; ±0,05 yuvarlama → ±%0,1) ile türetildi. Doluluk/kalış üzerinden türetme (0,545 × 270.829 × 365 / 4,0 = 13,47 M) yuvarlama nedeniyle daha belirsiz (±%1,3). Ankara değerleri hizmetin verildiği ile göre: başka illerden gelen yatışları da içerir (Ankara üçüncü basamak merkezi; yorum), bu yüzden Ankara sakinlerinin talebini olduğundan yüksek gösterebilir → varsayılan Türkiye. Aralık (100–250) varsayımdır: kaynaklı değerlerin (156,9–181,4) her iki yanına geniş pay.",
+    "group": "A. Talep",
+    "domain": "talep",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "tuik_bt_adnks2025_yogunluk",
+        "title": "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2025 (bülten tablosu)",
+        "publisher": "TÜİK — ADNKS 2025 haber bülteni ekli tablosu",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53899&p=rIUCdqMFrDbR9G16%2FzYrHvoeLnOJX2qwGHv%2FnTbYYVW7oVwGxCEndgsxq6yEtAaGIUnZOlAkIXvpgWsOf3YaaiWXxZNSSJWQjXdpGCuhBhHhrYCW058G4mZ7wZDZMryRvs71Bo8KbDkEyyr95daD92b1doudnS9QLr48tftQJyUBIOiI8rMRJpsLCnTOIWLb",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "saglik_karar_adnks2025",
+        "title": "TÜİK açıkladı: Türkiye'nin nüfusu 86 milyon 92 bin 168'e yükseldi",
+        "publisher": "Karar (gazete)",
+        "url": "https://www.karar.com/guncel-haberler/son-dakika-tuik-acikladi-turkiye-nufusu-86-milyon-92-bin-168e-yukseldi-2027851",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      }
+    ]
+  },
+  "demand.hb.alos_days": {
+    "label": "Ortalama kalış süresi",
+    "value": 4.0,
+    "unit": "gün",
+    "status": "kaynakli",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      3.0,
+      7.0
+    ],
+    "alternatives": [
+      {
+        "label": "2025, doluluk ve devir hızından: 0,545 × 365 / 50,3 (yuvarlama kontrolü)",
+        "value": 3.955,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      },
+      {
+        "label": "Türkiye 2024 (Haber Bülteni 2024 Tablo 17; SİY 2024 Tablo 8.26)",
+        "value": 4.2,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024",
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Türkiye 2024, sayılardan: 58.593.340 / 13.881.750",
+        "value": 4.221,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Türkiye 2023 (SİY 2023 Tablo 8.25)",
+        "value": 4.2,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "Ankara 2024 (SİY 2024 Tablo 8.26)",
+        "value": 5.1,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2024, sayılardan: 5.409.136 / 1.063.851",
+        "value": 5.084,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2023 (SİY 2023 Tablo 8.25)",
+        "value": 5.2,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "Batı Anadolu (TR5: Ankara, Konya, Karaman) 2025 (Haber Bülteni 2025 Tablo 16)",
+        "value": 4.3,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      }
+    ],
+    "notes": "Kaynak: SİY 2025 Haber Bülteni Tablo 16, Türkiye satırı (PDF s. 10). Tanım: yatılan gün / (taburcu + ölen). UYARI: 2024'te 4,2 olan değer 2025'te 4,0'a, Batı Anadolu'da 4,9 → 4,3'e düştü; bültende yöntem notu yok. Aralık (3–7 gün) varsayımdır: Türkiye (≈4) ile Ankara (≈5,1) değerlerini rahatça kapsar.",
+    "group": "A. Talep",
+    "domain": "talep",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "demand.hb.target_occupancy": {
+    "label": "Hedef yatak doluluk oranı (planlama)",
+    "value": 0.85,
+    "unit": "oran (0–1)",
+    "status": "kaynakli",
+    "source_ids": [
+      "saglik_aydemir2019",
+      "saglik_cirakli2019"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      0.5,
+      0.95
+    ],
+    "alternatives": [
+      {
+        "label": "Genel hastaneler için kabul edilen aralığın alt ucu (%80; Aydemir 2019, Çıraklı 2019)",
+        "value": 0.8,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_aydemir2019",
+          "saglik_cirakli2019"
+        ]
+      },
+      {
+        "label": "SB eğitim-araştırma hastanelerinde verimlilik göstergesi %72 (Aydemir 2019, Ağırbaş 2016'ya atıfla)",
+        "value": 0.72,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_aydemir2019"
+        ]
+      },
+      {
+        "label": "Türkiye'nin 2025 gerçekleşen doluluğu (%54,5; mevcut yatak/nüfus oranını yeniden üretir)",
+        "value": 0.545,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      }
+    ],
+    "notes": "Aydemir (2019, USAYSAD 5(2), dergi s. 233 / PDF s. 4): 'Yatak doluluk oranının genel hastanelerde %80-85 ... olması olumlu olarak değerlendirilir'; aynı sayfada Bagust vd. (1999, BMJ 319:155–8) için 'kabul görmüş standart (%85)' aşıldığında erişim engeli, uzun bekleme ve yüksek mortalite, %80'in altında ise tesislerin boşta kaldığı aktarılıyor. Çıraklı (2019, s. 43) aynı %80–85 aralığını teyit ediyor. Bagust vd. tam metni okunamadı (bmj.com/PMC vekil sunucuda engelli); künyesi Crossref ile doğrulandı. Sağlık Bakanlığı stratejik planı/hedef gösterge belgeleri (sgb.saglik.gov.tr, khgm.saglik.gov.tr, khgmickontrol.saglik.gov.tr) vekil sunucuda 403 verdiği için okunamadı. ÖNEMLİ: 2025'te gerçekleşen doluluk %54,5 olduğundan Hill-Burton (%85) oran yöntemine göre ≈%36 daha az yatak verir. Aralık (0,50–0,95) varsayımdır.",
+    "group": "A. Talep",
+    "domain": "talep",
+    "sources": [
+      {
+        "id": "saglik_aydemir2019",
+        "title": "Bir Kamu Hastanesinde Yatak Kullanım Etkinliğinin Değerlendirilmesi (Assessment of Bed Utilization Efficiency in a Public Hospital)",
+        "publisher": "İzzet Aydemir — Uluslararası Sağlık Yönetimi ve Stratejileri Araştırma Dergisi (USAYSAD), 2019; 5(2): 230–242 (DergiPark)",
+        "url": "https://dergipark.org.tr/tr/download/article-file/795199",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      },
+      {
+        "id": "saglik_cirakli2019",
+        "title": "Türkiye'de Yataklı Sağlık Kurumlarında Poliklinik ve Klinik Hizmetlerinin 2008-2017 Yılları Arası Gelişimi ve Mevcut Durumu",
+        "publisher": "Ümit Çıraklı — Sağlıkta Kalite ve Akreditasyon Dergisi, 2019, s. 37–46 (DergiPark)",
+        "url": "https://dergipark.org.tr/tr/download/article-file/747322",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "demand.hb.current_occupancy": {
+    "label": "Mevcut yatak doluluk oranı (bilgi amaçlı)",
+    "value": 0.545,
+    "unit": "oran (0–1)",
+    "status": "kaynakli",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      0.4,
+      0.9
+    ],
+    "alternatives": [
+      {
+        "label": "Türkiye 2024 (Haber Bülteni 2024 Tablo 17; SİY 2024 Tablo 8.26)",
+        "value": 0.598,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024",
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Türkiye 2023 (SİY 2023 Tablo 8.25)",
+        "value": 0.582,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "Ankara 2024 (SİY 2024 Tablo 8.26)",
+        "value": 0.595,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2023 (SİY 2023 Tablo 8.25)",
+        "value": 0.566,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "Batı Anadolu (TR5) 2025 (Haber Bülteni 2025 Tablo 16)",
+        "value": 0.595,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      }
+    ],
+    "notes": "SİY 2025 Haber Bülteni Tablo 16, Türkiye (PDF s. 10). Tanım: yatılan gün × 100 / (yatak × 365); payda tüm hastane yatakları (yoğun bakım dahil). Kontrol: Hill-Burton bu doluluk ile Ankara için 5.910.320 × 0,15823 × 4,0 / (365 × 0,545) = 18.805 yatak verir; oran yöntemi (3,15) 18.618 → fark yuvarlamadan (%1). Aralık varsayımdır.",
+    "group": "A. Talep",
+    "domain": "talep",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "size.general_min_beds": {
+    "label": "Genel hastane en az yatak (B_min)",
+    "value": 50,
+    "unit": "yatak",
+    "status": "model_secimi",
+    "source_ids": [
+      "maliyet_sygm_bahce_2021",
+      "maliyet_cnnturk_dikili_2026",
+      "yatirim_kyp2026"
+    ],
+    "derivation": null,
+    "rationale": "Sağlık Bakanlığı'nın yaptırdığı en küçük yeni ilçe devlet hastanesi örnekleri 50 yatak (Bahçe/Osmaniye, SYGM 2021) ve 75 yatak (Dikili, 2026). Daha küçük 'hastane' örneği bulunmadı. 2026 KYP'deki en küçük yeni SB genel hastanesi 150 yataktır (6 proje); 50, gerçekçi alt uçtur.",
+    "range": [
+      25,
+      200
+    ],
+    "alternatives": [],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_sygm_bahce_2021",
+        "title": "Osmaniye Bahçe'ye 50 Yataklı Hastane Müjdesi",
+        "publisher": "T.C. Sağlık Bakanlığı Sağlık Yatırımları Genel Müdürlüğü",
+        "url": "https://sygm.saglik.gov.tr/TR-86211/osmaniye-bahceye-50-yatakli-hastane-mujdesi.html",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_cnnturk_dikili_2026",
+        "title": "Dikili'nin 75 yataklı yeni devlet hastanesi hizmete girdi",
+        "publisher": "CNN Türk (DHA)",
+        "url": "https://www.cnnturk.com/yerel-haberler/izmir/dikili/dikilinin-75-yatakli-yeni-devlet-hastanesi-hizmete-girdi-2404810",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "size.general_max_beds": {
+    "label": "Genel hastane en çok yatak (B_max)",
+    "value": 999,
+    "unit": "yatak",
+    "status": "model_secimi",
+    "source_ids": [
+      "yatirim_kyp2026",
+      "maliyet_kalkinma_ankara_2017"
+    ],
+    "derivation": null,
+    "rationale": "Şehir hastanesi sınıfının bir altı (size.city_min_beds − 1), sınıflar kesintisiz olsun diye. 2026 KYP'deki en büyük yeni SB genel (şehir hastanesi olmayan) hastaneleri 750 yataktır (Konya Merkez, Tokat Merkez, Bursa Çekirge); Ankara'da Etlik kampüsündeki Bölge Hastanesi 718, Ankara EAH fiilî 616 yatak. Daha büyük tek genel hastane örneği de var (Gülhane EAH 1.150 yatak, Kalkınma 2017) ama istisnadır.",
+    "range": [
+      400,
+      1500
+    ],
+    "alternatives": [],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_kalkinma_ankara_2017",
+        "title": "Sağlığın ve Termalin Başkenti Ankara (tanıtım kitapçığı)",
+        "publisher": "Ankara Kalkınma Ajansı (kapakta ajans logosu) — Kalkınma Kütüphanesi'nde barındırılıyor",
+        "url": "https://www.kalkinmakutuphanesi.gov.tr/assets/upload/dosyalar/ankara-saglik-termal-2017.pdf",
+        "accessed": "2026-10-21",
+        "kind": "ikincil"
+      }
+    ]
+  },
+  "size.city_min_beds": {
+    "label": "Şehir hastanesi en az yatak",
+    "value": 1000,
+    "unit": "yatak",
+    "status": "model_secimi",
+    "source_ids": [
+      "maliyet_memurlar_2018",
+      "maliyet_savas_2020",
+      "yatirim_kyp2026"
+    ],
+    "derivation": null,
+    "rationale": "Modelleme tercihi: 'şehir hastanesi' sınıfı (V-D fiyatı, ≈335 m²/yatak) 1.000 yatak ve üstü için açılır. Tebliğde şehir hastanesi için yatak eşiği yoktur ve Bakanlık bu adı daha küçük tesislere de veriyor: Yozgat 455/475, Manisa 558, Isparta 755 (KÖİ); Muğla 700, Rize ve Van 800, Samsun/Ordu/Trabzon 900 (2026 KYP, genel bütçe). Spec örnekleri (Elazığ 1.038, Eskişehir 1.081, Kayseri 1.607) eşiğin üstündedir.",
+    "range": [
+      400,
+      2000
+    ],
+    "alternatives": [
+      {
+        "label": "En küçük KÖİ şehir hastanesi (Yozgat, SB 2020 bütçe sunumu)",
+        "value": 455,
+        "source_ids": [
+          "maliyet_savas_2020"
+        ]
+      }
+    ],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_memurlar_2018",
+        "title": "Şehir Hastanesi yatırımı tam gaz",
+        "publisher": "Memurlar.net (kaynak: Yeni Şafak)",
+        "url": "https://www.memurlar.net/haber/757810/sehir-hastanesi-yatirimi-tam-gaz.html",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "maliyet_savas_2020",
+        "title": "Kamu Özel İşbirliği Modeli Ankara Şehir Hastanesi Örneği",
+        "publisher": "Savaş, T.; Keleş, R.; Göktaş, B. — Ankara Sağlık Bilimleri Dergisi (ASBD), 2020",
+        "url": "https://dergipark.org.tr/tr/download/article-file/972597",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      },
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "size.city_max_beds": {
+    "label": "Şehir hastanesi en çok yatak",
+    "value": 4000,
+    "unit": "yatak",
+    "status": "model_secimi",
+    "source_ids": [
+      "maliyet_tbmm_2025_ankara",
+      "yatirim_kyp2026"
+    ],
+    "derivation": null,
+    "rationale": "Spec varsayılanı. Gerçek üst uç biraz daha yüksek: Bilkent ve Etlik 4.050'şer yatak (Ankara İl Sağlık Müdürlüğü, TBMM 2025, 'fiilî ve resmî'); İstanbul Sancaktepe 1. Etap 4.050 yatak (2026 KYP). 4.000, bu üç örneği dışarıda bırakır; gerekirse 4.050'ye çıkarılmalı.",
+    "range": [
+      2000,
+      5000
+    ],
+    "alternatives": [
+      {
+        "label": "En büyük gerçek örnekler (Bilkent, Etlik, Sancaktepe)",
+        "value": 4050,
+        "source_ids": [
+          "maliyet_tbmm_2025_ankara",
+          "yatirim_kyp2026"
+        ]
+      }
+    ],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_tbmm_2025_ankara",
+        "title": "Meclis Araştırması Komisyonu (10/1899…1904) — Ankara Çalışma Ziyareti Tutanakları, 27 Şubat 2025 (Ankara İl Sağlık Müdürlüğü sunumu)",
+        "publisher": "Türkiye Büyük Millet Meclisi",
+        "url": "https://tbmm.gov.tr/Tutanaklar/TutanakGoster/4125",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "size.class_threshold_1": {
+    "label": "Tebliğ sınıf eşiği 1 (IV-C → V-B)",
+    "value": 200,
+    "unit": "yatak",
+    "status": "model_secimi",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": "Model boyut sınıflarını tebliğin hastane sınıflarıyla eşler (spec 4.1). 200 sayısı tebliğde birebir geçer: IV-C 'yatak sayısı 200'ün altındaki', V-B 'yatak sayısı 200 dâhil'. Yani B < 200 → IV-C, B ≥ 200 → V-B. Sürekli yatak değişkeninde sınır yatak (tam 200) V-B'ye aittir.",
+    "range": [
+      100,
+      300
+    ],
+    "alternatives": [],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "size.class_threshold_2": {
+    "label": "Tebliğ sınıf eşiği 2 (V-B → V-C)",
+    "value": 400,
+    "unit": "yatak",
+    "status": "model_secimi",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": "Tebliğ: V-B '400'den az', V-C 'yatak sayısı 400 ve üzeri … 400 dâhil'. B ≥ 400 → V-C (genel hastane üst sınıfı).",
+    "range": [
+      300,
+      600
+    ],
+    "alternatives": [],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.unit.IV-C": {
+    "label": "Birim maliyet — IV-C: hastane (<200 yatak)",
+    "value": 40500,
+    "unit": "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      32600,
+      50600
+    ],
+    "alternatives": [
+      {
+        "label": "2025 tebliği (RG 31.01.2025/32799)",
+        "value": 32600,
+        "source_ids": [
+          "maliyet_rg_2025_birim_maliyet_teblig"
+        ]
+      }
+    ],
+    "notes": "Tebliğ md. 1, 'IV. SINIF (C) GRUBU YAPILAR … 40.500,00 TL/m²', 6. kalem: 'Hastaneler (yatak sayısı 200'ün altındaki yapılar)'. Arsa, çevre düzenlemesi ve altyapı hariç (md. 2(4)). Kaydırıcı aralığı: alt sınır 2025 değeri, üst sınır 2026 değerinin %25 fazlası (2025→2026 artış ×1,24).",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.unit.V-A": {
+    "label": "Birim maliyet — V-A: eğitim ve araştırma hastanesi",
+    "value": 42350,
+    "unit": "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      34400,
+      52900
+    ],
+    "alternatives": [
+      {
+        "label": "2025 tebliği",
+        "value": 34400,
+        "source_ids": [
+          "maliyet_rg_2025_birim_maliyet_teblig"
+        ]
+      }
+    ],
+    "notes": "'V. SINIF (A) GRUBU YAPILAR … 42.350,00 TL/m²', 2. kalem: 'Eğitim ve araştırma hastaneleri'. Yatak eşiği yok; tebliğe göre yatak sayısından bağımsız bir tür sınıfıdır (V-B'den ucuz). Model boyut sınıflarında varsayılan olarak kullanılmaz.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.unit.V-B": {
+    "label": "Birim maliyet — V-B: hastane (200–399 yatak)",
+    "value": 43850,
+    "unit": "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      35600,
+      54800
+    ],
+    "alternatives": [
+      {
+        "label": "2025 tebliği",
+        "value": 35600,
+        "source_ids": [
+          "maliyet_rg_2025_birim_maliyet_teblig"
+        ]
+      }
+    ],
+    "notes": "'V. SINIF (B) … 43.850,00 TL/m²', 2. kalem: 'Hastaneler (yatak sayısı 200'den fazla ve 400'den az olan yapılar-yatak sayısı 200 dâhil)'.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.unit.V-C": {
+    "label": "Birim maliyet — V-C: hastane (≥400 yatak)",
+    "value": 48750,
+    "unit": "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      39500,
+      60900
+    ],
+    "alternatives": [
+      {
+        "label": "2025 tebliği",
+        "value": 39500,
+        "source_ids": [
+          "maliyet_rg_2025_birim_maliyet_teblig"
+        ]
+      }
+    ],
+    "notes": "'V. SINIF (C) … 48.750,00 TL/m²', 2. kalem: 'Hastaneler (yatak sayısı 400 ve üzeri yapılar-yatak sayısı 400 dâhil)'.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.unit.V-D": {
+    "label": "Birim maliyet — V-D: şehir hastanesi",
+    "value": 53500,
+    "unit": "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      43400,
+      66900
+    ],
+    "alternatives": [
+      {
+        "label": "2025 tebliği",
+        "value": 43400,
+        "source_ids": [
+          "maliyet_rg_2025_birim_maliyet_teblig"
+        ]
+      }
+    ],
+    "notes": "'V. SINIF (D) … 53.500,00 TL/m²', 4. kalem: 'Şehir hastaneleri'. Tebliğde şehir hastanesi için yatak eşiği yoktur; 'şehir hastanesi' sınıfına geçiş eşiği (size.city_min_beds) model seçimidir.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.m2_per_bed.general": {
+    "label": "Yatak başına kapalı alan — genel hastane",
+    "value": 130,
+    "unit": "m² kapalı alan / yatak",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_balcali_2019",
+      "maliyet_ehta_2021"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      100,
+      350
+    ],
+    "alternatives": [
+      {
+        "label": "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)",
+        "value": 138.7,
+        "source_ids": [
+          "maliyet_aliefendioglu_2021"
+        ]
+      },
+      {
+        "label": "Balcalı Hastanesi (190.651 ÷ 1.200)",
+        "value": 158.9,
+        "source_ids": [
+          "maliyet_balcali_2019"
+        ]
+      },
+      {
+        "label": "2026 KYP SB genel hastaneleri, alan–yatak eğimi (n = 47)",
+        "value": 228.4,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan",
+          "yatirim_kyp2026"
+        ]
+      },
+      {
+        "label": "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47)",
+        "value": 237.0,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan",
+          "yatirim_kyp2026"
+        ]
+      },
+      {
+        "label": "2026 KYP SB genel hastaneleri, medyan (n = 47)",
+        "value": 250.0,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan",
+          "yatirim_kyp2026"
+        ]
+      }
+    ],
+    "notes": "Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa) standardıdır (maliyet_mpyy_ek2); EHTA da 130'u 'İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik' hükmü olarak anıyor. Yani 130'un bina alanı olarak kullanımı akademik yorumdur. (3) 130 bir ASGARİdir; Bakanlığın 2026 KYP'deki yeni genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_balcali_2019",
+        "title": "Hastane Yapıları Teknik ve Destek Hizmet Birimlerinin Mekânsal Büyüklük Analizi: Çukurova Üniversitesi Tıp Fakültesi Balcalı Hastanesi Örneği",
+        "publisher": "Durgun Şahin, Y. — Çukurova Üniversitesi Mühendislik Mimarlık Fakültesi Dergisi 34(4), 203–216 (2019); doi:10.21605/cukurovaummfd.704217",
+        "url": "https://dergipark.org.tr/tr/download/article-file/1007709",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      },
+      {
+        "id": "maliyet_ehta_2021",
+        "title": "Esnek Hastane Tasarımında Türkiye'deki Hastanelerin İstatistiksel Verilerinin Analizi",
+        "publisher": "Karakaş, G.; Sönmez, A. — Eurasian Journal of Health Technology Assessment 5(1), 9–26 (2021)",
+        "url": "https://dergipark.org.tr/en/download/article-file/1649898",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "cost.m2_per_bed.city": {
+    "label": "Yatak başına kapalı alan — şehir hastanesi",
+    "value": 335.5,
+    "unit": "m² kapalı alan / yatak",
+    "status": "hesap",
+    "source_ids": [
+      "maliyet_savas_2020"
+    ],
+    "derivation": "14.159.000 m² ÷ 42.199 yatak = 335,5 (Sağlık Bakanlığı KÖİ şehir hastanesi programı, 32 hastane, Aralık 2017; Savaş vd. 2020, s. 26)",
+    "rationale": null,
+    "range": [
+      250,
+      400
+    ],
+    "alternatives": [
+      {
+        "label": "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310",
+        "value": 308.3,
+        "source_ids": [
+          "maliyet_memurlar_2018"
+        ]
+      },
+      {
+        "label": "Manisa Şehir H. (178.204 ÷ 558)",
+        "value": 319.4,
+        "source_ids": [
+          "maliyet_memurlar_2018"
+        ]
+      },
+      {
+        "label": "Bilkent, 2017 planı (1.200.000 ÷ 3.704)",
+        "value": 324.0,
+        "source_ids": [
+          "maliyet_kalkinma_ankara_2017"
+        ]
+      },
+      {
+        "label": "Şehir hastaneleri (Aliefendioğlu & Bostancı 2021, yazıldığı gibi)",
+        "value": 331,
+        "source_ids": [
+          "maliyet_aliefendioglu_2021"
+        ]
+      },
+      {
+        "label": "Bilkent (1.312.358 ÷ 3.810)",
+        "value": 344.5,
+        "source_ids": [
+          "maliyet_medikalakademi_bilkent"
+        ]
+      },
+      {
+        "label": "2026 KYP genel bütçeli şehir hastaneleri, medyan (n = 14)",
+        "value": 279.5,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan",
+          "yatirim_kyp2026"
+        ]
+      }
+    ],
+    "notes": "Spec 4.4 C 'şehir hastanesi ≈310' (Eskişehir) diyor, 4.2 '≈310–345'. Varsayılan olarak tek hastane yerine tüm KÖİ programının toplam/toplam oranı seçildi (spec aralığının içinde); Eskişehir değeri ilk alternatif. Kapalı alanlar kapalı otoparkları da içerir (ör. Bilkent 6.918 araçlık otopark). Bilkent'in yatak sayısı kaynaklar arasında çelişkili (3.704 / 3.711 / 3.810 / 4.050) — bkz. hastane_boyut_ornekleri.csv; 4.050 ile 324,0 m²/yatak çıkar. Genel bütçeyle yapılan yeni şehir hastaneleri (2026 KYP) daha küçük: medyan 279,5, ≥1.000 yatak (n = 8) medyan 254,9.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_savas_2020",
+        "title": "Kamu Özel İşbirliği Modeli Ankara Şehir Hastanesi Örneği",
+        "publisher": "Savaş, T.; Keleş, R.; Göktaş, B. — Ankara Sağlık Bilimleri Dergisi (ASBD), 2020",
+        "url": "https://dergipark.org.tr/tr/download/article-file/972597",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "cost.core_area_m2": {
+    "label": "Yataktan bağımsız çekirdek alan (A0)",
+    "value": 5000,
+    "unit": "m² kapalı alan / hastane",
+    "status": "varsayim",
+    "source_ids": [
+      "maliyet_hesap_kyp_alan",
+      "yatirim_kyp2026",
+      "maliyet_balcali_2019"
+    ],
+    "derivation": null,
+    "rationale": "Veriden anlamlı biçimde tanımlanamadı; tahminlerin ortasında yuvarlak bir değer seçildi. Dayanaklar (hepsi 2026 KYP SB genel hastaneleri): alan = A0 + a·yatak regresyonu n = 47 için A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61), ≤600 yatak (n = 44) için 7.695 m² (p = 0,12); sınıf ortalamalarından iki nokta tahmini 6.938 m². Yatak başı alanın büyüklükle düşmesi (266 → 244 → 233 m²/yatak) küçük ama pozitif bir sabit çekirdek alanla tutarlı. Üst sınır kontrolü: yatirim alanının F0 %95 GA üst sınırı (0,74–0,94 milyar TL) − F_sabit (250 mn TL) payı, (1,20)(1,40)·u_k ile bölününce ≈6.700–10.200 m² eder; 5.000 bunun altında. Balcalı'da tüm teknik ve destek birimleri 27.326 m² (1.200 yatak, %14,3) ama mutfak, çamaşırhane, depo gibi kalemler yatakla ölçeklendiği için A0 olarak alınmadı.",
+    "range": [
+      0,
+      45000
+    ],
+    "alternatives": [
+      {
+        "label": "KYP regresyon kesişimi, n = 47 (a = 228,4 ile birlikte)",
+        "value": 3361,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan"
+        ]
+      },
+      {
+        "label": "KYP sınıf ortalamaları, iki nokta (a = 219,9 ile)",
+        "value": 6938,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan"
+        ]
+      },
+      {
+        "label": "KYP regresyon kesişimi, ≤600 yatak (a = 214,1 ile)",
+        "value": 7695,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan"
+        ]
+      },
+      {
+        "label": "a = 130 sabitken KYP ortalamasını tutturan A0 (önerilmez)",
+        "value": 41552,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan"
+        ]
+      }
+    ],
+    "notes": "A0 ile cost.m2_per_bed.general birlikte seçilmeli. a = 130 ve A0 = 5.000 ile 150 yataklı hastane 24.500 m², 600 yataklı 83.000 m² çıkar; KYP'de aynı boyutlar 26.432–49.250 m² ve 104.000–152.000 m²'dir. KYP ile tutarlı çift (a ≈ 228, A0 ≈ 3.400) ya da (a ≈ 214, A0 ≈ 7.700) kullanılabilir. a = 130'u koruyup A0 = 41.552 almak alanı tutturur ama ölçek ekonomisini abartır (küçük hastaneyi çok pahalı yapar). Duyarlılık analizinde mutlaka gösterilmeli (spec 4.2).",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_hesap_kyp_alan",
+        "title": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları",
+        "publisher": "Proje hesabı (maliyet_build.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
+        "url": "data/reference/yatirim_programi_2026_saglik.csv",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      },
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_balcali_2019",
+        "title": "Hastane Yapıları Teknik ve Destek Hizmet Birimlerinin Mekânsal Büyüklük Analizi: Çukurova Üniversitesi Tıp Fakültesi Balcalı Hastanesi Örneği",
+        "publisher": "Durgun Şahin, Y. — Çukurova Üniversitesi Mühendislik Mimarlık Fakültesi Dergisi 34(4), 203–216 (2019); doi:10.21605/cukurovaummfd.704217",
+        "url": "https://dergipark.org.tr/tr/download/article-file/1007709",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "cost.infra_ratio": {
+    "label": "Altyapı + çevre düzenlemesi oranı (φ_alt)",
+    "value": 0.15,
+    "unit": "inşaat maliyetine oran",
+    "status": "kaynakli",
+    "source_ids": [
+      "yatirim_rehber_2026_2028",
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      0.05,
+      0.3
+    ],
+    "alternatives": [],
+    "notes": "SBB 2026-2028 Yatırım Programı Hazırlama Rehberi, EK 3 (İdari Hizmet Binası Gerekçe Raporu), 'Ödenek Talebine Esas Bedel Hesabı' (PDF s. 51, basılı s. 44): 'c) İnşaat Maliyeti a x b; d) Çevre Düzenlemesi (%15) c x %15; e) Toplam c + d; f) KDV … e x %…'; a = tebliğdeki birim maliyet. Bu şablon idari hizmet binaları içindir; hastaneye özgü bir oran bulunamadı. Tebliğ md. 2(4) hem çevre düzenlemesini hem altyapıyı (zemin iyileştirme, bina dışı şebekeler) hariç tutar; şablondaki %15 yalnız 'çevre düzenlemesi' diye adlandırılmıştır, bu yüzden 0,15 alt uca yakın bir değerdir. Bağlantı yolu/kavşak ve altyapı bağlantıları yatirim alanında F_sabit içinde düşünüldü — çift sayılmamalı.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "yatirim_rehber_2026_2028",
+        "title": "2026-2028 Dönemi Yatırım Programı Hazırlama Rehberi",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2025/09/2026-2028_Donemi_Yatirim_Programi_Hazirlama_Rehberi.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.equipment_ratio": {
+    "label": "Tıbbi donanım oranı (φ_don)",
+    "value": 0.25,
+    "unit": "inşaat maliyetine oran",
+    "status": "varsayim",
+    "source_ids": [
+      "maliyet_hesap_kyp_alan",
+      "yatirim_kyp2026",
+      "maliyet_savas_2020"
+    ],
+    "derivation": null,
+    "rationale": "Resmî ya da hakemli bir Türkiye oranı bulunamadı. 2026 KYP'de inşaat ve makine-teçhizatı ayrı alt proje olarak gösteren yataklı iki hastane var: KTÜ Çocuk Hastanesi (225 yatak) 0,158 ve Gaziantep Ü. Acil Travma ve Yanık Hastanesi (134 yatak) 0,320; ortalaması 0,239 → 0,25 yuvarlandı. Diş hastanelerinde oran 0,16–0,46. Diğer satırlardaki 2.000– 10.000.000 TL'lik makine-teçhizat kalemleri yer tutucudur (donanım sonradan bütçeleniyor), oran hesabına alınmadı. Şehir hastaneleri için ≈4 milyar TL tıbbi cihaz + mefruşat yatırımı bildiriliyor (Savaş vd. 2020) ama toplam yatırım farklı para birimi/yıllarda verildiğinden oran çıkarılamadı.",
+    "range": [
+      0.1,
+      0.45
+    ],
+    "alternatives": [
+      {
+        "label": "KTÜ Çocuk Hastanesi, 225 yatak (KYP 2014I00-2082)",
+        "value": 0.158,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan"
+        ]
+      },
+      {
+        "label": "Gaziantep Ü. Acil Travma ve Yanık H., 134 yatak (KYP 2022I00-183763)",
+        "value": 0.32,
+        "source_ids": [
+          "maliyet_hesap_kyp_alan"
+        ]
+      }
+    ],
+    "notes": "KYP'deki SB genel hastane proje tutarları m² başına 54.461 TL (KDV dahil, toplam/toplam), yani tebliğ fiyatı + KDV düzeyinde; KYP tutarları donanımı büyük ölçüde içermiyor gibi görünüyor. φ_don'un yatirim alanının v (TL/yatak) tahminiyle çift sayılmaması için model hangi tutarın neyi içerdiğini açıklamalı.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_hesap_kyp_alan",
+        "title": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları",
+        "publisher": "Proje hesabı (maliyet_build.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
+        "url": "data/reference/yatirim_programi_2026_saglik.csv",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      },
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_savas_2020",
+        "title": "Kamu Özel İşbirliği Modeli Ankara Şehir Hastanesi Örneği",
+        "publisher": "Savaş, T.; Keleş, R.; Göktaş, B. — Ankara Sağlık Bilimleri Dergisi (ASBD), 2020",
+        "url": "https://dergipark.org.tr/tr/download/article-file/972597",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "cost.vat_rate": {
+    "label": "KDV oranı (genel)",
+    "value": 0.2,
+    "unit": "oran",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_rg_2023_kdv_karar_7346"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      0.0,
+      0.2
+    ],
+    "alternatives": [
+      {
+        "label": "10.07.2023 öncesi genel oran",
+        "value": 0.18,
+        "source_ids": [
+          "maliyet_rg_2023_kdv_karar_7346"
+        ]
+      }
+    ],
+    "notes": "Cumhurbaşkanı Kararı 7346 (RG 07.07.2023/32241) md. 1: 2007/13033 sayılı BKK md. 1(1)(a)'daki '%18' ibaresi '%20' olarak değiştirildi; yürürlük 10.07.2023. (I) ve (II) sayılı listelerdeki teslimler %1 ve %10'dur; tıbbi donanımın indirimli listede olup olmadığı bu çalışmada incelenmedi (model tek oran kullanır). SBB rehber şablonundaki '%18' eski değerdir. GİB'in güncel oran tablosu indirilemedi (vekil 403); 7346'dan sonra genel oranı değiştiren karar bulunamadı. Aralığın alt ucu 0: KDV'yi hariç tutmak (cost.include_vat = false) ile aynı etki.",
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_rg_2023_kdv_karar_7346",
+        "title": "Mal ve Hizmetlere Uygulanacak Katma Değer Vergisi Oranlarının Tespitine İlişkin Kararda Değişiklik Yapılmasına Dair Karar (Cumhurbaşkanı Kararı, Karar Sayısı: 7346)",
+        "publisher": "Resmî Gazete, 7 Temmuz 2023, sayı 32241",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2023/07/20230707-11.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "cost.include_vat": {
+    "label": "Maliyetlere KDV dahil mi?",
+    "value": true,
+    "unit": "evet/hayır",
+    "status": "model_secimi",
+    "source_ids": [
+      "yatirim_rehber_2026_2028",
+      "maliyet_rg_2026_birim_maliyet_teblig"
+    ],
+    "derivation": null,
+    "rationale": "Varsayılan 'dahil': model kamu bütçesinin ödeyeceği tutarı hesaplar ve devlet yüklenici faturasındaki KDV'yi öder. Ayrıca kamu yatırım tutarları KDV dahil hazırlanır (SBB rehberi md. 19; EK 3 not 2 'Proje Toplam Maliyetine KDV dahildir') ve yatirim alanının F_sabit değeri KDV dahildir — tutarlılık için tebliğin KDV hariç fiyatlarına KDV eklenir. Alternatif 'hariç': toplumsal maliyet bakışında KDV hazineye dönen bir transferdir; o zaman F_sabit de KDV'siz yorumlanmalıdır.",
+    "range": null,
+    "alternatives": [],
+    "notes": null,
+    "group": "C. İnşaat",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "yatirim_rehber_2026_2028",
+        "title": "2026-2028 Dönemi Yatırım Programı Hazırlama Rehberi",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2025/09/2026-2028_Donemi_Yatirim_Programi_Hazirlama_Rehberi.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_rg_2026_birim_maliyet_teblig",
+        "title": "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "land.include": {
+    "label": "Arsa maliyeti dahil mi?",
+    "value": false,
+    "unit": "evet/hayır",
+    "status": "varsayim",
+    "source_ids": [
+      "erisim_mevzuat_6428",
+      "yatirim_rehber_2026_2028"
+    ],
+    "derivation": null,
+    "rationale": "Varsayılan: kamu arazisi → arsa bedeli 0. Kamu hastaneleri çoğunlukla Hazine taşınmazı üzerinde yapılır (ör. 6428 sayılı Kanun md. 1: KÖİ tesisleri 'Hazinenin özel mülkiyetindeki taşınmazlar üzerinde … üst hakkı tesis edilmek suretiyle' yaptırılır). SBB 2026-2028 Yatırım Programı Hazırlama Rehberi Ek-1 ekonomik analiz açıklaması (PDF s. 43): 'Transferler (kamulaştırma, arazi bedeli, vergi, teşvik gibi) ekonomik analizde dikkate alınmaz.' Arazinin alternatif kullanım değeri (fırsat maliyeti) ise sıfır değildir; bu yüzden anahtar açılınca aşağıdaki vekil fiyat modeli kullanılır.",
+    "range": null,
+    "alternatives": [],
+    "notes": null,
+    "group": "D. Arsa",
+    "domain": "arsa",
+    "sources": [
+      {
+        "id": "erisim_mevzuat_6428",
+        "title": "6428 sayılı Sağlık Bakanlığınca Kamu Özel İş Birliği Modeli ile Tesis Yaptırılması, Yenilenmesi ve Hizmet Alınması ile Bazı Kanun ve KHK'lerde Değişiklik Yapılması Hakkında Kanun (RG 9/3/2013, sayı 28582)",
+        "publisher": "mevzuat.gov.tr",
+        "url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6428.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "yatirim_rehber_2026_2028",
+        "title": "2026-2028 Dönemi Yatırım Programı Hazırlama Rehberi",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2025/09/2026-2028_Donemi_Yatirim_Programi_Hazirlama_Rehberi.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "land.m2_per_bed": {
+    "label": "Yatak başına arsa (plan alanı)",
+    "value": 130,
+    "unit": "m² arsa / yatak",
+    "status": "kaynakli",
+    "source_ids": [
+      "maliyet_mpyy_ek2"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      50,
+      300
+    ],
+    "alternatives": [
+      {
+        "label": "Sağlık kampüsleri (şehir hastanesi) standardı",
+        "value": 220,
+        "source_ids": [
+          "maliyet_mpyy_ek2"
+        ]
+      },
+      {
+        "label": "Balcalı (95.000 m² açık alan ÷ 1.200)",
+        "value": 79.2,
+        "source_ids": [
+          "maliyet_balcali_2019"
+        ]
+      },
+      {
+        "label": "Bilkent (674.000 m² arazi ÷ 3.810)",
+        "value": 176.9,
+        "source_ids": [
+          "maliyet_medikalakademi_bilkent"
+        ]
+      },
+      {
+        "label": "Dikili (15.010 m² açık alan ÷ 75)",
+        "value": 200.1,
+        "source_ids": [
+          "maliyet_cnnturk_dikili_2026"
+        ]
+      }
+    ],
+    "notes": "Mekânsal Planlar Yapım Yönetmeliği EK-2: Devlet hastaneleri, İhtisas/Eğitim ve Araştırma hastaneleri, FTR hastaneleri ve Doğum ve Çocuk Bakım Evleri için asgari birim alan 'Yatak başına (130) m²', 'Sağlık Kampüsleri' için 'Yatak başına (220) m²'. Model sınıf bazında ayırabiliyorsa şehir hastanesi sınıfı için 220 kullanılmalı. Bu bir asgari plan standardıdır; ilçe imar planı yoğunluğuna göre gerçek parseller farklıdır (Balcalı eski, Bilkent/Dikili standardın üstünde).",
+    "group": "D. Arsa",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_mpyy_ek2",
+        "title": "Mekânsal Planlar Yapım Yönetmeliği — EK-2 Tablo: Farklı Nüfus Gruplarında Asgari Sosyal ve Teknik Altyapı Alanlarına İlişkin Standartlar ve Asgari Alan Büyüklükleri",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — mevzuat.gov.tr (RG 14.06.2014/29030; EK-2 değişik: RG 17.05.2017/30069)",
+        "url": "https://www.mevzuat.gov.tr/MevzuatMetin/yonetmelik/7.5.19788-ek.zip",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "land.min_parcel_m2": {
+    "label": "Asgari parsel",
+    "value": 6500,
+    "unit": "m² arsa / hastane",
+    "status": "hesap",
+    "source_ids": [
+      "maliyet_mpyy_ek2"
+    ],
+    "derivation": "land.m2_per_bed × size.general_min_beds = 130 m²/yatak × 50 yatak = 6.500 m²",
+    "rationale": null,
+    "range": [
+      0,
+      20000
+    ],
+    "alternatives": [
+      {
+        "label": "Doğrusal maliyet formülünde L0 (çift sayımı önlemek için)",
+        "value": 0,
+        "source_ids": [
+          "maliyet_mpyy_ek2"
+        ]
+      },
+      {
+        "label": "EK-2 'Basamak Sağlık Tesisleri' asgari birim alanı (hastane değil)",
+        "value": 3000,
+        "source_ids": [
+          "maliyet_mpyy_ek2"
+        ]
+      }
+    ],
+    "notes": "EK-2'de hastaneler için ayrı bir asgari parsel yok; standart yatakla orantılı. 6.500 m², en küçük izinli genel hastanenin (50 yatak) parselidir: arsa alanı = max(land.min_parcel_m2, land.m2_per_bed × B) biçiminde alt sınır olarak kullanılmalı; B ≥ 50 için bağlayıcı değildir. Spec 4.5'teki doğrusal Fixed_jk formülündeki L0 terimi olarak kullanılacaksa 0 alınmalı (yoksa ℓ·B ile çift sayılır).",
+    "group": "D. Arsa",
+    "domain": "maliyet",
+    "sources": [
+      {
+        "id": "maliyet_mpyy_ek2",
+        "title": "Mekânsal Planlar Yapım Yönetmeliği — EK-2 Tablo: Farklı Nüfus Gruplarında Asgari Sosyal ve Teknik Altyapı Alanlarına İlişkin Standartlar ve Asgari Alan Büyüklükleri",
+        "publisher": "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — mevzuat.gov.tr (RG 14.06.2014/29030; EK-2 değişik: RG 17.05.2017/30069)",
+        "url": "https://www.mevzuat.gov.tr/MevzuatMetin/yonetmelik/7.5.19788-ek.zip",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "land.price_base_tl_m2": {
+    "label": "Arsa birim fiyatı — medyan yoğunluklu aday hücrede",
+    "value": 2000,
+    "unit": "TL / m² (2026)",
+    "status": "varsayim",
+    "source_ids": [
+      "erisim_haber_yeniankara_evren_arsa_2026",
+      "erisim_haber_yeniankara_toki_arsa_2026",
+      "erisim_rg_emlak_vergisi_teblig_89"
+    ],
+    "derivation": null,
+    "rationale": "Ankara için ilçe/hücre düzeyinde güvenilir, açık ve resmî bir arsa fiyatı veri seti bulunamadı (emlak vergisi asgari m² birim değerleri sokak bazında ve yalnız yerel ilanla yayımlanıyor; TKGM, TOKİ ve belediye siteleri bu ortamdan erişilemedi). 3 km aday hücrelerinin (P_min = 250) medyan yoğunluğu ≈85 kişi/km² (kalibre edilmemiş GHS-POP 2025 ön hesabı) — kırsal kasaba çevresi. Bu düzey için haber kaynaklı tek nokta: Evren'de konut imarlı arsa ortalaması 1.379 TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kaba tutarlılık (kalibrasyon değil): β = 0,5 ile 90. yüzdelik yoğunluktaki (≈2.700 kişi/km²) hücrede ≈11.200 TL/m² (TOKİ Sincan Yeni Peçenek muhammen ≈9.400–12.900), en yoğun hücrede (≈33.000 kişi/km²) ≈39.400 TL/m² (TOKİ Gölbaşı İncek ≈38.500, Yenimahalle Susuz kentsel servis alanı ≈31.000 TL/m²; Eylül 2026).",
+    "range": [
+      0,
+      40000
+    ],
+    "alternatives": [
+      {
+        "label": "Evren konut imarlı arsa ortalaması (haber, Mayıs 2026)",
+        "value": 1379,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_haber_yeniankara_evren_arsa_2026"
+        ]
+      },
+      {
+        "label": "TOKİ Sincan Temelli/Alcı muhammen bedel (≈5.000 m², >30 mn TL; kaba)",
+        "value": 6000,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_yeniankara_toki_arsa_2026"
+        ]
+      },
+      {
+        "label": "TOKİ Yenimahalle Susuz kentsel servis alanı (140,7 mn TL / 4.538,61 m²)",
+        "value": 31001,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_yeniankara_toki_arsa_2026"
+        ]
+      }
+    ],
+    "notes": "Arsa birim fiyatı yalnız land.include = true iken kullanılır. Hastane parselleri (kentsel servis alanı) genellikle konut arsasından farklı fiyatlanır; TOKİ muhammen bedeli satış fiyatı değildir. Faz 2'de (ızgara hazır olunca) medyan yoğunluk gerçek aday kümesiyle yeniden hesaplanmalı.",
+    "group": "D. Arsa",
+    "domain": "arsa",
+    "sources": [
+      {
+        "id": "erisim_haber_yeniankara_evren_arsa_2026",
+        "title": "Ankara'nın saklı bahçesi değerleniyor: 2026 yılı Evren arsa fiyatları",
+        "publisher": "Yeni Ankara",
+        "url": "https://www.yeniankara.com.tr/evren/ankaranin-sakli-bahcesi-degerleniyor-2026-yili-evren-arsa-fiyatlari-167274",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "erisim_haber_yeniankara_toki_arsa_2026",
+        "title": "TOKİ'nin Ankara arsa satışında hangi bölgeler var? İşte 76 taşınmazın bulunduğu ilçeler",
+        "publisher": "Yeni Ankara",
+        "url": "https://www.yeniankara.com.tr/ankara/tokinin-arsa-acik-artirmasinda-ankarada-nereler-satista-184430",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "erisim_rg_emlak_vergisi_teblig_89",
+        "title": "Emlak Vergisi Kanunu Genel Tebliği (Seri No: 89)",
+        "publisher": "Hazine ve Maliye Bakanlığı (Gelir İdaresi Başkanlığı) — Resmî Gazete, 31 Aralık 2025, sayı 33124 (5. Mükerrer)",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251231M5-27.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "land.price_beta": {
+    "label": "Arsa fiyatının nüfus yoğunluğu esnekliği (β)",
+    "value": 0.5,
+    "unit": "boyutsuz",
+    "status": "varsayim",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar; ön hesapta aday hücre yoğunlukları ≈33 (10. yüzdelik) ile ≈33.000 kişi/km² (en yoğun) arasında, bu da medyana göre ≈0,6× ile ≈19,7× fiyat aralığı verir — TOKİ'nin Eylül 2026 Ankara muhammen bedellerinin (≈6.000 – 38.500 TL/m²) ve Evren kırsal arsa fiyatının (1.379 TL/m²) kapsadığı yelpazeyle kabaca uyumlu. β = 0 tüm hücrelerde aynı fiyat demektir.",
+    "range": [
+      0.0,
+      1.5
+    ],
+    "alternatives": [
+      {
+        "label": "Sabit fiyat (yoğunluktan bağımsız)",
+        "value": 0.0,
+        "status": "model_secimi"
+      },
+      {
+        "label": "Zayıf bağımlılık (en yoğun/medyan ≈ 6×)",
+        "value": 0.3,
+        "status": "varsayim"
+      },
+      {
+        "label": "Güçlü bağımlılık (en yoğun/medyan ≈ 65×)",
+        "value": 0.7,
+        "status": "varsayim"
+      }
+    ],
+    "notes": null,
+    "group": "D. Arsa",
+    "domain": "arsa",
+    "sources": []
+  },
+  "cost.fixed_per_hospital": {
+    "label": "Hastane başına sabit açılış maliyeti (F_sabit)",
+    "value": 250000000,
+    "unit": "TL / hastane (2026 fiyatları, KDV dahil)",
+    "status": "varsayim",
+    "source_ids": [
+      "yatirim_kyp2026",
+      "yatirim_hesap_regresyon"
+    ],
+    "derivation": null,
+    "rationale": "Spec 4.2'deki kalibrasyon denendi ancak sabit maliyet veriden tanımlanamadı: 2026 Kamu Yatırım Programındaki 61 Sağlık Bakanlığı yeni hastane projesinde (aynı yıl fiyatları) 'tutar = F0 + v·yatak' kesişimi F0 = −142 mn TL (%95 GA −1,03 … +0,74 milyar TL; p = 0,75) çıktı ve dokuz farklı örneklem/tanımın hiçbirinde %5 düzeyinde sıfırdan ayırt edilemedi (nokta tahminleri −658 mn … +233 mn TL). Log-log esneklik 1,05 (%95 GA 0,96 … 1,15): programdaki tutarlar yatak sayısıyla orantılı. Bunun ana nedeni, tutarların plan normlarıyla üretilmesi (61 projenin 21'inde alan tam 200 ya da 250 m²/yatak, 11'inde tutar tam 60.000/70.000 TL/m² × alan); yani veri 'sabit maliyet yok' demiyor, programdaki tutarlar onu ayrıca göstermiyor. Bu yüzden F_sabit varsayımdır. 250 mn TL temkinli (düşük) seçildi: genel hastane alt örnekleminin nokta tahmini (233 mn TL) ile uyumlu, tüm tanımların %95 güven aralıkları içinde ve çekirdek alan (A0) inşaat maliyetiyle toplandığında veriyle tutarlı üst sınırı (ana örneklemde ≈0,74, genel hastanelerde ≈0,94 milyar TL) aşmayacak kadar küçük.",
+    "range": [
+      0,
+      1500000000
+    ],
+    "alternatives": [
+      {
+        "label": "0 — regresyon kesişimi sıfırdan ayırt edilemiyor (veriyle en uyumlu alt sınır)",
+        "value": 0,
+        "source_ids": [
+          "yatirim_hesap_regresyon"
+        ]
+      },
+      {
+        "label": "Regresyon F0, yalnız genel hastaneler (n = 47; p = 0,51; anlamlı değil)",
+        "value": 233318127,
+        "source_ids": [
+          "yatirim_hesap_regresyon"
+        ]
+      },
+      {
+        "label": "F0 %95 GA üst sınırı, ana örneklem (n = 61)",
+        "value": 742340771,
+        "source_ids": [
+          "yatirim_hesap_regresyon"
+        ]
+      },
+      {
+        "label": "F0 %95 GA üst sınırı, yalnız genel hastaneler (n = 47)",
+        "value": 942589903,
+        "source_ids": [
+          "yatirim_hesap_regresyon"
+        ]
+      },
+      {
+        "label": "Hastane kavşak ve bağlantı yolları, il başına ortalama (5,69 milyar TL ÷ 4 il; KYP 2025I00-280965)",
+        "value": 1422500000,
+        "source_ids": [
+          "yatirim_kyp2026"
+        ]
+      }
+    ],
+    "notes": "REGRESYON (statsmodels OLS, ana örneklem n = 61, Sağlık Bakanlığı tek binalı yeni hastane projeleri, bütçe finansmanlı şehir hastaneleri dahil): F0 = −142.000.683 TL (SE 441.950.773; HC3-SE 1.310.083.204), v = 14.784.989 TL/yatak (SE 544.985; %95 GA 13.694.478 … 15.875.501), R² = 0,926 (düz. 0,925). Etkili gözlem: İstanbul Sancaktepe Şehir Hastanesi 1. Etap (4.050 yatak; Cook D = 11,7). Sağlamlık: aykırılar hariç (n = 56) F0 = −658 mn (p = 0,085); yalnız genel (n = 47) F0 = +233 mn (p = 0,51), v = 12,31 mn; başlama 2025–2026 (n = 7) F0 = −575 mn; başlama ≤2024 (n = 54) F0 = −106 mn; formül satırları hariç (n = 50) F0 = −230 mn; üniversiteler dahil (n = 75) F0 = −74 mn; ek binalar dahil (n = 70) F0 = −135 mn — hepsi p > 0,05. Dışlananlar ve gerekçeleri: data/reference/yatirim_programi_2026_saglik.csv (dislama_nedeni sütunu; ek bina/ yenileme 12, paket proje 8, etüd-proje aşaması 6, toplu/çok yerli 3, kurum dışı 3, pandemi/acil durum 2, birden çok tesis 1, yalnız etüt bedeli 2; KÖİ 'Şehir Hastanesi Kullanım Bedeli' satırında yatak yok). v'NİN MAKULLÜĞÜ: tebliğe göre yatak başı inşaat 130 m² × 40.500–48.750 TL/m² = 5,27–6,34 mn TL (KDV, altyapı, donanım hariç); programdaki v bunun 2,3–2,8 katı. Fark açıklanabiliyor: programdaki projelerde alan ≈ 257,5 m²/yatak (eğim; medyan 250, aralık 171–380), yani 130 m² asgarisinin ≈2 katı; birim maliyet eğimi 56.604 TL/m² KDV dahil (tebliğ 40.500–53.500 TL/m² KDV hariç aralığıyla KDV eklenince uyumlu). v makul, F0 makul değil (negatif ve anlamsız). A0 İLE ETKİLEŞİM (çift sayımı önleme): modelde Fixed_jk = (1+kdv)·(1+φ_alt+φ_don)·u_k·A0 + p_j·L0 + F_sabit. Regresyon kesişimi F0, KDV dahil proje tutarı cinsinden yataktan bağımsız TÜM kısmı (çekirdek alan inşaatı dahil) temsil eder; bu nedenle veriyle tutarlılık için (1+kdv)·(1+φ)·u_k·A0 + F_sabit toplamı F0'ın %95 GA üst sınırını (≈0,74–0,94 milyar TL) aşmamalı. F_sabit yalnız alana bağlı olmayan kalemler içindir (etüt-proje, bağlantı yolu/kavşak, altyapı bağlantıları, ruhsat vb.); bunları A0 inşaatına ya da φ_alt oranına ikinci kez eklemeyin. F_sabit KDV dahil kabul edilir (KYP tutarları KDV dahil — yatirim_rehber_2026_2028 md. 19); modelde F_sabit'e ayrıca (1+kdv) uygulanmamalı. Kaynaklı örnekler: KYP'de kavşak/bağlantı yolu 5,69 milyar TL / 4 il (≈1,42 milyar TL/il; satırda hastane sayısı yazmıyor, il başına bir hastane varsayımıyla) — büyük şehir hastaneleri için üst uç; üniversite hastanelerinin etüt-proje satırları 20 mn TL (250 yatak, 50.000 m²) ile 48–60 mn TL (800 yatak, 120.000 m²) arasında — alana bağlı, küçük. Kaydırıcı aralığı [0; 1,5 milyar TL] bu iki uç arasını kapsar; sunumda duyarlılık (tornado) analizinde mutlaka gösterilmeli.",
+    "group": "E. Sabit",
+    "domain": "sabit",
+    "sources": [
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "yatirim_hesap_regresyon",
+        "title": "Sabit maliyet regresyonu: proje tutarı = F0 + v · yatak (2026 KYP, Sağlık Bakanlığı)",
+        "publisher": "Proje hesabı (pipeline/14_investment_program.py)",
+        "url": "pipeline/14_investment_program.py",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      }
+    ]
+  },
+  "opex.include": {
+    "label": "İşletme gideri dahil mi?",
+    "value": false,
+    "unit": "evet/hayır",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 F: isteğe bağlı, varsayılan kapalı. Toplam yatak sayısı talepten (q_i) belirlendiği için yatak başı işletme gideri hastane yerleşimini değil esas olarak toplam maliyet düzeyini etkiler; hastane başı sabit işletme gideri ise hastane sayısını azaltma yönünde çalışır. Kaynaklı bir sabit/değişken ayrımı olmadığından kapalı tutulur.",
+    "range": null,
+    "alternatives": [],
+    "notes": null,
+    "group": "F. İşletme",
+    "domain": "isletme",
+    "sources": []
+  },
+  "opex.fixed_per_hospital_year": {
+    "label": "Hastane başı yıllık sabit işletme gideri",
+    "value": 0,
+    "unit": "TL / hastane·yıl (2026)",
+    "status": "varsayim",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Türkiye hastaneleri için harcamanın hastane başı sabit ve yatak başı değişken kısma ayrıldığı resmî ya da hakemli bir kaynak bulunamadı (Sayıştay ve Sağlık Bakanlığı KHGM siteleri bu ortamdan erişilemedi). TÜİK hastane harcamasının tamamı opex.per_bed_year'e yüklendiği için çift sayımı önlemek amacıyla 0 alındı. Ölçek ekonomisi duyarlılığı için kaydırıcıyla artırılabilir; bu durumda per_bed_year aynı oranda düşürülmelidir.",
+    "range": [
+      0,
+      2000000000
+    ],
+    "alternatives": [],
+    "notes": null,
+    "group": "F. İşletme",
+    "domain": "isletme",
+    "sources": []
+  },
+  "opex.per_bed_year": {
+    "label": "Yatak başı yıllık işletme gideri",
+    "value": 8887000,
+    "unit": "TL / yatak·yıl (Eylül 2026 fiyatları)",
+    "status": "hesap",
+    "source_ids": [
+      "erisim_tuik_saglik_harcamalari_2024_sunucu",
+      "saglik_sbsgm_bulten2024",
+      "erisim_tuik_tufe_tt10"
+    ],
+    "derivation": "(TÜİK 2024 cari sağlık harcaması, sağlayıcı 'Hastaneler' 1.288.472,3 mn TL) / (2024 hastane yatağı 268.359; SİY 2024 Haber Bülteni Tablo 7) = 4.801.301 TL/yatak (2024 fiyatları) × TÜFE çarpanı 137,23 / 74,1393 = 1,8510 → 8.887.084 ≈ 8.887.000 TL/yatak·yıl.",
+    "rationale": null,
+    "range": [
+      0,
+      20000000
+    ],
+    "alternatives": [
+      {
+        "label": "2024 fiyatlarıyla (TÜFE güncellemesi yok)",
+        "value": 4801000,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_tuik_saglik_harcamalari_2024_sunucu",
+          "saglik_sbsgm_bulten2024"
+        ]
+      }
+    ],
+    "notes": "ÜST SINIR NİTELİĞİNDE: hastane harcaması yataklı tedavinin yanında ayakta tedavi (poliklinik, acil), hastanede kullanılan ilaç ve tıbbi malzemeyi de kapsar; yalnız yatağa bağlı gider daha düşüktür. Kamu, üniversite ve özel hastanelerin tümünü içerir (yatak sayısı da tüm sektörler). Yatırım harcaması (2024: 172.349 mn TL) dahil değildir (cari harcama). PV(25 yıl, %5) = 14,09 ile yatak başına bugünkü değer ≈125 mn TL'dir; inşaat maliyetinin çok üstündedir — açıldığında sonuçlar buna göre yorumlanmalı.",
+    "group": "F. İşletme",
+    "domain": "isletme",
+    "sources": [
+      {
+        "id": "erisim_tuik_saglik_harcamalari_2024_sunucu",
+        "title": "Sağlık hizmeti sunucularına göre sağlık harcamaları, 2023, 2024 (Sağlık Harcamaları İstatistikleri 2024 bülten tablosu)",
+        "publisher": "TÜİK",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=54188&p=3cHvVwntSQbVw%2BWpt0AAOK64WYQU%2BIi%2FQFaoiCE%2F4JBwCLBGORIs0AqgCvsXXmWjA8FInMk%2Bpc%2B6C8dxb1dfGhsMlwwdq4%2Fkaa%2B%2BNbJl8wuZWrPaf5fTIVesp%2FhMjSSG8NMIuU5rAP1Hd6scvRWe4rFDzMGWJP43qLSK8%2FAhQCo%3D",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "saglik_sbsgm_bulten2024",
+        "title": "Sağlık İstatistikleri Yıllığı 2024 Haber Bülteni (Sayı: 13)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/51942/0/haber-bulteni-2024-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "erisim_tuik_tufe_tt10",
+        "title": "Tüketici fiyat endeksi ve değişim oranları (2025=100), veri akışı DF_TUFE_SDMX_TT10",
+        "publisher": "TÜİK",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/dataflows/DF_TUFE_SDMX_TT10+V1.0/file/csv",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      }
+    ]
+  },
+  "access.visits_per_capita_total": {
+    "label": "Kişi başı yıllık hekime müracaat (tüm basamaklar)",
+    "value": 13.2,
+    "unit": "müracaat / kişi / yıl",
+    "status": "kaynakli",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      8.0,
+      18.0
+    ],
+    "alternatives": [
+      {
+        "label": "Türkiye 2024 (Haber Bülteni 2024 Tablo 16; şartname Bölüm 3)",
+        "value": 12.2,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024"
+        ]
+      },
+      {
+        "label": "Türkiye 2023 (Haber Bülteni 2023 Tablo 14; şartname [14])",
+        "value": 11.4,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2023"
+        ]
+      },
+      {
+        "label": "Ankara 2024 (SİY 2024 Tablo 8.26)",
+        "value": 13.0,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2023 (SİY 2023 Tablo 8.25)",
+        "value": 12.4,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      },
+      {
+        "label": "Batı Anadolu (TR5) 2025 (Haber Bülteni 2025 Tablo 16)",
+        "value": 14.0,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      }
+    ],
+    "notes": "SİY 2025 Haber Bülteni Tablo 15 'Genel Toplam' (1.138.060.185 müracaat; kişi başı 13,2; PDF s. 9) ve Tablo 16 Türkiye satırı (PDF s. 10). Tanım: OECD 'hekime telefon hariç herhangi bir sebeple müracaat'; diş hekimi müracaatları ve danışmanlık başvuruları hariç (SİY 2024 Bölüm 8 açıklamaları, PDF s. 237). Ziyaret sayısıdır, tekil hasta sayısı değildir. Aralık (8–18) varsayımdır.",
+    "group": "G. Erişim",
+    "domain": "muracaat",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "access.share_hospital_visits": {
+    "label": "Müracaatlarda ikinci + üçüncü basamak payı",
+    "value": 0.587,
+    "unit": "oran (0–1)",
+    "status": "kaynakli",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      0.4,
+      0.8
+    ],
+    "alternatives": [
+      {
+        "label": "Türkiye 2024: %56,7 (Haber Bülteni 2024 PDF s. 9 metni; şartname Bölüm 3)",
+        "value": 0.567,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024"
+        ]
+      },
+      {
+        "label": "Türkiye 2023: %56,7 (Haber Bülteni 2023 PDF s. 8 metni)",
+        "value": 0.567,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2023"
+        ]
+      },
+      {
+        "label": "2025, yalnız hastaneler (özel tıp merkezleri hariç): 656.167.336 / 1.138.060.185",
+        "value": 0.5766,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      },
+      {
+        "label": "Ankara 2024: 47.073.855 / (47.073.855 + 28.920.274) (SİY 2024 Tablo 8.26)",
+        "value": 0.6194,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "Ankara 2023: 44.014.412 / (44.014.412 + 27.961.355) (SİY 2023 Tablo 8.25)",
+        "value": 0.6115,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2023"
+        ]
+      }
+    ],
+    "notes": "SİY 2025 Haber Bülteni, PDF s. 9 metni: 'hekime müracaatın %41,3'ü birinci basamak ... %58,7'si ikinci ve üçüncü basamak sağlık kurumlarına yapıldı'. TANIM UYARISI: 'ikinci ve üçüncü basamak' hastanelere ek olarak özel tıp merkezlerini de (2025: 11.536.197 müracaat, toplamın %1,0'ı) içerir; yalnız hastaneler %57,66. Aralık varsayımdır.",
+    "group": "G. Erişim",
+    "domain": "muracaat",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "access.hospital_visits_per_capita": {
+    "label": "Kişi başı yıllık hastane başvurusu (v)",
+    "value": 7.75,
+    "unit": "başvuru / kişi / yıl",
+    "status": "hesap",
+    "source_ids": [
+      "saglik_sbsgm_bulten2025"
+    ],
+    "derivation": "access.visits_per_capita_total × access.share_hospital_visits = 13,2 × 0,587 = 7,748 ≈ 7,75 (SİY 2025 Haber Bülteni Tablo 15 ve PDF s. 9 metni)",
+    "rationale": null,
+    "range": [
+      4.0,
+      10.0
+    ],
+    "alternatives": [
+      {
+        "label": "2025, yayımlanan ikinci + üçüncü basamak kişi başı müracaat (Tablo 15)",
+        "value": 7.8,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      },
+      {
+        "label": "2025, yalnız hastanelerde kişi başı müracaat (Tablo 11 ve 15; özel tıp merkezleri hariç)",
+        "value": 7.6,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      },
+      {
+        "label": "2024: 12,2 × 0,567 — şartname Bölüm 3 / 4.4 G değeri (≈6,9)",
+        "value": 6.92,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024"
+        ]
+      },
+      {
+        "label": "2024, yalnız hastanelerde kişi başı müracaat (Haber Bülteni 2024 Tablo 12 ve 16; SİY 2024 Tablo 8.2)",
+        "value": 6.8,
+        "status": "kaynakli",
+        "source_ids": [
+          "saglik_sbsgm_bulten2024",
+          "saglik_sbsgm_siy2024"
+        ]
+      },
+      {
+        "label": "2023: 11,4 × 0,567",
+        "value": 6.46,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2023"
+        ]
+      },
+      {
+        "label": "Ankara 2024: 47.073.855 / 5.864.049 (SİY 2024 Tablo 8.26 ve 1.3)",
+        "value": 8.03,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_siy2024"
+        ]
+      }
+    ],
+    "notes": "Şartnamenin yöntemi (kişi başı müracaat × ikinci+üçüncü basamak payı) 2025 verisine uygulandı; çarpım yayımlanan 7,8 ile tutarlı (667.703.533 / 86.092.168 = 7,76). Hastane dışı özel tıp merkezlerini dışlamak için 7,6 seçilebilir. Ankara değeri il dışından gelen başvuruları da içerir (yorum). Aralık (4–10) varsayımdır.",
+    "group": "G. Erişim",
+    "domain": "muracaat",
+    "sources": [
+      {
+        "id": "saglik_sbsgm_bulten2025",
+        "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
+        "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
+        "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "access.round_trip_factor": {
+    "label": "Gidiş-dönüş çarpanı",
+    "value": 2,
+    "unit": "yolculuk / başvuru",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Her hastane başvurusu evden hastaneye gidiş ve dönüş olmak üzere iki yolculuktur (şartname 4.4 G ve 4.5'teki λ formülündeki 2). Refakatçi, aynı başvuru için ikinci gidiş (tahlil sonucu vb.) ve ambulansla geliş modellenmedi.",
+    "range": [
+      1,
+      4
+    ],
+    "alternatives": [],
+    "notes": "1 = yalnız gidiş; >2 refakatçi/tekrar ziyaret etkisini kabaca temsil eder (duyarlılık için).",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": []
+  },
+  "access.fuel_price_tl_per_l": {
+    "label": "Ağırlıklı akaryakıt pompa fiyatı (Ankara, 21.10.2026)",
+    "value": 70.45,
+    "unit": "TL / litre (KDV dahil)",
+    "status": "hesap",
+    "source_ids": [
+      "erisim_haber_birgun_akaryakit_20261021",
+      "erisim_haber_yeniankara_akaryakit_20261021",
+      "erisim_tuik_mkt_eylul2026_yakit",
+      "erisim_yalilikilic_2021"
+    ],
+    "derivation": "Litre ağırlıklı ortalama: p = Σ s_f·q_f·p_f / Σ s_f·q_f. Fiyatlar p (Ankara, 21.10.2026): benzin 80,60 · motorin 97,80 · LPG 41,29 TL/L. Filo payları s (TÜİK, Eylül 2026 sonu trafiğe kayıtlı otomobil; hibrit benzine katıldı, elektrik %2,7 ve bilinmeyen %0,2 dışarıda): benzin 6.532.695/17.594.516 = 0,37129 · motorin 5.793.543/17.594.516 = 0,32928 · LPG 5.268.278/17.594.516 = 0,29943. Tüketimler q: 8,5 / 7,3 / 11,2 L/100 km. Σ s·q·p = 627,93; Σ s·q = 8,9133 → p = 627,93 / 8,9133 = 70,448 ≈ 70,45 TL/L.",
+    "rationale": null,
+    "range": [
+      40,
+      120
+    ],
+    "alternatives": [
+      {
+        "label": "Filo payı ağırlıklı (Σ s_f·p_f; görev tanımındaki basit ağırlık)",
+        "value": 74.49,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021",
+          "erisim_tuik_mkt_eylul2026_yakit"
+        ]
+      },
+      {
+        "label": "EPDK resmî Eylül 2026 ortalaması (İstanbul Avrupa), litre ağırlıklı",
+        "value": 66.06,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_epdk_fiyatlandirma_2026_09",
+          "erisim_tuik_mkt_eylul2026_yakit",
+          "erisim_yalilikilic_2021"
+        ]
+      },
+      {
+        "label": "EPDK resmî Eylül 2026 ortalaması (İstanbul Avrupa), filo payı ağırlıklı",
+        "value": 70.12,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_epdk_fiyatlandirma_2026_09",
+          "erisim_tuik_mkt_eylul2026_yakit"
+        ]
+      },
+      {
+        "label": "Yalnız benzin, Ankara 21.10.2026",
+        "value": 80.6,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021"
+        ]
+      },
+      {
+        "label": "Yalnız motorin, Ankara 21.10.2026",
+        "value": 97.8,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021"
+        ]
+      },
+      {
+        "label": "Yalnız LPG (otogaz), Ankara 21.10.2026",
+        "value": 41.29,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021"
+        ]
+      }
+    ],
+    "notes": "NEDEN LİTRE AĞIRLIKLI: LPG'li araç litre başına ucuz ama daha çok litre yakıyor (11,2 vs 8,5 L/100 km). Basit filo payı ağırlıklı fiyat (74,49) ortalama tüketimle (8,91) çarpılınca km maliyeti 6,64 TL çıkıyor; yakıt türüne özgü doğru toplam 6,28 TL/km. Litre ağırlıklı fiyat, fiyat × tüketim = km maliyeti eşitliğini korur (arayüz kaydırıcıları tutarlı). KAYNAK UYARISI: Ankara günlük fiyatı haber kaynağı (kind: haber; iki bağımsız haber birebir aynı). Resmî il bazında EPDK sorgusu (bildirim.epdk.gov.tr) ve dağıtıcı siteleri (Petrol Ofisi, Opet, Shell) bu ortamdan erişilemedi. Resmî EPDK Eylül 2026 aylık ortalaması (İstanbul Avrupa: 78,826 / 91,543 / 35,780) alternatif olarak verildi. Fiyatlar çok oynak: benzine 20.10.2026'da 4,30 TL indirim geldi, 22.10.2026'dan itibaren 3,35 TL ek indirim bekleniyor (BirGün); Brent Eylül 2026 ortalaması ≈115,8 $/varil (EPDK raporu s. 2). Yakıt payları Türkiye geneli (il kırılımı yok).",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_haber_birgun_akaryakit_20261021",
+        "title": "21 Ekim 2026 Benzin ve Motorin Fiyatlarında İndirim, Zam Var mı? Güncel Akaryakıt Fiyatları",
+        "publisher": "BirGün",
+        "url": "https://www.birgun.net/haber/21-ekim-2026-benzin-ve-motorin-fiyatlarinda-indirim-zam-var-mi-guncel-akaryakit-fiyatlari-741622",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "erisim_haber_yeniankara_akaryakit_20261021",
+        "title": "21 Ekim 2026 akaryakıt fiyatları: Benzine indirim var mı? Ankara, İstanbul, İzmir güncel liste",
+        "publisher": "Yeni Ankara",
+        "url": "https://www.yeniankara.com.tr/ekonomi/21-ekim-2026-akaryakit-fiyatlari-benzine-indirim-var-mi-ankara-istanbul-izmir-guncel-liste-187070",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "erisim_tuik_mkt_eylul2026_yakit",
+        "title": "Trafiğe kayıtlı otomobillerin yakıt cinsine göre dağılımı, 2004-2026 (Motorlu Kara Taşıtları, Eylül 2026 bülten tablosu)",
+        "publisher": "TÜİK",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=58046&p=QbnDV82P2BgapDdu3Zb99ku6MrEvCDVPzp%2BJPcaDcXOD691b5hAWgxEXLpgM9ZaVsiFA%2FbBcmWdKTb4ykXpJubV5qal3eNAk1GhC95WxvYqQWpofXCe4tg67Dx%2FkBAmsrl6bAb1rYNPUcoNi1ViFVqoeHETvjjgMbwz1gPF9nCQ%3D",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "erisim_yalilikilic_2021",
+        "title": "Karayolu ulaşımında yakıt tüketimine bağlı karbon ayak izi değişimi: Çanakkale örneği",
+        "publisher": "Yalılı Kılıç, M.; Dönmez, T.; Adalı, S. — Gümüşhane Üniversitesi Fen Bilimleri Dergisi 11(3), 943–955 (2021), doi:10.17714/gumusfenbil.848016",
+        "url": "https://dergipark.org.tr/tr/download/article-file/1472050",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "access.fuel_l_per_100km": {
+    "label": "Ortalama yakıt tüketimi (otomobil filosu)",
+    "value": 8.91,
+    "unit": "litre / 100 km",
+    "status": "hesap",
+    "source_ids": [
+      "erisim_yalilikilic_2021",
+      "erisim_tuik_mkt_eylul2026_yakit"
+    ],
+    "derivation": "Σ s_f·q_f = 0,37129 × 8,5 + 0,32928 × 7,3 + 0,29943 × 11,2 = 3,156 + 2,404 + 3,354 = 8,913 ≈ 8,91 L/100 km (q_f: Yalılı Kılıç vd. 2021, Tablo 7; s_f: TÜİK Eylül 2026 filo payları).",
+    "rationale": null,
+    "range": [
+      4,
+      12
+    ],
+    "alternatives": [
+      {
+        "label": "Benzinli otomobil (IPCC kılavuz değeri)",
+        "value": 8.5,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_yalilikilic_2021"
+        ]
+      },
+      {
+        "label": "Dizel otomobil",
+        "value": 7.3,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_yalilikilic_2021"
+        ]
+      },
+      {
+        "label": "LPG'li otomobil",
+        "value": 11.2,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_yalilikilic_2021"
+        ]
+      }
+    ],
+    "notes": "Resmî bir Türkiye filo ortalaması (TÜİK, Ulaştırma Bakanlığı) bulunamadı; ICCT/IEA/EEA gerçek kullanım raporları bu ortamdan erişilemedi. Değerler IPCC kılavuzunun varsayılanları olup hakemli bir Türkiye çalışmasında kullanılmıştır; eski filoyu temsil eder, yeni (hibrit ağırlıklı) araçlar için yüksek kalabilir. Hibrit otomobiller (%5,1) benzinli tüketimiyle hesaba katıldı (üst sınır yönünde). Kent içi sıkışık trafik tüketimi artırır.",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_yalilikilic_2021",
+        "title": "Karayolu ulaşımında yakıt tüketimine bağlı karbon ayak izi değişimi: Çanakkale örneği",
+        "publisher": "Yalılı Kılıç, M.; Dönmez, T.; Adalı, S. — Gümüşhane Üniversitesi Fen Bilimleri Dergisi 11(3), 943–955 (2021), doi:10.17714/gumusfenbil.848016",
+        "url": "https://dergipark.org.tr/tr/download/article-file/1472050",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      },
+      {
+        "id": "erisim_tuik_mkt_eylul2026_yakit",
+        "title": "Trafiğe kayıtlı otomobillerin yakıt cinsine göre dağılımı, 2004-2026 (Motorlu Kara Taşıtları, Eylül 2026 bülten tablosu)",
+        "publisher": "TÜİK",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=58046&p=QbnDV82P2BgapDdu3Zb99ku6MrEvCDVPzp%2BJPcaDcXOD691b5hAWgxEXLpgM9ZaVsiFA%2FbBcmWdKTb4ykXpJubV5qal3eNAk1GhC95WxvYqQWpofXCe4tg67Dx%2FkBAmsrl6bAb1rYNPUcoNi1ViFVqoeHETvjjgMbwz1gPF9nCQ%3D",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "access.cost_tl_per_km": {
+    "label": "Araç kilometre başına yakıt maliyeti (c)",
+    "value": 6.28,
+    "unit": "TL / araç·km",
+    "status": "hesap",
+    "source_ids": [
+      "erisim_haber_birgun_akaryakit_20261021",
+      "erisim_tuik_mkt_eylul2026_yakit",
+      "erisim_yalilikilic_2021"
+    ],
+    "derivation": "c = Σ s_f·p_f·q_f / 100 = (0,37129 × 80,60 × 8,5 + 0,32928 × 97,80 × 7,3 + 0,29943 × 41,29 × 11,2) / 100 = 2,544 + 2,351 + 1,385 = 6,279 ≈ 6,28 TL/km  (= access.fuel_price_tl_per_l × access.fuel_l_per_100km / 100 = 70,45 × 8,91 / 100).",
+    "rationale": null,
+    "range": [
+      2,
+      15
+    ],
+    "alternatives": [
+      {
+        "label": "Filo payı ağırlıklı fiyat × ortalama tüketim (74,49 × 8,91 / 100)",
+        "value": 6.64,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021",
+          "erisim_tuik_mkt_eylul2026_yakit",
+          "erisim_yalilikilic_2021"
+        ]
+      },
+      {
+        "label": "EPDK Eylül 2026 resmî ortalama fiyatlarla (İstanbul Avrupa)",
+        "value": 5.89,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_epdk_fiyatlandirma_2026_09",
+          "erisim_tuik_mkt_eylul2026_yakit",
+          "erisim_yalilikilic_2021"
+        ]
+      },
+      {
+        "label": "KGM taşıt işletme maliyeti 2013 (0,26029 TL/km; yakıt dışı giderler dahil) × TÜFE 2013→Eylül 2026 (19,648)",
+        "value": 5.11,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_bagdatli_akbiyikli_2015",
+          "erisim_tuik_tufe_tt10"
+        ]
+      }
+    ],
+    "notes": "YALNIZ YAKIT: lastik, bakım, amortisman, sigorta, otopark ve köprü/otoyol ücretleri hariç (resmî güncel bir 'km başı' taşıt işletme maliyeti bulunamadı; KGM sitesi erişilemedi). Alternatifteki KGM 2013 değeri bütün işletme giderlerini kapsar ama TÜFE ile güncellendiğinde yakıt-yalnız değerin altında kalıyor, çünkü 2026'da akaryakıt fiyatları genel fiyat düzeyinden hızlı arttı. Toplu taşıma, taksi, ambulans ve yürüyüş modellenmedi (tüm yolculuklar otomobille varsayılır). Kişi başına yük paylaşımı (araç doluluğu) uygulanmadı: 1 başvuru = 1 araç yolculuğu.",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_haber_birgun_akaryakit_20261021",
+        "title": "21 Ekim 2026 Benzin ve Motorin Fiyatlarında İndirim, Zam Var mı? Güncel Akaryakıt Fiyatları",
+        "publisher": "BirGün",
+        "url": "https://www.birgun.net/haber/21-ekim-2026-benzin-ve-motorin-fiyatlarinda-indirim-zam-var-mi-guncel-akaryakit-fiyatlari-741622",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "erisim_tuik_mkt_eylul2026_yakit",
+        "title": "Trafiğe kayıtlı otomobillerin yakıt cinsine göre dağılımı, 2004-2026 (Motorlu Kara Taşıtları, Eylül 2026 bülten tablosu)",
+        "publisher": "TÜİK",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=58046&p=QbnDV82P2BgapDdu3Zb99ku6MrEvCDVPzp%2BJPcaDcXOD691b5hAWgxEXLpgM9ZaVsiFA%2FbBcmWdKTb4ykXpJubV5qal3eNAk1GhC95WxvYqQWpofXCe4tg67Dx%2FkBAmsrl6bAb1rYNPUcoNi1ViFVqoeHETvjjgMbwz1gPF9nCQ%3D",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "erisim_yalilikilic_2021",
+        "title": "Karayolu ulaşımında yakıt tüketimine bağlı karbon ayak izi değişimi: Çanakkale örneği",
+        "publisher": "Yalılı Kılıç, M.; Dönmez, T.; Adalı, S. — Gümüşhane Üniversitesi Fen Bilimleri Dergisi 11(3), 943–955 (2021), doi:10.17714/gumusfenbil.848016",
+        "url": "https://dergipark.org.tr/tr/download/article-file/1472050",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "access.value_of_time_tl_per_h": {
+    "label": "Yolculuk zamanı değeri (kişi başı)",
+    "value": 73.4,
+    "unit": "TL / kişi·saat",
+    "status": "varsayim",
+    "source_ids": [
+      "erisim_rg_asgari_ucret_2026",
+      "erisim_mevzuat_4857_is_kanunu"
+    ],
+    "derivation": "f × saatlik brüt asgari ücret = 0,5 × (1.101 TL/gün ÷ 7,5 sa/gün) = 0,5 × 146,80 = 73,40 TL/sa",
+    "rationale": "Ücret tabanı kaynaklı (2026 günlük brüt asgari ücret 1.101 TL, RG 26.12.2025/33119; 4857 sayılı Kanun md. 63: haftada 45 saat → 6 gün × 7,5 saat). İş dışı (sağlık) yolculuklarında zamanın ücretin bir kesri olarak değerlendirilmesi yerleşik bir yaklaşımdır; ancak bu kesri veren rehberlere (AB HEATCO, İngiltere TAG, ABD DOT, Dünya Bankası) bu ortamdan erişilemediği ve Türkiye için resmî bir oran bulunamadığı için f = 0,5 VARSAYIMDIR (doğrulanmamış; ders kaynağından teyit edilmeli). Asgari ücret tabanı bilinçli olarak temkinli: hastaların önemli bir kısmı çalışmayan (yaşlı, çocuk) kişilerdir. Aralık 0 (zaman maliyeti yok) ile ortalama ücretin ≈1 katı arası.",
+    "range": [
+      0,
+      300
+    ],
+    "alternatives": [
+      {
+        "label": "Zaman maliyeti dahil değil (yalnız yakıt)",
+        "value": 0,
+        "status": "model_secimi"
+      },
+      {
+        "label": "Saatlik brüt asgari ücretin tamamı (f = 1)",
+        "value": 146.8,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_rg_asgari_ucret_2026",
+          "erisim_mevzuat_4857_is_kanunu"
+        ]
+      },
+      {
+        "label": "2026 ortalama saatlik brüt ücret tahmini (KYA 2023 ortalama/asgari oranı 1,996 × 146,80)",
+        "value": 293.0,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_tuik_kya_2023",
+          "erisim_rg_asgari_ucret_2026"
+        ]
+      },
+      {
+        "label": "Karayolu Ulaştırma Ana Planı yolcu zaman değeri (orta senaryo; fiyat yılı belirsiz, Demirci 2025 aktarımı)",
+        "value": 100,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_demirci_2025"
+        ]
+      }
+    ],
+    "notes": "Brüt ücret kullanıldı (net asgari ücret RG kararında yok). KUAP değeri (100 TL/sa) ikincil aktarım; fiyat yılı bilinmediği için güncellenmedi. Erişim maliyetinde zaman bileşeni km başına VOT / hız = 73,4 / 28,5 = 2,58 TL/km.",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_rg_asgari_ucret_2026",
+        "title": "Asgari Ücret Tespit Komisyonu Kararı (Karar No: 2025/1, 23/12/2025)",
+        "publisher": "Çalışma ve Sosyal Güvenlik Bakanlığı — Resmî Gazete, 26 Aralık 2025, sayı 33119",
+        "url": "https://www.resmigazete.gov.tr/eskiler/2025/12/20251226-6.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "erisim_mevzuat_4857_is_kanunu",
+        "title": "4857 sayılı İş Kanunu (RG 10/6/2003, sayı 25134)",
+        "publisher": "mevzuat.gov.tr",
+        "url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4857.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      }
+    ]
+  },
+  "access.speed_kmh": {
+    "label": "Ortalama yolculuk hızı (Ankara)",
+    "value": 28.5,
+    "unit": "km / saat",
+    "status": "hesap",
+    "source_ids": [
+      "erisim_haber_yeniankara_tomtom_2025"
+    ],
+    "derivation": "TomTom Trafik Endeksi 2025, Ankara: 10 km ortalama yolculuk 21 dk 3 sn → 10 / (21,05/60) = 28,50 km/sa",
+    "rationale": null,
+    "range": [
+      15,
+      80
+    ],
+    "alternatives": [
+      {
+        "label": "Yoğun saat ortalama hızı (TomTom 2025)",
+        "value": 20.9,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_haber_yeniankara_tomtom_2025"
+        ]
+      },
+      {
+        "label": "Akşam yoğun saat ortalama hızı (TomTom 2025)",
+        "value": 19.5,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_haber_yeniankara_tomtom_2025"
+        ]
+      },
+      {
+        "label": "Serbest akış tahmini: 28,50 × (1 + 0,558) — sıkışıklık %55,8'in TomTom tanımıyla (serbest akışa göre ek süre) yorumlanmasıyla",
+        "value": 44.4,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_yeniankara_tomtom_2025"
+        ]
+      },
+      {
+        "label": "Şehirlerarası devlet yolu otomobil hızı (Sakaltutan, KGM hız istasyonlarına dayalı varsayım; kırsal referans)",
+        "value": 95,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_demirci_2025"
+        ]
+      }
+    ],
+    "notes": "Haber aktarımı (kind: haber); TomTom sitesi ve Ankara Büyükşehir Ulaşım Ana Planı bu ortamdan erişilemedi. TomTom değeri kent (metropol) yol ağında tüm saatlerin ortalamasıdır; il geneli uzun kırsal yolculuklar daha hızlıdır. Tek hız kullanımı uzun mesafelerde zaman maliyetini yükseltir (temkinli). İyileştirme: mesafeye bağlı hız (kent içi/kırsal).",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_haber_yeniankara_tomtom_2025",
+        "title": "Ankara'da sürücüler bir yılda kaç saatini trafikte geçiriyor? (TomTom Trafik Endeksi 2025)",
+        "publisher": "Yeni Ankara",
+        "url": "https://www.yeniankara.com.tr/ankara/ankara-trafik-suresi-suruculer-yilda-kac-saat-trafikte-kaliyor-185439",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      }
+    ]
+  },
+  "access.horizon_years": {
+    "label": "Planlama ufku (T)",
+    "value": 25,
+    "unit": "yıl",
+    "status": "kaynakli",
+    "source_ids": [
+      "erisim_tbmm_haber_saglik_butce_2024",
+      "erisim_haber_diken_536163",
+      "erisim_mevzuat_6428",
+      "maliyet_savas_2020"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      5,
+      50
+    ],
+    "alternatives": [
+      {
+        "label": "6428 sayılı Kanun md. 4: KÖİ sözleşmesi üst sınırı (yatırım dönemi hariç)",
+        "value": 30,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_mevzuat_6428"
+        ]
+      },
+      {
+        "label": "Ulaştırma projelerinde en yaygın değerlendirme dönemi",
+        "value": 20,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_bagdatli_akbiyikli_2015"
+        ]
+      },
+      {
+        "label": "Şehir hastanelerinde kesintiler sonrası ortalama kalan ödeme süresi ('15-16 yıl', 2023)",
+        "value": 15.5,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_tbmm_haber_saglik_butce_2024"
+        ]
+      }
+    ],
+    "notes": "DOĞRULANDI: şehir hastanesi KÖİ sözleşmeleri 25 yıl — Sağlık Bakanı, TBMM PBK 10.11.2023: '25 yıllık sözleşme sürelerini kesmediğimiz bir şehir hastanesi olmadı'; Diken [27]: Bilkent ödemeleri 2019–2043 (25 yıl); Savaş vd. 2020 (maliyet_savas_2020, s. 2): '25 yıl sonra işletme kamuya kalır'. Yasal üst sınır 30 yıl + yatırım dönemi (6428 md. 4). Bakanın aynı konuşmasına göre sözleşmeler sonradan kısaltıldı (İzmir −10 yıl 3 ay, Etlik −7 yıl 8 ay, Bilkent −3 yıl 1 ay; ortalama kalan 15–16 yıl). Bu değeri planlama ufku olarak kullanmak bir modelleme tercihidir (hastane binasının fiziksel ömrü daha uzundur).",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_tbmm_haber_saglik_butce_2024",
+        "title": "Sağlık Bakanlığının 2024 Yılı Bütçesi TBMM Plan ve Bütçe Komisyonunda Kabul Edildi (Meclis Haberleri, 10.11.2023)",
+        "publisher": "TBMM",
+        "url": "https://www.tbmm.gov.tr/Haber/Detay?Id=0092bb1b-0174-46b9-8cf3-018bb76df0af",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "erisim_haber_diken_536163",
+        "title": "Çiğdem Toker: Ankara'nın merkezindeki köklü hastaneler kapatılacak",
+        "publisher": "Diken (Günün 11'i özeti)",
+        "url": "https://www.diken.com.tr/?p=536163",
+        "accessed": "2026-10-21",
+        "kind": "haber"
+      },
+      {
+        "id": "erisim_mevzuat_6428",
+        "title": "6428 sayılı Sağlık Bakanlığınca Kamu Özel İş Birliği Modeli ile Tesis Yaptırılması, Yenilenmesi ve Hizmet Alınması ile Bazı Kanun ve KHK'lerde Değişiklik Yapılması Hakkında Kanun (RG 9/3/2013, sayı 28582)",
+        "publisher": "mevzuat.gov.tr",
+        "url": "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6428.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "maliyet_savas_2020",
+        "title": "Kamu Özel İşbirliği Modeli Ankara Şehir Hastanesi Örneği",
+        "publisher": "Savaş, T.; Keleş, R.; Göktaş, B. — Ankara Sağlık Bilimleri Dergisi (ASBD), 2020",
+        "url": "https://dergipark.org.tr/tr/download/article-file/972597",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "access.discount_rate": {
+    "label": "Sosyal iskonto oranı (r, reel)",
+    "value": 0.05,
+    "unit": "oran / yıl (reel)",
+    "status": "kaynakli",
+    "source_ids": [
+      "erisim_kalayci_oflaz_2022"
+    ],
+    "derivation": null,
+    "rationale": null,
+    "range": [
+      0.0,
+      0.12
+    ],
+    "alternatives": [
+      {
+        "label": "AB CBA rehberi 2014–2020, uyum ülkesi olmayan üye devletler; WHO sağlık değerlendirmeleri",
+        "value": 0.03,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_kalayci_oflaz_2022"
+        ]
+      },
+      {
+        "label": "Türkiye sosyal zaman tercihi oranı (Halıcıoğlu ve Karataş 2011)",
+        "value": 0.0506,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_kalayci_oflaz_2022"
+        ]
+      },
+      {
+        "label": "Yurt içi tasarrufların ortalama getirisi 1987–2006 (Kalkınma Bakanlığı)",
+        "value": 0.06,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_uzunkaya_2012"
+        ]
+      },
+      {
+        "label": "Türkiye ulaştırma projelerinde son uygulama (≈%8)",
+        "value": 0.08,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_bagdatli_akbiyikli_2015"
+        ]
+      },
+      {
+        "label": "Türkiye ekonomik indirgeme oranı 1987–2006 (Kalkınma Bakanlığı; duyarlılık %9,0–11,9)",
+        "value": 0.098,
+        "status": "kaynakli",
+        "source_ids": [
+          "erisim_uzunkaya_2012"
+        ]
+      }
+    ],
+    "notes": "Varsayılan %5: Avrupa Komisyonu 'Guide to Cost-Benefit Analysis of Investment Projects 2014–2020' uyum ülkeleri için önerdiği sosyal iskonto oranı (hakemli derlemedeki aktarım; rehberin aslı ec.europa.eu bu ortamdan erişilemedi) ve Türkiye için tahmin edilen sosyal zaman tercihi oranı %5,06 ile uyumlu. Türkiye'de BAĞLAYICI resmî bir sosyal iskonto oranı bulunamadı: SBB 2026-2028 Yatırım Programı Hazırlama Rehberi (yatirim_rehber_2026_2028, md. 54) 'ekonomik analizde kullanılacak iskonto oranı … güncel veriler kullanılarak hesaplanacaktır' diyor. Kalkınma Bakanlığı'nın tek resmî tahmini (Uzunkaya ve Uzunkaya 2012) sermayenin fırsat maliyetine dayalı %9,8'dir → ÖĞRENCİ KARARI: %5 (sosyal zaman tercihi) mi, %9,8 (Türkiye ekonomik indirgeme oranı) mı? PV(25 yıl) = 14,09 (%5) / 9,22 (%9,8) / 17,41 (%3). Oran reel olduğundan tüm maliyetler sabit 2026 fiyatlarıyla kullanılmalı.",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": [
+      {
+        "id": "erisim_kalayci_oflaz_2022",
+        "title": "Sağlık Ekonomisi Perspektifinden Fayda-Maliyet Analizlerinde Sosyal İskonto Oranının Seçiminin Analizi",
+        "publisher": "Kalaycı Oflaz, N. — Pamukkale Üniversitesi Sosyal Bilimler Enstitüsü Dergisi 53, 391–408 (2022), doi:10.30794/pausbed.1115230",
+        "url": "https://dergipark.org.tr/tr/download/article-file/2421920",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      }
+    ]
+  },
+  "access.circuity": {
+    "label": "Dolambaç katsayısı (yol ağı mesafesi / kuş uçuşu mesafe)",
+    "value": 1.223,
+    "unit": "oran (boyutsuz)",
+    "status": "hesap",
+    "source_ids": [
+      "arazi_osm_circuity_hesap",
+      "arazi_osm_osm_turkey_pbf",
+      "arazi_osm_ghs_pop_e2025_1km",
+      "arazi_osm_geoboundaries_tur"
+    ],
+    "derivation": "OSM (2026-06-26T20:21:00Z) araç yolu ağında 4.761 köken–hedef çifti; köken ∝ GHS-POP 2025 nüfusu, her mesafe bandından bir hedef ∝ nüfus; ağ mesafesi (Dijkstra, yönlü, tek yön kuralları) / bağlanan düğümler arası kuş uçuşu (EPSG:32636); hücreler en yakın motorway/trunk dışı yol düğümüne bağlandı. Değer = kuş uçuşu 5–40 km çiftlerinin nüfus ağırlıklı ortalaması (n = 2.394, w = kökenin bant içi nüfusu). Aynı bantta ortanca 1,218, ağırlıksız ortalama 1,247, nüfus ağırlıklı oranlar toplamı Σw·ağ/Σw·kuş = 1,206, kapıdan kapıya (bağlantı mesafeleri dahil, hücre merkezine göre) 1,229.",
+    "rationale": "Hastane yolculuklarının çoğu hücreden en yakın hastaneye 5–40 km aralığında (R varsayılanı 30 km); çok kısa (<5 km) çiftlerde katsayı kent içi blok yapısı nedeniyle yüksek, uzun çiftlerde düşük. Model d_ij = kuş uçuşu × k kullandığı için bu banttaki nüfus ağırlıklı ortalama seçildi.",
+    "range": [
+      1.0,
+      1.5
+    ],
+    "alternatives": [
+      {
+        "label": "Şartname varsayılanı (Bölüm 4.3/4.4; kaynaksız)",
+        "value": 1.3,
+        "status": "varsayim",
+        "source_ids": []
+      },
+      {
+        "label": "OSM ölçümü, tüm çiftler (nüfus ağırlıklı)",
+        "value": 1.236,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 5–40 km, köken kentsel (9 merkez ilçe)",
+        "value": 1.222,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 5–40 km, köken kırsal (16 ilçe)",
+        "value": 1.262,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 0–5 km (nüfus ağırlıklı)",
+        "value": 1.384,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 5–10 km (nüfus ağırlıklı)",
+        "value": 1.281,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 10–20 km (nüfus ağırlıklı)",
+        "value": 1.232,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 20–40 km (nüfus ağırlıklı)",
+        "value": 1.185,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 40–80 km (nüfus ağırlıklı)",
+        "value": 1.204,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      },
+      {
+        "label": "OSM ölçümü, 80+ km (nüfus ağırlıklı)",
+        "value": 1.181,
+        "status": "hesap",
+        "source_ids": [
+          "arazi_osm_circuity_hesap"
+        ]
+      }
+    ],
+    "notes": "Aralık: 1,0 = kuş uçuşu (fiziksel alt sınır); üst sınır = ölçülen en yüksek bant ortalaması + pay. Tablo: data/reference/circuity_ankara.csv; grafik: data/processed/circuity_ankara.png. Çekilen 4.800 çiftten 4.761 geçerli (bağlantı > 1000 m veya düğümler arası < 500 m olanlar atıldı). Nüfuslu hücrelerin %12,8'i (nüfusun %0,21'i) 1 km içinde araç yoluna bağlanamadı. Literatür: Boscoe, Henry & Zdeb 2012 ve Ballou, Rahardja & Sakai 2002 künyeleri Crossref'ten doğrulandı; tam metinlere erişilemediği (vekil sunucu 403) için katsayı değerleri kaydedilmedi.",
+    "group": "G. Erişim",
+    "domain": "dolambac",
+    "sources": [
+      {
+        "id": "arazi_osm_circuity_hesap",
+        "title": "Ankara yol ağı dolambaç katsayısı ölçümü (OSM + GHS-POP; bu proje, pipeline/15_circuity.py)",
+        "publisher": "Proje hesabı",
+        "url": "pipeline/15_circuity.py",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      },
+      {
+        "id": "arazi_osm_osm_turkey_pbf",
+        "title": "OpenStreetMap — Geofabrik Türkiye özütü turkey-latest.osm.pbf (çoğaltma zaman damgası 2026-06-26T20:21:00Z)",
+        "publisher": "© OpenStreetMap katkıcıları; özüt Geofabrik; ayna Hugging Face (NoeFlandre/osm-geofabrik-raw-pbf-extracts)",
+        "url": "https://huggingface.co/datasets/NoeFlandre/osm-geofabrik-raw-pbf-extracts/resolve/main/turkey-latest.osm.pbf",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      },
+      {
+        "id": "arazi_osm_ghs_pop_e2025_1km",
+        "title": "GHS-POP R2023A, E2025, 1 km, Mollweide (GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.tif) — Ankara penceresi",
+        "publisher": "Avrupa Komisyonu Ortak Araştırma Merkezi (JRC), Global Human Settlement Layer",
+        "url": "https://jrc-ghsl.s3.amazonaws.com/ghs-pop/r2023a/54009/1000m/2025/GHS_POP_E2025_GLOBE_R2023A_54009_1000_V1_0.tif",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      },
+      {
+        "id": "arazi_osm_geoboundaries_tur",
+        "title": "geoBoundaries gbOpen TUR ADM1 (TUR-ADM1-25984515) ve ADM2 (TUR-ADM2-54988432), sürüm 9469f09",
+        "publisher": "geoBoundaries (William & Mary geoLab); kaynak: OpenStreetMap / OSM Boundaries",
+        "url": "https://www.geoboundaries.org/api/current/gbOpen/TUR/ADM1/",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      }
+    ]
+  },
+  "access.alpha": {
+    "label": "Mesafe üssü (α)",
+    "value": 1,
+    "unit": "boyutsuz",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "α = 1 erişim maliyetini mesafeyle doğrusal kılar (toplam yolculuk maliyeti = verimlilik ölçütü; λ'nın TL/kişi·km birimi ancak α = 1'de doğrudan para cinsindendir). α > 1 uzak mesafeleri orantısız cezalandırır (eşitlik ayarı, şartname 4.1 ve 4.4 G); bu durumda amaç terimi artık TL değil, 'eşitlik ağırlıklı' bir ölçüdür.",
+    "range": [
+      1.0,
+      3.0
+    ],
+    "alternatives": [],
+    "notes": null,
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": []
+  },
+  "access.max_distance_km": {
+    "label": "Azami erişim mesafesi (R, yol mesafesi)",
+    "value": 30,
+    "unit": "km (yol; d_ij = kuş uçuşu × access.circuity)",
+    "status": "varsayim",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur. Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Ön kontrol (oturum çalışma alanında, kalibre edilmemiş GHS-POP 2025 1 km'den 3 km bloklar): P_min = 250 ile tüm nüfuslu hücrelerin R içinde en az bir adayı var; P_min = 500'de ≈71 hücre (≈4.900 kişi) R dışında kalıyor — R ile P_min birlikte seçilmeli.",
+    "range": [
+      10,
+      100
+    ],
+    "alternatives": [
+      {
+        "label": "Kentsel alt sınır (varsayım; kaynak yok)",
+        "value": 15,
+        "status": "varsayim"
+      },
+      {
+        "label": "Kırsal üst sınır (varsayım; kaynak yok)",
+        "value": 50,
+        "status": "varsayim"
+      }
+    ],
+    "notes": "Kentsel/kırsal ayrı R destekleyen resmî bir kaynak bulunamadı; ayrım istenirse ilçe/hücre yoğunluğuna göre iki değer (ör. 15/50 km) varsayım olarak etiketlenmeli. R kapsama alt sınırını (LSCP) doğrudan belirler; küçük R çok hastane gerektirir.",
+    "group": "G. Erişim",
+    "domain": "erisim",
+    "sources": []
+  },
+  "grid.cell_km": {
+    "label": "Hücre boyutu",
+    "value": 3,
+    "unit": "km",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.3/4.6: 2, 3 ve 5 km ızgaralar üretilecek; canlı çözüm hedefi 3 km'de ≲15 sn, 2 km'de ≲60 sn. Varsayılan 3 km: sunum dizüstünde canlı çözüm hedefine uygun ve 300 yataklı bir hastanenin ≈0,04 km² inşaat alanına göre hücre (9 km²) arazi bakımından bağlayıcı değil. Ön sayım: il içinde ≈2.856 hücre (3 km), nüfuslu ≈1.876.",
+    "range": [
+      2,
+      5
+    ],
+    "alternatives": [
+      {
+        "label": "2 km (ayrıntılı; il içi ≈6.498 hücre, nüfuslu ≈2.969)",
+        "value": 2,
+        "status": "model_secimi"
+      },
+      {
+        "label": "5 km (hızlı; il içi ≈1.025 hücre, nüfuslu ≈911)",
+        "value": 5,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "H. Izgara/çözücü",
+    "domain": "izgara",
+    "sources": []
+  },
+  "grid.candidate_min_pop": {
+    "label": "Aday hücre için asgari nüfus (P_min)",
+    "value": 250,
+    "unit": "kişi / hücre",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal varsayılan verilmemiş. 3 km ön sayım (kalibre edilmemiş GHS-POP 2025): P_min ≥ 1 → |J| ≈ 1.876; 100 → 899 (nüfusun %99,6'sı); 250 → 551 (%98,7); 500 → 356 (%97,6); 1.000 → 244 (%96,4). 250 seçildi çünkü R = 30 km (yol; kuş uçuşu ≈24,5 km) ile her nüfuslu hücrenin R içinde en az bir adayı kalıyor (P_min = 500'de ≈71 hücre/≈4.900 kişi R dışında), aday sayısı da çözüm süresi için makul. Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı (2 km'de 250 → ≈727 aday; 5 km'de ≈414).",
+    "range": [
+      0,
+      5000
+    ],
+    "alternatives": [
+      {
+        "label": "Tüm nüfuslu hücreler",
+        "value": 1,
+        "status": "model_secimi"
+      },
+      {
+        "label": "Daha geniş aday kümesi",
+        "value": 100,
+        "status": "model_secimi"
+      },
+      {
+        "label": "Daha dar aday kümesi (R = 30 km ile bazı kırsal hücreler kapsanamıyor)",
+        "value": 500,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "H. Izgara/çözücü",
+    "domain": "izgara",
+    "sources": []
+  },
+  "grid.k_nearest": {
+    "label": "Her talep hücresi için tutulan en yakın aday sayısı (k)",
+    "value": 50,
+    "unit": "aday / talep hücresi",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). 3 km ve P_min = 250 ön sayımında R (24,5 km kuş uçuşu) içindeki aday sayısı medyan ≈30, nüfus ağırlıklı ortalama ≈137: k = 50 kırsal hücrelerde R içi adayların tamamını, kent çekirdeğinde ≈12 km yarıçaplı en yakın 50 adayı tutar. Atama değişkeni sayısı ≈ |I|·k ≈ 1.876 × 50 ≈ 94 bin (3 km) — canlı çözüm için makul. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).",
+    "range": [
+      5,
+      300
+    ],
+    "alternatives": [
+      {
+        "label": "Hızlı (daha az değişken, kısıtlayıcı olabilir)",
+        "value": 20,
+        "status": "model_secimi"
+      },
+      {
+        "label": "Geniş (R içindeki adayların neredeyse tamamı)",
+        "value": 150,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "H. Izgara/çözücü",
+    "domain": "izgara",
+    "sources": []
+  },
+  "solver.time_limit_s": {
+    "label": "Çözücü süre sınırı",
+    "value": 15,
+    "unit": "saniye",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.6 hedefi: 3 km'de canlı çözüm ≲15 sn (2 km'de ≲60 sn). Süre dolarsa en iyi bulunan çözüm, alt sınır ve gap ile birlikte gösterilir; varsayılan senaryolar önceden (süre sınırı olmadan) çözülür.",
+    "range": [
+      5,
+      600
+    ],
+    "alternatives": [
+      {
+        "label": "2 km ızgara hedefi",
+        "value": 60,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "H. Izgara/çözücü",
+    "domain": "izgara",
+    "sources": []
+  },
+  "solver.mip_gap": {
+    "label": "Hedef MIP gap (göreli)",
+    "value": 0.01,
+    "unit": "oran (0–1)",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.6 gap'i parametrik bırakıyor, sayı vermiyor. %1: parametre belirsizliklerinin (ör. iskonto oranı, zaman değeri) etkisinden çok küçük bir optimallik toleransı; canlı çözümün süre hedefini tutturmasına yardım eder. Önceden çözülen varsayılan senaryolar ve kaba kuvvet testleri için 0 / 1e-4 kullanılmalı.",
+    "range": [
+      0.0,
+      0.1
+    ],
+    "alternatives": [
+      {
+        "label": "Sıkı (raporlama/önceden çözüm)",
+        "value": 0.0001,
+        "status": "model_secimi"
+      },
+      {
+        "label": "Gevşek (çok hızlı keşif)",
+        "value": 0.05,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "H. Izgara/çözücü",
+    "domain": "izgara",
+    "sources": []
+  }
+}

@@ -1,0 +1,328 @@
+# Alan: maliyet — B. Hastane boyutu, C. İnşaat, D. Arsa (yalnız alan standartları) (spec 4.4)
+# Kaynaklar: data/sources/maliyet.yaml (+ yatirim alanının yatirim_kyp2026, yatirim_rehber_2026_2028 kayıtları)
+# Tablolar: data/reference/tebligat_2026_birim_maliyet.csv, data/reference/hastane_boyut_ornekleri.csv
+# Model sınıf eşlemesi (öneri): B < 200 → IV-C · 200 ≤ B < 400 → V-B · 400 ≤ B ≤ general_max → V-C · şehir hastanesi → V-D.
+# V-A (eğitim ve araştırma hastanesi) yatak eşiği olmayan ayrı bir sınıftır; yalnız alternatif olarak sunulur.
+
+# ---------------------------------------------------------------- C. İnşaat birim maliyetleri (2026 tebliği)
+
+- key: cost.unit.IV-C
+  label: "Birim maliyet — IV-C: hastane (<200 yatak)"
+  value: 40500
+  unit: "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)"
+  status: kaynakli
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  range: [32600, 50600]
+  alternatives:
+    - {label: "2025 tebliği (RG 31.01.2025/32799)", value: 32600, source_ids: [maliyet_rg_2025_birim_maliyet_teblig]}
+  notes: >-
+    Tebliğ md. 1, 'IV. SINIF (C) GRUBU YAPILAR … 40.500,00 TL/m²', 6. kalem: 'Hastaneler (yatak sayısı 200'ün altındaki
+    yapılar)'. Arsa, çevre düzenlemesi ve altyapı hariç (md. 2(4)). Kaydırıcı aralığı: alt sınır 2025 değeri, üst sınır
+    2026 değerinin %25 fazlası (2025→2026 artış ×1,24).
+
+- key: cost.unit.V-A
+  label: "Birim maliyet — V-A: eğitim ve araştırma hastanesi"
+  value: 42350
+  unit: "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)"
+  status: kaynakli
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  range: [34400, 52900]
+  alternatives:
+    - {label: "2025 tebliği", value: 34400, source_ids: [maliyet_rg_2025_birim_maliyet_teblig]}
+  notes: >-
+    'V. SINIF (A) GRUBU YAPILAR … 42.350,00 TL/m²', 2. kalem: 'Eğitim ve araştırma hastaneleri'. Yatak eşiği yok;
+    tebliğe göre yatak sayısından bağımsız bir tür sınıfıdır (V-B'den ucuz). Model boyut sınıflarında varsayılan olarak
+    kullanılmaz.
+
+- key: cost.unit.V-B
+  label: "Birim maliyet — V-B: hastane (200–399 yatak)"
+  value: 43850
+  unit: "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)"
+  status: kaynakli
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  range: [35600, 54800]
+  alternatives:
+    - {label: "2025 tebliği", value: 35600, source_ids: [maliyet_rg_2025_birim_maliyet_teblig]}
+  notes: "'V. SINIF (B) … 43.850,00 TL/m²', 2. kalem: 'Hastaneler (yatak sayısı 200'den fazla ve 400'den az olan yapılar-yatak sayısı 200 dâhil)'."
+
+- key: cost.unit.V-C
+  label: "Birim maliyet — V-C: hastane (≥400 yatak)"
+  value: 48750
+  unit: "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)"
+  status: kaynakli
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  range: [39500, 60900]
+  alternatives:
+    - {label: "2025 tebliği", value: 39500, source_ids: [maliyet_rg_2025_birim_maliyet_teblig]}
+  notes: "'V. SINIF (C) … 48.750,00 TL/m²', 2. kalem: 'Hastaneler (yatak sayısı 400 ve üzeri yapılar-yatak sayısı 400 dâhil)'."
+
+- key: cost.unit.V-D
+  label: "Birim maliyet — V-D: şehir hastanesi"
+  value: 53500
+  unit: "TL/m² (2026; KDV hariç; %15 genel gider + %10 yüklenici kârı dahil)"
+  status: kaynakli
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  range: [43400, 66900]
+  alternatives:
+    - {label: "2025 tebliği", value: 43400, source_ids: [maliyet_rg_2025_birim_maliyet_teblig]}
+  notes: >-
+    'V. SINIF (D) … 53.500,00 TL/m²', 4. kalem: 'Şehir hastaneleri'. Tebliğde şehir hastanesi için yatak eşiği yoktur;
+    'şehir hastanesi' sınıfına geçiş eşiği (size.city_min_beds) model seçimidir.
+
+# ---------------------------------------------------------------- B. Boyut sınıfları ve sınırlar
+
+- key: size.class_threshold_1
+  label: "Tebliğ sınıf eşiği 1 (IV-C → V-B)"
+  value: 200
+  unit: "yatak"
+  status: model_secimi
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  rationale: >-
+    Model boyut sınıflarını tebliğin hastane sınıflarıyla eşler (spec 4.1). 200 sayısı tebliğde birebir geçer:
+    IV-C 'yatak sayısı 200'ün altındaki', V-B 'yatak sayısı 200 dâhil'. Yani B < 200 → IV-C, B ≥ 200 → V-B.
+    Sürekli yatak değişkeninde sınır yatak (tam 200) V-B'ye aittir.
+  range: [100, 300]
+
+- key: size.class_threshold_2
+  label: "Tebliğ sınıf eşiği 2 (V-B → V-C)"
+  value: 400
+  unit: "yatak"
+  status: model_secimi
+  source_ids: [maliyet_rg_2026_birim_maliyet_teblig]
+  rationale: >-
+    Tebliğ: V-B '400'den az', V-C 'yatak sayısı 400 ve üzeri … 400 dâhil'. B ≥ 400 → V-C (genel hastane üst sınıfı).
+  range: [300, 600]
+
+- key: size.general_min_beds
+  label: "Genel hastane en az yatak (B_min)"
+  value: 50
+  unit: "yatak"
+  status: model_secimi
+  source_ids: [maliyet_sygm_bahce_2021, maliyet_cnnturk_dikili_2026, yatirim_kyp2026]
+  rationale: >-
+    Sağlık Bakanlığı'nın yaptırdığı en küçük yeni ilçe devlet hastanesi örnekleri 50 yatak (Bahçe/Osmaniye, SYGM 2021)
+    ve 75 yatak (Dikili, 2026). Daha küçük 'hastane' örneği bulunmadı. 2026 KYP'deki en küçük yeni SB genel hastanesi
+    150 yataktır (6 proje); 50, gerçekçi alt uçtur.
+  range: [25, 200]
+
+- key: size.general_max_beds
+  label: "Genel hastane en çok yatak (B_max)"
+  value: 999
+  unit: "yatak"
+  status: model_secimi
+  source_ids: [yatirim_kyp2026, maliyet_kalkinma_ankara_2017]
+  rationale: >-
+    Şehir hastanesi sınıfının bir altı (size.city_min_beds − 1), sınıflar kesintisiz olsun diye. 2026 KYP'deki en büyük
+    yeni SB genel (şehir hastanesi olmayan) hastaneleri 750 yataktır (Konya Merkez, Tokat Merkez, Bursa Çekirge);
+    Ankara'da Etlik kampüsündeki Bölge Hastanesi 718, Ankara EAH fiilî 616 yatak. Daha büyük tek genel hastane örneği
+    de var (Gülhane EAH 1.150 yatak, Kalkınma 2017) ama istisnadır.
+  range: [400, 1500]
+
+- key: size.city_min_beds
+  label: "Şehir hastanesi en az yatak"
+  value: 1000
+  unit: "yatak"
+  status: model_secimi
+  source_ids: [maliyet_memurlar_2018, maliyet_savas_2020, yatirim_kyp2026]
+  rationale: >-
+    Modelleme tercihi: 'şehir hastanesi' sınıfı (V-D fiyatı, ≈335 m²/yatak) 1.000 yatak ve üstü için açılır. Tebliğde
+    şehir hastanesi için yatak eşiği yoktur ve Bakanlık bu adı daha küçük tesislere de veriyor: Yozgat 455/475, Manisa
+    558, Isparta 755 (KÖİ); Muğla 700, Rize ve Van 800, Samsun/Ordu/Trabzon 900 (2026 KYP, genel bütçe). Spec örnekleri
+    (Elazığ 1.038, Eskişehir 1.081, Kayseri 1.607) eşiğin üstündedir.
+  range: [400, 2000]
+  alternatives:
+    - {label: "En küçük KÖİ şehir hastanesi (Yozgat, SB 2020 bütçe sunumu)", value: 455, source_ids: [maliyet_savas_2020]}
+
+- key: size.city_max_beds
+  label: "Şehir hastanesi en çok yatak"
+  value: 4000
+  unit: "yatak"
+  status: model_secimi
+  source_ids: [maliyet_tbmm_2025_ankara, yatirim_kyp2026]
+  rationale: >-
+    Spec varsayılanı. Gerçek üst uç biraz daha yüksek: Bilkent ve Etlik 4.050'şer yatak (Ankara İl Sağlık Müdürlüğü,
+    TBMM 2025, 'fiilî ve resmî'); İstanbul Sancaktepe 1. Etap 4.050 yatak (2026 KYP). 4.000, bu üç örneği dışarıda bırakır;
+    gerekirse 4.050'ye çıkarılmalı.
+  range: [2000, 5000]
+  alternatives:
+    - {label: "En büyük gerçek örnekler (Bilkent, Etlik, Sancaktepe)", value: 4050, source_ids: [maliyet_tbmm_2025_ankara, yatirim_kyp2026]}
+
+# ---------------------------------------------------------------- C. Yatak başına alan ve çekirdek alan
+
+- key: cost.m2_per_bed.general
+  label: "Yatak başına kapalı alan — genel hastane"
+  value: 130
+  unit: "m² kapalı alan / yatak"
+  status: kaynakli
+  source_ids: [maliyet_balcali_2019, maliyet_ehta_2021]
+  range: [100, 350]
+  alternatives:
+    - {label: "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)", value: 138.7, source_ids: [maliyet_aliefendioglu_2021]}
+    - {label: "Balcalı Hastanesi (190.651 ÷ 1.200)", value: 158.9, source_ids: [maliyet_balcali_2019]}
+    - {label: "2026 KYP SB genel hastaneleri, alan–yatak eğimi (n = 47)", value: 228.4, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47)", value: 237.0, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "2026 KYP SB genel hastaneleri, medyan (n = 47)", value: 250.0, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+  notes: >-
+    Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari
+    alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz
+    alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî
+    Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa)
+    standardıdır (maliyet_mpyy_ek2); EHTA da 130'u 'İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik' hükmü olarak
+    anıyor. Yani 130'un bina alanı olarak kullanımı akademik yorumdur. (3) 130 bir ASGARİdir; Bakanlığın 2026 KYP'deki yeni
+    genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre
+    toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin
+    yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli.
+
+- key: cost.m2_per_bed.city
+  label: "Yatak başına kapalı alan — şehir hastanesi"
+  value: 335.5
+  unit: "m² kapalı alan / yatak"
+  status: hesap
+  source_ids: [maliyet_savas_2020]
+  derivation: "14.159.000 m² ÷ 42.199 yatak = 335,5 (Sağlık Bakanlığı KÖİ şehir hastanesi programı, 32 hastane, Aralık 2017; Savaş vd. 2020, s. 26)"
+  range: [250, 400]
+  alternatives:
+    - {label: "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310", value: 308.3, source_ids: [maliyet_memurlar_2018]}
+    - {label: "Manisa Şehir H. (178.204 ÷ 558)", value: 319.4, source_ids: [maliyet_memurlar_2018]}
+    - {label: "Bilkent, 2017 planı (1.200.000 ÷ 3.704)", value: 324.0, source_ids: [maliyet_kalkinma_ankara_2017]}
+    - {label: "Şehir hastaneleri (Aliefendioğlu & Bostancı 2021, yazıldığı gibi)", value: 331, source_ids: [maliyet_aliefendioglu_2021]}
+    - {label: "Bilkent (1.312.358 ÷ 3.810)", value: 344.5, source_ids: [maliyet_medikalakademi_bilkent]}
+    - {label: "2026 KYP genel bütçeli şehir hastaneleri, medyan (n = 14)", value: 279.5, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+  notes: >-
+    Spec 4.4 C 'şehir hastanesi ≈310' (Eskişehir) diyor, 4.2 '≈310–345'. Varsayılan olarak tek hastane yerine tüm KÖİ
+    programının toplam/toplam oranı seçildi (spec aralığının içinde); Eskişehir değeri ilk alternatif. Kapalı alanlar
+    kapalı otoparkları da içerir (ör. Bilkent 6.918 araçlık otopark). Bilkent'in yatak sayısı kaynaklar arasında çelişkili
+    (3.704 / 3.711 / 3.810 / 4.050) — bkz. hastane_boyut_ornekleri.csv; 4.050 ile 324,0 m²/yatak çıkar.
+    Genel bütçeyle yapılan yeni şehir hastaneleri (2026 KYP) daha küçük: medyan 279,5, ≥1.000 yatak (n = 8) medyan 254,9.
+
+- key: cost.core_area_m2
+  label: "Yataktan bağımsız çekirdek alan (A0)"
+  value: 5000
+  unit: "m² kapalı alan / hastane"
+  status: varsayim
+  source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026, maliyet_balcali_2019]
+  rationale: >-
+    Veriden anlamlı biçimde tanımlanamadı; tahminlerin ortasında yuvarlak bir değer seçildi. Dayanaklar (hepsi 2026 KYP SB
+    genel hastaneleri): alan = A0 + a·yatak regresyonu n = 47 için A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61),
+    ≤600 yatak (n = 44) için 7.695 m² (p = 0,12); sınıf ortalamalarından iki nokta tahmini 6.938 m². Yatak başı alanın
+    büyüklükle düşmesi (266 → 244 → 233 m²/yatak) küçük ama pozitif bir sabit çekirdek alanla tutarlı. Üst sınır kontrolü:
+    yatirim alanının F0 %95 GA üst sınırı (0,74–0,94 milyar TL) − F_sabit (250 mn TL) payı, (1,20)(1,40)·u_k ile bölününce
+    ≈6.700–10.200 m² eder; 5.000 bunun altında. Balcalı'da tüm teknik ve destek birimleri 27.326 m² (1.200 yatak,
+    %14,3) ama mutfak, çamaşırhane, depo gibi kalemler yatakla ölçeklendiği için A0 olarak alınmadı.
+  range: [0, 45000]
+  alternatives:
+    - {label: "KYP regresyon kesişimi, n = 47 (a = 228,4 ile birlikte)", value: 3361, source_ids: [maliyet_hesap_kyp_alan]}
+    - {label: "KYP sınıf ortalamaları, iki nokta (a = 219,9 ile)", value: 6938, source_ids: [maliyet_hesap_kyp_alan]}
+    - {label: "KYP regresyon kesişimi, ≤600 yatak (a = 214,1 ile)", value: 7695, source_ids: [maliyet_hesap_kyp_alan]}
+    - {label: "a = 130 sabitken KYP ortalamasını tutturan A0 (önerilmez)", value: 41552, source_ids: [maliyet_hesap_kyp_alan]}
+  notes: >-
+    A0 ile cost.m2_per_bed.general birlikte seçilmeli. a = 130 ve A0 = 5.000 ile 150 yataklı hastane 24.500 m², 600
+    yataklı 83.000 m² çıkar; KYP'de aynı boyutlar 26.432–49.250 m² ve 104.000–152.000 m²'dir. KYP ile tutarlı çift
+    (a ≈ 228, A0 ≈ 3.400) ya da (a ≈ 214, A0 ≈ 7.700) kullanılabilir. a = 130'u koruyup A0 = 41.552 almak alanı tutturur
+    ama ölçek ekonomisini abartır (küçük hastaneyi çok pahalı yapar). Duyarlılık analizinde mutlaka gösterilmeli (spec 4.2).
+
+# ---------------------------------------------------------------- C. Tebliğe dahil olmayan kalemler ve KDV
+
+- key: cost.infra_ratio
+  label: "Altyapı + çevre düzenlemesi oranı (φ_alt)"
+  value: 0.15
+  unit: "inşaat maliyetine oran"
+  status: kaynakli
+  source_ids: [yatirim_rehber_2026_2028, maliyet_rg_2026_birim_maliyet_teblig]
+  range: [0.05, 0.30]
+  notes: >-
+    SBB 2026-2028 Yatırım Programı Hazırlama Rehberi, EK 3 (İdari Hizmet Binası Gerekçe Raporu), 'Ödenek Talebine Esas
+    Bedel Hesabı' (PDF s. 51, basılı s. 44): 'c) İnşaat Maliyeti a x b; d) Çevre Düzenlemesi (%15) c x %15; e) Toplam c + d;
+    f) KDV … e x %…'; a = tebliğdeki birim maliyet. Bu şablon idari hizmet binaları içindir; hastaneye özgü bir oran
+    bulunamadı. Tebliğ md. 2(4) hem çevre düzenlemesini hem altyapıyı (zemin iyileştirme, bina dışı şebekeler) hariç
+    tutar; şablondaki %15 yalnız 'çevre düzenlemesi' diye adlandırılmıştır, bu yüzden 0,15 alt uca yakın bir değerdir.
+    Bağlantı yolu/kavşak ve altyapı bağlantıları yatirim alanında F_sabit içinde düşünüldü — çift sayılmamalı.
+
+- key: cost.equipment_ratio
+  label: "Tıbbi donanım oranı (φ_don)"
+  value: 0.25
+  unit: "inşaat maliyetine oran"
+  status: varsayim
+  source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026, maliyet_savas_2020]
+  rationale: >-
+    Resmî ya da hakemli bir Türkiye oranı bulunamadı. 2026 KYP'de inşaat ve makine-teçhizatı ayrı alt proje olarak
+    gösteren yataklı iki hastane var: KTÜ Çocuk Hastanesi (225 yatak) 0,158 ve Gaziantep Ü. Acil Travma ve Yanık Hastanesi
+    (134 yatak) 0,320; ortalaması 0,239 → 0,25 yuvarlandı. Diş hastanelerinde oran 0,16–0,46. Diğer satırlardaki 2.000–
+    10.000.000 TL'lik makine-teçhizat kalemleri yer tutucudur (donanım sonradan bütçeleniyor), oran hesabına alınmadı.
+    Şehir hastaneleri için ≈4 milyar TL tıbbi cihaz + mefruşat yatırımı bildiriliyor (Savaş vd. 2020) ama toplam yatırım
+    farklı para birimi/yıllarda verildiğinden oran çıkarılamadı.
+  range: [0.10, 0.45]
+  alternatives:
+    - {label: "KTÜ Çocuk Hastanesi, 225 yatak (KYP 2014I00-2082)", value: 0.158, source_ids: [maliyet_hesap_kyp_alan]}
+    - {label: "Gaziantep Ü. Acil Travma ve Yanık H., 134 yatak (KYP 2022I00-183763)", value: 0.320, source_ids: [maliyet_hesap_kyp_alan]}
+  notes: >-
+    KYP'deki SB genel hastane proje tutarları m² başına 54.461 TL (KDV dahil, toplam/toplam), yani tebliğ fiyatı + KDV
+    düzeyinde; KYP tutarları donanımı büyük ölçüde içermiyor gibi görünüyor. φ_don'un yatirim alanının v (TL/yatak)
+    tahminiyle çift sayılmaması için model hangi tutarın neyi içerdiğini açıklamalı.
+
+- key: cost.vat_rate
+  label: "KDV oranı (genel)"
+  value: 0.20
+  unit: "oran"
+  status: kaynakli
+  source_ids: [maliyet_rg_2023_kdv_karar_7346]
+  range: [0.0, 0.20]
+  alternatives:
+    - {label: "10.07.2023 öncesi genel oran", value: 0.18, source_ids: [maliyet_rg_2023_kdv_karar_7346]}
+  notes: >-
+    Cumhurbaşkanı Kararı 7346 (RG 07.07.2023/32241) md. 1: 2007/13033 sayılı BKK md. 1(1)(a)'daki '%18' ibaresi '%20'
+    olarak değiştirildi; yürürlük 10.07.2023. (I) ve (II) sayılı listelerdeki teslimler %1 ve %10'dur; tıbbi donanımın
+    indirimli listede olup olmadığı bu çalışmada incelenmedi (model tek oran kullanır). SBB rehber şablonundaki '%18' eski
+    değerdir. GİB'in güncel oran tablosu indirilemedi (vekil 403); 7346'dan sonra genel oranı değiştiren karar bulunamadı.
+    Aralığın alt ucu 0: KDV'yi hariç tutmak (cost.include_vat = false) ile aynı etki.
+
+- key: cost.include_vat
+  label: "Maliyetlere KDV dahil mi?"
+  value: true
+  unit: "evet/hayır"
+  status: model_secimi
+  source_ids: [yatirim_rehber_2026_2028, maliyet_rg_2026_birim_maliyet_teblig]
+  rationale: >-
+    Varsayılan 'dahil': model kamu bütçesinin ödeyeceği tutarı hesaplar ve devlet yüklenici faturasındaki KDV'yi öder.
+    Ayrıca kamu yatırım tutarları KDV dahil hazırlanır (SBB rehberi md. 19; EK 3 not 2 'Proje Toplam Maliyetine KDV
+    dahildir') ve yatirim alanının F_sabit değeri KDV dahildir — tutarlılık için tebliğin KDV hariç fiyatlarına KDV
+    eklenir. Alternatif 'hariç': toplumsal maliyet bakışında KDV hazineye dönen bir transferdir; o zaman F_sabit de
+    KDV'siz yorumlanmalıdır.
+
+# ---------------------------------------------------------------- D. Arsa alanı (fiyat parametreleri başka alanda)
+
+- key: land.m2_per_bed
+  label: "Yatak başına arsa (plan alanı)"
+  value: 130
+  unit: "m² arsa / yatak"
+  status: kaynakli
+  source_ids: [maliyet_mpyy_ek2]
+  range: [50, 300]
+  alternatives:
+    - {label: "Sağlık kampüsleri (şehir hastanesi) standardı", value: 220, source_ids: [maliyet_mpyy_ek2]}
+    - {label: "Balcalı (95.000 m² açık alan ÷ 1.200)", value: 79.2, source_ids: [maliyet_balcali_2019]}
+    - {label: "Bilkent (674.000 m² arazi ÷ 3.810)", value: 176.9, source_ids: [maliyet_medikalakademi_bilkent]}
+    - {label: "Dikili (15.010 m² açık alan ÷ 75)", value: 200.1, source_ids: [maliyet_cnnturk_dikili_2026]}
+  notes: >-
+    Mekânsal Planlar Yapım Yönetmeliği EK-2: Devlet hastaneleri, İhtisas/Eğitim ve Araştırma hastaneleri, FTR
+    hastaneleri ve Doğum ve Çocuk Bakım Evleri için asgari birim alan 'Yatak başına (130) m²', 'Sağlık Kampüsleri' için
+    'Yatak başına (220) m²'. Model sınıf bazında ayırabiliyorsa şehir hastanesi sınıfı için 220 kullanılmalı. Bu bir
+    asgari plan standardıdır; ilçe imar planı yoğunluğuna göre gerçek parseller farklıdır (Balcalı eski, Bilkent/Dikili
+    standardın üstünde).
+
+- key: land.min_parcel_m2
+  label: "Asgari parsel"
+  value: 6500
+  unit: "m² arsa / hastane"
+  status: hesap
+  source_ids: [maliyet_mpyy_ek2]
+  derivation: "land.m2_per_bed × size.general_min_beds = 130 m²/yatak × 50 yatak = 6.500 m²"
+  range: [0, 20000]
+  alternatives:
+    - {label: "Doğrusal maliyet formülünde L0 (çift sayımı önlemek için)", value: 0, source_ids: [maliyet_mpyy_ek2]}
+    - {label: "EK-2 'Basamak Sağlık Tesisleri' asgari birim alanı (hastane değil)", value: 3000, source_ids: [maliyet_mpyy_ek2]}
+  notes: >-
+    EK-2'de hastaneler için ayrı bir asgari parsel yok; standart yatakla orantılı. 6.500 m², en küçük izinli genel
+    hastanenin (50 yatak) parselidir: arsa alanı = max(land.min_parcel_m2, land.m2_per_bed × B) biçiminde alt sınır
+    olarak kullanılmalı; B ≥ 50 için bağlayıcı değildir. Spec 4.5'teki doğrusal Fixed_jk formülündeki L0 terimi
+    olarak kullanılacaksa 0 alınmalı (yoksa ℓ·B ile çift sayılır).

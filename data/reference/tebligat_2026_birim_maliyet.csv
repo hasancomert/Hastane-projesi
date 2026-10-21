@@ -1,0 +1,12 @@
+sinif,tl_m2,yapi_turu_ifadesi,source_id
+III-B,21050,112 acil sağlık hizmetleri istasyonları,maliyet_rg_2026_birim_maliyet_teblig
+III-B,21050,Aile sağlığı merkezleri,maliyet_rg_2026_birim_maliyet_teblig
+III-C,23400,Ağız ve diş sağlığı merkezleri,maliyet_rg_2026_birim_maliyet_teblig
+III-C,23400,Toplum sağlığı merkezleri,maliyet_rg_2026_birim_maliyet_teblig
+IV-A,26450,Tıp merkezleri,maliyet_rg_2026_birim_maliyet_teblig
+IV-B,33900,Fizik tedavi ve rehabilitasyon merkezleri,maliyet_rg_2026_birim_maliyet_teblig
+IV-C,40500,Hastaneler (yatak sayısı 200'ün altındaki yapılar),maliyet_rg_2026_birim_maliyet_teblig
+V-A,42350,Eğitim ve araştırma hastaneleri,maliyet_rg_2026_birim_maliyet_teblig
+V-B,43850,Hastaneler (yatak sayısı 200'den fazla ve 400'den az olan yapılar-yatak sayısı 200 dâhil),maliyet_rg_2026_birim_maliyet_teblig
+V-C,48750,Hastaneler (yatak sayısı 400 ve üzeri yapılar-yatak sayısı 400 dâhil),maliyet_rg_2026_birim_maliyet_teblig
+V-D,53500,Şehir hastaneleri,maliyet_rg_2026_birim_maliyet_teblig

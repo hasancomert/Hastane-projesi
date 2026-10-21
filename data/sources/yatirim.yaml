@@ -1,0 +1,92 @@
+# Alan: yatirim — 2026 Yılı Kamu Yatırım Programı ile sabit maliyet kalibrasyonu (spec 4.2 madde 1)
+# Üreten betik: pipeline/14_investment_program.py
+
+- id: yatirim_kyp2026
+  title: "2026 Yılı Kamu Yatırım Programı"
+  publisher: "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)"
+  url: "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf"
+  accessed: 2026-10-21
+  published: 2026-01-15
+  kind: resmi
+  archived: data/raw/yatirim/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf
+  sha256: "09be0380513eb9c73416ac21b04560ce611e02994702c5e7f399555fd379cdc1"
+  used_for:
+    - "Sağlık sektörü proje satırları (277 ana proje + 56 alt proje; proje no, ad, yer, karakteristik, başlama–bitiş, proje tutarı, 2025 sonu kümülatif harcama, 2026 ödeneği) → data/reference/yatirim_programi_2026_saglik.csv"
+    - "Sabit maliyet regresyonu için 61 Sağlık Bakanlığı yeni hastane projesi (yatak, kapalı alan, proje tutarı)"
+    - "Fiyat bazı ve birim: 'bütün nakdi yatırım değerleri program yılı fiyatlarıyla (2026 yılı fiyatlarıyla) ve TL bazında verilmiştir'"
+    - "Kümülatif harcama tanımı: 'harcamaların birikimli olarak ilgili kamu yatırım programı yılı fiyatlarına güncellenmesiyle elde edilen toplam tutar'"
+    - "Şehir hastanelerinin kira ödemeleri yatırım ödeneklerine dâhil değil (KÖİ satırının dışlanma gerekçesi)"
+    - "Hastane Kavşak ve Bağlantı Yolları (2025I00-280965; Gaziantep, Mersin, Sakarya, Şanlıurfa): 5.690.000.000 TL"
+  notes: >-
+    PDF 465 sayfa; basılı sayfa = PDF sayfası − 25. Fiyat bazı ve birim notu: PDF s. 26 (basılı s. 1, 'Açıklama').
+    Kümülatif harcama tanımı: Karar md. 1(1)(c), PDF s. 23 (basılı s. xix). Sağlık sektörü kuruluş özeti:
+    PDF s. 336–338 (basılı s. 311–313; sektör toplamı 277 proje, proje tutarı 1.367.496.309.147 TL, 2026 ödeneği
+    173.459.300.000 TL). Proje satırları PDF s. 339–366 (basılı s. 314–341); Sağlık Bakanlığı bölümü PDF s. 356–362
+    (basılı s. 331–337; 107 proje, proje tutarı 1.139.600.153.635 TL, 2026 ödeneği 145.959.589.000 TL).
+    Ayrıştırma bu kuruluş ve sektör toplamlarıyla kuruşu kuruşuna doğrulandı. Birim 'Bin TL' DEĞİL, TL'dir.
+    Sayfalar 90° döndürülmüş tablo; pdfplumber karakter koordinatlarıyla okundu. Kararın SBB'deki ayrı PDF'i
+    (data/raw/yatirim/2026-Yili-KYP-Kabulu-ve-Uygulanmasina-Dair-Karar.pdf) font kodlaması nedeniyle metin olarak
+    okunamıyor; aynı karar metni bu PDF'in s. 22–25'inde yer alıyor.
+
+- id: yatirim_kyp2026_rg
+  title: "2026 Yılı Kamu Yatırım Programının Kabulü ve Uygulanmasına Dair Karar (Karar Sayısı: 10868)"
+  publisher: "Resmî Gazete"
+  url: "https://www.resmigazete.gov.tr/eskiler/2026/01/20260115M1-1.pdf"
+  accessed: 2026-10-21
+  published: 2026-01-15
+  kind: resmi
+  archived: data/raw/yatirim/RG_20260115M1-1.pdf
+  sha256: "5a0fd8637de62d3cac7a5383aa9b34640a843c3c26239919a168860f890a77ac"
+  used_for:
+    - "Programın resmî yayımı: 15 Ocak 2026 tarihli ve 33138 sayılı (Mükerrer) Resmî Gazete, Cumhurbaşkanı Kararı sayı 10868"
+  notes: >-
+    441 sayfalık PDF; 1. sayfa metin olarak okunabiliyor (karar sayısı, tarih, RG sayısı), ekteki tablolar taranmış/
+    gömülü fontlu olduğundan veri SBB'nin aranabilir PDF'inden (yatirim_kyp2026) alındı.
+
+- id: yatirim_sbb_kyp2026_duyuru
+  title: "2026 Yılı Kamu Yatırım Programı Yayımlandı"
+  publisher: "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)"
+  url: "https://www.sbb.gov.tr/2026-yili-kamu-yatirim-programi-yayimlandi/"
+  accessed: 2026-10-21
+  published: 2026-01-15
+  kind: resmi
+  archived: data/raw/yatirim/sbb_2026_kyp_duyuru.html
+  sha256: "ae95ae9ed63a9f1171a6d6f71f623e964aabe0ebc26f8bb1055eb058cda88193"
+  used_for:
+    - "Program PDF'inin ve RG bağlantısının bulunduğu resmî duyuru; 15.01.2026 tarihli 33138 birinci mükerrer sayılı RG"
+  notes: "Duyuru: 13.887 proje, toplam ödenek 1.920,8 milyar TL (bu projede kullanılmadı, yalnız bağlam)."
+
+- id: yatirim_rehber_2026_2028
+  title: "2026-2028 Dönemi Yatırım Programı Hazırlama Rehberi"
+  publisher: "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)"
+  url: "https://www.sbb.gov.tr/wp-content/uploads/2025/09/2026-2028_Donemi_Yatirim_Programi_Hazirlama_Rehberi.pdf"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/yatirim/2026-2028_Donemi_Yatirim_Programi_Hazirlama_Rehberi.pdf
+  sha256: "8d7a66d05fa323202c9873819474f6a0105303ab6e8044fa40b6cdd35dc2046a"
+  used_for:
+    - "Md. 15: 2026-2028 dönemi yatırım teklifleri 2026 yılı fiyatlarıyla hazırlanır"
+    - "Md. 19: yatırım tekliflerine KDV vb. vergi, resim, harç dahil edilir; fiyat farkı, kur farkı ve iş artışı proje tutarına dahil edilmez → KYP proje tutarları KDV dahil"
+    - "Ek (hizmet binası keşif özeti şablonu): inşaat maliyeti = tebliğ birim maliyeti (üst sınır) × alan, + %15 çevre düzenlemesi, + KDV; 'Proje Toplam Maliyetine KDV dahildir'"
+  notes: >-
+    Md. 15 ve 19: PDF s. 10 (basılı s. 3). Keşif özeti şablonu ve 'KDV dahildir' notu: PDF s. 51 (basılı s. 44);
+    şablondaki '%18' KDV oranı eski şablon değeri, güncel oran maliyet alanında doğrulanır. Sağlık sektörü esasları
+    (md. 34): PDF s. 12 (basılı s. 5) — ek bina/yenileme projelerinin döner sermayeden karşılanması esası.
+    Yayım tarihi PDF'te yazmıyor; dosya SBB sitesine 2025/09 klasörüne yüklenmiş.
+
+- id: yatirim_hesap_regresyon
+  title: "Sabit maliyet regresyonu: proje tutarı = F0 + v · yatak (2026 KYP, Sağlık Bakanlığı)"
+  publisher: "Proje hesabı (pipeline/14_investment_program.py)"
+  url: "pipeline/14_investment_program.py"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: data/processed/sabit_maliyet_regresyon.json
+  used_for:
+    - "Ana örneklem n = 61: F0 = −142.000.683 TL (SE 441.950.773; %95 GA −1.026.342.137 … 742.340.771; p = 0,75), v = 14.784.989 TL/yatak (SE 544.985; %95 GA 13.694.478 … 15.875.501), R² = 0,926"
+    - "Yalnız genel hastane (n = 47): F0 = 233.318.127 TL (%95 GA −475.953.648 … 942.589.903; p = 0,51), v = 12.306.786 TL/yatak, R² = 0,831"
+    - "log-log esneklik b = 1,051 (%95 GA 0,956 … 1,145) → ölçek ekonomisi yok"
+    - "Kapalı alan = A0 + a·yatak: a = 257,5 m²/yatak (%95 GA 242,6 … 272,4), A0 = −878 m² (%95 GA −12.934 … 11.177)"
+    - "Tutar = c0 + c1·alan: c1 = 56.604 TL/m² KDV dahil (%95 GA 53.009 … 60.199)"
+  notes: >-
+    Girdi: yatirim_kyp2026. Grafik: data/processed/sabit_maliyet_regresyon.png. Tüm satırlar ve dışlama
+    gerekçeleri: data/reference/yatirim_programi_2026_saglik.csv (sütunlar dahil_ana, dahil_genis, dislama_nedeni).

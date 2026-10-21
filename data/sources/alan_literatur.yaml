@@ -1,0 +1,349 @@
+# Alan: alan-literatur — Ankara yüzölçümü kaynakları (spec 3 'Ankara yüzölçümü', 4.3 madde 3) ve kaynakça (spec 7 madde 14)
+# Betik: scratchpad alan_literatur.py (raporda yolu var); ham belgeler: data/raw/alan/, data/raw/literatur/ (git dışı;
+# _manifest.jsonl'de url/tarih/sha256). Tablo: data/reference/ankara_alan_kaynaklari.csv ; künyeler: data/reference/literatur.yaml
+# Not: TÜİK satırları nufus alanının (tuik_bt_adnks20xx_yogunluk), COD-AB satırı sinirlar alanının (sinirlar_hdx_codab_tur) kaydına bağlanır.
+
+- id: alan_literatur_csb_ref4_altindag
+  title: Ankara İli, Altındağ İlçesi, Gümüşdere Mahallesi 19734 Ada 9 Parsele Ait 1/5000 Ölçekli Nazım İmar Planı Değişikliği
+    Plan Açıklama Raporu (Ankara, 2020)
+  publisher: T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Ankara İl Müdürlüğü (webdosya.csb.gov.tr, plan ilanı
+    eki)
+  url: https://webdosya.csb.gov.tr/db/ankara/duyurular/plan-dosyasi-20210524152714.pdf
+  accessed: 2026-10-21
+  published: 2021-05-24
+  kind: resmi
+  archived: data/raw/alan/csb_ref4_altindag_plan_20210524152714.pdf
+  sha256: daef62692f3076324f8c90deba8d24b8a03a8158f0fd82fc9204ef2024333867
+  used_for:
+  - 'Ankara yüzölçümü: 24.521 km² — göller hariç (''Göller dışında'') [PDF s. 2 (aynı metin s. 32)]'
+  - 'Ankara yüzölçümü: 25.706 km² — belirtilmemiş (aynı sayfada ''göller dışında 24.521'' ile birlikte) [PDF s. 2 (aynı
+    metin s. 32)]'
+  notes: Spec kaynağı [4]. Yükleme 24.05.2021 (Last-Modified). 63 sayfa. webdosya.csb.gov.tr eksik TLS zinciri gönderiyor;
+    ara sertifika (subject=C = AE, O = SSL2BUY EMEA LLC, CN = SSL2BUY EMEA RSA Organization Validation Secure Server CA)
+    CCADB yansısından alındı, SHA-256 F7AD61C4F2A74D1B… CCADB değeriyle aynı, kök R46 ile openssl verify OK; birleşik CA
+    dosyası REQUESTS_CA_BUNDLE ile verildi (doğrulama kapatılmadı). Belge ÇŞB Ankara İl Müdürlüğü sitesinde plan askı ilanı
+    ekidir; raporu planlama bürosu hazırlamıştır, alan değeri için kaynak göstermez.
+
+- id: alan_literatur_csb_ref5_beypazari
+  title: Ankara İli, Beypazarı İlçesi, Macun Mahallesi 116 Ada 2-3 Nolu Parsellere İlişkin Enerji Üretim Alanı Amaçlı (GES)
+    1/5000 Ölçekli Nazım İmar Planı Açıklama Raporu
+  publisher: T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Ankara İl Müdürlüğü (webdosya.csb.gov.tr, plan ilanı
+    eki)
+  url: https://webdosya.csb.gov.tr/db/ankara/duyurular/plan-dosyasi-20251117081655.pdf
+  accessed: 2026-10-21
+  published: 2025-11-17
+  kind: resmi
+  archived: data/raw/alan/csb_ref5_beypazari_macun_plan_20251117081655.pdf
+  sha256: 2ac5b58cb6d5d2c48699f76a9dc400cbecc850bd59467d9646b2d6bd6060c1dd
+  used_for:
+  - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş [PDF s. 3 (basılı s. 1; aynı metin PDF s. 41)]'
+  notes: Spec kaynağı [5]. URL zaman damgası 17.11.2025. 83 sayfa. Aynı TLS çözümü.
+
+- id: alan_literatur_csb_ref6_cankaya
+  title: Ankara İli, Çankaya İlçesi, Yukarı Bahçelievler Mahallesi 7289 Ada 5 Parsel (Milli Kütüphane) 1/1000 Ölçekli Uygulama
+    İmar Planı Değişikliği Plan Açıklama Raporu
+  publisher: MİA Planlama Mim. Müh. Müş. Tic. ve San. Ltd. Şti.; yayımlayan ÇŞB Ankara İl Müdürlüğü (webdosya.csb.gov.tr)
+  url: https://webdosya.csb.gov.tr/db/ankara/duyurular/plan-aciklama-raporu-20200624102357.pdf
+  accessed: 2026-10-21
+  published: 2020-06-24
+  kind: resmi
+  archived: data/raw/alan/csb_ref6_cankaya_plan_aciklama_20200624102357.pdf
+  sha256: 1098c73ca37c347eb46fe8fefd57e443b2060b856af2ec31c8f5eb6a96356b3c
+  used_for:
+  - 'Ankara yüzölçümü: 25.978 km² — belirtilmemiş (''Ankara şehrinin'' deniyor) [PDF s. 3 (basılı s. 3)]'
+  notes: Spec kaynağı [6]. URL zaman damgası 24.06.2020. 11 sayfa. Aynı TLS çözümü.
+
+- id: alan_literatur_csb_polatli_2025
+  title: Ankara İli, Polatlı İlçesi, Zafer Mahallesi 2970 Ada 4 ve 7 Parsel 1/5.000 Ölçekli Nazım İmar Planı Plan Açıklama
+    Raporu (Haziran 2025)
+  publisher: ÇŞB Ankara İl Müdürlüğü (webdosya.csb.gov.tr, plan ilanı eki)
+  url: https://webdosya.csb.gov.tr/db/ankara/duyurular/plan-dosyasi-20250702092636.pdf
+  accessed: 2026-10-21
+  published: 2025-07-02
+  kind: resmi
+  archived: data/raw/alan/csb_plan_20250702092636.pdf
+  sha256: 31f9bc7adabf8db21815f6c1c4412351248a99e78682ceaa5e110bfdc5d5f631
+  used_for:
+  - 'Ankara yüzölçümü: 26.897 km² — belirtilmemiş [PDF s. 3 (aynı metin s. 31)]'
+  notes: Çapraz kontrol (arama motoruyla bulundu, indirilip okundu). 62 sayfa.
+
+- id: alan_literatur_csb_karakusunlar_2020
+  title: Ankara İli, Çankaya İlçesi, Karakusunlar Mahallesi 13911 Ada 11 ve 13 Parseller 1/5000 Ölçekli Nazım İmar Planı
+    Değişikliği Plan Açıklama Raporu (Ankara, 2020)
+  publisher: ÇŞB Ankara İl Müdürlüğü (webdosya.csb.gov.tr, plan ilanı eki)
+  url: https://webdosya.csb.gov.tr/db/ankara/duyurular/plan-dosyasi-20201225092342.pdf
+  accessed: 2026-10-21
+  published: 2020-12-25
+  kind: resmi
+  archived: data/raw/alan/csb_plan_20201225092342.pdf
+  sha256: e76166421b92269e460470d3702aa8dab07415205dc3f9b9c7bd2c65eb5f947c
+  used_for:
+  - 'Ankara yüzölçümü: 24.521 km² — göller hariç (''Göller dışında'') [PDF s. 2 (aynı metin s. 14)]'
+  notes: 'Çapraz kontrol: [4]''teki ''göller dışında 24.521'' cümlesinin başka raporda tekrarı. 27 sayfa.'
+
+- id: alan_literatur_valilik_cdr_2018
+  title: Ankara İli 2018 Yılı Çevre Durum Raporu
+  publisher: T.C. Ankara Valiliği Çevre ve Şehircilik İl Müdürlüğü (webdosya.csb.gov.tr/db/ced)
+  url: https://webdosya.csb.gov.tr/db/ced/icerikler/ankara_2018_-cdr_son-20190903153406.pdf
+  accessed: 2026-10-21
+  published: 2019-09-03
+  kind: resmi
+  archived: data/raw/alan/csb_valilik_cdr_2018.pdf
+  sha256: 67b9ead9a4e6cdb5080600dbf8a714d46e27ede334870d3068f477c4c2ecd4f1
+  used_for:
+  - 'Ankara yüzölçümü: 25.632 km² — arazi kullanım sınıflarının toplamı (tarım + çayır-mera + orman/diğer + yerleşim/diğer);
+    göl ayrımı yok [PDF s. 172 (basılı s. 159); tablo: Çizelge E.85, PDF s. 171 (basılı s. 158)]'
+  - 'Ankara yüzölçümü: 25.476,25 km² — CORINE poligonları toplamı (su yapıları ve sulak alanlar dahil) [PDF s. 171 (basılı
+    s. 158), Çizelge E.86, sütun 1990]'
+  - 'Ankara yüzölçümü: 25.654,75 km² — CORINE poligonları toplamı (su yapıları ve sulak alanlar dahil) [PDF s. 171 (basılı
+    s. 158), Çizelge E.86, sütun 2006/2012]'
+  - 'Ankara yüzölçümü: 26.897 km² — atlasın kapsadığı alan (il yüzölçümü olarak verilmemiş) [PDF s. 144 (basılı s. 131)]'
+  notes: Valiliğin resmî raporu; il yüzölçümünü tek sayı olarak yazmıyor, arazi kullanım tablosu (Çizelge E.85, kaynak Tarım
+    ve Orman İl Müd.) 25.632.000 da'ya toplanıyor. ankara.gov.tr ve ankara.bel.tr vekil sunucuda engelli (403). 182 sayfa.
+
+- id: alan_literatur_valilik_cdr_2017
+  title: Ankara İli 2017 Yılı Çevre Durum Raporu (Ankara, 2018)
+  publisher: T.C. Ankara Valiliği Çevre ve Şehircilik İl Müdürlüğü, ÇED Şube Müdürlüğü (webdosya.csb.gov.tr)
+  url: https://webdosya.csb.gov.tr/db/ankara/menu/ankara-ili-2017-cevre-durum-raporu-5_20190225023932.pdf
+  accessed: 2026-10-21
+  published: 2019-02-25
+  kind: resmi
+  archived: data/raw/alan/csb_valilik_cdr_2017.pdf
+  sha256: af15ee997d7bc3b3d8c06c31cfe51ae6165a08888d849611f1b50bd9fa64c8c2
+  used_for:
+  - 'Çapraz kontrol: CORINE tablosu (Çizelge E.44, PDF s. 152) ÇDR 2018 Çizelge E.86 ile aynı (1990: 2.547.625,24 ha; 2006/2012:
+    2.565.474,80 ha)'
+  notes: İl yüzölçümü sayısı yok; ormanlık alan 471.975,7 ha = il yüzölçümünün '% 18,3'ü (PDF s. 147) → ≈25.791 km² (yuvarlamalı,
+    kullanılmadı).
+
+- id: alan_literatur_hgm_ikincil_snrylmz
+  title: 'il-ilce-json (GitHub snrylmz) — illerin yüzölçümü; README: kaynak https://www.harita.gov.tr/images/urun/il_ilce_alanlari.pdf'
+  publisher: GitHub kullanıcısı snrylmz (ikincil; HGM tablosundan aktarım)
+  url: https://raw.githubusercontent.com/snrylmz/il-ilce-json/master/js/il-ilce.json
+  accessed: 2026-10-21
+  kind: ikincil
+  archived: data/raw/alan/ikincil/github_snrylmz_il-ilce.json
+  sha256: a071f7ea74377057c8a48c46fe47fddc0a6ba4f9abab1b34c6ff068b9a9496a4
+  used_for:
+  - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş (HGM tablosu) [js/il-ilce.json, Ankara kaydı]'
+  notes: 'HGM''nin kendi sayfası (www.harita.gov.tr/il-ve-ilce-yuzolcumleri) ve PDF''i vekil sunucuda engelli (403), web.archive.org
+    da engelli → HGM değeri yalnız ikincil kopyalardan. README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md.'
+
+- id: alan_literatur_hgm_ikincil_brkunver
+  title: turkiye-provinces-dataset (GitHub brkunver) — data/provinces.csv area_km2 + metadata/sources.json
+  publisher: GitHub kullanıcısı brkunver (ikincil; kaynak olarak HGM gösteriliyor)
+  url: https://raw.githubusercontent.com/brkunver/turkiye-provinces-dataset/main/data/provinces.csv
+  accessed: 2026-10-21
+  kind: ikincil
+  archived: data/raw/alan/ikincil/github_brkunver_provinces.csv
+  sha256: 762c9c87ff9191781129e75859511245cde526400208f7ef8390953d62f966b2
+  used_for:
+  - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş (HGM) [data/provinces.csv, Ankara satırı]'
+  notes: 'sources.json (data/raw/alan/ikincil/github_brkunver_sources.json) Ankara notu: ''Area 25632 HGM (26897/25437/24521
+    rejected)''.'
+
+- id: alan_literatur_lit_hakimi1964
+  title: Optimum Locations of Switching Centers and the Absolute Centers and Medians of a Graph
+  publisher: 'Hakimi, S. L. — Operations Research 12(3): 450–459 (1964); doi:10.1287/opre.12.3.450'
+  url: https://api.crossref.org/works/10.1287/opre.12.3.450
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_hakimi1964.json
+  sha256: d79a4ec1616e681f35b0c0aa165ae1c4efc5dd4da5ae7d8d880dcf65e8851552
+  used_for:
+  - Kaynakça künyesi (hakimi1964) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1287/opre.12.3.450); tür journal-article; basılı 1964-06,
+    çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_revelle_swain1970
+  title: Central Facilities Location
+  publisher: 'ReVelle, Charles S.; Swain, Ralph W. — Geographical Analysis 2(1): 30–42 (1970); doi:10.1111/j.1538-4632.1970.tb00142.x'
+  url: https://api.crossref.org/works/10.1111/j.1538-4632.1970.tb00142.x
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_revelle_swain1970.json
+  sha256: 2503bfbc5ea70469827e2b20e3923cc15bdeb0e806afdb9cd58bf73dd34390c5
+  used_for:
+  - Kaynakça künyesi (revelle_swain1970) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1111/j.1538-4632.1970.tb00142.x); tür journal-article;
+    basılı 1970-01, çevrimiçi 2010-09-03. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_toregas1971
+  title: The Location of Emergency Service Facilities
+  publisher: 'Toregas, Constantine; Swain, Ralph; ReVelle, Charles; Bergman, Lawrence — Operations Research 19(6): 1363–1373
+    (1971); doi:10.1287/opre.19.6.1363'
+  url: https://api.crossref.org/works/10.1287/opre.19.6.1363
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_toregas1971.json
+  sha256: 57a84e12c9bd5b5030a2f9cde1947714eb3c54b6a1df39e6c25a3640eab9f00e
+  used_for:
+  - Kaynakça künyesi (toregas1971) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1287/opre.19.6.1363); tür journal-article; basılı 1971-10,
+    çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_church_revelle1974
+  title: The maximal covering location problem
+  publisher: 'Church, Richard; ReVelle, Charles — Papers of the Regional Science Association 32(1): 101–118 (1974); doi:10.1007/BF01942293'
+  url: https://api.crossref.org/works/10.1007/BF01942293
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_church_revelle1974.json
+  sha256: 35b6cf9e3edc496f61078f0c4a7a8d810c042d895aed82423c8103f5e4f4a62a
+  used_for:
+  - Kaynakça künyesi (church_revelle1974) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1007/bf01942293); tür journal-article; basılı 1974-12,
+    çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_hill_burton1946
+  title: Hospital Survey and Construction Act — AN ACT To amend the Public Health Service Act to authorize grants to the
+    States for surveying their hospitals and public health centers and for planning construction of additional facilities,
+    and to authorize grants to assist in such construction
+  publisher: 'United States Statutes at Large, vol. 60 (künye dizini: unitedstates/legisworks-historical-statutes)'
+  url: https://raw.githubusercontent.com/unitedstates/legisworks-historical-statutes/master/data/060.yaml
+  accessed: 2026-10-21
+  kind: ikincil
+  archived: data/raw/literatur/ikincil/legisworks_statutes_060.yaml
+  sha256: 00807ac9b1999ebec32b2d597312cb5e21debd7db18ee3a2d8f9a226dd297be5
+  used_for:
+  - 'Künye: Pub. Law 79-725 (Hospital Survey and Construction Act), Aug. 13, 1946, ch. 958, 60 Stat. 1040'
+  notes: Resmî PDF adresi https://www.govinfo.gov/content/pkg/STATUTE-60/pdf/STATUTE-60-Pg1040.pdf — kanun PDF'i (govinfo.gov)
+    ve loc.gov vekil sunucuda engelli; künye GitHub'daki Statutes at Large dizininden ve ABD Kanunu notunun yansısından
+    (data/raw/literatur/ikincil/uscode_42_1592c.xml) doğrulandı.
+
+- id: alan_literatur_lit_ravaghi2020
+  title: 'Models and methods for determining the optimal number of beds in hospitals and regions: a systematic scoping review'
+  publisher: 'Ravaghi, Hamid; Alidoost, Saeide; Mannion, Russell; Bélorgeot, Victoria D. — BMC Health Services Research
+    20(1): 186 (2020); doi:10.1186/s12913-020-5023-z'
+  url: https://api.crossref.org/works/10.1186/s12913-020-5023-z
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_ravaghi2020.json
+  sha256: c9129cdab0db724e4f6ad7debf8109106c71cfe37d420c6659f3a8a0cb156736
+  used_for:
+  - Kaynakça künyesi (ravaghi2020) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1186/s12913-020-5023-z); tür journal-article; basılı 2020-12,
+    çevrimiçi 2020-03-06. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_boscoe2012
+  title: A Nationwide Comparison of Driving Distance Versus Straight-Line Distance to Hospitals
+  publisher: 'Boscoe, Francis P.; Henry, Kevin A.; Zdeb, Michael S. — The Professional Geographer 64(2): 188–196 (2012);
+    doi:10.1080/00330124.2011.583586'
+  url: https://api.crossref.org/works/10.1080/00330124.2011.583586
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_boscoe2012.json
+  sha256: 841d85e71d8151dccb7af078b22ac4733b17559f4c7f9e86d1366864fe435cc4
+  used_for:
+  - Kaynakça künyesi (boscoe2012) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1080/00330124.2011.583586); tür journal-article; basılı
+    2012-05, çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_ballou2002
+  title: Selected country circuity factors for road travel distance estimation
+  publisher: 'Ballou, Ronald H; Rahardja, Handoko; Sakai, Noriaki — Transportation Research Part A: Policy and Practice
+    36(9): 843–848 (2002); doi:10.1016/S0965-8564(01)00044-1'
+  url: https://api.crossref.org/works/10.1016/S0965-8564(01)00044-1
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_ballou2002.json
+  sha256: 5d2f00bd857f4364b6b87f4e04e2cf549089e8d4545b8881d8473ea14c05342a
+  used_for:
+  - Kaynakça künyesi (ballou2002) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1016/s0965-8564(01)00044-1); tür journal-article; basılı
+    2002-11, çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_daskin2013
+  title: 'Network and Discrete Location: Models, Algorithms, and Applications, Second Edition'
+  publisher: Daskin, Mark S. — Wiley (2013); doi:10.1002/9781118537015
+  url: https://api.crossref.org/works/10.1002/9781118537015
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_daskin2013.json
+  sha256: 3b84059ee5319ab3dda26018d928ec6ff6797e704ecc5efcdfa86e7909c07109
+  used_for:
+  - Kaynakça künyesi (daskin2013) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1002/9781118537015); tür edited-book; basılı 2013-09-03,
+    çevrimiçi 2013-06-25. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_ahmadi_javid2017
+  title: A survey of healthcare facility location
+  publisher: 'Ahmadi-Javid, Amir; Seyedi, Pardis; Syam, Siddhartha S. — Computers & Operations Research 79: 223–263 (2017);
+    doi:10.1016/j.cor.2016.05.018'
+  url: https://api.crossref.org/works/10.1016/j.cor.2016.05.018
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_ahmadi_javid2017.json
+  sha256: d21ecf20f669dc6d39d49a9512abc08a158929e814be409e9446e0aba6b1d3c5
+  used_for:
+  - Kaynakça künyesi (ahmadi_javid2017) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1016/j.cor.2016.05.018); tür journal-article; basılı 2017-03,
+    çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_huangfu_hall2018
+  title: Parallelizing the dual revised simplex method
+  publisher: 'Huangfu, Q.; Hall, J. A. J. — Mathematical Programming Computation 10(1): 119–142 (2018); doi:10.1007/s12532-017-0130-5'
+  url: https://api.crossref.org/works/10.1007/s12532-017-0130-5
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_huangfu_hall2018.json
+  sha256: 2177052a291fa7471dfdb30afd9631c78c616f70eec627e801874b26f5749c6c
+  used_for:
+  - Kaynakça künyesi (huangfu_hall2018) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1007/s12532-017-0130-5); tür journal-article; basılı 2018-03,
+    çevrimiçi 2017-12-14. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_schiavina2023
+  title: GHS-POP R2023A - GHS population grid multitemporal (1975-2030)
+  publisher: Schiavina, Marcello; Freire, Sergio; Carioli, Alessandra; MacManus, Kytt — European Commission, Joint Research
+    Centre (JRC) [Dataset] (2023); doi:10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE
+  url: https://data.jrc.ec.europa.eu/dataset/2ff68a52-5b5b-4a22-8f40-c41da8332cfe.rdf
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/literatur/jrc_ghs_pop_r2023a.rdf
+  sha256: 8fe750f7d026c5750e24c7316fdf1a6b856e1d25a8b58dabd08bec311b00c6b4
+  used_for:
+  - Kaynakça künyesi (schiavina2023_ghs_pop) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: JRC Veri Kataloğu DCAT-RDF (dct:issued 2023-05-08) + doi.org handle kaydı (URL http://data.europa.eu/89h/2ff68a52-5b5b-4a22-8f40-c41da8332cfe,
+    2023-04-18).'
+
+- id: alan_literatur_lit_pesaresi2024
+  title: Advances on the Global Human Settlement Layer by joint assessment of Earth Observation and population survey data
+  publisher: 'Pesaresi, Martino; Schiavina, Marcello; Politis, Panagiotis; Freire, Sergio vd. — International Journal of
+    Digital Earth 17(1): 2390454 (2024); doi:10.1080/17538947.2024.2390454'
+  url: https://api.crossref.org/works/10.1080/17538947.2024.2390454
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_pesaresi2024.json
+  sha256: d4426a563c0ae3846e50ca9866f65be14bfbb16ca2235ef9a5e1bab7dc6f00bd
+  used_for:
+  - Kaynakça künyesi (pesaresi2024) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1080/17538947.2024.2390454); tür journal-article; basılı
+    2024-12-31, çevrimiçi 2024-08-30. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_runfola2020
+  title: 'geoBoundaries: A global database of political administrative boundaries'
+  publisher: 'Runfola, Daniel; Anderson, Austin; Baier, Heather; Crittenden, Matt vd. — PLOS ONE 15(4): e0231866 (2020);
+    doi:10.1371/journal.pone.0231866'
+  url: https://api.crossref.org/works/10.1371/journal.pone.0231866
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/crossref_runfola2020.json
+  sha256: 7c79d1b58b37c00933a96ba3de90216e2895f568a76e9e9ced7654e6dc8865d0
+  used_for:
+  - Kaynakça künyesi (runfola2020) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1371/journal.pone.0231866); tür journal-article; basılı
+    —, çevrimiçi 2020-04-24. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+
+- id: alan_literatur_lit_zanaga2022
+  title: ESA WorldCover 10 m 2021 v200
+  publisher: Zanaga, Daniele; Van De Kerchove, Ruben; Daems, Dirk; De Keersmaecker, Wanda vd. — Zenodo (ESA WorldCover konsorsiyumu)
+    (2022); doi:10.5281/zenodo.7254221
+  url: https://zenodo.org/api/records/7254221
+  accessed: 2026-10-21
+  kind: veri
+  archived: data/raw/literatur/zenodo_7254221_worldcover_v200.json
+  sha256: 5a4c8c5f203fd182dfd9e0029a403d37cb27b549c6854e7bf9d74fb1328e9a32
+  used_for:
+  - Kaynakça künyesi (zanaga2022) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  notes: 'Doğrulama: Zenodo REST API kaydı 7254221 (yayım 2022-10-28, sürüm v200, lisans cc-by-4.0).'

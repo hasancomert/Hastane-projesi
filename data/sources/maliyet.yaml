@@ -1,0 +1,308 @@
+# Alan: maliyet — inşaat birim maliyetleri (tebliğ), hastane boyut örnekleri, yatak başına alan, arsa standardı, KDV
+# Spec 4.4 B, C ve D'nin bir kısmı. Arşiv: data/raw/maliyet/ (git dışı; _manifest.jsonl url/tarih/sha256 içerir).
+# Üreten betikler (oturum çalışma alanında): maliyet_fetch.py (indirme), maliyet_build.py (CSV'ler + türetmeler).
+
+# --- Yapı yaklaşık birim maliyetleri -------------------------------------------------------------
+
+- id: maliyet_rg_2026_birim_maliyet_teblig
+  title: "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2026 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ"
+  publisher: "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 3 Şubat 2026, sayı 33157"
+  url: "https://www.resmigazete.gov.tr/eskiler/2026/02/20260203-4.htm"
+  accessed: 2026-10-21
+  published: 2026-02-03
+  kind: resmi
+  archived: data/raw/maliyet/RG_20260203-4_yapi_yaklasik_birim_maliyetleri_2026.htm
+  sha256: "9ef8c4c2e92c2a78492d0afab762ceb99db231e4e9ffa480ee10ab941d07e571"
+  used_for:
+    - "IV. Sınıf (C): 40.500,00 TL/m² — 'Hastaneler (yatak sayısı 200'ün altındaki yapılar)'"
+    - "V. Sınıf (A): 42.350,00 TL/m² — 'Eğitim ve araştırma hastaneleri'"
+    - "V. Sınıf (B): 43.850,00 TL/m² — 'Hastaneler (yatak sayısı 200'den fazla ve 400'den az olan yapılar-yatak sayısı 200 dâhil)'"
+    - "V. Sınıf (C): 48.750,00 TL/m² — 'Hastaneler (yatak sayısı 400 ve üzeri yapılar-yatak sayısı 400 dâhil)'"
+    - "V. Sınıf (D): 53.500,00 TL/m² — 'Şehir hastaneleri'"
+    - "Diğer sağlık yapıları: III-B 21.050 (112 istasyonu, ASM), III-C 23.400 (ADSM, TSM), IV-A 26.450 (tıp merkezleri), IV-B 33.900 (FTR merkezleri) → data/reference/tebligat_2026_birim_maliyet.csv"
+    - "Md. 1(1): birim maliyetler 'KDV hariç, genel giderler (%15) ile yüklenici kârı (%10) dâhil'"
+    - "Md. 2(4): 'ortalama nitelikli yapı malzemeleri'; 'arsa bedeli, çevre düzenlemesi (peyzaj, bahçe sulama, yağmur suyu drenaj, çevre aydınlatma, ihata duvarları, ada içi yollar ve benzeri), altyapı (zemin iyileştirme, bina dışı; elektrik, içme suyu, doğalgaz, kanalizasyon, internet, haberleşme ve benzeri) giderleri dâhil edilmemektedir'"
+    - "Md. 3: 1/1/2026 tarihinden geçerli olmak üzere yayımı tarihinde yürürlüğe girer"
+  notes: >-
+    Resmî Gazete'nin özgün HTML metni (windows-1254). Fihrist (20260203.htm) ve sayının tam PDF'i (20260203.pdf, 114 s.)
+    de arşivlendi: data/raw/maliyet/RG_20260203_fihrist.htm (sha256 ef41a850…), RG_20260203_tam.pdf (sha256 6a2cee62…);
+    PDF'in font kodlaması bozuk olduğundan metin olarak okunamıyor, değerler HTML'den alındı. Spec Bölüm 3'teki beş değer
+    (40.500 / 42.350 / 43.850 / 48.750 / 53.500) ve IV-C'nin '<200 yatak' ifadesi birebir doğrulandı; çelişki yok.
+    ÇŞB'nin kendi sitesinde ya da mevzuat.gov.tr'de ayrı bir kopya bulunamadı (arama); RG aslı esas alındı.
+    Bu tebliğ fiyatları mimarlık/mühendislik hizmet bedeli hesabı içindir; 'yaklaşık maliyet' yerine geçmez.
+
+- id: maliyet_rg_2025_birim_maliyet_teblig
+  title: "Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak 2025 Yılı Yapı Yaklaşık Birim Maliyetleri Hakkında Tebliğ"
+  publisher: "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — Resmî Gazete, 31 Ocak 2025, sayı 32799"
+  url: "https://www.resmigazete.gov.tr/eskiler/2025/01/20250131-3.htm"
+  accessed: 2026-10-21
+  published: 2025-01-31
+  kind: resmi
+  archived: data/raw/maliyet/RG_20250131-3_yapi_yaklasik_birim_maliyetleri_2025.htm
+  sha256: "d523cb07d2821de012d6c992f98b4238f5c13a6a62b61f6da08cfa9ebef87d99"
+  used_for:
+    - "Karşılaştırma (2025): IV-C 32.600 · V-A 34.400 · V-B 35.600 · V-C 39.500 · V-D 43.400 TL/m² (aynı sınıf ifadeleri, aynı dahil/hariç notları)"
+    - "2026/2025 artış: IV-C ×1,242 · V-A ×1,231 · V-B ×1,232 · V-C ×1,234 · V-D ×1,233"
+  notes: "Yalnız karşılaştırma ve kaydırıcı alt sınırı için."
+
+- id: maliyet_alomaliye_2026_teblig
+  title: "2026 Yılı Mimarlık ve Mühendislik Hizmet Bedellerinin Hesabında Kullanılacak Yapı Yaklaşık Birim Maliyetleri (metin)"
+  publisher: "Alomaliye.com"
+  url: "https://www.alomaliye.com/2026/02/03/2026-yili-mimarlik-ve-muhendislik-hizmet-bedellerinin-hesabinda-kullanilacak-yapi-yaklasik-birim-maliyetleri/"
+  accessed: 2026-10-21
+  published: 2026-02-03
+  kind: ikincil
+  archived: data/raw/maliyet/alomaliye_2026_yapi_yaklasik_birim_maliyetleri.html
+  sha256: "ace49388286f3f692f65430d0eaec9712d57f0c18e1e7dea765615a59b2f24bc"
+  used_for:
+    - "Çapraz kontrol: IV-A…V-E sınıf fiyatları RG aslıyla aynı"
+  notes: "Spec kaynağı [10]. Değerler yalnız RG aslından (maliyet_rg_2026_birim_maliyet_teblig) alınır."
+
+# --- Yatak başına alan ve arsa ---------------------------------------------------------------------
+
+- id: maliyet_mpyy_ek2
+  title: "Mekânsal Planlar Yapım Yönetmeliği — EK-2 Tablo: Farklı Nüfus Gruplarında Asgari Sosyal ve Teknik Altyapı Alanlarına İlişkin Standartlar ve Asgari Alan Büyüklükleri"
+  publisher: "T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı — mevzuat.gov.tr (RG 14.06.2014/29030; EK-2 değişik: RG 17.05.2017/30069)"
+  url: "https://www.mevzuat.gov.tr/MevzuatMetin/yonetmelik/7.5.19788-ek.zip"
+  accessed: 2026-10-21
+  published: 2017-05-17
+  kind: resmi
+  archived: data/raw/maliyet/mevzuat_7.5.19788-ek.zip
+  sha256: "c679825ffe4d776383acdbc46ef0a8eb6fe5959ce5e2f9188eaf6b1e314e07d7"
+  used_for:
+    - "SAĞLIK TESİSLERİ ALANI — 'Doğum ve Çocuk Bakım Evleri', 'Devlet Hastaneleri', 'İhtisas/Eğitim ve Araştırma Hastaneleri', 'Fizik Tedavi ve Rehabilitasyon Hastaneleri': asgari birim alan 'Yatak başına (130) m²' (tüm nüfus gruplarında)"
+    - "'Sağlık Kampüsleri': asgari birim alan 'Yatak başına (220) m²'"
+    - "Sağlık tesisleri alanı toplamı: 1,5 m²/kişi (0–500.000 nüfus), 1,6 m²/kişi (501.000+); 'Basamak Sağlık Tesisleri' asgari 3.000 m²; ASM 750–2.000 m²"
+    - "Yönetmelik md. 11(1): imar planlarında EK-2'deki asgari standart ve alan büyüklüklerine uyulur; md. 11(3): yerleşik alanlarda karşılanamazsa ilgili kurumun görüşüyle plan belirler"
+  notes: >-
+    Zip içindeki EK-2.xlsx, 'EK-2 Tablo' sayfası, satır 25–32 (C28:C31 sağlık tesisi türleri; E28:E31, G28:G31, I28:I31,
+    K28:K31 birleşik hücre 'Yatak başına (130) m²'; E32…K32 'Yatak başına (220) m²'). Bu değerler imar planında ayrılacak
+    SAĞLIK TESİSİ ALANI (parsel/arsa) standardıdır, bina kapalı alanı değildir. Ana metin:
+    data/raw/maliyet/mevzuat_7.5.19788_mekansal_planlar_yapim_yonetmeligi.pdf (sha256 a7a26604…; md. 11, PDF s. 7;
+    son değişiklik RG 22/1/2026-33145). Not: 2010 Kılavuzu'ndan aktarılan 'yatak başına en az 130 m²' (maliyet_ehta_2021:
+    '3194 Sayılı İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik hükümlerine göre') aynı imar standardının
+    öncülüne dayanıyor görünüyor.
+
+- id: maliyet_sb_asgari_tasarim_2010
+  title: "Türkiye Sağlık Yapıları Asgari Tasarım Standartları 2010 Yılı Kılavuzu"
+  publisher: "T.C. Sağlık Bakanlığı İnşaat ve Onarım Dairesi Başkanlığı"
+  url: "http://sbu.saglik.gov.tr/Ekutuphane/kitaplar/s.b.2010_klavuz_low.pdf"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: null
+  used_for:
+    - "Doğrudan kullanılamadı: belge indirilemedi. İçeriği yalnız maliyet_balcali_2019 ve maliyet_ehta_2021 alıntılarıyla kullanıldı."
+  notes: >-
+    Denenen adresler (hepsi vekil sunucuda 403 / erişim politikası): sbu.saglik.gov.tr (E-Kütüphane Yayın/414),
+    hsgm.saglik.gov.tr (2021 sürümünün listelendiği 'Dokümanlar' sayfası), acilkoronamekanlari.wordpress.com (gayriresmî kopya),
+    tesisat.org, scribd.com. sygm.saglik.gov.tr ve dosyamerkez.saglik.gov.tr erişilebilir ama kılavuz bulunamadı.
+    Bakanlığın 2021 tarihli güncel sürümü (Sağlık Yapıları Asgari Tasarım Standartları 2021 Yılı Kılavuzu) da var; o da
+    indirilemedi. PDF'i elle indirip data/raw/maliyet/ altına koymak bu boşluğu kapatır.
+
+- id: maliyet_balcali_2019
+  title: "Hastane Yapıları Teknik ve Destek Hizmet Birimlerinin Mekânsal Büyüklük Analizi: Çukurova Üniversitesi Tıp Fakültesi Balcalı Hastanesi Örneği"
+  publisher: "Durgun Şahin, Y. — Çukurova Üniversitesi Mühendislik Mimarlık Fakültesi Dergisi 34(4), 203–216 (2019); doi:10.21605/cukurovaummfd.704217"
+  url: "https://dergipark.org.tr/tr/download/article-file/1007709"
+  accessed: 2026-10-21
+  published: 2019-12-31
+  kind: akademik
+  archived: data/raw/maliyet/dergipark_704217_balcali.pdf
+  sha256: "0d669b56c87a6e43916957992f5f7a97dc81af1ee60905eb0997d9324f96d224"
+  used_for:
+    - "2010 Kılavuzu alıntısı: 'İhtisas hastaneleri asgari alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı sonucu bulunur'; 1200 yatak için 156.000 m² (s. 211)"
+    - "'Halen yürürlükte olan imar mevzuatında yatak başına en az 130 m²'; dünyada 150–200 m²'ye kadar (s. 211)"
+    - "Balcalı: ≈1200 yatak, toplam kapalı alan 190.651 m² (Çizelge 2; 22.012 m² katlı otopark ve 149.164 m² ana bina dahil), 95.000 m² açık alan (s. 205, 211)"
+    - "190651/1200 = 158,87 m²/yatak (s. 212)"
+    - "Teknik ve destek hizmet birimleri toplamı 27.326 m² = bina içi 8.895 + bina içi %40 sirkülasyon 3.558 + bina dışı 14.873 (Çizelge 4, s. 214); toplam kapalı alanın ≈%14,3'ü (s. 215)"
+    - "Birim örnekleri: mutfak ≈1.350 m² (1200 yatak için standart 1.800 m², 1,5 m²/hasta), çamaşırhane 870–898 m², klima santralleri 1.280→2.650 m², elektrik-tesisat 400→580 m², arşiv 2.150 m² (s. 209–210)"
+  notes: >-
+    Spec kaynağı [11]. Sayfa numaraları dergi sayfasıdır (PDF s. = dergi s. − 202). Özet '1200 yataklı hastaneler için
+    belirlenmiş olan, yatak başına asgari 130 m²' diyor; metindeki alıntı ise standardı 'İhtisas hastaneleri' için veriyor
+    — '1200' Balcalı'nın yatak sayısıdır, kılavuzda bir yatak sınıfı değildir. Dergi açılış sayfası da arşivlendi:
+    data/raw/maliyet/dergipark_704217_balcali.html (sha256 401993ae…).
+
+- id: maliyet_ehta_2021
+  title: "Esnek Hastane Tasarımında Türkiye'deki Hastanelerin İstatistiksel Verilerinin Analizi"
+  publisher: "Karakaş, G.; Sönmez, A. — Eurasian Journal of Health Technology Assessment 5(1), 9–26 (2021)"
+  url: "https://dergipark.org.tr/en/download/article-file/1649898"
+  accessed: 2026-10-21
+  published: 2021-06-30
+  kind: akademik
+  archived: data/raw/maliyet/dergipark_ehta_899977_karakas_sonmez_2021.pdf
+  sha256: "b41fd879350148c2fe6425e1378cf7691d69a0f6deea698b4dbfaac843a2e5c4"
+  used_for:
+    - "'3194 Sayılı İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik hükümlerine göre, yatak başına en az 130 m2'; dünya örneklerinde cerrahi ≥150, dahili ≥120, rehabilitasyon 200, psikiyatri 150 m²; sağlık kampüslerinde 200 m²'ye kadar (Türkiye Sağlık Yapıları Asgari Tasarım Standartları Kılavuzu, 2010: 45) — s. 13"
+    - "İncelenen 30 mevcut hastanede ≈75–100 m²/yatak; 'hastane binasının toplam inşaat alanı baz alınarak yatak başına 130 m2 şartı' (s. 13, 15)"
+    - "Sprow (2015) 250 yataklı örnek: 35.000 m², 140 m²/yatak (s. 16)"
+  notes: >-
+    130 m²'yi açıkça bina toplam inşaat alanı olarak yorumluyor. Açılış sayfası: data/raw/maliyet/dergipark_ehta_899977.html.
+    Tablo 4–6'daki 'hesaplama cetveli' alanı nüfus ve yatakla orantılı kuruyor (sabit terim yok); A0 için kullanılmadı.
+
+# --- Şehir hastaneleri ve boyut örnekleri ----------------------------------------------------------
+
+- id: maliyet_savas_2020
+  title: "Kamu Özel İşbirliği Modeli Ankara Şehir Hastanesi Örneği"
+  publisher: "Savaş, T.; Keleş, R.; Göktaş, B. — Ankara Sağlık Bilimleri Dergisi (ASBD), 2020"
+  url: "https://dergipark.org.tr/tr/download/article-file/972597"
+  accessed: 2026-10-21
+  published: 2020
+  kind: akademik
+  archived: data/raw/maliyet/dergipark_972597_savas_2020.pdf
+  sha256: "d7ba8bf6323438a5dbedf25258455fe68933719ffc83a0afaedc0f10afb21083"
+  used_for:
+    - "'Aralık 2017 yılı itibariyle toplam 32 şehir hastanesi … 14 milyon 159 bin m2 kapalı alana sahip 42.199 yeni hasta yatak' (Atasever 2018'e atıfla) → 335,5 m²/yatak (hesap) — s. 26"
+    - "Tablo 3–6 (kaynak: Sağlık Bakanlığı 2020 Yılı Bütçe Sunumu, TBMM 2019): Yozgat 455, Isparta 755, Mersin 1.293, Adana 1.550, Kayseri 1.607, Elazığ 1.038, Eskişehir 1.081, Manisa 558, Ankara Bilkent 3.711, Ankara Etlik 3.577, İstanbul Sancaktepe 4.200 … yatak — s. 26–27"
+    - "21 projede tıbbi cihaz yatırımı ≈2,5 milyar TL medikal ekipman + 0,5 milyar TL mefruşat; tamamlanınca ≈4 milyar TL (uzman görüşmesi) — s. 27"
+  notes: >-
+    Geliş 19.02.2020, kabul 25.11.2020 (cilt/sayı PDF metninden okunamadı). Tıbbi cihaz tutarları TL, KÖİ yatırım tutarları ABD doları ve
+    farklı yıllar olduğundan tıbbi donanım/inşaat oranı bu kaynaktan tutarlı biçimde hesaplanamadı.
+
+- id: maliyet_aliefendioglu_2021
+  title: "Şehir Hastanesi Yatırımları ve Gayrimenkul Katma Değer Yönetimi İlişkisi"
+  publisher: "Aliefendioğlu, Y.; Bostancı, S. — Atatürk Üniversitesi Sosyal Bilimler Enstitüsü Dergisi 25 (Özel Sayı), 26–43 (2021)"
+  url: "https://dergipark.org.tr/tr/download/article-file/1105037"
+  accessed: 2026-10-21
+  published: 2021
+  kind: akademik
+  archived: data/raw/maliyet/dergipark_1105037_aliefendioglu_2021.pdf
+  sha256: "3a2f54f9e3f741f2c3fff8a4b287aa48d59bda752b92d8fbd564a2516d345cf1"
+  used_for:
+    - "'850 kamu hastanesinin toplam kapalı alanı 19 milyon m² ve yatak sayısı ise 137.000'; '34 şehir hastanesinin … 14.000.000 m² … 42.199'; 'SB yatak başına 138 m² düşerken şehir hastanelerinde yatak başına 331 m²' — s. 28"
+    - "Tablo 1: Bilkent 3.704, Etlik 3.577, Yozgat 475, Manisa 558 … yatak — s. 28–29"
+  notes: "İç tutarlılık sınırlı (şehir hastanelerinin SB toplam alanının %74'ü olduğu söyleniyor); yalnız karşılaştırma için."
+
+- id: maliyet_memurlar_2018
+  title: "Şehir Hastanesi yatırımı tam gaz"
+  publisher: "Memurlar.net (kaynak: Yeni Şafak)"
+  url: "https://www.memurlar.net/haber/757810/sehir-hastanesi-yatirimi-tam-gaz.html"
+  accessed: 2026-10-21
+  published: 2018-06-24
+  kind: haber
+  archived: data/raw/maliyet/memurlar_757810_sehir_hastanesi_yatirimi.html
+  sha256: "d599271d326efc64f85ba6a3d96028a1873d1734734c8444b741ccbb6d037278"
+  used_for:
+    - "Kayseri 1.607 yatak; Bilkent 3.704 yatak; Eskişehir 1.081 yatak, 333.303 m² kapalı alan; Elazığ 1.038 yatak, '355 bin 752 metrekare alan üzerine kurulu'; Manisa 558 yatak, 178.204 m² kapalı alan"
+  notes: "Spec kaynağı [12]. Haber; resmi kaynak bulunamayan boyut örnekleri için."
+
+- id: maliyet_medikalakademi_bilkent
+  title: "Ankara Bilkent Şehir Hastanesi (randevu, iletişim ve konum)"
+  publisher: "Medikal Akademi"
+  url: "https://www.medikalakademi.com.tr/hastane/ankara-bilkent-sehir-hastanesi-randevu-iletisim-ve-konum/"
+  accessed: 2026-10-21
+  published: 2019-03-15
+  kind: haber
+  archived: data/raw/maliyet/medikalakademi_bilkent_sehir_hastanesi.html
+  sha256: "b523d7f61dd7f2242b8d17512dc2dbbcd37ea0ba162fae5d451a29f21982829c"
+  used_for:
+    - "'Toplam Yatak Sayısı: 3.810' (bileşenler 562+441+506+599+542+588+72+300+100+100); 'Toplam Kapalı Alan: 1.312.358 m²'; 'Toplam Arazi Alanı: 674.000 m²'"
+    - "Görüntüleme 17.500 m², sterilizasyon 9.200 m², laboratuvar 7.400 m², yemekhane 2.500 m², çamaşırhane 1.600 m²; 131 ameliyathane; otopark 6.918 araç"
+  notes: "Spec kaynağı [13]. Aynı sayfanın metni '3 bin 704 nitelikli yatak' diyor (iç çelişki). Güncelleme 24.08.2021."
+
+- id: maliyet_tbmm_2025_ankara
+  title: "Meclis Araştırması Komisyonu (10/1899…1904) — Ankara Çalışma Ziyareti Tutanakları, 27 Şubat 2025 (Ankara İl Sağlık Müdürlüğü sunumu)"
+  publisher: "Türkiye Büyük Millet Meclisi"
+  url: "https://tbmm.gov.tr/Tutanaklar/TutanakGoster/4125"
+  accessed: 2026-10-21
+  published: 2025-02-27
+  kind: resmi
+  archived: data/raw/maliyet/tbmm_tutanak_4125.pdf
+  sha256: "50caa1792851a1ef0c8e985939b1605881913d3e6b383169b8c8a6e56c8a3a4c"
+  used_for:
+    - "'Bilkent ve Etlik Şehir Hastanesi 4.050'şer yatakla toplamda 8.100 yatak, yatak kapasitemizin yaklaşık yüzde 50'si'; soru üzerine 'hem fiilî hem resmî' (s. 2–3)"
+    - "Ankara toplam 25.522 yatak: SB 16.457, üniversite 4.261, özel 4.804 (tutanakta '2004 yılının sonu' yazıyor, bağlamdan 2024 olmalı) (s. 2)"
+  notes: "Spec kaynağı [16]."
+
+- id: maliyet_kalkinma_ankara_2017
+  title: "Sağlığın ve Termalin Başkenti Ankara (tanıtım kitapçığı)"
+  publisher: "Ankara Kalkınma Ajansı (kapakta ajans logosu) — Kalkınma Kütüphanesi'nde barındırılıyor"
+  url: "https://www.kalkinmakutuphanesi.gov.tr/assets/upload/dosyalar/ankara-saglik-termal-2017.pdf"
+  accessed: 2026-10-21
+  published: 2017
+  kind: ikincil
+  archived: data/raw/maliyet/kalkinmakutuphanesi_ankara_saglik_termal_2017.pdf
+  sha256: "58f4387f4574cfb0c6a34fa53f5df3e4ceb475b976fbb1d296453fdf88871e39"
+  used_for:
+    - "Etlik Entegre Sağlık Kampüsü: 'toplamda 3566 yatak' (Bölge Hastanesi 718, Kalp Damar 362, Ortopedi-Nöroloji 478, Kadın Doğum 500, Çocuk 508, Onkoloji 494, Rehabilitasyon 300, Psikiyatri 106, YG Psikiyatri 100); '1.071.885 m2 arazi üzerinde' / '1 milyon 71 bin metrekare alanda yükselen' (PDF s. 5)"
+    - "Bilkent Entegre Sağlık Kampüsü: '1.200.000 m2 inşaat alanı', 'toplamda 3704 yatak' (bileşenler 62+562+441+507+564+580+588+300+100) (PDF s. 5)"
+    - "Ankara Eğitim ve Araştırma Hastanesi: 'Fiili yatak kapasitesi 616'dır'; müşahede, diyaliz dahil 678 (PDF s. 6)"
+  notes: "Spec kaynağı [17]. PDF meta verisi: oluşturma 17.01.2017, değişiklik 09.02.2017. Planlama dönemine ait (açılış öncesi) değerler."
+
+- id: maliyet_sygm_bahce_2021
+  title: "Osmaniye Bahçe'ye 50 Yataklı Hastane Müjdesi"
+  publisher: "T.C. Sağlık Bakanlığı Sağlık Yatırımları Genel Müdürlüğü"
+  url: "https://sygm.saglik.gov.tr/TR-86211/osmaniye-bahceye-50-yatakli-hastane-mujdesi.html"
+  accessed: 2026-10-21
+  published: 2021-11-17
+  kind: resmi
+  archived: data/raw/maliyet/sygm_TR-86211_bahce_50_yatak.html
+  sha256: "8ba3147daf9bff92860476116ad36b8d80f0004329d430d08cb3ff18b1284e43"
+  used_for:
+    - "50 yataklı Bahçe Devlet Hastanesi (sözleşme imzalandı): 14 çift + 17 tek kişilik oda, 2 ameliyathane, 11 poliklinik, acil 15 müşahede yatağı + 4 poliklinik, diyaliz 10 yatak, palyatif 5 yatak, 2 doğum odası, 3 diş üniti"
+  notes: "Spec kaynağı [18]. Kapalı alan verilmiyor."
+
+- id: maliyet_sygm_cayirova_2021
+  title: "Kocaeli Çayırova'ya 200 Yataklı Hastane"
+  publisher: "T.C. Sağlık Bakanlığı Sağlık Yatırımları Genel Müdürlüğü"
+  url: "https://sygm.saglik.gov.tr/TR-84485/kocaeli-cayorovaya-200-yatakli-hastane.html"
+  accessed: 2026-10-21
+  published: 2021-07-04
+  kind: resmi
+  archived: data/raw/maliyet/sygm_TR-84485_cayirova_200_yatak.html
+  sha256: "3307ffb03839783a3e93e2a5613bbb2be65a1c9bfd3f1e491883766aab34f842"
+  used_for:
+    - "200 yataklı Çayırova Devlet Hastanesi: 99 oda (45 tek, 54 çift), 75 poliklinik, 51 yoğun bakım, 6 ameliyathane, 8 diyaliz, 26 yataklı acil, 156 deprem izolatörü"
+  notes: "Spec kaynağı [20]. Kapalı alan bu sayfada yok; 45.655 m² 2026 KYP karakteristiğinden (yatirim_kyp2026, proje 2017I00-145177)."
+
+- id: maliyet_cnnturk_dikili_2026
+  title: "Dikili'nin 75 yataklı yeni devlet hastanesi hizmete girdi"
+  publisher: "CNN Türk (DHA)"
+  url: "https://www.cnnturk.com/yerel-haberler/izmir/dikili/dikilinin-75-yatakli-yeni-devlet-hastanesi-hizmete-girdi-2404810"
+  accessed: 2026-10-21
+  published: 2026-03-10
+  kind: haber
+  archived: data/raw/maliyet/cnnturk_dikili_75_yatak.html
+  sha256: "c79a0ace603556dfc19245dc9498c0e55ae4bb3fe2b368ac0c731da4e513ed63"
+  used_for:
+    - "75 yatak; 'toplam 15 bin 10 metrekare açık alan, 3 bin 969 metre kare kapalı alan üzerine kurulan, 4 katlı'; 15 yataklı acil, 10 üniteli hemodiyaliz, 20 poliklinik odası, 2 genel + 1 lokal ameliyathane, 5 yataklı erişkin yoğun bakım"
+  notes: "Spec kaynağı [19]. 3.969 m² dört katlı bina için büyük olasılıkla taban alanıdır; m²/yatak hesabında kullanılmadı."
+
+# --- KDV -------------------------------------------------------------------------------------------
+
+- id: maliyet_rg_2023_kdv_karar_7346
+  title: "Mal ve Hizmetlere Uygulanacak Katma Değer Vergisi Oranlarının Tespitine İlişkin Kararda Değişiklik Yapılmasına Dair Karar (Cumhurbaşkanı Kararı, Karar Sayısı: 7346)"
+  publisher: "Resmî Gazete, 7 Temmuz 2023, sayı 32241"
+  url: "https://www.resmigazete.gov.tr/eskiler/2023/07/20230707-11.pdf"
+  accessed: 2026-10-21
+  published: 2023-07-07
+  kind: resmi
+  archived: data/raw/maliyet/RG_20230707-11_KDV_karar_7346.pdf
+  sha256: "6aa60516b04fbc1e73d6ea0f100ad78651f9280b08c6b96408389ebd7484b3f2"
+  used_for:
+    - "Md. 1: 2007/13033 sayılı BKK md. 1(1)(a) '%18' → '%20' (genel oran), (c) '%8' → '%10'"
+    - "Md. 3: yayımını izleyen üçüncü gün yürürlüğe girer (10.07.2023)"
+  notes: >-
+    Karar gövdesi PDF'in metin katmanından çıkarılamıyor (yalnız başlık okunuyor); sayfa görüntüye çevrilerek okundu.
+    Fihrist: data/raw/maliyet/RG_20230707_fihrist.htm. GİB'in güncel oran tablosu (cdn.gib.gov.tr) ve gib.gov.tr
+    özelge sayfaları vekil sunucuda engelli ya da JS ile yükleniyor; indirilemedi. 7346'dan sonra genel oranı değiştiren
+    bir karar bu çalışmada bulunamadı (yalnız aramayla tarandı).
+
+# --- Hesaplar --------------------------------------------------------------------------------------
+
+- id: maliyet_hesap_kyp_alan
+  title: "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları"
+  publisher: "Proje hesabı (maliyet_build.py; girdi data/reference/yatirim_programi_2026_saglik.csv)"
+  url: "data/reference/yatirim_programi_2026_saglik.csv"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: null
+  used_for:
+    - "SB genel hastaneleri (dahil_ana, şehir hastanesi değil, n = 47): m²/yatak medyan 250,0; toplam alan/toplam yatak 237,0; Ç1–Ç3 201,6–252,6"
+    - "Sınıflara göre toplam/toplam: <200 yatak 266,1 (n = 6, hepsi 150 yatak) · 200–399: 243,5 (n = 15) · ≥400: 233,2 (n = 26)"
+    - "SB şehir hastaneleri (genel bütçe, n = 14): medyan 279,5, toplam/toplam 275,8; ≥1.000 yatak (n = 8): medyan 254,9"
+    - "alan = A0 + a·yatak (OLS): n = 47 → A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61), a = 228,4 (197,4…259,3), R² = 0,830; ≤600 yatak (n = 44) → A0 = 7.695 (−1.997…17.387; p = 0,12), a = 214,1"
+    - "Sınıf ortalamalarıyla iki nokta: a = 219,9, A0 = 6.938 m²; a = 130 sabitken A0 = ort(alan − 130·yatak) = 41.552 m² (SH 3.654)"
+    - "Makine-teçhizat / inşaat alt proje oranı (yer tutucu satırlar hariç): KTÜ Çocuk Hastanesi 225 yatak 0,158 (238.000.000 / 1.504.752.636; basılı s. 327); Gaziantep Ü. Acil Travma ve Yanık Hastanesi 134 yatak 0,320 (288.140.000 / 901.597.000; basılı s. 323); diş hastaneleri 0,16–0,46"
+    - "SB genel hastaneleri proje tutarı / alan: medyan 53.556, toplam/toplam 54.461 TL/m² (KDV dahil)"
+  notes: >-
+    Girdi satırları yatirim alanının ayrıştırdığı yatirim_kyp2026 belgesindendir (sayfa numaraları CSV'de). KYP
+    alanları plan normlarıyla üretilmiş (47 projenin 19'unda tam 200 ya da 250 m²/yatak), bu yüzden A0 tahmini zayıf.

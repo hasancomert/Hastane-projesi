@@ -1,0 +1,45 @@
+# Alan: erisim — F. İşletme gideri (spec 4.4 F; isteğe bağlı, varsayılan kapalı)
+# Modelde: Fixed_jk += PV(T, r) · opex.fixed_per_hospital_year ; Var_jk += PV(T, r) · opex.per_bed_year  (spec 4.5)
+# Kaynaklar: data/sources/erisim.yaml ; ayrıntı: data/reference/erisim_turetim.md
+
+- key: opex.include
+  label: "İşletme gideri dahil mi?"
+  value: false
+  unit: "evet/hayır"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.4 F: isteğe bağlı, varsayılan kapalı. Toplam yatak sayısı talepten (q_i) belirlendiği için yatak başı
+    işletme gideri hastane yerleşimini değil esas olarak toplam maliyet düzeyini etkiler; hastane başı sabit işletme
+    gideri ise hastane sayısını azaltma yönünde çalışır. Kaynaklı bir sabit/değişken ayrımı olmadığından kapalı tutulur.
+
+- key: opex.fixed_per_hospital_year
+  label: "Hastane başı yıllık sabit işletme gideri"
+  value: 0
+  unit: "TL / hastane·yıl (2026)"
+  status: varsayim
+  rationale: >-
+    Türkiye hastaneleri için harcamanın hastane başı sabit ve yatak başı değişken kısma ayrıldığı resmî ya da hakemli
+    bir kaynak bulunamadı (Sayıştay ve Sağlık Bakanlığı KHGM siteleri bu ortamdan erişilemedi). TÜİK hastane harcamasının
+    tamamı opex.per_bed_year'e yüklendiği için çift sayımı önlemek amacıyla 0 alındı. Ölçek ekonomisi duyarlılığı için
+    kaydırıcıyla artırılabilir; bu durumda per_bed_year aynı oranda düşürülmelidir.
+  range: [0, 2000000000]
+
+- key: opex.per_bed_year
+  label: "Yatak başı yıllık işletme gideri"
+  value: 8887000
+  unit: "TL / yatak·yıl (Eylül 2026 fiyatları)"
+  status: hesap
+  source_ids: [erisim_tuik_saglik_harcamalari_2024_sunucu, saglik_sbsgm_bulten2024, erisim_tuik_tufe_tt10]
+  derivation: >-
+    (TÜİK 2024 cari sağlık harcaması, sağlayıcı 'Hastaneler' 1.288.472,3 mn TL) / (2024 hastane yatağı 268.359; SİY 2024
+    Haber Bülteni Tablo 7) = 4.801.301 TL/yatak (2024 fiyatları) × TÜFE çarpanı 137,23 / 74,1393 = 1,8510 →
+    8.887.084 ≈ 8.887.000 TL/yatak·yıl.
+  range: [0, 20000000]
+  alternatives:
+    - {label: "2024 fiyatlarıyla (TÜFE güncellemesi yok)", value: 4801000, status: hesap, source_ids: [erisim_tuik_saglik_harcamalari_2024_sunucu, saglik_sbsgm_bulten2024]}
+  notes: >-
+    ÜST SINIR NİTELİĞİNDE: hastane harcaması yataklı tedavinin yanında ayakta tedavi (poliklinik, acil), hastanede
+    kullanılan ilaç ve tıbbi malzemeyi de kapsar; yalnız yatağa bağlı gider daha düşüktür. Kamu, üniversite ve özel
+    hastanelerin tümünü içerir (yatak sayısı da tüm sektörler). Yatırım harcaması (2024: 172.349 mn TL) dahil değildir
+    (cari harcama). PV(25 yıl, %5) = 14,09 ile yatak
+    başına bugünkü değer ≈125 mn TL'dir; inşaat maliyetinin çok üstündedir — açıldığında sonuçlar buna göre yorumlanmalı.

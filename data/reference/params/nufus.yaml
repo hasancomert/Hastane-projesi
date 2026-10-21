@@ -1,0 +1,42 @@
+# Alan: tuik (nüfus) — il nüfusu senaryoları (spec 4.4 A "Nüfus senaryosu", Hocanın 1. maddesi "Ankara nüfusu 2026")
+# Kaynaklar: data/sources/nufus.yaml ; ilçe tablosu: data/reference/tuik_adnks_ankara.csv
+# Üretim/denetim: pipeline/10_tuik_population.py (sayıları arşivden yeniden okur ve bu dosyadaki değerlerle karşılaştırır)
+# İlçe dağılımı: 2025 için TÜİK ilçe toplamları (CSV); 2030 için TÜİK il düzeyinin altında projeksiyon yayımlamıyor,
+# ilçe/hücre dağılımı nüfus ızgarası alanında (GHS-POP 2030) yapılır.
+
+- key: population.province_2025
+  label: "Ankara nüfusu, 31.12.2025 (TÜİK ADNKS) = 2026 başı"
+  value: 5910320
+  unit: "kişi"
+  status: kaynakli
+  source_ids: [tuik_st_il_ilce_2025, tuik_bt_adnks2025_yogunluk, tuik_adnks2025_bulten]
+  alternatives:
+    - {label: "31.12.2024 (ADNKS 2024)", value: 5864049, status: kaynakli, source_ids: [tuik_bt_adnks2024_yogunluk, tuik_df_adnks_t22]}
+    - {label: "31.12.2023 (ADNKS 2023)", value: 5803482, status: kaynakli, source_ids: [tuik_bt_adnks2023_yogunluk]}
+    - {label: "31.12.2026, TÜİK projeksiyonu (ana senaryo, ADNKS 2023 tabanlı)", value: 5923283, status: kaynakli, source_ids: [tuik_st_projeksiyon_il_2023_2030]}
+    - {label: "31.12.2026, projeksiyon ADNKS 2025'e yeniden tabanlanmış: 5.910.320 × 5.923.283 / 5.886.877", value: 5946871, status: hesap, source_ids: [tuik_st_il_ilce_2025, tuik_st_projeksiyon_il_2023_2030]}
+  notes: >-
+    Şartname Bölüm 3 değeriyle (5.910.320) birebir aynı; 25 ilçenin toplamı da tam bu değer. Aynı sayı: istatistiksel
+    tablo (satır 70), bülten tablosu (satır 11), bülten metni, veri akışı DF_ADNKS_T22, NİP dışa aktarımı ve il gösterge
+    kartı; haber kaynakları [1] ve [3] de aynı. Yıllık artış hızı 2024→2025 ‰7,86. Nüfus kapsamı: Türkiye'de ikamet
+    eden yabancılar dahil (Ankara 128.633, NİP il kartı); kurumsal nüfus kurumun bulunduğu yerde sayılır.
+    Kaydırıcı değil, senaryo değeridir (aralık verilmedi).
+
+- key: population.province_2030
+  label: "Ankara nüfusu, 31.12.2030 (TÜİK projeksiyonu, ana senaryo)"
+  value: 6062005
+  unit: "kişi"
+  status: kaynakli
+  source_ids: [tuik_st_projeksiyon_il_2023_2030, tuik_projeksiyon_2023_2100_bulten]
+  alternatives:
+    - {label: "Projeksiyon ADNKS 2025'e yeniden tabanlanmış: 5.910.320 × 6.062.005 / 5.886.877", value: 6086145, status: hesap, source_ids: [tuik_st_il_ilce_2025, tuik_st_projeksiyon_il_2023_2030]}
+    - {label: "Büyümesiz karşılaştırma: 2025 nüfusu (5.910.320)", value: 5910320, status: kaynakli, source_ids: [tuik_st_il_ilce_2025]}
+  notes: >-
+    TÜİK "Nüfus Projeksiyonları, 2023-2100" (30.07.2024): ADNKS 2023 tabanlı, yıl sonu değeri; iller için yalnız ana
+    senaryo ve yalnız 2030'a kadar yayımlanıyor (düşük/yüksek senaryo il düzeyinde yok). 2023–2030 yıllık ortalama artış
+    ‰6,23. Projeksiyonun 2025 değeri 5.886.877, gerçekleşen 5.910.320'nin %0,40 altında: bu varsayılanla 2025→2030 artışı
+    %2,57; projeksiyonun kendi 2025→2030 artışı %2,97 (yeniden tabanlanmış alternatif bunu kullanır).
+    Şartname 4.4 A, 2030 senaryosu için "GHS-POP 2030 dağılımı + varsayımsal büyüme" diyordu; il toplamı için artık
+    resmî değer var, büyüme varsayımı gerekmiyor. GHS-POP E2030/E2025 oranına dayalı bir alternatif burada sayısal
+    olarak verilmedi: GHS toplamlarını bu alanda okumadık (nüfus ızgarası alanı hesaplayacak; Faz 0 yoklamasının
+    geçici toplamları kullanılmadı). Kaydırıcı değil, senaryo değeridir (aralık verilmedi).
