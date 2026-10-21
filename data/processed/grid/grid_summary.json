@@ -1306,18 +1306,18 @@
   "timings_note": "makineye bağlı; deterministik değildir (geliştirme kabı, Linux, 4 çekirdek)",
   "timings": {
     "2km": {
-      "neighbor_lists_s_median": 0.08606944499842939,
-      "neighbor_lists_s_min": 0.08501059999980498,
+      "neighbor_lists_s_median": 0.11111586299921328,
+      "neighbor_lists_s_min": 0.0986278990003484,
       "runs": 3
     },
     "3km": {
-      "neighbor_lists_s_median": 0.03260539000075369,
-      "neighbor_lists_s_min": 0.030319804998725886,
+      "neighbor_lists_s_median": 0.03497917799904826,
+      "neighbor_lists_s_min": 0.03422723199946631,
       "runs": 3
     },
     "5km": {
-      "neighbor_lists_s_median": 0.006639151999479509,
-      "neighbor_lists_s_min": 0.00657223999951384,
+      "neighbor_lists_s_median": 0.008688664998771856,
+      "neighbor_lists_s_min": 0.007798919001288596,
       "runs": 3
     }
   }

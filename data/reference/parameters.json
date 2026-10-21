@@ -1664,7 +1664,7 @@
       "erisim_rg_emlak_vergisi_teblig_89"
     ],
     "derivation": null,
-    "rationale": "Ankara için ilçe/hücre düzeyinde güvenilir, açık ve resmî bir arsa fiyatı veri seti bulunamadı (emlak vergisi asgari m² birim değerleri sokak bazında ve yalnız yerel ilanla yayımlanıyor; TKGM, TOKİ ve belediye siteleri bu ortamdan erişilemedi). Taban, medyan yoğunluklu aday hücrenin fiyatıdır; P_min eşiği düşük olduğundan (250 kişi / 9 km²) medyan adayın kırsal ilçe/kasaba çevresi olması beklenir. Bu düzey için haber kaynaklı tek nokta: Evren'de konut imarlı arsa ortalaması 1.379 TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kentsel uç için haber kaynaklı TOKİ muhammen bedelleri (Eylül 2026): Sincan Temelli/Alcı ≈6.000, Sincan Yeni Peçenek ≈9.400–12.900, Yenimahalle Susuz kentsel servis alanı ≈31.000, Gölbaşı İncek ≈38.500 TL/m². Aday hücrelerin medyan yoğunluğu ve taban × (yoğunluk / medyan)^β fiyatlarının bu haber değerleriyle tutarlılığı Faz 2'de kalibre edilmiş ızgarayla hesaplanacak.",
+    "rationale": "Ankara için ilçe/hücre düzeyinde güvenilir, açık ve resmî bir arsa fiyatı veri seti bulunamadı (emlak vergisi asgari m² birim değerleri sokak bazında ve yalnız yerel ilanla yayımlanıyor; TKGM, TOKİ ve belediye siteleri bu ortamdan erişilemedi). Taban, medyan yoğunluklu aday hücrenin fiyatıdır; P_min eşiği düşük olduğundan (250 kişi / 9 km²) medyan adayın kırsal ilçe/kasaba çevresi olması beklenir. Bu düzey için haber kaynaklı tek nokta: Evren'de konut imarlı arsa ortalaması 1.379 TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kentsel uç için haber kaynaklı TOKİ muhammen bedelleri (Eylül 2026): Sincan Temelli/Alcı ≈6.000, Sincan Yeni Peçenek ≈9.400–12.900, Yenimahalle Susuz kentsel servis alanı ≈31.000, Gölbaşı İncek ≈38.500 TL/m². Kalibre 3 km ızgarada (pipeline/22_grids.py; WorldPop dağılımı, TÜİK 2025; yoğunluk = hücre nüfusu / hücrenin il içi alanı) varsayılan aday hücrelerin (|J| = 634) yoğunluğu ortanca 78,3, %90'lık dilim 2.308, en çok 28.151 kişi/km²; tüm nüfuslu talep hücrelerinde (2.604 hücre) ortanca 4,8, %90'lık dilim 126, en çok 28.151 kişi/km² (data/processed/grid/grid_summary.json 'density_per_km2'). Ortanca aday gerçekten seyrek (kırsal/kasaba çevresi) bir hücredir.",
     "range": [
       0,
       40000
@@ -1696,7 +1696,7 @@
         ]
       }
     ],
-    "notes": "Arsa birim fiyatı yalnız land.include = true iken kullanılır. Hastane parselleri (kentsel servis alanı) genellikle konut arsasından farklı fiyatlanır; TOKİ muhammen bedeli satış fiyatı değildir. Faz 2'de (ızgara hazır olunca) medyan yoğunluk gerçek aday kümesiyle yeniden hesaplanmalı.",
+    "notes": "Arsa birim fiyatı yalnız land.include = true iken kullanılır. Hastane parselleri (kentsel servis alanı) genellikle konut arsasından farklı fiyatlanır; TOKİ muhammen bedeli satış fiyatı değildir. Medyan yoğunluk, modelin kullandığı aday kümesi J üzerinden alınır; aday kümesi hücre boyutu, P_min ve nüfus kaynağıyla değişir (varsayılan 3 km kümesinde 78,3 kişi/km²).",
     "group": "D. Arsa",
     "domain": "arsa",
     "sources": [
@@ -1733,7 +1733,7 @@
     "status": "varsayim",
     "source_ids": [],
     "derivation": null,
-    "rationale": "Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar. Haber kaynaklı Ankara arsa fiyatları kırsal Evren (1.379 TL/m²) ile TOKİ'nin Eylül 2026 muhammen bedelleri (≈6.000 – 38.500 TL/m²) arasında ≈28 kat değişiyor; β'nın bu yelpazeyle uyumu, aday hücre yoğunluk dağılımı Faz 2'de kalibre edilmiş ızgaradan hesaplanınca denetlenecek. β = 0 tüm hücrelerde aynı fiyat demektir.",
+    "rationale": "Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar. Haber kaynaklı Ankara arsa fiyatları kırsal Evren (1.379 TL/m²) ile TOKİ'nin Eylül 2026 muhammen bedelleri (≈6.000 – 38.500 TL/m²) arasında ≈28 kat değişiyor. Kalibre 3 km ızgarada aday hücre yoğunluğu ortanca 78,3, en çok 28.151 kişi/km² (en yoğun aday ortancanın ≈359 katı; data/processed/grid/grid_summary.json 'density_per_km2'). Bu yelpazeyi haber fiyatlarına bağlayan kaynaklı bir ilişki olmadığından β varsayım olarak kalır. β = 0 tüm hücrelerde aynı fiyat demektir.",
     "range": [
       0.0,
       1.5
@@ -3063,11 +3063,11 @@
   "access.max_distance_km": {
     "label": "Azami erişim mesafesi (R, yol mesafesi)",
     "value": 30,
-    "unit": "km (yol; d_ij = kuş uçuşu × access.circuity)",
+    "unit": "km (yol; d_ij = kuş uçuşu_ij × k(kuş uçuşu_ij) × access.circuity_scale)",
     "status": "varsayim",
     "source_ids": [],
     "derivation": null,
-    "rationale": "İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur. Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Kapsama kontrolü (R içinde adayı olmayan nüfuslu hücre sayısı ve nüfusu, grid.candidate_min_pop'a göre) Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; R ile P_min birlikte seçilmeli.",
+    "rationale": "İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur. Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Yol mesafesi varsayılan olarak mesafeye bağlı dolambaç profiliyle hesaplanır (access.circuity_mode = mesafeye_bagli, access.circuity_profile, ölçek 1,0): R = 30 yol km ≈25,0 km kuş uçuşuna karşılık gelir ('sabit' modunda 30 / 1,223 ≈ 24,5 km; ters hesap backend/model/distance.py euclid_for_road_km, grid_summary.json 'circuity'). Kalibre ızgarada kapsama denetimi (pipeline/22_grids.py, data/processed/grid/grid_summary.json; varsayılan aday kuralı, P_min = 250, WorldPop 2025): 3 km ve 5 km ızgarada her talep hücresinin R içinde en az bir adayı var; 2 km ızgarada 4 talep hücresi (33 kişi) adaysız kaldı ve kapsama onarımı 1 uygun hücreyi aday yaptı. R ile P_min birlikte seçilmeli: R küçülürse onarımla eklenen aday sayısı artar.",
     "range": [
       10,
       100
@@ -3117,7 +3117,7 @@
         "status": "model_secimi"
       }
     ],
-    "notes": "Kalibre ızgara (pipeline/22_grids.py): il poligonuyla kesişen hücre sayısı 2 km 6.825, 3 km 3.111, 5 km 1.178 (tamamı il içinde 5.976 / 2.572 / 876); nüfuslu talep hücresi |I| (WorldPop dağılımı, 2025) 4.842 / 2.604 / 1.073, GHS-POP dağılımıyla 2.816 / 1.806 / 917. En kalabalık hücre 3 km'de 253.355 kişi. Hücrelerin il içi alan toplamı 25.629,9 km² (UTM 36N). Varsayılan kuralla aday sayısı |J| 841 / 634 / 469 (2 km'de 1 hücre kapsama onarımıyla).",
+    "notes": "Kalibre ızgara (pipeline/22_grids.py): il poligonuyla kesişen hücre sayısı 2 km 6.825, 3 km 3.111, 5 km 1.178 (tamamı il içinde 5.976 / 2.572 / 876); nüfuslu talep hücresi |I| (WorldPop dağılımı, 2025) 4.842 / 2.604 / 1.073, GHS-POP dağılımıyla 2.816 / 1.806 / 917. En kalabalık hücre 3 km'de 253.355 kişi. Hücrelerin il içi alan toplamı 25.629,9 km² (UTM 36N). Varsayılan kuralla aday sayısı |J| 891 / 634 / 454 (2 km'de 1 hücre kapsama onarımıyla).",
     "group": "H. Izgara/çözücü",
     "domain": "izgara",
     "sources": [
@@ -3163,7 +3163,7 @@
         "status": "model_secimi"
       }
     ],
-    "notes": "|J| (aday sayısı) — WorldPop dağılımı, 2025, il içi ≥ 0,5, su < 0,5; \"yakınlık kuralıyla / kuralsız\" (grid.candidate_near_pop = 13.500). 3 km: P_min 0 → 2.776 / 2.776; 100 → 964 / 957; 250 → 634 / 617; 500 → 419 / 395; 1.000 → 311 / 269; 2.500 → 247 / 179. 2 km: 0 → 6.240; 100 → 1.316 / 1.311; 250 → 840 / 825; 500 → 579 / 553; 1.000 → 428 / 386; 2.500 → 314 / 248. 5 km: 0 → 1.004; 100 → 622 / 612; 250 → 469 / 451; 500 → 311 / 285; 1.000 → 221 / 179; 2.500 → 179 / 117. P_min = 250 ile aday hücrelerdeki nüfus payı 2 km %97,7, 3 km %98,5, 5 km %99,3. Kapsama (P_min = 250, R = 30 km yol): onarım öncesi R içinde adayı olmayan talep hücresi 3 km ve 5 km'de 0; 2 km'de 4 hücre / 33 kişi (onarım 1 uygun hücreyi aday yapar → 841). R içinde hiç UYGUN hücresi olmayan talep hücresi her boyutta 0. GHS-POP dağılımıyla 3 km |J| = 575; 2030 senaryosunda (WorldPop) 646.",
+    "notes": "|J| (aday sayısı) — WorldPop dağılımı, 2025, il içi ≥ 0,5, su < 0,5; \"P_min → yakınlık kuralıyla / kuralsız\" (ikisi eşitse tek sayı; grid.candidate_near_density = 1.500 kişi/km² → hücre başına eşik 2 km 6.000, 3 km 13.500, 5 km 37.500). 3 km: 0 → 2.776; 100 → 964 / 957; 250 → 634 / 617; 500 → 419 / 395; 1.000 → 311 / 269; 2.500 → 247 / 179. 2 km: 0 → 6.240; 100 → 1.347 / 1.311; 250 → 890 / 825; 500 → 659 / 553; 1.000 → 542 / 386; 2.500 → 462 / 248. 5 km: 0 → 1.004; 100 → 613 / 612; 250 → 454 / 451; 500 → 289 / 285; 1.000 → 188 / 179; 2.500 → 137 / 117. P_min = 250 ile aday hücrelerdeki nüfus payı 2 km %97,7, 3 km %98,5, 5 km %99,2. Kapsama (P_min = 250, R = 30 km yol): onarım öncesi R içinde adayı olmayan talep hücresi 3 km ve 5 km'de 0; 2 km'de 4 hücre / 33 kişi (onarım 1 uygun hücreyi aday yapar → 891). R içinde hiç UYGUN hücresi olmayan talep hücresi her boyutta 0. GHS-POP dağılımıyla 3 km |J| = 575; 2030 senaryosunda (WorldPop) 646.",
     "group": "H. Izgara/çözücü",
     "domain": "izgara",
     "sources": [
@@ -3186,7 +3186,7 @@
       "izgara_aday_kapsama_hesap"
     ],
     "derivation": null,
-    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir: seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak amaçlanır; atama değişkeni sayısı ≈ |I|·k olur (kalibre ızgarada dağılım notlarda). Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).",
+    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir: seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak amaçlanır; atama değişkeni sayısı ≈ |I|·k olur (k'ıncı mesafeye eşit adayların hepsi tutulduğundan biraz fazla; kalibre ızgarada dağılım notlarda). Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).",
     "range": [
       5,
       300
@@ -3204,7 +3204,7 @@
         "status": "model_secimi"
       }
     ],
-    "notes": "Varsayılan adaylarla (P_min = 250, R = 30 km yol) talep hücresi başına R içindeki aday sayısı: 3 km ortalama 47,6, ortanca 28, en az 1, en çok 206; talep hücrelerinin %30,7'sinde R içinde 50'den fazla aday var (k kırpıyor). Atama değişkeni (seyrek çift) sayısı 3 km'de R içindeki tümü 124.064 → k = 50 ile 79.761. 2 km: ortalama 72,4, en çok 388, kırpılan %37,8, 350.461 → 154.438. 5 km: ortalama 27,4, en çok 69, kırpılan %13,9, 29.435 → 27.957. Nüfus ağırlıklı en yakın aday yol mesafesi 3 km'de 1,67 km (hücre içi ortalama yolculuk 1,59 km); en uzak talep hücresinin en yakın adayı 29,1 km.",
+    "notes": "Varsayılan adaylarla (P_min = 250, R = 30 km yol) talep hücresi başına R içindeki aday sayısı: 3 km ortalama 47,6, ortanca 28, en az 1, en çok 206; talep hücrelerinin %30,7'sinde R içinde 50'den fazla aday var (k kırpıyor). k'ıncı yol mesafesine eşit (1e-9 km içinde) adayların hepsi tutulur (backend/model/distance.py neighbor_lists; düzenli ızgarada simetrik hücreler aynı mesafededir, eşitliği aday sırasıyla kesmek belirli bir yöndekileri sistematik olarak atardı). Atama değişkeni (seyrek çift) sayısı 3 km'de R içindeki tümü 124.064 → k = 50 ile 81.288 (eşitlik nedeniyle +1.527; 568 satır 50'den uzun, satır uzunluğu ortalama 31,22, en çok 58). 2 km: ortalama 76,4, en çok 404, kırpılan %39,2, 370.137 → 162.497 (+2.841; satır en çok 59). 5 km: ortalama 26,6, en çok 69, kırpılan %12,6, 28.543 → 27.639 (+410; satır en çok 57). Nüfus ağırlıklı en yakın aday yol mesafesi 3 km'de 1,67 km (hücre içi ortalama yolculuk 1,59 km); en uzak talep hücresinin en yakın adayı 29,1 km.",
     "group": "H. Izgara/çözücü",
     "domain": "izgara",
     "sources": [
@@ -3352,7 +3352,7 @@
       "izgara_aday_kapsama_hesap"
     ],
     "derivation": null,
-    "rationale": "Şartname 4.3.6 \"yerleşime yakın\" ifadesinin karşılığı: nüfusu P_min'in altında kalsa da 8 komşusundan en kalabalığının nüfusu ≥ eşik × hücre alanı (s² km², s = hücre kenarı) olan uygun hücre adaydır (yoğun kentin hemen kenarındaki seyrek/boş hücreler: arazisi olan kent saçağı). Eşik, GHSL Kentleşme Derecesi yönteminin \"kent merkezi\" yoğunluk eşiğidir: ≥ 1.500 kişi/km² (GHSL Data Package 2023, §2.6, PDF s. 55 / basılı s. 50). Yoğunluk olarak tanımlandığı için hücre boyutuyla birlikte ölçeklenir: hücre başına eşik 2 km'de 6.000, 3 km'de 13.500, 5 km'de 37.500 kişidir (yöntemdeki yoğunluk 1 km hücrede ve kalıcı kara alanında ölçülür; burada komşu hücrenin tüm alanına yaklaşık uygulanır). Yalnız yoğun kent hücrelerinin komşularını ekler, kümeyi şişirmez: __NEAR_EFFECT__",
+    "rationale": "Şartname 4.3.6 \"yerleşime yakın\" ifadesinin karşılığı: nüfusu P_min'in altında kalsa da 8 komşusundan en kalabalığının nüfusu ≥ eşik × hücre alanı (s² km², s = hücre kenarı) olan uygun hücre adaydır (yoğun kentin hemen kenarındaki seyrek/boş hücreler: arazisi olan kent saçağı). Eşik, GHSL Kentleşme Derecesi yönteminin \"kent merkezi\" yoğunluk eşiğidir: ≥ 1.500 kişi/km² (GHSL Data Package 2023, §2.6.2, PDF s. 55 / basılı s. 50). Yoğunluk olarak tanımlandığı için hücre boyutuyla birlikte ölçeklenir: hücre başına eşik 2 km'de 6.000, 3 km'de 13.500, 5 km'de 37.500 kişidir (yöntemdeki yoğunluk 1 km hücrede ve kalıcı kara alanında ölçülür; burada komşu hücrenin tüm alanına yaklaşık uygulanır). Yalnız yoğun kent hücrelerinin komşularını ekler, kümeyi şişirmez: P_min = 250 ile |J| 3 km'de 617 → 634 (+17), 2 km'de 825 → 890 (+65), 5 km'de 451 → 454 (+3).",
     "range": [
       0,
       10000

@@ -626,11 +626,12 @@ def fig_candidates(ctx: Context) -> tuple[Path, dict]:
     H = 10.4
     fig = plt.figure(figsize=(FIG_W, H), dpi=DPI)
     header(fig, f"Aday hücreler J, 3 km ızgara — |J| = {tr(J)} (ızgaraya sığabilecek en fazla hastane)",
-           f"Uygun hücre: il içi payı ≥ {pct_tr(r.min_inside, 0)} ve su + sulak alan < {pct_tr(r.max_water, 0)} (ESA WorldCover).  "
+           f"Uygun hücre: il içi payı ≥ {pct_tr(r.min_inside, 0)} ve su + sulak alan < {pct_tr(r.max_water, 0)} "
+           "(ESA WorldCover). Her hücrede en çok 1 hastane.\n"
            f"Aday: uygun ve (nüfus ≥ P_min = {tr(r.min_pop)} kişi/hücre  veya  8 komşudan biri ≥ {tr(near_thr)} kişi "
            f"= {tr(r.near_density)} kişi/km² × {tr(g.cell_km ** 2)} km²).\n"
            f"Kapsama denetimi (R = {tr(ctx.R_km)} km yol): adaysız kalan talep hücresi {tr(cov['uncovered_before_cells'])} "
-           f"→ onarım {tr(cov['added_cells'])} hücre ekledi. Her hücrede en çok 1 hastane.")
+           f"→ onarım {tr(cov['added_cells'])} hücre ekledi.")
 
     def draw(ax, lw):
         vals = cls.astype(float)

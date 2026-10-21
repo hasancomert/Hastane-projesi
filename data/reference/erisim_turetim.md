@@ -94,9 +94,11 @@ kaydırıcılarından); sabit sayı olarak saklanmamalı. Mesafe d_ij = kuş uç
 ## 5. Azami mesafe R
 
 Resmî standart bulunamadı (Ruhsatlandırma Yönetmeliği ve Mekânsal Planlar Yapım Yönetmeliği EK-2'de mesafe ölçütü yok;
-Sağlık Bakanlığı planlama rehberine erişilemedi) → **30 km yol mesafesi, varsayım** (≈24,5 km kuş uçuşu; 28,5 km/sa ile
-≈63 dk, serbest akışta ≈41 dk). Kapsama kontrolü (R içinde adayı olmayan nüfuslu hücreler ve nüfusları, P_min'e göre)
-ile hücre/aday sayıları Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; R ile P_min birlikte seçilmeli.
+Sağlık Bakanlığı planlama rehberine erişilemedi) → **30 km yol mesafesi, varsayım** (varsayılan mesafeye bağlı dolambaç
+profiliyle ≈25,0 km kuş uçuşu, 'sabit' modda ≈24,5 km; 28,5 km/sa ile ≈63 dk, serbest akışta ≈41 dk). Kapsama kontrolü
+kalibre ızgaradan yapıldı (pipeline/22_grids.py, data/processed/grid/grid_summary.json; ayrıntı
+`params/erisim.yaml` ve `params/izgara.yaml`): P_min = 250 ile 3 ve 5 km'de her talep hücresinin R içinde adayı var,
+2 km'de 4 hücre (33 kişi) için kapsama onarımı 1 aday ekliyor. R ile P_min birlikte seçilmeli.
 
 ## 6. Arsa (varsayılan kapalı)
 
@@ -106,8 +108,8 @@ ile hücre/aday sayıları Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; R 
   fiyat 10 kat). Kentsel uç için haber kaynaklı TOKİ Eylül 2026 muhammen bedelleri: Sincan Temelli/Alcı ≈6.000
   (30 mn / 5.000 m², kaba), Yeni Peçenek ≈9.400–12.900 (90 mn / 9.600–7.000 m², kaba), Yenimahalle Susuz 31.001
   (140,7 mn / 4.538,61 m²), Gölbaşı İncek 38.482 TL/m² (169,9 mn / 4.415 m²). Aday hücrelerin yoğunluk dağılımı
-  (medyan, yüzdelikler) ve modelin bu fiyatlarla tutarlılığı Faz 2'de kalibre edilmiş ızgarayla hesaplanacak
-  (kalibrasyon öncesi kaba ön hesaplar kaldırıldı).
+  kalibre ızgaradan hesaplandı (grid_summary.json 'density_per_km2'; sayılar `params/arsa.yaml`'da); kalibrasyon
+  öncesi kaba ön hesaplar kaldırıldı.
 - **İlçe ortalaması fizibilitesi:** emlak vergisi asgari arsa m² birim değerleri (Seri No 89 Tebliğ md. 3) takdir
   komisyonlarınca dört yılda bir (son: 2025'te 2026–2029 için) mahalle içinde cadde/sokak bazında belirleniyor ve yerel
   olarak ilan ediliyor; arazide il/ilçe bazında cins (kıraç/taban/sulak) değeri var. Ankara için açık, derlenmiş bir veri
@@ -136,4 +138,4 @@ sınırdır.
   ücret kararı (metin katmanı yok) sabit olarak yazılıdır. Türetilen değerleri `params/erisim.yaml`, `arsa.yaml`,
   `isletme.yaml` ile karşılaştırır, uyuşmazlıkta çıkış kodu 1 verir; dosya yazmaz. Izgara ön sayımları
   (`grid_stats.py`, `grid_cover.py`, kalibre edilmemiş GHS-POP) depoya alınmadı ve sayıları parametre metinlerinden
-  çıkarıldı; Faz 2'de kalibre edilmiş ızgaradan hesaplanacak.
+  çıkarıldı; yerine kalibre ızgaranın sayıları kullanılıyor (pipeline/22_grids.py, data/processed/grid/grid_summary.json).

@@ -32,8 +32,9 @@
     Yenimahalle Susuz kentsel servis alanı ≈31.000, Gölbaşı İncek ≈38.500 TL/m². Kalibre 3 km ızgarada
     (pipeline/22_grids.py; WorldPop dağılımı, TÜİK 2025; yoğunluk = hücre nüfusu / hücrenin il içi alanı) varsayılan
     aday hücrelerin (|J| = 634) yoğunluğu ortanca 78,3, %90'lık dilim 2.308, en çok 28.151 kişi/km²; tüm nüfuslu talep
-    hücrelerinde (2.604 hücre) ortanca 4,8, %90'lık dilim 126, en çok 28.151 kişi/km² (data/processed/grid/
-    grid_summary.json 'density_per_km2'). Ortanca aday gerçekten seyrek (kırsal/kasaba çevresi) bir hücredir.
+    hücrelerinde (2.604 hücre) ortanca 4,8, %90'lık dilim 126, en çok 28.151 kişi/km²
+    (data/processed/grid/grid_summary.json 'density_per_km2'). Ortanca aday gerçekten seyrek (kırsal/kasaba çevresi)
+    bir hücredir.
   range: [0, 40000]
   alternatives:
     - {label: "Evren konut imarlı arsa ortalaması (haber, Mayıs 2026)", value: 1379, status: kaynakli, source_ids: [erisim_haber_yeniankara_evren_arsa_2026]}
