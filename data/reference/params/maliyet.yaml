@@ -152,19 +152,27 @@
 
 - key: cost.m2_per_bed.general
   label: "Yatak başına kapalı alan — genel hastane"
-  value: 130
+  value: 228.35
   unit: "m² kapalı alan / yatak"
-  status: kaynakli
-  source_ids: [maliyet_balcali_2019, maliyet_ehta_2021]
+  status: hesap
+  source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]
+  derivation: >-
+    2026 Yatırım Programı'ndaki 47 Sağlık Bakanlığı genel hastane projesinde kapalı alan = A0 + a·yatak (OLS):
+    a = 228,35 m²/yatak (%95 GA 197,4–259,3; R² = 0,83), A0 = 3.361 m² (cost.core_area_m2 ile birlikte kullanılır).
+    Hesap: pipeline/18_costs.py → data/processed/kyp_alan_yatak.json (ols_alan_yatak.genel).
+  rationale: >-
+    Öğrenci kararı (2026-10-21, docs/KARARLAR.md #5): iki hastane sınıfı aynı tabanda, Bakanlığın gerçekleşen
+    projelerinden ölçülür. Spec'teki 130 m²/yatak resmî düzenlemede asgari arsa (imar) standardıdır; alternatif olarak kalır.
   range: [100, 350]
   alternatives:
+    - {label: "Asgari standart 130 m²/yatak (spec varsayılanı; Balcalı 2019 ve EHTA 2021'in aktardığı 2010 Kılavuzu; MPYY EK-2'de arsa standardı)", value: 130, status: kaynakli, source_ids: [maliyet_balcali_2019, maliyet_ehta_2021]}
     - {label: "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)", value: 138.7, status: hesap, source_ids: [maliyet_aliefendioglu_2021]}
     - {label: "Balcalı Hastanesi (190.651 ÷ 1.200; makalede 158,87)", value: 158.9, status: kaynakli, source_ids: [maliyet_balcali_2019]}
-    - {label: "2026 KYP SB genel hastaneleri, alan–yatak OLS eğimi (n = 47; A0 = 3.361 m² ile birlikte) — gerçekleşen proje alanı", value: 228.35, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "2026 KYP SB genel hastaneleri, ≤600 yatak OLS eğimi (n = 44; A0 = 7.695 m² ile birlikte)", value: 214.13, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
     - {label: "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47) — gerçekleşen proje alanı", value: 237.0, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
     - {label: "2026 KYP SB genel hastaneleri, medyan (n = 47) — gerçekleşen proje alanı", value: 250.0, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
   notes: >-
-    Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari
+    Önceki varsayılan (spec, 130) alternatiflerde. Aşağıdaki not Faz 1 incelemesidir. Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari
     alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz
     alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî
     Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa)
@@ -181,13 +189,22 @@
 
 - key: cost.m2_per_bed.city
   label: "Yatak başına kapalı alan — şehir hastanesi"
-  value: 335.5
+  value: 279.5
   unit: "m² kapalı alan / yatak"
   status: hesap
-  source_ids: [maliyet_savas_2020]
-  derivation: "14.159.000 m² ÷ 42.199 yatak = 335,5 (Sağlık Bakanlığı KÖİ şehir hastanesi programı, 32 hastane, Aralık 2017; Savaş vd. 2020, s. 26)"
-  range: [250, 400]
+  source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]
+  derivation: >-
+    2026 Yatırım Programı'ndaki genel bütçeli 14 şehir hastanesi projesinin (700–4.050 yatak) kapalı alan / yatak
+    medyanı = 279,5 m²/yatak (ortalama 284,4; ≥1.000 yatak n = 8 medyan 254,9). Hesap: pipeline/18_costs.py →
+    data/processed/kyp_alan_yatak.json (m2_per_yatak.sehir).
+  rationale: >-
+    Öğrenci kararı (2026-10-21, docs/KARARLAR.md #5): genel hastaneyle aynı tabanda (Bakanlığın gerçekleşen projeleri).
+    KÖİ kampüs oranları (335,5; 324,0; 344,5) hastane dışı kapalı alanları (Bakanlık idari binası, kampüs otoparkları) da
+    içerdiği için alternatif olarak kalır.
+  range: [220, 400]
   alternatives:
+    - {label: "KÖİ şehir hastanesi programı, 32 hastane toplam/toplam (14.159.000 ÷ 42.199; Savaş vd. 2020 s. 26) — önceki varsayılan", value: 335.5, status: hesap, source_ids: [maliyet_savas_2020]}
+    - {label: "2026 KYP şehir hastaneleri, ≥1.000 yatak medyanı (n = 8)", value: 254.85, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
     - {label: "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310", value: 308.3, status: hesap, source_ids: [maliyet_memurlar_2018]}
     - {label: "Manisa Şehir H. (178.204 ÷ 558)", value: 319.4, status: hesap, source_ids: [maliyet_memurlar_2018]}
     - {label: "Bilkent, 2017 planı (1.200.000 ÷ 3.704) — Bakanlık idari binası ve bodrum otoparkları dahil, hastane m²/yatak'ı yüksek gösterir", value: 324.0, status: hesap, source_ids: [maliyet_kalkinma_ankara_2017]}
@@ -211,12 +228,17 @@
 
 - key: cost.core_area_m2
   label: "Yataktan bağımsız çekirdek alan (A0)"
-  value: 5000
+  value: 3361
   unit: "m² kapalı alan / hastane"
-  status: varsayim
-  source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026, maliyet_balcali_2019]
+  status: hesap
+  source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]
+  derivation: >-
+    2026 Yatırım Programı'ndaki 47 SB genel hastane projesinde kapalı alan = A0 + a·yatak regresyonunun kesişimi:
+    A0 = 3.361 m² (a = 228,35 ile birlikte). İstatistiksel olarak sıfırdan ayırt edilemiyor (%95 GA −9.818…16.540;
+    p = 0,61); bu yüzden duyarlılık analizinde 0–16.540 aralığında gösterilir.
   rationale: >-
-    Veriden anlamlı biçimde tanımlanamadı; tahminlerin ortasında yuvarlak bir değer seçildi. Dayanaklar (hepsi 2026 KYP SB
+    Öğrenci kararı (2026-10-21, docs/KARARLAR.md #5): a ile aynı regresyondan, tutarlı çift olarak alınır. Önceki
+    varsayılan 5.000 m² (varsayım) alternatiflerde. Faz 1 gerekçe notu: veriden anlamlı biçimde tanımlanamadı. Dayanaklar (hepsi 2026 KYP SB
     genel hastaneleri): alan = A0 + a·yatak regresyonu n = 47 için A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61),
     ≤600 yatak (n = 44) için 7.695 m² (p = 0,12); sınıf ortalamalarından iki nokta tahmini 6.938 m². Yatak başı alanın
     büyüklükle düşmesi (266 → 244 → 233 m²/yatak) küçük ama pozitif bir sabit çekirdek alanla tutarlı. Üst sınır kontrolü:
@@ -225,7 +247,8 @@
     %14,3) ama mutfak, çamaşırhane, depo gibi kalemler yatakla ölçeklendiği için A0 olarak alınmadı.
   range: [0, 45000]
   alternatives:
-    - {label: "KYP regresyon kesişimi, n = 47 (a = 228,4 ile birlikte)", value: 3361, source_ids: [maliyet_hesap_kyp_alan]}
+    - {label: "Önceki varsayılan: tahminlerin ortasında yuvarlak değer (varsayım)", value: 5000, status: varsayim, source_ids: [maliyet_hesap_kyp_alan]}
+    - {label: "Çekirdek alan yok", value: 0, status: model_secimi, source_ids: []}
     - {label: "KYP sınıf ortalamaları, iki nokta (a = 219,9 ile)", value: 6938, source_ids: [maliyet_hesap_kyp_alan]}
     - {label: "KYP regresyon kesişimi, ≤600 yatak (a = 214,1 ile)", value: 7695, source_ids: [maliyet_hesap_kyp_alan]}
     - {label: "a = 130 sabitken KYP ortalamasını tutturan A0 (önerilmez)", value: 41552, source_ids: [maliyet_hesap_kyp_alan]}

@@ -133,6 +133,69 @@
       }
     ]
   },
+  "population.grid_source": {
+    "label": "Hücre nüfusunun dağılım kaynağı (ilçe bazında TÜİK 2025'e kalibre)",
+    "value": "worldpop_r2025a",
+    "unit": "seçenek",
+    "status": "model_secimi",
+    "source_ids": [
+      "nufus_izgara_worldpop_2025",
+      "nufus_izgara_worldpop_release_statement",
+      "nufus_izgara_ghs_pop_e2025_100m",
+      "nufus_izgara_ilce_toplamlari_hesap"
+    ],
+    "derivation": null,
+    "rationale": "Öğrenci kararı (2026-10-21). İki ızgara da her ilçede TÜİK ADNKS 2025 toplamına ölçeklenir; fark yalnız ilçe içi dağılımdadır. WorldPop R2025A, TÜİK 2022 ilçe verisinden üretilmiştir ve kalibrasyon öncesi 25 ilçenin hepsi TÜİK'in %81–104'ü aralığındadır (data/processed/ilce_kontrol_tablosu.csv). GHS-POP R2023A, TÜİK 2010 ilçe verisinden türetilmiş bir projeksiyondur ve 9 ilçede sapma %30'u aşar (Çubuk 0,43, Evren 0,30, Akyurt 1,86). Not: WorldPop R2025A yayıncısınca \"alfa\" sürüm olarak tanımlanır ve yerleşim dışına nüfus koymaz (constrained).",
+    "range": null,
+    "range_note": null,
+    "alternatives": [
+      {
+        "label": "GHS-POP R2023A E2025 100 m (spec'in ana kaynağı)",
+        "value": "ghs_pop_r2023a",
+        "status": "model_secimi",
+        "source_ids": [
+          "nufus_izgara_ghs_pop_e2025_100m"
+        ]
+      }
+    ],
+    "notes": "2030 senaryosunda il toplamı TÜİK projeksiyonu (population.province_2030), ilçe içi ve ilçeler arası dağılım seçilen kaynağın 2030 katmanından (WorldPop 2030 ya da GHS-POP E2030) alınır; hesap Faz 2 ızgara betiğindedir.",
+    "group": "Nüfus",
+    "domain": "nufus_izgara",
+    "sources": [
+      {
+        "id": "nufus_izgara_worldpop_2025",
+        "title": "WorldPop R2025A v1 — TUR population 2025, constrained, 100 m (tur_pop_2025_CN_100m_R2025A_v1.tif)",
+        "publisher": "WorldPop, University of Southampton (Global Demographic Data Project)",
+        "url": "https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2025/TUR/v1/100m/constrained/tur_pop_2025_CN_100m_R2025A_v1.tif",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      },
+      {
+        "id": "nufus_izgara_worldpop_release_statement",
+        "title": "Global Demographic Data — Public release R2025A V1 (Global2_Release_Statement_R2025A_v1.pdf)",
+        "publisher": "WorldPop, University of Southampton",
+        "url": "https://data.worldpop.org/repo/prj/Global_2015_2030/R2025A/doc/Global2_Release_Statement_R2025A_v1.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "nufus_izgara_ghs_pop_e2025_100m",
+        "title": "GHS-POP R2023A, E2025, 100 m, World Mollweide — karo R5_C21 (GHS_POP_E2025_GLOBE_R2023A_54009_100_V1_0_R5_C21.zip)",
+        "publisher": "Avrupa Komisyonu Ortak Araştırma Merkezi (JRC), Global Human Settlement Layer",
+        "url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2025_GLOBE_R2023A_54009_100/V1-0/tiles/GHS_POP_E2025_GLOBE_R2023A_54009_100_V1_0_R5_C21.zip",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      },
+      {
+        "id": "nufus_izgara_ilce_toplamlari_hesap",
+        "title": "İlçe bazında nüfus ızgarası toplamları (GHS-POP, WorldPop, Kontur; kalibrasyonsuz)",
+        "publisher": "Bu proje (pipeline/12_population_grids.py)",
+        "url": "data/processed/ilce_nufus_kaynaklar.csv",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      }
+    ]
+  },
   "demand.beds_per_1000": {
     "label": "1000 kişiye düşen hastane yatağı (oran yöntemi)",
     "value": 3.15,
@@ -993,21 +1056,30 @@
   },
   "cost.m2_per_bed.general": {
     "label": "Yatak başına kapalı alan — genel hastane",
-    "value": 130,
+    "value": 228.35,
     "unit": "m² kapalı alan / yatak",
-    "status": "kaynakli",
+    "status": "hesap",
     "source_ids": [
-      "maliyet_balcali_2019",
-      "maliyet_ehta_2021"
+      "maliyet_hesap_kyp_alan",
+      "yatirim_kyp2026"
     ],
-    "derivation": null,
-    "rationale": null,
+    "derivation": "2026 Yatırım Programı'ndaki 47 Sağlık Bakanlığı genel hastane projesinde kapalı alan = A0 + a·yatak (OLS): a = 228,35 m²/yatak (%95 GA 197,4–259,3; R² = 0,83), A0 = 3.361 m² (cost.core_area_m2 ile birlikte kullanılır). Hesap: pipeline/18_costs.py → data/processed/kyp_alan_yatak.json (ols_alan_yatak.genel).",
+    "rationale": "Öğrenci kararı (2026-10-21, docs/KARARLAR.md #5): iki hastane sınıfı aynı tabanda, Bakanlığın gerçekleşen projelerinden ölçülür. Spec'teki 130 m²/yatak resmî düzenlemede asgari arsa (imar) standardıdır; alternatif olarak kalır.",
     "range": [
       100,
       350
     ],
     "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
+      {
+        "label": "Asgari standart 130 m²/yatak (spec varsayılanı; Balcalı 2019 ve EHTA 2021'in aktardığı 2010 Kılavuzu; MPYY EK-2'de arsa standardı)",
+        "value": 130,
+        "status": "kaynakli",
+        "source_ids": [
+          "maliyet_balcali_2019",
+          "maliyet_ehta_2021"
+        ]
+      },
       {
         "label": "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)",
         "value": 138.7,
@@ -1025,8 +1097,8 @@
         ]
       },
       {
-        "label": "2026 KYP SB genel hastaneleri, alan–yatak OLS eğimi (n = 47; A0 = 3.361 m² ile birlikte) — gerçekleşen proje alanı",
-        "value": 228.35,
+        "label": "2026 KYP SB genel hastaneleri, ≤600 yatak OLS eğimi (n = 44; A0 = 7.695 m² ile birlikte)",
+        "value": 214.13,
         "status": "hesap",
         "source_ids": [
           "maliyet_hesap_kyp_alan",
@@ -1052,44 +1124,62 @@
         ]
       }
     ],
-    "notes": "Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa) standardıdır (maliyet_mpyy_ek2); EHTA da 130'u 'İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik' hükmü olarak anıyor. Yani 130'un bina alanı olarak kullanımı akademik yorumdur. (3) 130 bir ASGARİdir; Bakanlığın 2026 KYP'deki yeni genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli. TEMEL FARKI: varsayılan 130 bir ASGARİ / imar standardıdır (plan ve tasarım alt sınırı); KYP alternatifleri ise Bakanlığın yatırım programındaki gerçek projelerin karakteristiğinde yazan kapalı alandır (gerçekleşen proje alanı, asgari değil). İkisi aynı büyüklüğü ölçmez: KYP eğimi (228,35) yalnız KYP kesişimiyle (A0 = 3.361 m²) birlikte, ≤600 yatak eğimi (214,13) A0 = 7.695 m² ile birlikte anlamlıdır. Tüm KYP sayıları pipeline/18_costs.py ile data/processed/kyp_alan_yatak.json'a yazılır. Varsayılan değiştirilmedi.",
+    "notes": "Önceki varsayılan (spec, 130) alternatiflerde. Aşağıdaki not Faz 1 incelemesidir. Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa) standardıdır (maliyet_mpyy_ek2); EHTA da 130'u 'İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik' hükmü olarak anıyor. Yani 130'un bina alanı olarak kullanımı akademik yorumdur. (3) 130 bir ASGARİdir; Bakanlığın 2026 KYP'deki yeni genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli. TEMEL FARKI: varsayılan 130 bir ASGARİ / imar standardıdır (plan ve tasarım alt sınırı); KYP alternatifleri ise Bakanlığın yatırım programındaki gerçek projelerin karakteristiğinde yazan kapalı alandır (gerçekleşen proje alanı, asgari değil). İkisi aynı büyüklüğü ölçmez: KYP eğimi (228,35) yalnız KYP kesişimiyle (A0 = 3.361 m²) birlikte, ≤600 yatak eğimi (214,13) A0 = 7.695 m² ile birlikte anlamlıdır. Tüm KYP sayıları pipeline/18_costs.py ile data/processed/kyp_alan_yatak.json'a yazılır. Varsayılan değiştirilmedi.",
     "group": "C. İnşaat",
     "domain": "maliyet",
     "sources": [
       {
-        "id": "maliyet_balcali_2019",
-        "title": "Hastane Yapıları Teknik ve Destek Hizmet Birimlerinin Mekânsal Büyüklük Analizi: Çukurova Üniversitesi Tıp Fakültesi Balcalı Hastanesi Örneği",
-        "publisher": "Durgun Şahin, Y. — Çukurova Üniversitesi Mühendislik Mimarlık Fakültesi Dergisi 34(4), 203–216 (2019); doi:10.21605/cukurovaummfd.704217",
-        "url": "https://dergipark.org.tr/tr/download/article-file/1007709",
+        "id": "maliyet_hesap_kyp_alan",
+        "title": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları",
+        "publisher": "Proje hesabı (pipeline/18_costs.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
+        "url": "pipeline/18_costs.py",
         "accessed": "2026-10-21",
-        "kind": "akademik"
+        "kind": "hesap"
       },
       {
-        "id": "maliyet_ehta_2021",
-        "title": "Esnek Hastane Tasarımında Türkiye'deki Hastanelerin İstatistiksel Verilerinin Analizi",
-        "publisher": "Karakaş, G.; Sönmez, A. — Eurasian Journal of Health Technology Assessment 5(1), 9–26 (2021)",
-        "url": "https://dergipark.org.tr/en/download/article-file/1649898",
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
         "accessed": "2026-10-21",
-        "kind": "akademik"
+        "kind": "resmi"
       }
     ]
   },
   "cost.m2_per_bed.city": {
     "label": "Yatak başına kapalı alan — şehir hastanesi",
-    "value": 335.5,
+    "value": 279.5,
     "unit": "m² kapalı alan / yatak",
     "status": "hesap",
     "source_ids": [
-      "maliyet_savas_2020"
+      "maliyet_hesap_kyp_alan",
+      "yatirim_kyp2026"
     ],
-    "derivation": "14.159.000 m² ÷ 42.199 yatak = 335,5 (Sağlık Bakanlığı KÖİ şehir hastanesi programı, 32 hastane, Aralık 2017; Savaş vd. 2020, s. 26)",
-    "rationale": null,
+    "derivation": "2026 Yatırım Programı'ndaki genel bütçeli 14 şehir hastanesi projesinin (700–4.050 yatak) kapalı alan / yatak medyanı = 279,5 m²/yatak (ortalama 284,4; ≥1.000 yatak n = 8 medyan 254,9). Hesap: pipeline/18_costs.py → data/processed/kyp_alan_yatak.json (m2_per_yatak.sehir).",
+    "rationale": "Öğrenci kararı (2026-10-21, docs/KARARLAR.md #5): genel hastaneyle aynı tabanda (Bakanlığın gerçekleşen projeleri). KÖİ kampüs oranları (335,5; 324,0; 344,5) hastane dışı kapalı alanları (Bakanlık idari binası, kampüs otoparkları) da içerdiği için alternatif olarak kalır.",
     "range": [
-      250,
+      220,
       400
     ],
     "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
+      {
+        "label": "KÖİ şehir hastanesi programı, 32 hastane toplam/toplam (14.159.000 ÷ 42.199; Savaş vd. 2020 s. 26) — önceki varsayılan",
+        "value": 335.5,
+        "status": "hesap",
+        "source_ids": [
+          "maliyet_savas_2020"
+        ]
+      },
+      {
+        "label": "2026 KYP şehir hastaneleri, ≥1.000 yatak medyanı (n = 8)",
+        "value": 254.85,
+        "status": "hesap",
+        "source_ids": [
+          "maliyet_hesap_kyp_alan",
+          "yatirim_kyp2026"
+        ]
+      },
       {
         "label": "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310",
         "value": 308.3,
@@ -1155,27 +1245,34 @@
     "domain": "maliyet",
     "sources": [
       {
-        "id": "maliyet_savas_2020",
-        "title": "Kamu Özel İşbirliği Modeli Ankara Şehir Hastanesi Örneği",
-        "publisher": "Savaş, T.; Keleş, R.; Göktaş, B. — Ankara Sağlık Bilimleri Dergisi (ASBD), 2020",
-        "url": "https://dergipark.org.tr/tr/download/article-file/972597",
+        "id": "maliyet_hesap_kyp_alan",
+        "title": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları",
+        "publisher": "Proje hesabı (pipeline/18_costs.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
+        "url": "pipeline/18_costs.py",
         "accessed": "2026-10-21",
-        "kind": "akademik"
+        "kind": "hesap"
+      },
+      {
+        "id": "yatirim_kyp2026",
+        "title": "2026 Yılı Kamu Yatırım Programı",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
       }
     ]
   },
   "cost.core_area_m2": {
     "label": "Yataktan bağımsız çekirdek alan (A0)",
-    "value": 5000,
+    "value": 3361,
     "unit": "m² kapalı alan / hastane",
-    "status": "varsayim",
+    "status": "hesap",
     "source_ids": [
       "maliyet_hesap_kyp_alan",
-      "yatirim_kyp2026",
-      "maliyet_balcali_2019"
+      "yatirim_kyp2026"
     ],
-    "derivation": null,
-    "rationale": "Veriden anlamlı biçimde tanımlanamadı; tahminlerin ortasında yuvarlak bir değer seçildi. Dayanaklar (hepsi 2026 KYP SB genel hastaneleri): alan = A0 + a·yatak regresyonu n = 47 için A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61), ≤600 yatak (n = 44) için 7.695 m² (p = 0,12); sınıf ortalamalarından iki nokta tahmini 6.938 m². Yatak başı alanın büyüklükle düşmesi (266 → 244 → 233 m²/yatak) küçük ama pozitif bir sabit çekirdek alanla tutarlı. Üst sınır kontrolü: yatirim alanının F0 %95 GA üst sınırı (0,74–0,94 milyar TL) − F_sabit (250 mn TL) payı, (1,20)(1,40)·u_k ile bölününce ≈6.700–10.200 m² eder; 5.000 bunun altında. Balcalı'da tüm teknik ve destek birimleri 27.326 m² (1.200 yatak, %14,3) ama mutfak, çamaşırhane, depo gibi kalemler yatakla ölçeklendiği için A0 olarak alınmadı.",
+    "derivation": "2026 Yatırım Programı'ndaki 47 SB genel hastane projesinde kapalı alan = A0 + a·yatak regresyonunun kesişimi: A0 = 3.361 m² (a = 228,35 ile birlikte). İstatistiksel olarak sıfırdan ayırt edilemiyor (%95 GA −9.818…16.540; p = 0,61); bu yüzden duyarlılık analizinde 0–16.540 aralığında gösterilir.",
+    "rationale": "Öğrenci kararı (2026-10-21, docs/KARARLAR.md #5): a ile aynı regresyondan, tutarlı çift olarak alınır. Önceki varsayılan 5.000 m² (varsayım) alternatiflerde. Faz 1 gerekçe notu: veriden anlamlı biçimde tanımlanamadı. Dayanaklar (hepsi 2026 KYP SB genel hastaneleri): alan = A0 + a·yatak regresyonu n = 47 için A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61), ≤600 yatak (n = 44) için 7.695 m² (p = 0,12); sınıf ortalamalarından iki nokta tahmini 6.938 m². Yatak başı alanın büyüklükle düşmesi (266 → 244 → 233 m²/yatak) küçük ama pozitif bir sabit çekirdek alanla tutarlı. Üst sınır kontrolü: yatirim alanının F0 %95 GA üst sınırı (0,74–0,94 milyar TL) − F_sabit (250 mn TL) payı, (1,20)(1,40)·u_k ile bölününce ≈6.700–10.200 m² eder; 5.000 bunun altında. Balcalı'da tüm teknik ve destek birimleri 27.326 m² (1.200 yatak, %14,3) ama mutfak, çamaşırhane, depo gibi kalemler yatakla ölçeklendiği için A0 olarak alınmadı.",
     "range": [
       0,
       45000
@@ -1183,11 +1280,18 @@
     "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
-        "label": "KYP regresyon kesişimi, n = 47 (a = 228,4 ile birlikte)",
-        "value": 3361,
+        "label": "Önceki varsayılan: tahminlerin ortasında yuvarlak değer (varsayım)",
+        "value": 5000,
+        "status": "varsayim",
         "source_ids": [
           "maliyet_hesap_kyp_alan"
         ]
+      },
+      {
+        "label": "Çekirdek alan yok",
+        "value": 0,
+        "status": "model_secimi",
+        "source_ids": []
       },
       {
         "label": "KYP sınıf ortalamaları, iki nokta (a = 219,9 ile)",
@@ -1230,14 +1334,6 @@
         "url": "https://www.sbb.gov.tr/wp-content/uploads/2026/01/2026-Yili-Kamu-Yatirim-Programi-26012026.pdf",
         "accessed": "2026-10-21",
         "kind": "resmi"
-      },
-      {
-        "id": "maliyet_balcali_2019",
-        "title": "Hastane Yapıları Teknik ve Destek Hizmet Birimlerinin Mekânsal Büyüklük Analizi: Çukurova Üniversitesi Tıp Fakültesi Balcalı Hastanesi Örneği",
-        "publisher": "Durgun Şahin, Y. — Çukurova Üniversitesi Mühendislik Mimarlık Fakültesi Dergisi 34(4), 203–216 (2019); doi:10.21605/cukurovaummfd.704217",
-        "url": "https://dergipark.org.tr/tr/download/article-file/1007709",
-        "accessed": "2026-10-21",
-        "kind": "akademik"
       }
     ]
   },
@@ -2818,6 +2914,132 @@
         "kind": "veri"
       }
     ]
+  },
+  "access.circuity_mode": {
+    "label": "Dolambaç katsayısı modu",
+    "value": "mesafeye_bagli",
+    "unit": "seçenek",
+    "status": "model_secimi",
+    "source_ids": [
+      "arazi_osm_circuity_hesap",
+      "arazi_osm_osm_turkey_pbf"
+    ],
+    "derivation": null,
+    "rationale": "Öğrenci kararı (2026-10-21, docs/KARARLAR.md #7). Ankara OSM ölçümünde katsayı mesafe kısaldıkça artıyor (0–5 km bandında 1,38, 40 km üstünde ≈1,19); tek katsayı (1,22) kısa şehir içi yolculukları ≈%11 eksik ölçer. 'sabit' modunda access.circuity kullanılır.",
+    "range": null,
+    "range_note": null,
+    "alternatives": [
+      {
+        "label": "Tek katsayı (access.circuity)",
+        "value": "sabit",
+        "status": "model_secimi",
+        "source_ids": [
+          "arazi_osm_circuity_hesap",
+          "arazi_osm_osm_turkey_pbf"
+        ]
+      }
+    ],
+    "notes": null,
+    "group": "G. Erişim",
+    "domain": "dolambac_profil",
+    "sources": [
+      {
+        "id": "arazi_osm_circuity_hesap",
+        "title": "Ankara yol ağı dolambaç katsayısı ölçümü (OSM + GHS-POP; bu proje, pipeline/15_circuity.py)",
+        "publisher": "Proje hesabı",
+        "url": "pipeline/15_circuity.py",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      },
+      {
+        "id": "arazi_osm_osm_turkey_pbf",
+        "title": "OpenStreetMap — Geofabrik Türkiye özütü turkey-latest.osm.pbf (çoğaltma zaman damgası 2026-06-26T20:21:00Z)",
+        "publisher": "© OpenStreetMap katkıcıları; özüt Geofabrik; ayna Hugging Face (NoeFlandre/osm-geofabrik-raw-pbf-extracts)",
+        "url": "https://huggingface.co/datasets/NoeFlandre/osm-geofabrik-raw-pbf-extracts/resolve/main/turkey-latest.osm.pbf",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      }
+    ]
+  },
+  "access.circuity_profile": {
+    "label": "Mesafeye bağlı dolambaç profili k(d)",
+    "value": [
+      [
+        3.06,
+        1.3843
+      ],
+      [
+        7.63,
+        1.2808
+      ],
+      [
+        14.77,
+        1.2316
+      ],
+      [
+        26.94,
+        1.1942
+      ],
+      [
+        59.48,
+        1.1942
+      ],
+      [
+        107.12,
+        1.1811
+      ]
+    ],
+    "unit": "[kuş uçuşu km, katsayı] çiftleri",
+    "status": "hesap",
+    "source_ids": [
+      "arazi_osm_circuity_hesap",
+      "arazi_osm_osm_turkey_pbf"
+    ],
+    "derivation": "data/reference/circuity_ankara.csv bant satırları: bandın ortalama kuş uçuşu mesafesi → nüfus ağırlıklı ortalama katsayı: 3,1 km → 1,384; 7,6 km → 1,281; 14,8 km → 1,232; 26,9 km → 1,185 (izotonik 1,194); 59,5 km → 1,204 (izotonik 1,194); 107,1 km → 1,181. Artmayan ağırlıklı izotonik regresyon (ağırlık = çift sayısı); ara mesafelerde doğrusal enterpolasyon, ilk noktadan kısa ve son noktadan uzun mesafelerde uç değer. Üretim: pipeline/21_circuity_profile.py.",
+    "rationale": null,
+    "range": null,
+    "range_note": null,
+    "alternatives": [],
+    "notes": "Yol mesafesi d_ij = kuş uçuşu_ij × k(kuş uçuşu_ij) × access.circuity_scale. Aynı hücre içi yolculukta kuş uçuşu mesafe hücre içi ortalama mesafe olarak alınır (Faz 2 ızgara betiği).",
+    "group": "G. Erişim",
+    "domain": "dolambac_profil",
+    "sources": [
+      {
+        "id": "arazi_osm_circuity_hesap",
+        "title": "Ankara yol ağı dolambaç katsayısı ölçümü (OSM + GHS-POP; bu proje, pipeline/15_circuity.py)",
+        "publisher": "Proje hesabı",
+        "url": "pipeline/15_circuity.py",
+        "accessed": "2026-10-21",
+        "kind": "hesap"
+      },
+      {
+        "id": "arazi_osm_osm_turkey_pbf",
+        "title": "OpenStreetMap — Geofabrik Türkiye özütü turkey-latest.osm.pbf (çoğaltma zaman damgası 2026-06-26T20:21:00Z)",
+        "publisher": "© OpenStreetMap katkıcıları; özüt Geofabrik; ayna Hugging Face (NoeFlandre/osm-geofabrik-raw-pbf-extracts)",
+        "url": "https://huggingface.co/datasets/NoeFlandre/osm-geofabrik-raw-pbf-extracts/resolve/main/turkey-latest.osm.pbf",
+        "accessed": "2026-10-21",
+        "kind": "veri"
+      }
+    ]
+  },
+  "access.circuity_scale": {
+    "label": "Dolambaç profili çarpanı",
+    "value": 1.0,
+    "unit": "çarpan (boyutsuz)",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "1,0 = ölçülen profil aynen kullanılır. Arayüzde duyarlılık için kaydırıcıdır (ör. 1,1 = tüm yol mesafeleri %10 uzun).",
+    "range": [
+      0.8,
+      1.3
+    ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
+    "alternatives": [],
+    "notes": null,
+    "group": "G. Erişim",
+    "domain": "dolambac_profil",
+    "sources": []
   },
   "access.alpha": {
     "label": "Mesafe üssü (α)",

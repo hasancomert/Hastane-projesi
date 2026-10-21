@@ -1,0 +1,18 @@
+# Alan: nufus-izgara — hücre nüfusunun dağılım kaynağı (elle yazılır; öğrenci kararı, docs/KARARLAR.md #6)
+- key: population.grid_source
+  label: "Hücre nüfusunun dağılım kaynağı (ilçe bazında TÜİK 2025'e kalibre)"
+  value: worldpop_r2025a
+  unit: "seçenek"
+  status: model_secimi
+  source_ids: [nufus_izgara_worldpop_2025, nufus_izgara_worldpop_release_statement, nufus_izgara_ghs_pop_e2025_100m, nufus_izgara_ilce_toplamlari_hesap]
+  rationale: >-
+    Öğrenci kararı (2026-10-21). İki ızgara da her ilçede TÜİK ADNKS 2025 toplamına ölçeklenir; fark yalnız ilçe içi
+    dağılımdadır. WorldPop R2025A, TÜİK 2022 ilçe verisinden üretilmiştir ve kalibrasyon öncesi 25 ilçenin hepsi TÜİK'in
+    %81–104'ü aralığındadır (data/processed/ilce_kontrol_tablosu.csv). GHS-POP R2023A, TÜİK 2010 ilçe verisinden türetilmiş
+    bir projeksiyondur ve 9 ilçede sapma %30'u aşar (Çubuk 0,43, Evren 0,30, Akyurt 1,86). Not: WorldPop R2025A yayıncısınca
+    "alfa" sürüm olarak tanımlanır ve yerleşim dışına nüfus koymaz (constrained).
+  alternatives:
+    - {label: "GHS-POP R2023A E2025 100 m (spec'in ana kaynağı)", value: ghs_pop_r2023a, status: model_secimi, source_ids: [nufus_izgara_ghs_pop_e2025_100m]}
+  notes: >-
+    2030 senaryosunda il toplamı TÜİK projeksiyonu (population.province_2030), ilçe içi ve ilçeler arası dağılım seçilen
+    kaynağın 2030 katmanından (WorldPop 2030 ya da GHS-POP E2030) alınır; hesap Faz 2 ızgara betiğindedir.

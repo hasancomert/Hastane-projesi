@@ -1,0 +1,52 @@
+# Alan: arazi-osm — mesafeye bağlı dolambaç profili. Üreten: pipeline/21_circuity_profile.py (elle düzenlemeyin)
+- key: access.circuity_mode
+  label: Dolambaç katsayısı modu
+  value: mesafeye_bagli
+  unit: seçenek
+  status: model_secimi
+  source_ids: &id001
+  - arazi_osm_circuity_hesap
+  - arazi_osm_osm_turkey_pbf
+  rationale: 'Öğrenci kararı (2026-10-21, docs/KARARLAR.md #7). Ankara OSM ölçümünde katsayı mesafe kısaldıkça artıyor
+    (0–5 km bandında 1,38, 40 km üstünde ≈1,19); tek katsayı (1,22) kısa şehir içi yolculukları ≈%11 eksik ölçer.
+    ''sabit'' modunda access.circuity kullanılır.'
+  alternatives:
+  - label: Tek katsayı (access.circuity)
+    value: sabit
+    status: model_secimi
+    source_ids: *id001
+- key: access.circuity_profile
+  label: Mesafeye bağlı dolambaç profili k(d)
+  value:
+  - - 3.06
+    - 1.3843
+  - - 7.63
+    - 1.2808
+  - - 14.77
+    - 1.2316
+  - - 26.94
+    - 1.1942
+  - - 59.48
+    - 1.1942
+  - - 107.12
+    - 1.1811
+  unit: '[kuş uçuşu km, katsayı] çiftleri'
+  status: hesap
+  source_ids: *id001
+  derivation: 'data/reference/circuity_ankara.csv bant satırları: bandın ortalama kuş uçuşu mesafesi → nüfus ağırlıklı
+    ortalama katsayı: 3,1 km → 1,384; 7,6 km → 1,281; 14,8 km → 1,232; 26,9 km → 1,185 (izotonik 1,194); 59,5 km
+    → 1,204 (izotonik 1,194); 107,1 km → 1,181. Artmayan ağırlıklı izotonik regresyon (ağırlık = çift sayısı); ara
+    mesafelerde doğrusal enterpolasyon, ilk noktadan kısa ve son noktadan uzun mesafelerde uç değer. Üretim: pipeline/21_circuity_profile.py.'
+  notes: Yol mesafesi d_ij = kuş uçuşu_ij × k(kuş uçuşu_ij) × access.circuity_scale. Aynı hücre içi yolculukta kuş
+    uçuşu mesafe hücre içi ortalama mesafe olarak alınır (Faz 2 ızgara betiği).
+- key: access.circuity_scale
+  label: Dolambaç profili çarpanı
+  value: 1.0
+  unit: çarpan (boyutsuz)
+  status: model_secimi
+  source_ids: []
+  rationale: 1,0 = ölçülen profil aynen kullanılır. Arayüzde duyarlılık için kaydırıcıdır (ör. 1,1 = tüm yol mesafeleri
+    %10 uzun).
+  range:
+  - 0.8
+  - 1.3
