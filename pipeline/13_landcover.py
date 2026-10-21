@@ -2,7 +2,11 @@
 
 Çıktı: data/processed/landcover/worldcover_ankara_100m.tif — 3 bant, uint8, hücre alanının yüzdesi (0–100):
   bant 1 = sınıf 80 kalıcı su, bant 2 = sınıf 90 otsu sulak alan, bant 3 = sınıf 50 yapılaşmış alan; 255 = veri yok.
-Izgara: ESRI:54009 (Mollweide, eşit alanlı), 100 m, common.GHS_WINDOW -> her hücre tam 1 ha.
+Izgara: ESRI:54009 (Mollweide), 100 m, common.GHS_WINDOW.
+Hücre alanı: PROJ'un Mollweide'i yalnız küre formülüyle çalışır (WGS84'te yarıçap = a); elipsoit üzerinde 100 m
+hücre tam 1 ha DEĞİLDİR, enleme bağlıdır (Ankara'da ≈9.985–9.990 m², jeodezik). Hücre içi yüzde değerleri bundan
+etkilenmez; km² toplamlarında her satırın jeodezik hücre alanı kullanılır (Mollweide'de bir satırdaki hücrelerin alanı
+aynıdır). Poligon alanları EPSG:6933'te (common.CRS_EQUAL_AREA) hesaplanır.
 Yöntem: her sınıf için 10 m ikili maske -> GDAL 'average' (kısmi piksel ağırlıklı) ile 100 m'ye.
 Sağlama: OSM göl poligonlarında 100 m ürünün su alanı, 10 m piksellerin jeodezik alanıyla karşılaştırılır.
 
@@ -231,6 +235,30 @@ def geodesic_row_areas(lat_top: float, nrows: int) -> np.ndarray:
     return areas
 
 
+def mollweide_row_cell_areas(transform, nrows: int, densify: int = 8) -> np.ndarray:
+    """Mollweide ızgarasında her satırdaki bir hücrenin WGS84 elipsoidi üzerindeki alanı (m²).
+
+    Mollweide'de paraleller yatay doğrudur ve bir satırdaki hücrelerin boylam genişliği aynıdır; bu yüzden hücre
+    alanı yalnız satıra bağlıdır. Kenarlar sıklaştırılıp coğrafi koordinata çevrilir, alan pyproj.Geod ile bulunur.
+    """
+    from pyproj import Geod, Transformer
+    geod = Geod(ellps="WGS84")
+    to_ll = Transformer.from_crs(common.CRS_MOLLWEIDE, common.CRS_WGS84, always_xy=True)
+    t = np.linspace(0.0, 1.0, densify, endpoint=False)
+    x0, dx, dy = transform.c, transform.a, transform.e   # dy < 0
+    ring = np.concatenate([np.c_[x0 + t * dx, np.zeros_like(t)],          # üst kenar
+                           np.c_[np.full_like(t, x0 + dx), t * dy],        # sağ kenar
+                           np.c_[x0 + dx - t * dx, np.full_like(t, dy)],   # alt kenar
+                           np.c_[np.full_like(t, x0), dy - t * dy]])       # sol kenar
+    areas = np.empty(nrows)
+    for r in range(nrows):
+        y_top = transform.f + r * dy
+        lon, lat = to_ll.transform(ring[:, 0], y_top + ring[:, 1])
+        a, _ = geod.polygon_area_perimeter(lon, lat)
+        areas[r] = abs(a)
+    return areas
+
+
 def checks() -> None:
     import geopandas as gpd
     import pandas as pd
@@ -246,24 +274,35 @@ def checks() -> None:
     with rasterio.open(OUT_TIF) as ds:
         arr = ds.read().astype(np.float64)  # %
         tr, shape = ds.transform, (ds.height, ds.width)
-    cell_km2 = CELL * CELL / 1e6
+    # hücre alanı (km²): satır başına jeodezik alan; Mollweide hücresi tam 1 ha değil (bkz. modül notu)
+    row_m2 = mollweide_row_cell_areas(tr, shape[0])
+    cell_km2 = (row_m2 / 1e6)[:, None]
     frac = np.where(arr == 255, 0.0, arr / 100.0)
 
     # il geneli
     in_ank = ~geometry_mask([ank_m], out_shape=shape, transform=tr, all_touched=False)
-    prov = {"il_alani_km2_hucre_merkezi": float(in_ank.sum() * cell_km2)}
+    rows_ank = in_ank.any(axis=1)
+    prov = {
+        "il_alani_km2_epsg6933": float(gpd.GeoSeries([ank], crs=common.CRS_WGS84).to_crs(common.CRS_EQUAL_AREA)
+                                       .area.iloc[0] / 1e6),
+        "il_alani_km2_hucre_merkezi": float((in_ank * cell_km2).sum()),
+        "hucre_sayisi_hucre_merkezi": int(in_ank.sum()),
+        "hucre_alani_m2_min": float(row_m2[rows_ank].min()),
+        "hucre_alani_m2_max": float(row_m2[rows_ank].max()),
+        "hucre_alani_yontem": "satır başına WGS84 jeodezik hücre alanı (pyproj.Geod); 100 m Mollweide hücresi tam 1 ha değil",
+    }
     for k, (cls, label) in enumerate(CLASSES):
-        prov[f"sinif_{cls}_km2"] = float((frac[k] * in_ank).sum() * cell_km2)
+        prov[f"sinif_{cls}_km2"] = float((frac[k] * in_ank * cell_km2).sum())
     prov["veri_yok_hucre"] = int(((arr[0] == 255) & in_ank).sum())
     for k, (cls, _) in enumerate(CLASSES):
         prov[f"sinif_{cls}_yuzde"] = 100.0 * prov[f"sinif_{cls}_km2"] / prov["il_alani_km2_hucre_merkezi"]
     PROVINCE_JSON.write_text(json.dumps(prov, ensure_ascii=False, indent=2), encoding="utf-8")
-    print("  il geneli:", {k: round(v, 2) for k, v in prov.items()})
+    print("  il geneli:", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in prov.items()})
 
     # göller: 100 m ürün vs 10 m jeodezik alan
     lakes = osm_lakes().to_crs(common.CRS_MOLLWEIDE)
     to_ll = Transformer.from_crs(common.CRS_MOLLWEIDE, common.CRS_WGS84, always_xy=True).transform
-    eq = "EPSG:6933"
+    eq = common.CRS_EQUAL_AREA
     srcs = [rasterio.open(RAW_ARAZI / f"ESA_WorldCover_10m_2021_v200_{t}_Map.tif") for t in WC_TILES]
     rows = []
     try:
@@ -281,7 +320,7 @@ def checks() -> None:
                     rec[f"wc10_su_{tag}_km2"] = 0.0
                     continue
                 m = ~geometry_mask([geom], out_shape=shape, transform=tr, all_touched=False)
-                rec[f"wc100_su_{tag}_km2"] = float((frac[0] * m).sum() * cell_km2)
+                rec[f"wc100_su_{tag}_km2"] = float((frac[0] * m * cell_km2).sum())
                 # 10 m piksellerle doğrudan (piksel merkezi bölgede ise)
                 g_ll = shapely.transform(geom, lambda xx, yy: to_ll(xx, yy), interleaved=False)
                 w, s, e, n = g_ll.bounds
@@ -295,6 +334,8 @@ def checks() -> None:
         for s in srcs:
             s.close()
     df = pd.DataFrame(rows)
+    for tag in ("pencere", "ankara"):   # 100 m ürünün 10 m jeodezik alana göre farkı (%)
+        df[f"fark_{tag}_yuzde"] = 100.0 * (df[f"wc100_su_{tag}_km2"] / df[f"wc10_su_{tag}_km2"] - 1.0)
     df.to_csv(LAKE_CHECK_CSV, index=False, float_format="%.2f")
     with pd.option_context("display.width", 200, "display.max_columns", 20):
         print(df.round(2).to_string(index=False))

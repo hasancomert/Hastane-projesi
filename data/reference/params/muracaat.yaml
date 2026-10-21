@@ -1,6 +1,8 @@
 # Alan: saglik — G. Erişim: kişi başı yıllık hastane başvurusu v (spec 4.4 G)
 # Kaynaklar: data/sources/saglik.yaml ; ayrıntılı tablo: data/reference/saglik_istatistikleri.csv
 # Varsayılan yıl 2025 (öğrenci kararı); şartnamenin 2024 değeri (≈6,9) alternatif.
+# v varsayılanı doğrudan 2025 hastane müracaat sayısından (özel tıp merkezleri hariç); şartnamenin yöntemi
+# (access.visits_per_capita_total × access.share_hospital_visits) v'nin alternatifi olarak duruyor.
 
 - key: access.visits_per_capita_total
   label: "Kişi başı yıllık hekime müracaat (tüm basamaklar)"
@@ -19,7 +21,9 @@
     SİY 2025 Haber Bülteni Tablo 15 'Genel Toplam' (1.138.060.185 müracaat; kişi başı 13,2; PDF s. 9) ve Tablo 16
     Türkiye satırı (PDF s. 10). Tanım: OECD 'hekime telefon hariç herhangi bir sebeple müracaat'; diş hekimi
     müracaatları ve danışmanlık başvuruları hariç (SİY 2024 Bölüm 8 açıklamaları, PDF s. 237). Ziyaret sayısıdır,
-    tekil hasta sayısı değildir. Aralık (8–18) varsayımdır.
+    tekil hasta sayısı değildir. Aralık (8–18) varsayımdır. NOT: v (access.hospital_visits_per_capita) varsayılanı
+    artık doğrudan hastane müracaat sayısından hesaplanıyor (656.167.336 / 86.092.168 = 7,622; özel tıp merkezleri
+    hariç); bu değer × access.share_hospital_visits (13,2 × 0,587 = 7,748) v için alternatif olarak duruyor.
 
 - key: access.share_hospital_visits
   label: "Müracaatlarda ikinci + üçüncü basamak payı"
@@ -38,23 +42,36 @@
     SİY 2025 Haber Bülteni, PDF s. 9 metni: 'hekime müracaatın %41,3'ü birinci basamak ... %58,7'si ikinci ve üçüncü
     basamak sağlık kurumlarına yapıldı'. TANIM UYARISI: 'ikinci ve üçüncü basamak' hastanelere ek olarak özel tıp
     merkezlerini de (2025: 11.536.197 müracaat, toplamın %1,0'ı) içerir; yalnız hastaneler %57,66. Aralık varsayımdır.
+    NOT: v (access.hospital_visits_per_capita) varsayılanı artık bu pay ile değil, doğrudan hastane müracaat
+    sayısından hesaplanıyor (656.167.336 / 86.092.168 = 7,622; özel tıp merkezleri hariç); toplam × pay
+    (13,2 × 0,587 = 7,748) v için alternatif olarak duruyor.
 
 - key: access.hospital_visits_per_capita
   label: "Kişi başı yıllık hastane başvurusu (v)"
-  value: 7.75
+  value: 7.622
   unit: "başvuru / kişi / yıl"
   status: hesap
-  source_ids: [saglik_sbsgm_bulten2025]
-  derivation: "access.visits_per_capita_total × access.share_hospital_visits = 13,2 × 0,587 = 7,748 ≈ 7,75 (SİY 2025 Haber Bülteni Tablo 15 ve PDF s. 9 metni)"
+  source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk]
+  derivation: >-
+    Türkiye 2025: hastanelerde hekime müracaat 656.167.336 (SİY 2025 Haber Bülteni Tablo 15 'Hastaneler', PDF s. 9;
+    aynı toplam Tablo 11, PDF s. 7) ÷ Türkiye nüfusu 86.092.168 (TÜİK ADNKS 31.12.2025, bülten tablosu sayfa 't3',
+    satır 5, sütun B) = 7,62168… ≈ 7,622. Hastaneler = Sağlık Bakanlığı + üniversite + özel hastaneler; özel tıp
+    merkezleri hariç.
   range: [4.0, 10.0]
   alternatives:
+    - {label: "2025, şartname yöntemi (ikinci + üçüncü basamak, sayılardan): 667.703.533 / 86.092.168 (Tablo 15; özel tıp merkezleri dahil)", value: 7.756, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk]}
+    - {label: "2025, şartname yöntemi yuvarlanmış girdilerle: 13,2 × 0,587 = 7,7484 (Tablo 15 ve PDF s. 9 metni; önceki varsayılan 7,75)", value: 7.748, status: hesap, source_ids: [saglik_sbsgm_bulten2025]}
     - {label: "2025, yayımlanan ikinci + üçüncü basamak kişi başı müracaat (Tablo 15)", value: 7.8, status: kaynakli, source_ids: [saglik_sbsgm_bulten2025]}
     - {label: "2025, yalnız hastanelerde kişi başı müracaat (Tablo 11 ve 15; özel tıp merkezleri hariç)", value: 7.6, status: kaynakli, source_ids: [saglik_sbsgm_bulten2025]}
-    - {label: "2024: 12,2 × 0,567 — şartname Bölüm 3 / 4.4 G değeri (≈6,9)", value: 6.92, status: hesap, source_ids: [saglik_sbsgm_bulten2024]}
+    - {label: "2024: 12,2 × 0,567 = 6,9174 — şartname Bölüm 3 / 4.4 G değeri (≈6,9)", value: 6.917, status: hesap, source_ids: [saglik_sbsgm_bulten2024]}
     - {label: "2024, yalnız hastanelerde kişi başı müracaat (Haber Bülteni 2024 Tablo 12 ve 16; SİY 2024 Tablo 8.2)", value: 6.8, status: kaynakli, source_ids: [saglik_sbsgm_bulten2024, saglik_sbsgm_siy2024]}
     - {label: "2023: 11,4 × 0,567", value: 6.46, status: hesap, source_ids: [saglik_sbsgm_bulten2023]}
     - {label: "Ankara 2024: 47.073.855 / 5.864.049 (SİY 2024 Tablo 8.26 ve 1.3)", value: 8.03, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
   notes: >-
-    Şartnamenin yöntemi (kişi başı müracaat × ikinci+üçüncü basamak payı) 2025 verisine uygulandı; çarpım yayımlanan
-    7,8 ile tutarlı (667.703.533 / 86.092.168 = 7,76). Hastane dışı özel tıp merkezlerini dışlamak için 7,6 seçilebilir.
-    Ankara değeri il dışından gelen başvuruları da içerir (yorum). Aralık (4–10) varsayımdır.
+    Şartname v'yi 'kişi başı yıllık hastane başvurusu' olarak tanımlıyor; 2025 bülteni hastanelerdeki müracaatı doğrudan
+    verdiği için varsayılan bu sayımdan hesaplandı (özel tıp merkezlerindeki 11.536.197 müracaat hariç; yayımlanan
+    yuvarlanmış değer 7,6). Şartnamenin yöntemi (kişi başı toplam müracaat × ikinci+üçüncü basamak payı =
+    access.visits_per_capita_total × access.share_hospital_visits) alternatif olarak duruyor: sayılardan 7,756,
+    yuvarlanmış girdilerle 7,748; ikisi de özel tıp merkezlerini içerdiği için varsayılandan ≈%1,7–1,8 yüksek. Bu
+    nedenle v ≠ toplam × pay (bilinçli). Ankara değeri il dışından gelen başvuruları da içerir (yorum). Aralık (4–10)
+    varsayımdır.

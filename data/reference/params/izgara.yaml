@@ -1,6 +1,6 @@
 # Alan: erisim — H. Izgara ve çözücü (spec 4.3, 4.4 H, 4.6). Hepsi modelleme tercihi (model_secimi).
-# Ön istatistikler oturum çalışma alanında, kalibre edilmemiş GHS-POP 2025 1 km ızgarasının il içi 2/3/5 km bloklarından
-# hesaplandı (Faz 2 ızgarası değildir; UTM 36N hücreleri ve TÜİK kalibrasyonu ile değerler biraz değişecektir).
+# Hücre/aday sayıları ve kapsama istatistikleri burada verilmez: Faz 2'de kalibre edilmiş ızgaradan (UTM 36N hücreleri,
+# TÜİK ilçe toplamlarına kalibre nüfus) hesaplanıp raporlanacak. Parametre değerleri değişmedi.
 
 - key: grid.cell_km
   label: "Hücre boyutu"
@@ -10,11 +10,12 @@
   rationale: >-
     Şartname 4.3/4.6: 2, 3 ve 5 km ızgaralar üretilecek; canlı çözüm hedefi 3 km'de ≲15 sn, 2 km'de ≲60 sn. Varsayılan
     3 km: sunum dizüstünde canlı çözüm hedefine uygun ve 300 yataklı bir hastanenin ≈0,04 km² inşaat alanına göre hücre
-    (9 km²) arazi bakımından bağlayıcı değil. Ön sayım: il içinde ≈2.856 hücre (3 km), nüfuslu ≈1.876.
+    (9 km²) arazi bakımından bağlayıcı değil. Her hücre boyutundaki il içi ve nüfuslu hücre sayısı Faz 2'de kalibre
+    edilmiş ızgaradan hesaplanacak.
   range: [2, 5]
   alternatives:
-    - {label: "2 km (ayrıntılı; il içi ≈6.498 hücre, nüfuslu ≈2.969)", value: 2, status: model_secimi}
-    - {label: "5 km (hızlı; il içi ≈1.025 hücre, nüfuslu ≈911)", value: 5, status: model_secimi}
+    - {label: "2 km (ayrıntılı; canlı çözüm hedefi ≲60 sn)", value: 2, status: model_secimi}
+    - {label: "5 km (hızlı, kaba)", value: 5, status: model_secimi}
 
 - key: grid.candidate_min_pop
   label: "Aday hücre için asgari nüfus (P_min)"
@@ -23,16 +24,16 @@
   status: model_secimi
   rationale: >-
     Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal
-    varsayılan verilmemiş. 3 km ön sayım (kalibre edilmemiş GHS-POP 2025): P_min ≥ 1 → |J| ≈ 1.876; 100 → 899 (nüfusun
-    %99,6'sı); 250 → 551 (%98,7); 500 → 356 (%97,6); 1.000 → 244 (%96,4). 250 seçildi çünkü R = 30 km (yol; kuş uçuşu
-    ≈24,5 km) ile her nüfuslu hücrenin R içinde en az bir adayı kalıyor (P_min = 500'de ≈71 hücre/≈4.900 kişi R dışında),
-    aday sayısı da çözüm süresi için makul. Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı
-    (2 km'de 250 → ≈727 aday; 5 km'de ≈414).
+    varsayılan verilmemiş. 250 kişi / hücre (3 km'de 9 km² başına ≈28 kişi/km²) seyrek nüfuslu hücreleri aday
+    kümesinden çıkarıp değişken sayısını azaltan düşük bir eşik olarak seçildi. Aday sayısı |J|, adayların kapsadığı
+    nüfus payı ve R = 30 km (yol; kuş uçuşu ≈24,5 km) içinde hiç adayı kalmayan nüfuslu hücreler Faz 2'de kalibre
+    edilmiş ızgaradan hesaplanacak; P_min bu sonuçlara göre R ile birlikte denetlenecek. Eşik hücre başına olduğundan
+    hücre boyutu değişince yeniden ayarlanmalı.
   range: [0, 5000]
   alternatives:
     - {label: "Tüm nüfuslu hücreler", value: 1, status: model_secimi}
     - {label: "Daha geniş aday kümesi", value: 100, status: model_secimi}
-    - {label: "Daha dar aday kümesi (R = 30 km ile bazı kırsal hücreler kapsanamıyor)", value: 500, status: model_secimi}
+    - {label: "Daha dar aday kümesi (R = 30 km ile kırsal kapsama Faz 2'de denetlenmeli)", value: 500, status: model_secimi}
 
 - key: grid.k_nearest
   label: "Her talep hücresi için tutulan en yakın aday sayısı (k)"
@@ -40,11 +41,11 @@
   unit: "aday / talep hücresi"
   status: model_secimi
   rationale: >-
-    Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). 3 km ve P_min = 250 ön sayımında
-    R (24,5 km kuş uçuşu) içindeki aday sayısı medyan ≈30, nüfus ağırlıklı ortalama ≈137: k = 50 kırsal hücrelerde R içi
-    adayların tamamını, kent çekirdeğinde ≈12 km yarıçaplı en yakın 50 adayı tutar. Atama değişkeni sayısı ≈ |I|·k ≈
-    1.876 × 50 ≈ 94 bin (3 km) — canlı çözüm için makul. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı
-    (k'nın etkisi Faz 3'te raporlanacak).
+    Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir:
+    seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak
+    amaçlanır; atama değişkeni sayısı ≈ |I|·k olur. R içindeki aday sayısının dağılımı ve |I|·k Faz 2'de kalibre
+    edilmiş ızgaradan hesaplanacak. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi
+    Faz 3'te raporlanacak).
   range: [5, 300]
   alternatives:
     - {label: "Hızlı (daha az değişken, kısıtlayıcı olabilir)", value: 20, status: model_secimi}

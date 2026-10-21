@@ -74,6 +74,6 @@
   notes: 'Aralık: 1,0 = kuş uçuşu (fiziksel alt sınır); üst sınır = ölçülen en yüksek bant ortalaması + pay. Tablo:
     data/reference/circuity_ankara.csv; grafik: data/processed/circuity_ankara.png. Çekilen 4.800 çiftten 4.761
     geçerli (bağlantı > 1000 m veya düğümler arası < 500 m olanlar atıldı). Nüfuslu hücrelerin %12,8''i (nüfusun
-    %0,21''i) 1 km içinde araç yoluna bağlanamadı. Literatür: Boscoe, Henry & Zdeb 2012 ve Ballou, Rahardja & Sakai
-    2002 künyeleri Crossref''ten doğrulandı; tam metinlere erişilemediği (vekil sunucu 403) için katsayı değerleri
-    kaydedilmedi.'
+    %0,21''i) 1 km içinde araç yoluna bağlanamadı. Literatür: Boscoe, Henry & Zdeb 2012 (alan_literatur_lit_boscoe2012)
+    ve Ballou, Rahardja & Sakai 2002 (alan_literatur_lit_ballou2002) künyeleri Crossref''ten doğrulandı; tam metinlere
+    erişilemediği (vekil sunucu 403) için katsayı değerleri kaydedilmedi.'

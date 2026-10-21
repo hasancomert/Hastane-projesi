@@ -189,14 +189,14 @@ inpatients_moh,2024,Türkiye,8274725,hasta (taburcu + ölen),saglik_sbsgm_siy202
 inpatients_university,2024,Türkiye,2035411,hasta (taburcu + ölen),saglik_sbsgm_siy2024,"Sağlık İstatistikleri Yıllığı 2024, Tablo 8.3 (PDF s. 205; basılı s. 176)"
 inpatients_private,2024,Türkiye,3571614,hasta (taburcu + ölen),saglik_sbsgm_siy2024,"Sağlık İstatistikleri Yıllığı 2024, Tablo 8.3 (PDF s. 205; basılı s. 176)"
 inpatient_days,2024,Türkiye (sektör toplamı),58593340,gün,saglik_sbsgm_siy2024,"Sağlık İstatistikleri Yıllığı 2024, Tablo 8.10 (PDF s. 208; basılı s. 179)"
-population,2025,Türkiye,86092168,kişi,saglik_karar_adnks2025,"Karar, 09.02.2026 (TÜİK ADNKS 31.12.2025 sonuçlarını aktaran haber metni)"
-population,2025,Ankara,5910320,kişi,saglik_karar_adnks2025,"Karar, 09.02.2026 (TÜİK ADNKS 31.12.2025 sonuçlarını aktaran haber metni)"
+population,2025,Türkiye,86092168,kişi,tuik_bt_adnks2025_yogunluk;tuik_haber_karar_adnks2025,"TÜİK ADNKS 2025 bülten tablosu, sayfa 't3', satır 5, sütun B (31.12.2025); çapraz kontrol: Karar haberi 09.02.2026"
+population,2025,Ankara,5910320,kişi,tuik_bt_adnks2025_yogunluk;tuik_haber_karar_adnks2025,"TÜİK ADNKS 2025 bülten tablosu, sayfa 't3', satır 11, sütun B (31.12.2025); çapraz kontrol: Karar haberi 09.02.2026"
 inpatients_est,2025,Türkiye,13622699,hasta (taburcu + ölen),saglik_sbsgm_bulten2025,hesap: yatak devir hızı 50.3 (Tablo 16) × hastane yatağı 270829 (Tablo 7); bülten yatan hasta sayısını vermiyor
 inpatient_days_est,2025,Türkiye,53874659,gün,saglik_sbsgm_bulten2025,hesap: doluluk %54.5 × yatak 270829 × 365 (SİY tanımı: doluluk = yatılan gün×100/(yatak×365))
 alos_days_implied,2025,Türkiye,3.955,gün,saglik_sbsgm_bulten2025,"hesap: doluluk 0.545 × 365 / devir hızı 50.3 (yuvarlama kontrolü; yayımlanan 4,0)"
-admissions_per_1000,2025,Türkiye,158.23,yatan hasta / 1.000 kişi,saglik_sbsgm_bulten2025;saglik_karar_adnks2025,hesap: 13622699 / 86092168 × 1000
-beds_per_1000_exact,2025,Türkiye,3.1458,yatak / 1.000 kişi,saglik_sbsgm_bulten2025;saglik_karar_adnks2025,"hesap: 270829 / 86092168 × 1000 (yayımlanan 31,5/10.000)"
-beds_per_1000_excl_icu,2025,Türkiye,2.5841,yatak / 1.000 kişi,saglik_sbsgm_bulten2025;saglik_karar_adnks2025,hesap: (270829 − yoğun bakım 48360) / 86092168 × 1000
+admissions_per_1000,2025,Türkiye,158.23,yatan hasta / 1.000 kişi,saglik_sbsgm_bulten2025;tuik_bt_adnks2025_yogunluk;tuik_haber_karar_adnks2025,hesap: 13622699 / 86092168 × 1000
+beds_per_1000_exact,2025,Türkiye,3.1458,yatak / 1.000 kişi,saglik_sbsgm_bulten2025;tuik_bt_adnks2025_yogunluk;tuik_haber_karar_adnks2025,"hesap: 270829 / 86092168 × 1000 (yayımlanan 31,5/10.000)"
+beds_per_1000_excl_icu,2025,Türkiye,2.5841,yatak / 1.000 kişi,saglik_sbsgm_bulten2025;tuik_bt_adnks2025_yogunluk;tuik_haber_karar_adnks2025,hesap: (270829 − yoğun bakım 48360) / 86092168 × 1000
 share_hospitals_only_pct,2025,Türkiye,57.66,%,saglik_sbsgm_bulten2025,hesap: Hastaneler / Genel Toplam (Tablo 15; özel tıp merkezleri hariç)
 admissions_per_1000,2024,Türkiye,162.05,yatan hasta / 1.000 kişi,saglik_sbsgm_siy2024,hesap: yatan hasta 13881750 / nüfus 85664944 × 1000
 alos_days_exact,2024,Türkiye,4.221,gün,saglik_sbsgm_siy2024,hesap: yatılan gün 58593340 / yatan hasta 13881750

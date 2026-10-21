@@ -9,6 +9,8 @@ Kaynaklar (hepsi TÜİK; ayrıntı ve kaynak kimlikleri data/sources/nufus.yaml)
       * Veri akışları DF_ADNKS_T22 (il/ilçe nüfusu, son 2 yıl: 2024-2025) ve DF_ADNKS_T38 (il/ilçe yıllık nüfus artış
         hızı ‰, 2024-2025) CSV ("df_" dosyaları)
       * Nüfus Projeksiyonları 2023-2100 bülteni (53699) ve "Yıllara göre il nüfusları, 2023-2030" tabloları
+      * Haber bülteni yayın listesi (api/tr/press: her bülten serisinin en güncel sayısı) — daha yeni bir
+        projeksiyon ya da ADNKS bülteni olup olmadığının denetimi
   - Nüfus İstatistikleri Portalı (nip.tuik.gov.tr) Ankara dışa aktarımları (çapraz kontrol)
   - Şartname kaynakları [1] Yeni Ankara ve [3] Karar haberleri (çapraz kontrol); [2] ATO PDF'i buradan erişilemiyor
 
@@ -19,6 +21,8 @@ Aynı yöntem 2025 → 2024 için resmî T22 değerlerini birebir veriyor; 2023 
 
 Çıktı:
   data/reference/tuik_adnks_ankara.csv   25 ilçe: ilce, ilce_key, nufus_2025, nufus_2024, nufus_2023, source_id
+Ayrıca ekrana: ADNKS kapsam notu (bülten metaverisi 'Verinin kapsamı'; kapsam dışı yabancılar ve geçici koruma
+altındaki Suriyeliler), Ankara yabancı nüfusu (NİP il kartı) ve yayın listesindeki en güncel bülten numaraları.
 
 Çalıştırma (repo kökünden):  .venv/bin/python pipeline/10_tuik_population.py [--ato]
   --ato : ATO "Rakamlarla Ankara" PDF'ini bir kez denemek için (bu ortamda bağlantı sıfırlanıyor).
@@ -27,8 +31,10 @@ Ham dosyalar data/raw/nufus/tuik/ altında; varsa yeniden indirilmez (çevrimdı
 from __future__ import annotations
 
 import csv
+import html
 import json
 import math
+import re
 import sys
 import time
 from pathlib import Path
@@ -45,10 +51,14 @@ PARAMS_YAML = common.PARAMS_DIR / "nufus.yaml"
 
 PORTAL = "https://veriportali.tuik.gov.tr"
 PRESS_API = PORTAL + "/api/tr/press/{id}"            # JSON; 'X-Requested-With' başlığı olmadan 404 döner
+PRESS_LIST_API = PORTAL + "/api/tr/press"             # yayın listesi: her serinin en güncel bülteni (id, başlık)
+PRESS_LIST_FILE = "veriportali_press_list.json"
 DATAFLOW_CSV = PORTAL + "/api/tr/dataflows/{id}/file/csv"
 
 ADNKS_PRESS = {2025: "53899", 2024: "53783", 2023: "49684"}   # yıl -> bülten no (31 Aralık nüfusu)
 PROJ_PRESS = "53699"                                          # Nüfus Projeksiyonları, 2023-2100
+# yayın listesindeki seri başlıkları -> beklenen en güncel bülten
+LATEST_EXPECTED = {"Adrese Dayalı Nüfus Kayıt Sistemi Sonuçları": ADNKS_PRESS[2025], "Nüfus Projeksiyonları": PROJ_PRESS}
 
 # İstatistiksel tablolar (statisticalTables; güncel sürüm) ve bülten tabloları (tables; bültene özgü)
 ST_DISTRICT = "İl ve İlçelere Göre İl/İlçe Merkezi, Belde/Köy Nüfusu ve Yıllık Nüfus Artış Hızı"
@@ -198,6 +208,7 @@ def fetch_all(try_ato: bool) -> dict:
     for key, (df_id, name) in DATAFLOWS.items():
         f[key] = ensure_portal(DATAFLOW_CSV.format(id=df_id), RAW_DIR / name)
     proj = load_press(PROJ_PRESS, f"veriportali_press_{PROJ_PRESS}_projeksiyon_2023_2100.json")
+    f["press_list"] = ensure_portal(PRESS_LIST_API, RAW_DIR / PRESS_LIST_FILE)
     f["proj_years"] = ensure_portal(table_url(proj, ST_PROJ_YEARS, "st"),
                                     RAW_DIR / "st_projeksiyon_yillara_gore_il_nufuslari_2023_2030.xls")
     f["proj_growth"] = ensure_portal(table_url(proj, ST_PROJ_GROWTH, "st"),
@@ -336,6 +347,35 @@ def news_checks(files: dict) -> dict:
     return res
 
 
+def coverage_sentences(press_json: Path) -> tuple[str, str]:
+    """ADNKS bülten metaverisi 'Verinin kapsamı' bölümünden kapsam cümlesi ve kapsam dışı cümlesi (birebir)."""
+    data = json.loads(press_json.read_text(encoding="utf-8"))["data"]
+    detail = next(d for d in data["metadatas"][0]["data"][0]["detail"] if d["title"].strip() == "Verinin kapsamı")
+    txt = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(detail["content"]))).strip()
+    inc = re.search(r"ADNKS’de ülke sınırları içinde ikamet eden .*?kapsanmaktadır\.", txt).group(0)
+    exc = re.search(r"Kurs, turizm, bilimsel araştırma vb\. .*?nüfusa dâhil değildir\.", txt).group(0)
+    return inc, exc
+
+
+def nip_foreign_population(pdf: Path | None) -> int | None:
+    """NİP il gösterge kartı: 'Yabancı Nüfus' satırı."""
+    if not pdf or not pdf.exists():
+        return None
+    import pdfplumber
+    with pdfplumber.open(pdf) as doc:
+        txt = "\n".join(pg.extract_text() or "" for pg in doc.pages)
+    m = re.search(r"Yabancı Nüfus ([\d.]+)", txt)
+    return int(m.group(1).replace(".", "")) if m else None
+
+
+def latest_press_ids(press_list: Path) -> dict[str, list[str]]:
+    """Yayın listesi: başlık -> bülten numaraları (liste her serinin en güncel sayısını verir)."""
+    out: dict[str, list[str]] = {}
+    for item in json.loads(press_list.read_text(encoding="utf-8"))["data"]:
+        out.setdefault(item["title"].strip(), []).append(str(item["id"]))
+    return out
+
+
 def ok(cond: bool) -> str:
     return "TAMAM" if cond else "ÇELİŞKİ"
 
@@ -427,6 +467,22 @@ def main() -> None:
     print(f"  yeniden tabanlanmış 2030 = ADNKS 2025 × P2030/P2025 = {fmt(prov[2025] * pv[2030] / pv[2025], 1)}")
 
     print("\nHaber çapraz kontrolü:", json.dumps(news_checks(files), ensure_ascii=False))
+
+    # --- kapsam notu (ADNKS 2025 metaverisi) ve yabancı nüfus
+    inc, exc = coverage_sentences(RAW_DIR / f"veriportali_press_{ADNKS_PRESS[2025]}_adnks2025.json")
+    print("\nADNKS 2025 metaverisi, 'Verinin kapsamı':")
+    print("  kapsam:", inc)
+    print("  kapsam dışı:", exc)
+    foreign = nip_foreign_population(files.get("nip_ankara_il_gosterge_karti.pdf"))
+    if foreign is not None:
+        print(f"  Ankara yabancı nüfus (NİP il kartı, ADNKS 2025'e dahil): {fmt(foreign)}")
+
+    # --- yayın listesi: daha yeni bir ADNKS / projeksiyon bülteni var mı
+    latest = latest_press_ids(files["press_list"])
+    print(f"\nTÜİK yayın listesi ({files['press_list'].relative_to(common.ROOT)}; {sum(map(len, latest.values()))} seri)")
+    for title, pid in LATEST_EXPECTED.items():
+        got = latest.get(title, [])
+        print(f"  '{title}' en güncel bülten {', '.join(got) or '—'} (beklenen {pid}):", ok(got == [pid]))
 
     # --- CSV (TÜİK tablosundaki sıra ve yazım)
     keys = [common.norm_name(n) for n in names]

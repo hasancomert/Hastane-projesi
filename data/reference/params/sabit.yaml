@@ -20,11 +20,11 @@
     veriyle tutarlı üst sınırı (ana örneklemde ≈0,74, genel hastanelerde ≈0,94 milyar TL) aşmayacak kadar küçük.
   range: [0, 1500000000]
   alternatives:
-    - {label: "0 — regresyon kesişimi sıfırdan ayırt edilemiyor (veriyle en uyumlu alt sınır)", value: 0, source_ids: [yatirim_hesap_regresyon]}
-    - {label: "Regresyon F0, yalnız genel hastaneler (n = 47; p = 0,51; anlamlı değil)", value: 233318127, source_ids: [yatirim_hesap_regresyon]}
-    - {label: "F0 %95 GA üst sınırı, ana örneklem (n = 61)", value: 742340771, source_ids: [yatirim_hesap_regresyon]}
-    - {label: "F0 %95 GA üst sınırı, yalnız genel hastaneler (n = 47)", value: 942589903, source_ids: [yatirim_hesap_regresyon]}
-    - {label: "Hastane kavşak ve bağlantı yolları, il başına ortalama (5,69 milyar TL ÷ 4 il; KYP 2025I00-280965)", value: 1422500000, source_ids: [yatirim_kyp2026]}
+    - {label: "Model seçimi: sabit maliyet yok (regresyon kesişimi sıfırdan ayırt edilemiyor; veriyle en uyumlu alt sınır)", value: 0, status: model_secimi, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "Hesap: yalnız genel hastaneler regresyonu F0 (n = 47; p = 0,51; anlamlı değil)", value: 233318127, status: hesap, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "Hesap: ana regresyonun F0 %95 GA üst sınırı (n = 61)", value: 742340771, status: hesap, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "Hesap: yalnız genel hastaneler regresyonunun F0 %95 GA üst sınırı (n = 47)", value: 942589903, status: hesap, source_ids: [yatirim_hesap_regresyon]}
+    - {label: "Varsayım: 'Hastane Kavşak ve Bağlantı Yolları' kalemi (5,69 milyar TL; KYP 2025I00-280965; Gaziantep, Mersin, Sakarya, Şanlıurfa) 4 ile eşit bölünür, il başına bir hastane", value: 1422500000, status: varsayim, source_ids: [yatirim_kyp2026]}
   notes: >-
     REGRESYON (statsmodels OLS, ana örneklem n = 61, Sağlık Bakanlığı tek binalı yeni hastane projeleri, bütçe
     finansmanlı şehir hastaneleri dahil): F0 = −142.000.683 TL (SE 441.950.773; HC3-SE 1.310.083.204),

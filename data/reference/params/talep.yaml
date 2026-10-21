@@ -12,10 +12,10 @@
   derivation: "Türkiye 2025: 31,5 yatak / 10.000 kişi (SİY 2025 Haber Bülteni, Tablo 11, PDF s. 7) ÷ 10 = 3,15"
   range: [2.0, 5.0]
   alternatives:
-    - {label: "2025, sayılardan tam değer: 270.829 yatak / 86.092.168 kişi × 1000", value: 3.1458, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, saglik_karar_adnks2025]}
+    - {label: "2025, sayılardan tam değer: 270.829 yatak / 86.092.168 kişi × 1000", value: 3.1458, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, tuik_haber_karar_adnks2025]}
     - {label: "2024: 31,3 / 10 (Haber Bülteni 2024 Tablo 12; SİY 2024 Tablo 7.20)", value: 3.13, status: hesap, source_ids: [saglik_sbsgm_bulten2024, saglik_sbsgm_siy2024]}
     - {label: "2023: 31,2 / 10 — şartname Bölüm 3 değeri (SİY 2023 Tablo 7.19)", value: 3.12, status: hesap, source_ids: [saglik_sbsgm_siy2023]}
-    - {label: "2025, yoğun bakım yatakları hariç: (270.829 − 48.360) / 86.092.168 × 1000", value: 2.5841, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, saglik_karar_adnks2025]}
+    - {label: "2025, yoğun bakım yatakları hariç: (270.829 − 48.360) / 86.092.168 × 1000", value: 2.5841, status: hesap, source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, tuik_haber_karar_adnks2025]}
     - {label: "Ankara 2024: 42,5 / 10 (SİY 2024 Tablo 7.20; il dışından gelen hastaları da karşılıyor)", value: 4.25, status: hesap, source_ids: [saglik_sbsgm_siy2024]}
     - {label: "Ankara 2023: 43,1 / 10 (SİY 2023 Tablo 7.19)", value: 4.31, status: hesap, source_ids: [saglik_sbsgm_siy2023]}
   notes: >-
@@ -42,7 +42,7 @@
   value: 158.23
   unit: "yatan hasta / 1000 kişi / yıl"
   status: hesap
-  source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, saglik_karar_adnks2025]
+  source_ids: [saglik_sbsgm_bulten2025, tuik_bt_adnks2025_yogunluk, tuik_haber_karar_adnks2025]
   derivation: >-
     Türkiye 2025: yatan hasta ≈ yatak devir hızı 50,3 (SİY 2025 Haber Bülteni Tablo 16, PDF s. 10) × hastane yatağı
     270.829 (Tablo 7, PDF s. 5) = 13.622.699; ÷ nüfus 86.092.168 (TÜİK ADNKS 31.12.2025) × 1000 = 158,23.
@@ -85,8 +85,16 @@
   label: "Hedef yatak doluluk oranı (planlama)"
   value: 0.85
   unit: "oran (0–1)"
-  status: kaynakli
+  status: model_secimi
   source_ids: [saglik_aydemir2019, saglik_cirakli2019]
+  rationale: >-
+    Kaynaklar tek bir planlama hedefi vermiyor, genel hastaneler için 'olumlu' kabul edilen %80–85 ARALIĞINI veriyor;
+    üstelik bu aralık ikinci el: Aydemir (2019) Ağırbaş (2016), Çıraklı (2019) Ağırbaş (2012) ders kitabından aktarıyor
+    (kitap okunmadı); %85 'kabul görmüş standart' ifadesi de Bagust vd. (1999) için yalnız Aydemir üzerinden aktarılıyor
+    (tam metin okunamadı). 0,85 bu aralığın üst ucu olarak seçildi: aynı talep için en az yatağı veren (yatakların
+    verimli kullanımı) ama Bagust vd.'nin %85 eşiğini (aşılınca erişim engeli, uzun bekleme, yüksek mortalite) aşmayan
+    değer.
+    Aralığın alt ucu (0,80) ve diğer değerler alternatif olarak duruyor; kaydırıcıyla duyarlılık analizi yapılabilir.
   range: [0.5, 0.95]
   alternatives:
     - {label: "Genel hastaneler için kabul edilen aralığın alt ucu (%80; Aydemir 2019, Çıraklı 2019)", value: 0.80, status: kaynakli, source_ids: [saglik_aydemir2019, saglik_cirakli2019]}

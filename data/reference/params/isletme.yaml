@@ -1,6 +1,6 @@
 # Alan: erisim — F. İşletme gideri (spec 4.4 F; isteğe bağlı, varsayılan kapalı)
 # Modelde: Fixed_jk += PV(T, r) · opex.fixed_per_hospital_year ; Var_jk += PV(T, r) · opex.per_bed_year  (spec 4.5)
-# Kaynaklar: data/sources/erisim.yaml ; ayrıntı: data/reference/erisim_turetim.md
+# Kaynaklar: data/sources/erisim.yaml ; ayrıntı: data/reference/erisim_turetim.md ; denetim: pipeline/19_access_params.py
 
 - key: opex.include
   label: "İşletme gideri dahil mi?"

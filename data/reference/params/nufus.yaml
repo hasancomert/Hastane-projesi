@@ -18,9 +18,14 @@
   notes: >-
     Şartname Bölüm 3 değeriyle (5.910.320) birebir aynı; 25 ilçenin toplamı da tam bu değer. Aynı sayı: istatistiksel
     tablo (satır 70), bülten tablosu (satır 11), bülten metni, veri akışı DF_ADNKS_T22, NİP dışa aktarımı ve il gösterge
-    kartı; haber kaynakları [1] ve [3] de aynı. Yıllık artış hızı 2024→2025 ‰7,86. Nüfus kapsamı: Türkiye'de ikamet
-    eden yabancılar dahil (Ankara 128.633, NİP il kartı); kurumsal nüfus kurumun bulunduğu yerde sayılır.
-    Kaydırıcı değil, senaryo değeridir (aralık verilmedi).
+    kartı; haber kaynakları [1] ve [3] de aynı. Yıllık artış hızı 2024→2025 ‰7,86. Nüfus kapsamı (ADNKS 2025 bülten
+    metaverisi 'Verinin kapsamı', tuik_adnks2025_bulten): "ADNKS’de ülke sınırları içinde ikamet eden Türkiye
+    Cumhuriyeti vatandaşları ve yabancı uyruklu kişiler kapsanmaktadır." ve "Kurs, turizm, bilimsel araştırma vb.
+    nedenlerle 3 aydan kısa süreli vize veya ikamet iznine sahip yabancılar ile geçici koruma statüsüyle ülkede
+    bulunan Suriyeliler nüfusa dâhil değildir." (bülten metni dipnotu aynı kuralı "90 günden kısa" diye yazıyor).
+    Yani geçici koruma altındaki Suriyeliler ve 3 aydan kısa kalan yabancılar bu sayıda YOK; ADNKS'ye kayıtlı
+    yabancılar VAR: Ankara'da sayılan 128.633 yabancı (NİP il kartı, tuik_nip_ankara_il_karti) 5.910.320'ye dahil.
+    Kurumsal nüfus kurumun bulunduğu yerde sayılır. Kaydırıcı değil, senaryo değeridir (aralık verilmedi).
 
 - key: population.province_2030
   label: "Ankara nüfusu, 31.12.2030 (TÜİK projeksiyonu, ana senaryo)"
@@ -39,4 +44,8 @@
     Şartname 4.4 A, 2030 senaryosu için "GHS-POP 2030 dağılımı + varsayımsal büyüme" diyordu; il toplamı için artık
     resmî değer var, büyüme varsayımı gerekmiyor. GHS-POP E2030/E2025 oranına dayalı bir alternatif burada sayısal
     olarak verilmedi: GHS toplamlarını bu alanda okumadık (nüfus ızgarası alanı hesaplayacak; Faz 0 yoklamasının
-    geçici toplamları kullanılmadı). Kaydırıcı değil, senaryo değeridir (aralık verilmedi).
+    geçici toplamları kullanılmadı). 21.10.2026 itibarıyla daha yeni bir TÜİK projeksiyonu yok: yayın listesinde
+    'Nüfus Projeksiyonları' serisinin bülteni hâlâ 53699 (tuik_veriportali_press_listesi). Kapsam: projeksiyon
+    metaverisi '3.6. Kitle' (tuik_projeksiyon_2023_2100_bulten): "Ülkemizde geçici koruma altında bulunan Suriye
+    vatandaşları, ikamete dayalı olan “de-jure” nüfus tanımının dışında olduğundan projeksiyon kapsamında da yer
+    almamaktadır." Kaydırıcı değil, senaryo değeridir (aralık verilmedi).

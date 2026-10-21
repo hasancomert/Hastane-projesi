@@ -1,7 +1,7 @@
 # Alan: erisim — D. Arsa fiyatı parametreleri (spec 4.4 D). Arsa alanı (land.m2_per_bed, land.min_parcel_m2) maliyet alanında.
 # Model: p_j = land.price_base_tl_m2 · (yoğunluk_j / medyan yoğunluk)^land.price_beta   [TL/m², aday hücre j]
 #   yoğunluk_j: hücre nüfusu / hücre alanı (kişi/km²); medyan: aday hücreler (J) üzerinden.
-# Kaynaklar: data/sources/erisim.yaml ; ayrıntı: data/reference/erisim_turetim.md
+# Kaynaklar: data/sources/erisim.yaml ; ayrıntı: data/reference/erisim_turetim.md ; denetim: pipeline/19_access_params.py
 
 - key: land.include
   label: "Arsa maliyeti dahil mi?"
@@ -25,12 +25,13 @@
   rationale: >-
     Ankara için ilçe/hücre düzeyinde güvenilir, açık ve resmî bir arsa fiyatı veri seti bulunamadı (emlak vergisi asgari
     m² birim değerleri sokak bazında ve yalnız yerel ilanla yayımlanıyor; TKGM, TOKİ ve belediye siteleri bu ortamdan
-    erişilemedi). 3 km aday hücrelerinin (P_min = 250) medyan yoğunluğu ≈85 kişi/km² (kalibre edilmemiş GHS-POP 2025 ön
-    hesabı) — kırsal kasaba çevresi. Bu düzey için haber kaynaklı tek nokta: Evren'de konut imarlı arsa ortalaması 1.379
-    TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kaba tutarlılık (kalibrasyon değil): β = 0,5 ile
-    90. yüzdelik yoğunluktaki (≈2.700 kişi/km²) hücrede ≈11.200 TL/m² (TOKİ Sincan Yeni Peçenek muhammen ≈9.400–12.900),
-    en yoğun hücrede (≈33.000 kişi/km²) ≈39.400 TL/m² (TOKİ Gölbaşı İncek ≈38.500, Yenimahalle Susuz kentsel servis alanı
-    ≈31.000 TL/m²; Eylül 2026).
+    erişilemedi). Taban, medyan yoğunluklu aday hücrenin fiyatıdır; P_min eşiği düşük olduğundan (250 kişi / 9 km²)
+    medyan adayın kırsal ilçe/kasaba çevresi olması beklenir. Bu düzey için haber kaynaklı tek nokta: Evren'de konut
+    imarlı arsa ortalaması 1.379 TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kentsel uç için
+    haber kaynaklı TOKİ muhammen bedelleri (Eylül 2026): Sincan Temelli/Alcı ≈6.000, Sincan Yeni Peçenek ≈9.400–12.900,
+    Yenimahalle Susuz kentsel servis alanı ≈31.000, Gölbaşı İncek ≈38.500 TL/m². Aday hücrelerin medyan yoğunluğu ve
+    taban × (yoğunluk / medyan)^β fiyatlarının bu haber değerleriyle tutarlılığı Faz 2'de kalibre edilmiş ızgarayla
+    hesaplanacak.
   range: [0, 40000]
   alternatives:
     - {label: "Evren konut imarlı arsa ortalaması (haber, Mayıs 2026)", value: 1379, status: kaynakli, source_ids: [erisim_haber_yeniankara_evren_arsa_2026]}
@@ -47,12 +48,12 @@
   unit: "boyutsuz"
   status: varsayim
   rationale: >-
-    Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar; ön hesapta aday hücre
-    yoğunlukları ≈33 (10. yüzdelik) ile ≈33.000 kişi/km² (en yoğun) arasında, bu da medyana göre ≈0,6× ile ≈19,7× fiyat
-    aralığı verir — TOKİ'nin Eylül 2026 Ankara muhammen bedellerinin (≈6.000 – 38.500 TL/m²) ve Evren kırsal arsa
-    fiyatının (1.379 TL/m²) kapsadığı yelpazeyle kabaca uyumlu. β = 0 tüm hücrelerde aynı fiyat demektir.
+    Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar. Haber kaynaklı Ankara
+    arsa fiyatları kırsal Evren (1.379 TL/m²) ile TOKİ'nin Eylül 2026 muhammen bedelleri (≈6.000 – 38.500 TL/m²)
+    arasında ≈28 kat değişiyor; β'nın bu yelpazeyle uyumu, aday hücre yoğunluk dağılımı Faz 2'de kalibre edilmiş
+    ızgaradan hesaplanınca denetlenecek. β = 0 tüm hücrelerde aynı fiyat demektir.
   range: [0.0, 1.5]
   alternatives:
     - {label: "Sabit fiyat (yoğunluktan bağımsız)", value: 0.0, status: model_secimi}
-    - {label: "Zayıf bağımlılık (en yoğun/medyan ≈ 6×)", value: 0.3, status: varsayim}
-    - {label: "Güçlü bağımlılık (en yoğun/medyan ≈ 65×)", value: 0.7, status: varsayim}
+    - {label: "Zayıf bağımlılık (yoğunluk 100 kat → fiyat ≈4 kat)", value: 0.3, status: varsayim}
+    - {label: "Güçlü bağımlılık (yoğunluk 100 kat → fiyat ≈25 kat)", value: 0.7, status: varsayim}

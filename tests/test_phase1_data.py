@@ -1,4 +1,4 @@
-"""Faz 1 veri kontrolleri: TÜİK tablosu, sınırlar, kayıt doğrulaması, işlenmiş rasterler.
+"""Faz 1 veri kontrolleri: TÜİK tablosu, sınırlar, kayıt doğrulaması, işlenmiş rasterler, kaynak tekilliği.
 
 Çalıştırma (repo kökünden):  .venv/bin/python -m pytest -q tests/test_phase1_data.py
 Önkoşul: pipeline/build_registry.py ve pipeline/16_district_check.py çalıştırılmış olmalı.
@@ -6,6 +6,8 @@
 from __future__ import annotations
 
 import json
+import re
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -22,6 +24,7 @@ BOUNDARIES = {
     "web_ilceler": common.PROCESSED / "web" / "ankara_ilceler.geojson",
     "web_il": common.PROCESSED / "web" / "ankara_il.geojson",
 }
+AREA_CSV = common.REFERENCE / "ankara_alan_kaynaklari.csv"
 GHS_100M = (2920, 2390)   # (genişlik, yükseklik) — common.GHS_WINDOW, 100 m
 GHS_1KM = (292, 239)
 
@@ -137,6 +140,94 @@ def test_sources_md_generated():
     for heading in ("## 2. Parametreler", "## 3. Varsayımlar", "## 4. Bölüm 3 ile karşılaştırma"):
         assert heading in text
     assert "5.910.320" in text
+
+
+def test_range_note_in_outputs(params):
+    # kaydırıcı aralıkları arayüz tercihi (varsayım): parameters.json'da alan, SOURCES.md'de genel not
+    note = build_registry.RANGE_NOTE
+    assert "varsayım" in note
+    for key, p in params.items():
+        assert "range_note" in p, key
+        assert p["range_note"] == (note if p["range"] is not None else None), key
+    assert any(p["range"] is not None for p in params.values())
+    assert note in (common.DATA / "SOURCES.md").read_text(encoding="utf-8")
+
+
+# ---------------------------------------------------------------- kaynak tekilliği ve betik listesi
+# Alanlar arası birleştirilen kayıtlar: kaldırılan kimlik -> korunan kimlik (alan_literatur)
+MERGED_SOURCES = {
+    "arazi_osm_worldcover_2021_v200": "alan_literatur_lit_zanaga2022",
+    "arazi_osm_boscoe_2012": "alan_literatur_lit_boscoe2012",
+    "arazi_osm_ballou_2002": "alan_literatur_lit_ballou2002",
+}
+# Birleştirilen belgelerin URL'de geçen DOI/kayıt parçaları
+MERGED_DOI_KEYS = {
+    "alan_literatur_lit_zanaga2022": ("zenodo.7254221", "zenodo.org/api/records/7254221"),
+    "alan_literatur_lit_boscoe2012": ("10.1080/00330124.2011.583586",),
+    "alan_literatur_lit_ballou2002": ("10.1016/s0965-8564(01)00044-1",),
+}
+
+
+def _cited_ids(registry) -> set[str]:
+    ids = set()
+    for p in registry.params.values():
+        ids |= set(p.get("source_ids") or [])
+        for a in p.get("alternatives") or []:
+            ids |= set(a.get("source_ids") or [])
+    for row in build_registry.SPEC_SECTION3:
+        ids |= set(row["source_ids"])
+    return ids
+
+
+def test_merged_sources_are_single_records(registry):
+    for old, new in MERGED_SOURCES.items():
+        assert old not in registry.sources, old
+        assert new in registry.sources, new
+    assert not _cited_ids(registry) & set(MERGED_SOURCES)
+    for new, keys in MERGED_DOI_KEYS.items():
+        same = {sid for sid, s in registry.sources.items()
+                if any(k in str(s.get("url", "")).lower() for k in keys)
+                or s.get("sha256") == registry.sources[new].get("sha256")}
+        assert same == {new}, (new, same)
+
+
+def test_no_cross_domain_duplicate_urls(registry):
+    # birleştirilen belgeler için yinelenme HATA; diğer alanlar arası yinelenmeler yalnız uyarı
+    dups = build_registry.cross_domain_duplicates(registry)
+    merged = set(MERGED_SOURCES) | set(MERGED_SOURCES.values())
+    bad = [d for d in dups if {d[1], d[2]} & merged]
+    assert not bad, bad
+    for crit, first, sid in dups:
+        warnings.warn(f"alanlar arası yinelenen {crit}: {first} / {sid}", UserWarning)
+    reported = [i for i in registry.warnings if i.where.startswith("yinelenen")]
+    assert len(reported) == len(dups)
+
+
+SCRIPT_RE = re.compile(r"pipeline/[A-Za-z0-9_./-]+?\.py")
+
+
+def test_listed_pipeline_scripts_exist():
+    files = [*common.SOURCES_DIR.glob("*.yaml"), common.SOURCES_DIR / "README.md", *common.PARAMS_DIR.glob("*.yaml"),
+             *(f for f in common.REFERENCE.iterdir() if f.suffix in (".yaml", ".md", ".csv", ".json")),
+             common.DATA / "SOURCES.md", *(common.ROOT / "pipeline").glob("*.py")]
+    listed: dict[str, set[str]] = {}
+    for f in files:
+        for m in SCRIPT_RE.findall(f.read_text(encoding="utf-8")):
+            listed.setdefault(m, set()).add(str(f.relative_to(common.ROOT)))
+    assert "pipeline/20_area_literature.py" in listed
+    missing = {m: sorted(w) for m, w in listed.items() if not (common.ROOT / m).is_file()}
+    assert not missing, missing
+
+
+def test_area_25632_primary_sources():
+    # 25.632 km²: birincil dayanak resmî belgeler ([5] ve Valilik ÇDR 2018 Çizelge E.85); HGM yalnız ikincil
+    df = pd.read_csv(AREA_CSV)
+    rows = df[df["deger_km2"].astype(float) == 25632]
+    official = rows[rows["status"].isin(["kaynakli", "hesap"])]
+    assert set(official["source_id"]) == {"alan_literatur_csb_ref5_beypazari", "alan_literatur_valilik_cdr_2018"}
+    hgm = rows[rows["source_id"].str.startswith("alan_literatur_hgm_")]
+    assert len(hgm) == 2 and (hgm["status"] == "kaynakli_ikincil").all()
+    assert official["notlar"].str.contains("kopyalara göre HGM ile aynı", regex=False).all()   # 'İ' küçültmesi güvenilmez
 
 
 # ---------------------------------------------------------------- rasterler

@@ -12,6 +12,7 @@
     "derivation": null,
     "rationale": null,
     "range": null,
+    "range_note": null,
     "alternatives": [
       {
         "label": "31.12.2024 (ADNKS 2024)",
@@ -48,7 +49,7 @@
         ]
       }
     ],
-    "notes": "Şartname Bölüm 3 değeriyle (5.910.320) birebir aynı; 25 ilçenin toplamı da tam bu değer. Aynı sayı: istatistiksel tablo (satır 70), bülten tablosu (satır 11), bülten metni, veri akışı DF_ADNKS_T22, NİP dışa aktarımı ve il gösterge kartı; haber kaynakları [1] ve [3] de aynı. Yıllık artış hızı 2024→2025 ‰7,86. Nüfus kapsamı: Türkiye'de ikamet eden yabancılar dahil (Ankara 128.633, NİP il kartı); kurumsal nüfus kurumun bulunduğu yerde sayılır. Kaydırıcı değil, senaryo değeridir (aralık verilmedi).",
+    "notes": "Şartname Bölüm 3 değeriyle (5.910.320) birebir aynı; 25 ilçenin toplamı da tam bu değer. Aynı sayı: istatistiksel tablo (satır 70), bülten tablosu (satır 11), bülten metni, veri akışı DF_ADNKS_T22, NİP dışa aktarımı ve il gösterge kartı; haber kaynakları [1] ve [3] de aynı. Yıllık artış hızı 2024→2025 ‰7,86. Nüfus kapsamı (ADNKS 2025 bülten metaverisi 'Verinin kapsamı', tuik_adnks2025_bulten): \"ADNKS’de ülke sınırları içinde ikamet eden Türkiye Cumhuriyeti vatandaşları ve yabancı uyruklu kişiler kapsanmaktadır.\" ve \"Kurs, turizm, bilimsel araştırma vb. nedenlerle 3 aydan kısa süreli vize veya ikamet iznine sahip yabancılar ile geçici koruma statüsüyle ülkede bulunan Suriyeliler nüfusa dâhil değildir.\" (bülten metni dipnotu aynı kuralı \"90 günden kısa\" diye yazıyor). Yani geçici koruma altındaki Suriyeliler ve 3 aydan kısa kalan yabancılar bu sayıda YOK; ADNKS'ye kayıtlı yabancılar VAR: Ankara'da sayılan 128.633 yabancı (NİP il kartı, tuik_nip_ankara_il_karti) 5.910.320'ye dahil. Kurumsal nüfus kurumun bulunduğu yerde sayılır. Kaydırıcı değil, senaryo değeridir (aralık verilmedi).",
     "group": "Nüfus",
     "domain": "nufus",
     "sources": [
@@ -90,6 +91,7 @@
     "derivation": null,
     "rationale": null,
     "range": null,
+    "range_note": null,
     "alternatives": [
       {
         "label": "Projeksiyon ADNKS 2025'e yeniden tabanlanmış: 5.910.320 × 6.062.005 / 5.886.877",
@@ -109,7 +111,7 @@
         ]
       }
     ],
-    "notes": "TÜİK \"Nüfus Projeksiyonları, 2023-2100\" (30.07.2024): ADNKS 2023 tabanlı, yıl sonu değeri; iller için yalnız ana senaryo ve yalnız 2030'a kadar yayımlanıyor (düşük/yüksek senaryo il düzeyinde yok). 2023–2030 yıllık ortalama artış ‰6,23. Projeksiyonun 2025 değeri 5.886.877, gerçekleşen 5.910.320'nin %0,40 altında: bu varsayılanla 2025→2030 artışı %2,57; projeksiyonun kendi 2025→2030 artışı %2,97 (yeniden tabanlanmış alternatif bunu kullanır). Şartname 4.4 A, 2030 senaryosu için \"GHS-POP 2030 dağılımı + varsayımsal büyüme\" diyordu; il toplamı için artık resmî değer var, büyüme varsayımı gerekmiyor. GHS-POP E2030/E2025 oranına dayalı bir alternatif burada sayısal olarak verilmedi: GHS toplamlarını bu alanda okumadık (nüfus ızgarası alanı hesaplayacak; Faz 0 yoklamasının geçici toplamları kullanılmadı). Kaydırıcı değil, senaryo değeridir (aralık verilmedi).",
+    "notes": "TÜİK \"Nüfus Projeksiyonları, 2023-2100\" (30.07.2024): ADNKS 2023 tabanlı, yıl sonu değeri; iller için yalnız ana senaryo ve yalnız 2030'a kadar yayımlanıyor (düşük/yüksek senaryo il düzeyinde yok). 2023–2030 yıllık ortalama artış ‰6,23. Projeksiyonun 2025 değeri 5.886.877, gerçekleşen 5.910.320'nin %0,40 altında: bu varsayılanla 2025→2030 artışı %2,57; projeksiyonun kendi 2025→2030 artışı %2,97 (yeniden tabanlanmış alternatif bunu kullanır). Şartname 4.4 A, 2030 senaryosu için \"GHS-POP 2030 dağılımı + varsayımsal büyüme\" diyordu; il toplamı için artık resmî değer var, büyüme varsayımı gerekmiyor. GHS-POP E2030/E2025 oranına dayalı bir alternatif burada sayısal olarak verilmedi: GHS toplamlarını bu alanda okumadık (nüfus ızgarası alanı hesaplayacak; Faz 0 yoklamasının geçici toplamları kullanılmadı). 21.10.2026 itibarıyla daha yeni bir TÜİK projeksiyonu yok: yayın listesinde 'Nüfus Projeksiyonları' serisinin bülteni hâlâ 53699 (tuik_veriportali_press_listesi). Kapsam: projeksiyon metaverisi '3.6. Kitle' (tuik_projeksiyon_2023_2100_bulten): \"Ülkemizde geçici koruma altında bulunan Suriye vatandaşları, ikamete dayalı olan “de-jure” nüfus tanımının dışında olduğundan projeksiyon kapsamında da yer almamaktadır.\" Kaydırıcı değil, senaryo değeridir (aralık verilmedi).",
     "group": "Nüfus",
     "domain": "nufus",
     "sources": [
@@ -145,6 +147,7 @@
       2.0,
       5.0
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025, sayılardan tam değer: 270.829 yatak / 86.092.168 kişi × 1000",
@@ -153,7 +156,7 @@
         "source_ids": [
           "saglik_sbsgm_bulten2025",
           "tuik_bt_adnks2025_yogunluk",
-          "saglik_karar_adnks2025"
+          "tuik_haber_karar_adnks2025"
         ]
       },
       {
@@ -180,7 +183,7 @@
         "source_ids": [
           "saglik_sbsgm_bulten2025",
           "tuik_bt_adnks2025_yogunluk",
-          "saglik_karar_adnks2025"
+          "tuik_haber_karar_adnks2025"
         ]
       },
       {
@@ -226,6 +229,7 @@
       0.0,
       0.3
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": "Aralık (0–%30) varsayımdır; tornado analizinde ±%20 yerine mutlak 0 → 0,2 denenebilir.",
     "group": "A. Talep",
@@ -240,7 +244,7 @@
     "source_ids": [
       "saglik_sbsgm_bulten2025",
       "tuik_bt_adnks2025_yogunluk",
-      "saglik_karar_adnks2025"
+      "tuik_haber_karar_adnks2025"
     ],
     "derivation": "Türkiye 2025: yatan hasta ≈ yatak devir hızı 50,3 (SİY 2025 Haber Bülteni Tablo 16, PDF s. 10) × hastane yatağı 270.829 (Tablo 7, PDF s. 5) = 13.622.699; ÷ nüfus 86.092.168 (TÜİK ADNKS 31.12.2025) × 1000 = 158,23. Tanım (SİY 2024 Bölüm 8 açıklamaları): devir hızı = (taburcu + ölen) / yatak; yatan hasta = taburcu + ölen.",
     "rationale": null,
@@ -248,6 +252,7 @@
       100,
       250
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Türkiye 2024: 13.881.750 / 85.664.944 × 1000 (SİY 2024 Tablo 8.26 ve 1.3)",
@@ -303,9 +308,9 @@
         "kind": "resmi"
       },
       {
-        "id": "saglik_karar_adnks2025",
+        "id": "tuik_haber_karar_adnks2025",
         "title": "TÜİK açıkladı: Türkiye'nin nüfusu 86 milyon 92 bin 168'e yükseldi",
-        "publisher": "Karar (gazete)",
+        "publisher": "Karar",
         "url": "https://www.karar.com/guncel-haberler/son-dakika-tuik-acikladi-turkiye-nufusu-86-milyon-92-bin-168e-yukseldi-2027851",
         "accessed": "2026-10-21",
         "kind": "haber"
@@ -326,6 +331,7 @@
       3.0,
       7.0
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025, doluluk ve devir hızından: 0,545 × 365 / 50,3 (yuvarlama kontrolü)",
@@ -411,17 +417,18 @@
     "label": "Hedef yatak doluluk oranı (planlama)",
     "value": 0.85,
     "unit": "oran (0–1)",
-    "status": "kaynakli",
+    "status": "model_secimi",
     "source_ids": [
       "saglik_aydemir2019",
       "saglik_cirakli2019"
     ],
     "derivation": null,
-    "rationale": null,
+    "rationale": "Kaynaklar tek bir planlama hedefi vermiyor, genel hastaneler için 'olumlu' kabul edilen %80–85 ARALIĞINI veriyor; üstelik bu aralık ikinci el: Aydemir (2019) Ağırbaş (2016), Çıraklı (2019) Ağırbaş (2012) ders kitabından aktarıyor (kitap okunmadı); %85 'kabul görmüş standart' ifadesi de Bagust vd. (1999) için yalnız Aydemir üzerinden aktarılıyor (tam metin okunamadı). 0,85 bu aralığın üst ucu olarak seçildi: aynı talep için en az yatağı veren (yatakların verimli kullanımı) ama Bagust vd.'nin %85 eşiğini (aşılınca erişim engeli, uzun bekleme, yüksek mortalite) aşmayan değer. Aralığın alt ucu (0,80) ve diğer değerler alternatif olarak duruyor; kaydırıcıyla duyarlılık analizi yapılabilir.",
     "range": [
       0.5,
       0.95
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Genel hastaneler için kabul edilen aralığın alt ucu (%80; Aydemir 2019, Çıraklı 2019)",
@@ -485,6 +492,7 @@
       0.4,
       0.9
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Türkiye 2024 (Haber Bülteni 2024 Tablo 17; SİY 2024 Tablo 8.26)",
@@ -558,6 +566,7 @@
       25,
       200
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": null,
     "group": "B. Boyut",
@@ -604,6 +613,7 @@
       400,
       1500
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": null,
     "group": "B. Boyut",
@@ -643,6 +653,7 @@
       400,
       2000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "En küçük KÖİ şehir hastanesi (Yozgat, SB 2020 bütçe sunumu)",
@@ -697,6 +708,7 @@
       2000,
       5000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "En büyük gerçek örnekler (Bilkent, Etlik, Sancaktepe)",
@@ -743,6 +755,7 @@
       100,
       300
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": null,
     "group": "B. Boyut",
@@ -772,6 +785,7 @@
       300,
       600
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": null,
     "group": "B. Boyut",
@@ -801,6 +815,7 @@
       32600,
       50600
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025 tebliği (RG 31.01.2025/32799)",
@@ -838,6 +853,7 @@
       34400,
       52900
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025 tebliği",
@@ -875,6 +891,7 @@
       35600,
       54800
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025 tebliği",
@@ -912,6 +929,7 @@
       39500,
       60900
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025 tebliği",
@@ -949,6 +967,7 @@
       43400,
       66900
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2025 tebliği",
@@ -987,47 +1006,53 @@
       100,
       350
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)",
         "value": 138.7,
+        "status": "hesap",
         "source_ids": [
           "maliyet_aliefendioglu_2021"
         ]
       },
       {
-        "label": "Balcalı Hastanesi (190.651 ÷ 1.200)",
+        "label": "Balcalı Hastanesi (190.651 ÷ 1.200; makalede 158,87)",
         "value": 158.9,
+        "status": "kaynakli",
         "source_ids": [
           "maliyet_balcali_2019"
         ]
       },
       {
-        "label": "2026 KYP SB genel hastaneleri, alan–yatak eğimi (n = 47)",
-        "value": 228.4,
+        "label": "2026 KYP SB genel hastaneleri, alan–yatak OLS eğimi (n = 47; A0 = 3.361 m² ile birlikte) — gerçekleşen proje alanı",
+        "value": 228.35,
+        "status": "hesap",
         "source_ids": [
           "maliyet_hesap_kyp_alan",
           "yatirim_kyp2026"
         ]
       },
       {
-        "label": "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47)",
+        "label": "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47) — gerçekleşen proje alanı",
         "value": 237.0,
+        "status": "hesap",
         "source_ids": [
           "maliyet_hesap_kyp_alan",
           "yatirim_kyp2026"
         ]
       },
       {
-        "label": "2026 KYP SB genel hastaneleri, medyan (n = 47)",
+        "label": "2026 KYP SB genel hastaneleri, medyan (n = 47) — gerçekleşen proje alanı",
         "value": 250.0,
+        "status": "hesap",
         "source_ids": [
           "maliyet_hesap_kyp_alan",
           "yatirim_kyp2026"
         ]
       }
     ],
-    "notes": "Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa) standardıdır (maliyet_mpyy_ek2); EHTA da 130'u 'İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik' hükmü olarak anıyor. Yani 130'un bina alanı olarak kullanımı akademik yorumdur. (3) 130 bir ASGARİdir; Bakanlığın 2026 KYP'deki yeni genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli.",
+    "notes": "Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz alınarak yatak başına 130 m2 şartı' (s. 15). ÇELİŞKİ / UYARI: (1) Kılavuzun kendisi indirilemedi (vekil 403). (2) Resmî Mekânsal Planlar Yapım Yönetmeliği EK-2'de aynı 130 m²/yatak, imar planında ayrılacak SAĞLIK TESİSİ ALANI (arsa) standardıdır (maliyet_mpyy_ek2); EHTA da 130'u 'İmar Kanunu, Plan Yapımına Ait Esaslara Dair Yönetmelik' hükmü olarak anıyor. Yani 130'un bina alanı olarak kullanımı akademik yorumdur. (3) 130 bir ASGARİdir; Bakanlığın 2026 KYP'deki yeni genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli. TEMEL FARKI: varsayılan 130 bir ASGARİ / imar standardıdır (plan ve tasarım alt sınırı); KYP alternatifleri ise Bakanlığın yatırım programındaki gerçek projelerin karakteristiğinde yazan kapalı alandır (gerçekleşen proje alanı, asgari değil). İkisi aynı büyüklüğü ölçmez: KYP eğimi (228,35) yalnız KYP kesişimiyle (A0 = 3.361 m²) birlikte, ≤600 yatak eğimi (214,13) A0 = 7.695 m² ile birlikte anlamlıdır. Tüm KYP sayıları pipeline/18_costs.py ile data/processed/kyp_alan_yatak.json'a yazılır. Varsayılan değiştirilmedi.",
     "group": "C. İnşaat",
     "domain": "maliyet",
     "sources": [
@@ -1063,10 +1088,12 @@
       250,
       400
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310",
         "value": 308.3,
+        "status": "hesap",
         "source_ids": [
           "maliyet_memurlar_2018"
         ]
@@ -1074,13 +1101,15 @@
       {
         "label": "Manisa Şehir H. (178.204 ÷ 558)",
         "value": 319.4,
+        "status": "hesap",
         "source_ids": [
           "maliyet_memurlar_2018"
         ]
       },
       {
-        "label": "Bilkent, 2017 planı (1.200.000 ÷ 3.704)",
+        "label": "Bilkent, 2017 planı (1.200.000 ÷ 3.704) — Bakanlık idari binası ve bodrum otoparkları dahil, hastane m²/yatak'ı yüksek gösterir",
         "value": 324.0,
+        "status": "hesap",
         "source_ids": [
           "maliyet_kalkinma_ankara_2017"
         ]
@@ -1088,27 +1117,40 @@
       {
         "label": "Şehir hastaneleri (Aliefendioğlu & Bostancı 2021, yazıldığı gibi)",
         "value": 331,
+        "status": "kaynakli",
         "source_ids": [
           "maliyet_aliefendioglu_2021"
         ]
       },
       {
-        "label": "Bilkent (1.312.358 ÷ 3.810)",
+        "label": "Bilkent (1.312.358 ÷ 3.810) — aynı kampüs; hastane dışı alanlar büyük olasılıkla dahil, yüksek gösterir",
         "value": 344.5,
+        "status": "hesap",
         "source_ids": [
-          "maliyet_medikalakademi_bilkent"
+          "maliyet_medikalakademi_bilkent",
+          "maliyet_kalkinma_ankara_2017"
         ]
       },
       {
         "label": "2026 KYP genel bütçeli şehir hastaneleri, medyan (n = 14)",
         "value": 279.5,
+        "status": "hesap",
+        "source_ids": [
+          "maliyet_hesap_kyp_alan",
+          "yatirim_kyp2026"
+        ]
+      },
+      {
+        "label": "2026 KYP genel bütçeli şehir hastaneleri, proje başına ortalama (n = 14)",
+        "value": 284.4,
+        "status": "hesap",
         "source_ids": [
           "maliyet_hesap_kyp_alan",
           "yatirim_kyp2026"
         ]
       }
     ],
-    "notes": "Spec 4.4 C 'şehir hastanesi ≈310' (Eskişehir) diyor, 4.2 '≈310–345'. Varsayılan olarak tek hastane yerine tüm KÖİ programının toplam/toplam oranı seçildi (spec aralığının içinde); Eskişehir değeri ilk alternatif. Kapalı alanlar kapalı otoparkları da içerir (ör. Bilkent 6.918 araçlık otopark). Bilkent'in yatak sayısı kaynaklar arasında çelişkili (3.704 / 3.711 / 3.810 / 4.050) — bkz. hastane_boyut_ornekleri.csv; 4.050 ile 324,0 m²/yatak çıkar. Genel bütçeyle yapılan yeni şehir hastaneleri (2026 KYP) daha küçük: medyan 279,5, ≥1.000 yatak (n = 8) medyan 254,9.",
+    "notes": "Spec 4.4 C 'şehir hastanesi ≈310' (Eskişehir) diyor, 4.2 '≈310–345'. Varsayılan olarak tek hastane yerine tüm KÖİ programının toplam/toplam oranı seçildi (spec aralığının içinde); Eskişehir değeri ilk alternatif. Kapalı alanlar kapalı otoparkları da içerir (ör. Bilkent 6.918 araçlık otopark). Bilkent'in yatak sayısı kaynaklar arasında çelişkili (3.704 / 3.711 / 3.810 / 4.050) — bkz. hastane_boyut_ornekleri.csv; 4.050 ile 324,0 m²/yatak çıkar. Genel bütçeyle yapılan yeni şehir hastaneleri (2026 KYP) daha küçük: medyan 279,5, ortalama 284,4 (n = 14; proje başına alan/yatak ortalaması, pipeline/18_costs.py → data/processed/kyp_alan_yatak.json), ≥1.000 yatak (n = 8) medyan 254,9. KAPSAM UYARISI: Bilkent/KÖİ kampüs alanları hastane dışı kapalı alan da içerir. Kalkınma 2017 (PDF s. 5): Bilkent'in 1.200.000 m² inşaat alanı 'Sağlık Bakanlığı'nın yeni idari binasını' da içinde bulundurur; kampüste Sağlık Bilimleri Üniversitesi, kongre merkezleri, ticari alanlar, yüksek teknoloji ve AR-GE merkezi de yer alır; '8 bin araç kapasiteli kapalı otoparklar bodrum katlarda' (Bakanlık ana hizmet binasının otoparkı 800 araç). Bu yüzden Bilkent oranları (324,0; 344,5) hastane m²/yatak değerini olduğundan yüksek gösterir; varsayılan 335,5 de Bilkent ve Etlik kampüslerini içeren program toplamından hesaplandığı için kısmen yüksektir. Varsayılan değiştirilmedi; öğrenci kararı.",
     "group": "C. İnşaat",
     "domain": "maliyet",
     "sources": [
@@ -1138,6 +1180,7 @@
       0,
       45000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "KYP regresyon kesişimi, n = 47 (a = 228,4 ile birlikte)",
@@ -1175,8 +1218,8 @@
       {
         "id": "maliyet_hesap_kyp_alan",
         "title": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları",
-        "publisher": "Proje hesabı (maliyet_build.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
-        "url": "data/reference/yatirim_programi_2026_saglik.csv",
+        "publisher": "Proje hesabı (pipeline/18_costs.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
+        "url": "pipeline/18_costs.py",
         "accessed": "2026-10-21",
         "kind": "hesap"
       },
@@ -1202,17 +1245,18 @@
     "label": "Altyapı + çevre düzenlemesi oranı (φ_alt)",
     "value": 0.15,
     "unit": "inşaat maliyetine oran",
-    "status": "kaynakli",
+    "status": "varsayim",
     "source_ids": [
       "yatirim_rehber_2026_2028",
       "maliyet_rg_2026_birim_maliyet_teblig"
     ],
     "derivation": null,
-    "rationale": null,
+    "rationale": "Hastaneye özgü bir altyapı + çevre düzenlemesi oranı bulunamadı. %15, SBB 2026-2028 Yatırım Programı Hazırlama Rehberi EK 3'teki İDARİ HİZMET BİNASI gerekçe raporu şablonundan (PDF s. 51: 'd) Çevre Düzenlemesi (%15) c x %15') BENZETMEYLE alındı: şablon hastaneler için değildir ve yalnız 'çevre düzenlemesi'ni adlandırır; tebliğ md. 2(4)'ün ayrıca hariç tuttuğu altyapıyı (zemin iyileştirme, bina dışı şebekeler) açıkça kapsamaz. Kaynakta yazan bir hastane oranı olmadığı için değer varsayımdır; alt uca yakın, temkinli bir seçimdir ve duyarlılık analizinde aralık [0,05; 0,30] taranmalıdır.",
     "range": [
       0.05,
       0.3
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": "SBB 2026-2028 Yatırım Programı Hazırlama Rehberi, EK 3 (İdari Hizmet Binası Gerekçe Raporu), 'Ödenek Talebine Esas Bedel Hesabı' (PDF s. 51, basılı s. 44): 'c) İnşaat Maliyeti a x b; d) Çevre Düzenlemesi (%15) c x %15; e) Toplam c + d; f) KDV … e x %…'; a = tebliğdeki birim maliyet. Bu şablon idari hizmet binaları içindir; hastaneye özgü bir oran bulunamadı. Tebliğ md. 2(4) hem çevre düzenlemesini hem altyapıyı (zemin iyileştirme, bina dışı şebekeler) hariç tutar; şablondaki %15 yalnız 'çevre düzenlemesi' diye adlandırılmıştır, bu yüzden 0,15 alt uca yakın bir değerdir. Bağlantı yolu/kavşak ve altyapı bağlantıları yatirim alanında F_sabit içinde düşünüldü — çift sayılmamalı.",
     "group": "C. İnşaat",
@@ -1252,6 +1296,7 @@
       0.1,
       0.45
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "KTÜ Çocuk Hastanesi, 225 yatak (KYP 2014I00-2082)",
@@ -1275,8 +1320,8 @@
       {
         "id": "maliyet_hesap_kyp_alan",
         "title": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları",
-        "publisher": "Proje hesabı (maliyet_build.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
-        "url": "data/reference/yatirim_programi_2026_saglik.csv",
+        "publisher": "Proje hesabı (pipeline/18_costs.py; girdi data/reference/yatirim_programi_2026_saglik.csv)",
+        "url": "pipeline/18_costs.py",
         "accessed": "2026-10-21",
         "kind": "hesap"
       },
@@ -1312,6 +1357,7 @@
       0.0,
       0.2
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "10.07.2023 öncesi genel oran",
@@ -1347,6 +1393,7 @@
     "derivation": null,
     "rationale": "Varsayılan 'dahil': model kamu bütçesinin ödeyeceği tutarı hesaplar ve devlet yüklenici faturasındaki KDV'yi öder. Ayrıca kamu yatırım tutarları KDV dahil hazırlanır (SBB rehberi md. 19; EK 3 not 2 'Proje Toplam Maliyetine KDV dahildir') ve yatirim alanının F_sabit değeri KDV dahildir — tutarlılık için tebliğin KDV hariç fiyatlarına KDV eklenir. Alternatif 'hariç': toplumsal maliyet bakışında KDV hazineye dönen bir transferdir; o zaman F_sabit de KDV'siz yorumlanmalıdır.",
     "range": null,
+    "range_note": null,
     "alternatives": [],
     "notes": null,
     "group": "C. İnşaat",
@@ -1382,6 +1429,7 @@
     "derivation": null,
     "rationale": "Varsayılan: kamu arazisi → arsa bedeli 0. Kamu hastaneleri çoğunlukla Hazine taşınmazı üzerinde yapılır (ör. 6428 sayılı Kanun md. 1: KÖİ tesisleri 'Hazinenin özel mülkiyetindeki taşınmazlar üzerinde … üst hakkı tesis edilmek suretiyle' yaptırılır). SBB 2026-2028 Yatırım Programı Hazırlama Rehberi Ek-1 ekonomik analiz açıklaması (PDF s. 43): 'Transferler (kamulaştırma, arazi bedeli, vergi, teşvik gibi) ekonomik analizde dikkate alınmaz.' Arazinin alternatif kullanım değeri (fırsat maliyeti) ise sıfır değildir; bu yüzden anahtar açılınca aşağıdaki vekil fiyat modeli kullanılır.",
     "range": null,
+    "range_note": null,
     "alternatives": [],
     "notes": null,
     "group": "D. Arsa",
@@ -1419,6 +1467,7 @@
       50,
       300
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Sağlık kampüsleri (şehir hastanesi) standardı",
@@ -1477,6 +1526,7 @@
       0,
       20000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Doğrusal maliyet formülünde L0 (çift sayımı önlemek için)",
@@ -1518,11 +1568,12 @@
       "erisim_rg_emlak_vergisi_teblig_89"
     ],
     "derivation": null,
-    "rationale": "Ankara için ilçe/hücre düzeyinde güvenilir, açık ve resmî bir arsa fiyatı veri seti bulunamadı (emlak vergisi asgari m² birim değerleri sokak bazında ve yalnız yerel ilanla yayımlanıyor; TKGM, TOKİ ve belediye siteleri bu ortamdan erişilemedi). 3 km aday hücrelerinin (P_min = 250) medyan yoğunluğu ≈85 kişi/km² (kalibre edilmemiş GHS-POP 2025 ön hesabı) — kırsal kasaba çevresi. Bu düzey için haber kaynaklı tek nokta: Evren'de konut imarlı arsa ortalaması 1.379 TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kaba tutarlılık (kalibrasyon değil): β = 0,5 ile 90. yüzdelik yoğunluktaki (≈2.700 kişi/km²) hücrede ≈11.200 TL/m² (TOKİ Sincan Yeni Peçenek muhammen ≈9.400–12.900), en yoğun hücrede (≈33.000 kişi/km²) ≈39.400 TL/m² (TOKİ Gölbaşı İncek ≈38.500, Yenimahalle Susuz kentsel servis alanı ≈31.000 TL/m²; Eylül 2026).",
+    "rationale": "Ankara için ilçe/hücre düzeyinde güvenilir, açık ve resmî bir arsa fiyatı veri seti bulunamadı (emlak vergisi asgari m² birim değerleri sokak bazında ve yalnız yerel ilanla yayımlanıyor; TKGM, TOKİ ve belediye siteleri bu ortamdan erişilemedi). Taban, medyan yoğunluklu aday hücrenin fiyatıdır; P_min eşiği düşük olduğundan (250 kişi / 9 km²) medyan adayın kırsal ilçe/kasaba çevresi olması beklenir. Bu düzey için haber kaynaklı tek nokta: Evren'de konut imarlı arsa ortalaması 1.379 TL/m², tarla 100–300 TL/m² (Mayıs 2026). Yuvarlak 2.000 TL/m² seçildi. Kentsel uç için haber kaynaklı TOKİ muhammen bedelleri (Eylül 2026): Sincan Temelli/Alcı ≈6.000, Sincan Yeni Peçenek ≈9.400–12.900, Yenimahalle Susuz kentsel servis alanı ≈31.000, Gölbaşı İncek ≈38.500 TL/m². Aday hücrelerin medyan yoğunluğu ve taban × (yoğunluk / medyan)^β fiyatlarının bu haber değerleriyle tutarlılığı Faz 2'de kalibre edilmiş ızgarayla hesaplanacak.",
     "range": [
       0,
       40000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Evren konut imarlı arsa ortalaması (haber, Mayıs 2026)",
@@ -1586,11 +1637,12 @@
     "status": "varsayim",
     "source_ids": [],
     "derivation": null,
-    "rationale": "Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar; ön hesapta aday hücre yoğunlukları ≈33 (10. yüzdelik) ile ≈33.000 kişi/km² (en yoğun) arasında, bu da medyana göre ≈0,6× ile ≈19,7× fiyat aralığı verir — TOKİ'nin Eylül 2026 Ankara muhammen bedellerinin (≈6.000 – 38.500 TL/m²) ve Evren kırsal arsa fiyatının (1.379 TL/m²) kapsadığı yelpazeyle kabaca uyumlu. β = 0 tüm hücrelerde aynı fiyat demektir.",
+    "rationale": "Kaynaklı bir esneklik bulunamadı. β = 0,5 ile yoğunluk 100 kat artınca fiyat 10 kat artar. Haber kaynaklı Ankara arsa fiyatları kırsal Evren (1.379 TL/m²) ile TOKİ'nin Eylül 2026 muhammen bedelleri (≈6.000 – 38.500 TL/m²) arasında ≈28 kat değişiyor; β'nın bu yelpazeyle uyumu, aday hücre yoğunluk dağılımı Faz 2'de kalibre edilmiş ızgaradan hesaplanınca denetlenecek. β = 0 tüm hücrelerde aynı fiyat demektir.",
     "range": [
       0.0,
       1.5
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Sabit fiyat (yoğunluktan bağımsız)",
@@ -1598,12 +1650,12 @@
         "status": "model_secimi"
       },
       {
-        "label": "Zayıf bağımlılık (en yoğun/medyan ≈ 6×)",
+        "label": "Zayıf bağımlılık (yoğunluk 100 kat → fiyat ≈4 kat)",
         "value": 0.3,
         "status": "varsayim"
       },
       {
-        "label": "Güçlü bağımlılık (en yoğun/medyan ≈ 65×)",
+        "label": "Güçlü bağımlılık (yoğunluk 100 kat → fiyat ≈25 kat)",
         "value": 0.7,
         "status": "varsayim"
       }
@@ -1628,38 +1680,44 @@
       0,
       1500000000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
-        "label": "0 — regresyon kesişimi sıfırdan ayırt edilemiyor (veriyle en uyumlu alt sınır)",
+        "label": "Model seçimi: sabit maliyet yok (regresyon kesişimi sıfırdan ayırt edilemiyor; veriyle en uyumlu alt sınır)",
         "value": 0,
+        "status": "model_secimi",
         "source_ids": [
           "yatirim_hesap_regresyon"
         ]
       },
       {
-        "label": "Regresyon F0, yalnız genel hastaneler (n = 47; p = 0,51; anlamlı değil)",
+        "label": "Hesap: yalnız genel hastaneler regresyonu F0 (n = 47; p = 0,51; anlamlı değil)",
         "value": 233318127,
+        "status": "hesap",
         "source_ids": [
           "yatirim_hesap_regresyon"
         ]
       },
       {
-        "label": "F0 %95 GA üst sınırı, ana örneklem (n = 61)",
+        "label": "Hesap: ana regresyonun F0 %95 GA üst sınırı (n = 61)",
         "value": 742340771,
+        "status": "hesap",
         "source_ids": [
           "yatirim_hesap_regresyon"
         ]
       },
       {
-        "label": "F0 %95 GA üst sınırı, yalnız genel hastaneler (n = 47)",
+        "label": "Hesap: yalnız genel hastaneler regresyonunun F0 %95 GA üst sınırı (n = 47)",
         "value": 942589903,
+        "status": "hesap",
         "source_ids": [
           "yatirim_hesap_regresyon"
         ]
       },
       {
-        "label": "Hastane kavşak ve bağlantı yolları, il başına ortalama (5,69 milyar TL ÷ 4 il; KYP 2025I00-280965)",
+        "label": "Varsayım: 'Hastane Kavşak ve Bağlantı Yolları' kalemi (5,69 milyar TL; KYP 2025I00-280965; Gaziantep, Mersin, Sakarya, Şanlıurfa) 4 ile eşit bölünür, il başına bir hastane",
         "value": 1422500000,
+        "status": "varsayim",
         "source_ids": [
           "yatirim_kyp2026"
         ]
@@ -1696,6 +1754,7 @@
     "derivation": null,
     "rationale": "Şartname 4.4 F: isteğe bağlı, varsayılan kapalı. Toplam yatak sayısı talepten (q_i) belirlendiği için yatak başı işletme gideri hastane yerleşimini değil esas olarak toplam maliyet düzeyini etkiler; hastane başı sabit işletme gideri ise hastane sayısını azaltma yönünde çalışır. Kaynaklı bir sabit/değişken ayrımı olmadığından kapalı tutulur.",
     "range": null,
+    "range_note": null,
     "alternatives": [],
     "notes": null,
     "group": "F. İşletme",
@@ -1714,6 +1773,7 @@
       0,
       2000000000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": null,
     "group": "F. İşletme",
@@ -1736,6 +1796,7 @@
       0,
       20000000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2024 fiyatlarıyla (TÜFE güncellemesi yok)",
@@ -1791,6 +1852,7 @@
       8.0,
       18.0
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Türkiye 2024 (Haber Bülteni 2024 Tablo 16; şartname Bölüm 3)",
@@ -1833,7 +1895,7 @@
         ]
       }
     ],
-    "notes": "SİY 2025 Haber Bülteni Tablo 15 'Genel Toplam' (1.138.060.185 müracaat; kişi başı 13,2; PDF s. 9) ve Tablo 16 Türkiye satırı (PDF s. 10). Tanım: OECD 'hekime telefon hariç herhangi bir sebeple müracaat'; diş hekimi müracaatları ve danışmanlık başvuruları hariç (SİY 2024 Bölüm 8 açıklamaları, PDF s. 237). Ziyaret sayısıdır, tekil hasta sayısı değildir. Aralık (8–18) varsayımdır.",
+    "notes": "SİY 2025 Haber Bülteni Tablo 15 'Genel Toplam' (1.138.060.185 müracaat; kişi başı 13,2; PDF s. 9) ve Tablo 16 Türkiye satırı (PDF s. 10). Tanım: OECD 'hekime telefon hariç herhangi bir sebeple müracaat'; diş hekimi müracaatları ve danışmanlık başvuruları hariç (SİY 2024 Bölüm 8 açıklamaları, PDF s. 237). Ziyaret sayısıdır, tekil hasta sayısı değildir. Aralık (8–18) varsayımdır. NOT: v (access.hospital_visits_per_capita) varsayılanı artık doğrudan hastane müracaat sayısından hesaplanıyor (656.167.336 / 86.092.168 = 7,622; özel tıp merkezleri hariç); bu değer × access.share_hospital_visits (13,2 × 0,587 = 7,748) v için alternatif olarak duruyor.",
     "group": "G. Erişim",
     "domain": "muracaat",
     "sources": [
@@ -1861,6 +1923,7 @@
       0.4,
       0.8
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Türkiye 2024: %56,7 (Haber Bülteni 2024 PDF s. 9 metni; şartname Bölüm 3)",
@@ -1903,7 +1966,7 @@
         ]
       }
     ],
-    "notes": "SİY 2025 Haber Bülteni, PDF s. 9 metni: 'hekime müracaatın %41,3'ü birinci basamak ... %58,7'si ikinci ve üçüncü basamak sağlık kurumlarına yapıldı'. TANIM UYARISI: 'ikinci ve üçüncü basamak' hastanelere ek olarak özel tıp merkezlerini de (2025: 11.536.197 müracaat, toplamın %1,0'ı) içerir; yalnız hastaneler %57,66. Aralık varsayımdır.",
+    "notes": "SİY 2025 Haber Bülteni, PDF s. 9 metni: 'hekime müracaatın %41,3'ü birinci basamak ... %58,7'si ikinci ve üçüncü basamak sağlık kurumlarına yapıldı'. TANIM UYARISI: 'ikinci ve üçüncü basamak' hastanelere ek olarak özel tıp merkezlerini de (2025: 11.536.197 müracaat, toplamın %1,0'ı) içerir; yalnız hastaneler %57,66. Aralık varsayımdır. NOT: v (access.hospital_visits_per_capita) varsayılanı artık bu pay ile değil, doğrudan hastane müracaat sayısından hesaplanıyor (656.167.336 / 86.092.168 = 7,622; özel tıp merkezleri hariç); toplam × pay (13,2 × 0,587 = 7,748) v için alternatif olarak duruyor.",
     "group": "G. Erişim",
     "domain": "muracaat",
     "sources": [
@@ -1919,19 +1982,38 @@
   },
   "access.hospital_visits_per_capita": {
     "label": "Kişi başı yıllık hastane başvurusu (v)",
-    "value": 7.75,
+    "value": 7.622,
     "unit": "başvuru / kişi / yıl",
     "status": "hesap",
     "source_ids": [
-      "saglik_sbsgm_bulten2025"
+      "saglik_sbsgm_bulten2025",
+      "tuik_bt_adnks2025_yogunluk"
     ],
-    "derivation": "access.visits_per_capita_total × access.share_hospital_visits = 13,2 × 0,587 = 7,748 ≈ 7,75 (SİY 2025 Haber Bülteni Tablo 15 ve PDF s. 9 metni)",
+    "derivation": "Türkiye 2025: hastanelerde hekime müracaat 656.167.336 (SİY 2025 Haber Bülteni Tablo 15 'Hastaneler', PDF s. 9; aynı toplam Tablo 11, PDF s. 7) ÷ Türkiye nüfusu 86.092.168 (TÜİK ADNKS 31.12.2025, bülten tablosu sayfa 't3', satır 5, sütun B) = 7,62168… ≈ 7,622. Hastaneler = Sağlık Bakanlığı + üniversite + özel hastaneler; özel tıp merkezleri hariç.",
     "rationale": null,
     "range": [
       4.0,
       10.0
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
+      {
+        "label": "2025, şartname yöntemi (ikinci + üçüncü basamak, sayılardan): 667.703.533 / 86.092.168 (Tablo 15; özel tıp merkezleri dahil)",
+        "value": 7.756,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025",
+          "tuik_bt_adnks2025_yogunluk"
+        ]
+      },
+      {
+        "label": "2025, şartname yöntemi yuvarlanmış girdilerle: 13,2 × 0,587 = 7,7484 (Tablo 15 ve PDF s. 9 metni; önceki varsayılan 7,75)",
+        "value": 7.748,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sbsgm_bulten2025"
+        ]
+      },
       {
         "label": "2025, yayımlanan ikinci + üçüncü basamak kişi başı müracaat (Tablo 15)",
         "value": 7.8,
@@ -1949,8 +2031,8 @@
         ]
       },
       {
-        "label": "2024: 12,2 × 0,567 — şartname Bölüm 3 / 4.4 G değeri (≈6,9)",
-        "value": 6.92,
+        "label": "2024: 12,2 × 0,567 = 6,9174 — şartname Bölüm 3 / 4.4 G değeri (≈6,9)",
+        "value": 6.917,
         "status": "hesap",
         "source_ids": [
           "saglik_sbsgm_bulten2024"
@@ -1982,7 +2064,7 @@
         ]
       }
     ],
-    "notes": "Şartnamenin yöntemi (kişi başı müracaat × ikinci+üçüncü basamak payı) 2025 verisine uygulandı; çarpım yayımlanan 7,8 ile tutarlı (667.703.533 / 86.092.168 = 7,76). Hastane dışı özel tıp merkezlerini dışlamak için 7,6 seçilebilir. Ankara değeri il dışından gelen başvuruları da içerir (yorum). Aralık (4–10) varsayımdır.",
+    "notes": "Şartname v'yi 'kişi başı yıllık hastane başvurusu' olarak tanımlıyor; 2025 bülteni hastanelerdeki müracaatı doğrudan verdiği için varsayılan bu sayımdan hesaplandı (özel tıp merkezlerindeki 11.536.197 müracaat hariç; yayımlanan yuvarlanmış değer 7,6). Şartnamenin yöntemi (kişi başı toplam müracaat × ikinci+üçüncü basamak payı = access.visits_per_capita_total × access.share_hospital_visits) alternatif olarak duruyor: sayılardan 7,756, yuvarlanmış girdilerle 7,748; ikisi de özel tıp merkezlerini içerdiği için varsayılandan ≈%1,7–1,8 yüksek. Bu nedenle v ≠ toplam × pay (bilinçli). Ankara değeri il dışından gelen başvuruları da içerir (yorum). Aralık (4–10) varsayımdır.",
     "group": "G. Erişim",
     "domain": "muracaat",
     "sources": [
@@ -1991,6 +2073,14 @@
         "title": "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)",
         "publisher": "T.C. Sağlık Bakanlığı, Sağlık Bilgi Sistemleri Genel Müdürlüğü (SBSGM), Sağlık İstatistikleri Dairesi Başkanlığı",
         "url": "https://dosyamerkez.saglik.gov.tr/Eklenti/56342/0/haber-bulteni-2025-trpdf.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
+      },
+      {
+        "id": "tuik_bt_adnks2025_yogunluk",
+        "title": "İl ve cinsiyete göre il/ilçe merkezi, belde/köy nüfusu ve nüfus yoğunluğu, 2025 (bülten tablosu)",
+        "publisher": "TÜİK — ADNKS 2025 haber bülteni ekli tablosu",
+        "url": "https://veriportali.tuik.gov.tr/api/tr/data/downloads?t=t&pid=53899&p=rIUCdqMFrDbR9G16%2FzYrHvoeLnOJX2qwGHv%2FnTbYYVW7oVwGxCEndgsxq6yEtAaGIUnZOlAkIXvpgWsOf3YaaiWXxZNSSJWQjXdpGCuhBhHhrYCW058G4mZ7wZDZMryRvs71Bo8KbDkEyyr95daD92b1doudnS9QLr48tftQJyUBIOiI8rMRJpsLCnTOIWLb",
         "accessed": "2026-10-21",
         "kind": "resmi"
       }
@@ -2008,6 +2098,7 @@
       1,
       4
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": "1 = yalnız gidiş; >2 refakatçi/tekrar ziyaret etkisini kabaca temsil eder (duyarlılık için).",
     "group": "G. Erişim",
@@ -2025,12 +2116,13 @@
       "erisim_tuik_mkt_eylul2026_yakit",
       "erisim_yalilikilic_2021"
     ],
-    "derivation": "Litre ağırlıklı ortalama: p = Σ s_f·q_f·p_f / Σ s_f·q_f. Fiyatlar p (Ankara, 21.10.2026): benzin 80,60 · motorin 97,80 · LPG 41,29 TL/L. Filo payları s (TÜİK, Eylül 2026 sonu trafiğe kayıtlı otomobil; hibrit benzine katıldı, elektrik %2,7 ve bilinmeyen %0,2 dışarıda): benzin 6.532.695/17.594.516 = 0,37129 · motorin 5.793.543/17.594.516 = 0,32928 · LPG 5.268.278/17.594.516 = 0,29943. Tüketimler q: 8,5 / 7,3 / 11,2 L/100 km. Σ s·q·p = 627,93; Σ s·q = 8,9133 → p = 627,93 / 8,9133 = 70,448 ≈ 70,45 TL/L.",
+    "derivation": "Litre ağırlıklı ortalama: p = Σ s_f·q_f·p_f / Σ s_f·q_f. Fiyatlar p (Ankara, 21.10.2026): benzin 80,60 · motorin 97,80 · LPG 41,29 TL/L. Filo payları s (TÜİK, Eylül 2026 sonu trafiğe kayıtlı otomobil; hibrit benzine katıldı, elektrik %2,7 ve bilinmeyen %0,2 dışarıda): benzin 6.532.695/17.594.516 = 0,37129 · motorin 5.793.543/17.594.516 = 0,32928 · LPG 5.268.278/17.594.516 = 0,29943. Tüketimler q: 8,5 / 7,3 / 11,2 L/100 km. Σ s·q·p = 627,93; Σ s·q = 8,9133 → p = 627,93 / 8,9133 = 70,448 ≈ 70,45 TL/L. VARSAYIM: her yakıt türündeki otomobil yılda aynı km'yi yapar (araç-km payı = filo payı s_f); yakıt türüne göre km farkı alternatifte (Tablo 8).",
     "rationale": null,
     "range": [
       40,
       120
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Filo payı ağırlıklı (Σ s_f·p_f; görev tanımındaki basit ağırlık)",
@@ -2039,6 +2131,16 @@
         "source_ids": [
           "erisim_haber_birgun_akaryakit_20261021",
           "erisim_tuik_mkt_eylul2026_yakit"
+        ]
+      },
+      {
+        "label": "Yakıt türüne göre yıllık km ağırlıklı, litre ağırlıklı (Yalılı Kılıç vd. 2021 Tablo 8, 2018; araç-km payı 0,283 / 0,370 / 0,347)",
+        "value": 68.79,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021",
+          "erisim_tuik_mkt_eylul2026_yakit",
+          "erisim_yalilikilic_2021"
         ]
       },
       {
@@ -2085,7 +2187,7 @@
         ]
       }
     ],
-    "notes": "NEDEN LİTRE AĞIRLIKLI: LPG'li araç litre başına ucuz ama daha çok litre yakıyor (11,2 vs 8,5 L/100 km). Basit filo payı ağırlıklı fiyat (74,49) ortalama tüketimle (8,91) çarpılınca km maliyeti 6,64 TL çıkıyor; yakıt türüne özgü doğru toplam 6,28 TL/km. Litre ağırlıklı fiyat, fiyat × tüketim = km maliyeti eşitliğini korur (arayüz kaydırıcıları tutarlı). KAYNAK UYARISI: Ankara günlük fiyatı haber kaynağı (kind: haber; iki bağımsız haber birebir aynı). Resmî il bazında EPDK sorgusu (bildirim.epdk.gov.tr) ve dağıtıcı siteleri (Petrol Ofisi, Opet, Shell) bu ortamdan erişilemedi. Resmî EPDK Eylül 2026 aylık ortalaması (İstanbul Avrupa: 78,826 / 91,543 / 35,780) alternatif olarak verildi. Fiyatlar çok oynak: benzine 20.10.2026'da 4,30 TL indirim geldi, 22.10.2026'dan itibaren 3,35 TL ek indirim bekleniyor (BirGün); Brent Eylül 2026 ortalaması ≈115,8 $/varil (EPDK raporu s. 2). Yakıt payları Türkiye geneli (il kırılımı yok).",
+    "notes": "NEDEN LİTRE AĞIRLIKLI: LPG'li araç litre başına ucuz ama daha çok litre yakıyor (11,2 vs 8,5 L/100 km). Basit filo payı ağırlıklı fiyat (74,49) ortalama tüketimle (8,91) çarpılınca km maliyeti 6,64 TL çıkıyor; yakıt türüne özgü doğru toplam 6,28 TL/km. Litre ağırlıklı fiyat, fiyat × tüketim = km maliyeti eşitliğini korur (arayüz kaydırıcıları tutarlı). AYNI KM VARSAYIMI: ağırlıklar filo payıdır, yani her yakıt türündeki otomobilin yılda aynı km'yi yaptığı varsayılır. Yalılı Kılıç vd. 2021 Tablo 8'e göre (Çanakkale, 2018; yazarların yakıt dengesinden tahmini) dizel ve LPG'li otomobiller benzinliden ≈%48 / %52 daha çok km yapıyor; araç-km ağırlığıyla fiyat 68,79 TL/L, tüketim 8,99 L/100 km, c = 6,19 TL/km (alternatif; 2015–2018 satırlarıyla c 6,15–6,19). KAYNAK UYARISI: Ankara fiyatı TEK GÜNÜN (21.10.2026) haber fiyatıdır (kind: haber; iki bağımsız haber birebir aynı, 20.10.2026 haberi de aynı). Resmî il bazında EPDK sorgusu (bildirim.epdk.gov.tr) ve dağıtıcı siteleri (Petrol Ofisi, Opet, Shell) bu ortamdan erişilemedi. Resmî EPDK Eylül 2026 aylık ortalaması (İstanbul Avrupa: 78,826 / 91,543 / 35,780) alternatif olarak verildi. Fiyatlar çok oynak: benzine 20.10.2026'da 4,30 TL indirim geldi; 22.10.2026'dan itibaren 3,35 TL ek benzin indirimi bekleniyor (BirGün). Bu indirim uygulanırsa (benzin 77,25 TL/L) litre ağırlıklı fiyat 69,26 TL/L, c = 6,17 TL/km (−%1,7) olur; değer güncel pompa fiyatlarıyla yenilenmelidir. Brent Eylül 2026 ortalaması 115,79 $/varil (EPDK raporu s. 2). Yakıt payları Türkiye geneli (il kırılımı yok).",
     "group": "G. Erişim",
     "domain": "erisim",
     "sources": [
@@ -2132,12 +2234,13 @@
       "erisim_yalilikilic_2021",
       "erisim_tuik_mkt_eylul2026_yakit"
     ],
-    "derivation": "Σ s_f·q_f = 0,37129 × 8,5 + 0,32928 × 7,3 + 0,29943 × 11,2 = 3,156 + 2,404 + 3,354 = 8,913 ≈ 8,91 L/100 km (q_f: Yalılı Kılıç vd. 2021, Tablo 7; s_f: TÜİK Eylül 2026 filo payları).",
+    "derivation": "Σ s_f·q_f = 0,37129 × 8,5 + 0,32928 × 7,3 + 0,29943 × 11,2 = 3,156 + 2,404 + 3,354 = 8,913 ≈ 8,91 L/100 km (q_f: Yalılı Kılıç vd. 2021, Tablo 7; s_f: TÜİK Eylül 2026 filo payları). Ağırlık filo payıdır: her yakıt türündeki otomobilin yılda aynı km'yi yaptığı varsayılır (bkz. access.fuel_price_tl_per_l notu).",
     "rationale": null,
     "range": [
       4,
       12
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Benzinli otomobil (IPCC kılavuz değeri)",
@@ -2161,6 +2264,15 @@
         "status": "kaynakli",
         "source_ids": [
           "erisim_yalilikilic_2021"
+        ]
+      },
+      {
+        "label": "Yakıt türüne göre yıllık km ağırlıklı (Yalılı Kılıç vd. 2021 Tablo 8, 2018: 3.444 / 5.090 / 5.242 km; Σ w_f·q_f)",
+        "value": 8.99,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_yalilikilic_2021",
+          "erisim_tuik_mkt_eylul2026_yakit"
         ]
       }
     ],
@@ -2196,12 +2308,13 @@
       "erisim_tuik_mkt_eylul2026_yakit",
       "erisim_yalilikilic_2021"
     ],
-    "derivation": "c = Σ s_f·p_f·q_f / 100 = (0,37129 × 80,60 × 8,5 + 0,32928 × 97,80 × 7,3 + 0,29943 × 41,29 × 11,2) / 100 = 2,544 + 2,351 + 1,385 = 6,279 ≈ 6,28 TL/km  (= access.fuel_price_tl_per_l × access.fuel_l_per_100km / 100 = 70,45 × 8,91 / 100).",
+    "derivation": "c = Σ s_f·p_f·q_f / 100 = (0,37129 × 80,60 × 8,5 + 0,32928 × 97,80 × 7,3 + 0,29943 × 41,29 × 11,2) / 100 = 2,544 + 2,351 + 1,385 = 6,279 ≈ 6,28 TL/km  (= access.fuel_price_tl_per_l × access.fuel_l_per_100km / 100 = 70,45 × 8,91 / 100). VARSAYIM: her yakıt türündeki otomobil yılda aynı km'yi yapar (ağırlık = filo payı s_f).",
     "rationale": null,
     "range": [
       2,
       15
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Filo payı ağırlıklı fiyat × ortalama tüketim (74,49 × 8,91 / 100)",
@@ -2231,9 +2344,19 @@
           "erisim_bagdatli_akbiyikli_2015",
           "erisim_tuik_tufe_tt10"
         ]
+      },
+      {
+        "label": "Yakıt türüne göre yıllık km ağırlıklı: Σ w_f·p_f·q_f / 100, w_f = s_f·m_f / Σ s·m (m_f: Yalılı Kılıç vd. 2021 Tablo 8, 2018 — benzin 3.444 · dizel 5.090 · LPG 5.242 km/yıl; w = 0,283 / 0,370 / 0,347)",
+        "value": 6.19,
+        "status": "hesap",
+        "source_ids": [
+          "erisim_haber_birgun_akaryakit_20261021",
+          "erisim_tuik_mkt_eylul2026_yakit",
+          "erisim_yalilikilic_2021"
+        ]
       }
     ],
-    "notes": "YALNIZ YAKIT: lastik, bakım, amortisman, sigorta, otopark ve köprü/otoyol ücretleri hariç (resmî güncel bir 'km başı' taşıt işletme maliyeti bulunamadı; KGM sitesi erişilemedi). Alternatifteki KGM 2013 değeri bütün işletme giderlerini kapsar ama TÜFE ile güncellendiğinde yakıt-yalnız değerin altında kalıyor, çünkü 2026'da akaryakıt fiyatları genel fiyat düzeyinden hızlı arttı. Toplu taşıma, taksi, ambulans ve yürüyüş modellenmedi (tüm yolculuklar otomobille varsayılır). Kişi başına yük paylaşımı (araç doluluğu) uygulanmadı: 1 başvuru = 1 araç yolculuğu.",
+    "notes": "YALNIZ YAKIT: lastik, bakım, amortisman, sigorta, otopark ve köprü/otoyol ücretleri hariç (resmî güncel bir 'km başı' taşıt işletme maliyeti bulunamadı; KGM sitesi erişilemedi). Alternatifteki KGM 2013 değeri bütün işletme giderlerini kapsar ama TÜFE ile güncellendiğinde yakıt-yalnız değerin altında kalıyor, çünkü 2026'da akaryakıt fiyatları genel fiyat düzeyinden hızlı arttı. Toplu taşıma, taksi, ambulans ve yürüyüş modellenmedi (tüm yolculuklar otomobille varsayılır). Kişi başına yük paylaşımı (araç doluluğu) uygulanmadı: 1 başvuru = 1 araç yolculuğu. Km ağırlıklı alternatif (6,19): Tablo 8 Çanakkale 2015–2018 için yazarların yakıt dengesinden tahmin ettiği ortalama yıllık menzillerdir (ölçüm değil; 2015–2018 satırlarıyla c = 6,15–6,19); dizel/LPG'li araçların daha çok km yapması ağırlığı benzinden dizel ve LPG'ye kaydırır ve c'yi ≈%1,5 düşürür. Tek günlük haber fiyatı ve 22.10.2026 beklenen benzin indirimi (c ≈ 6,17) için bkz. access.fuel_price_tl_per_l notu.",
     "group": "G. Erişim",
     "domain": "erisim",
     "sources": [
@@ -2278,6 +2401,7 @@
       0,
       300
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Zaman maliyeti dahil değil (yalnız yakıt)",
@@ -2294,12 +2418,13 @@
         ]
       },
       {
-        "label": "2026 ortalama saatlik brüt ücret tahmini (KYA 2023 ortalama/asgari oranı 1,996 × 146,80)",
-        "value": 293.0,
+        "label": "2026 ortalama saatlik brüt ücret tahmini, 225 sa tabanı: 146,80 × (TÜİK KYA 2023 aylık ortalama brüt ücret-maaş 23.789 / aylık brüt asgari ücret 13.414,5 = 1,7734)",
+        "value": 260.3,
         "status": "hesap",
         "source_ids": [
           "erisim_tuik_kya_2023",
-          "erisim_rg_asgari_ucret_2026"
+          "erisim_rg_asgari_ucret_2026",
+          "erisim_mevzuat_4857_is_kanunu"
         ]
       },
       {
@@ -2311,7 +2436,7 @@
         ]
       }
     ],
-    "notes": "Brüt ücret kullanıldı (net asgari ücret RG kararında yok). KUAP değeri (100 TL/sa) ikincil aktarım; fiyat yılı bilinmediği için güncellenmedi. Erişim maliyetinde zaman bileşeni km başına VOT / hız = 73,4 / 28,5 = 2,58 TL/km.",
+    "notes": "Brüt ücret kullanıldı (net asgari ücret RG kararında yok). KUAP değeri (100 TL/sa) ikincil aktarım; fiyat yılı bilinmediği için güncellenmedi. Ortalama ücret alternatifi (260,3): aylık ortalama ücretin aylık asgari ücrete oranı saat tabanından bağımsızdır; 2026 asgari ücretin saatlik karşılığı (33.030 / 225 = 146,80) ile çarpılınca varsayılanla aynı 225 saatlik tabana oturur. Oranın Kasım 2023'ten 2026'ya sabit kaldığı varsayılır (çapraz kontrol: TÜFE ile 23.789 / 225 × 137,23 / 56,7505 = 255,7 TL/sa). Önceki 293,0 alternatifi saat tabanlarını karıştırıyordu: TÜİK'in saatlik 119 TL'si ayda 200 ücretli saat tabanında (23.789 / 200 ≈ 119), asgari ücret ise 225 saate bölünmüştü (119 / (13.414,5 / 225) = 1,996). Erişim maliyetinde zaman bileşeni km başına VOT / hız = 73,4 / 28,5 = 2,58 TL/km.",
     "group": "G. Erişim",
     "domain": "erisim",
     "sources": [
@@ -2347,6 +2472,7 @@
       15,
       80
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Yoğun saat ortalama hızı (TomTom 2025)",
@@ -2399,7 +2525,7 @@
     "label": "Planlama ufku (T)",
     "value": 25,
     "unit": "yıl",
-    "status": "kaynakli",
+    "status": "model_secimi",
     "source_ids": [
       "erisim_tbmm_haber_saglik_butce_2024",
       "erisim_haber_diken_536163",
@@ -2407,11 +2533,12 @@
       "maliyet_savas_2020"
     ],
     "derivation": null,
-    "rationale": null,
+    "rationale": "MODEL SEÇİMİ: planlama ufku olarak şehir hastanesi KÖİ sözleşme süresi (25 yıl) kullanıldı. Kaynaklı olan sözleşme süresidir (Sağlık Bakanı, TBMM PBK 10.11.2023; Diken [27]: Bilkent ödemeleri 2019–2043; Savaş vd. 2020); bu sürenin erişim maliyetlerinin bugünkü değeri için ufuk alınması bizim tercihimizdir. Hastane binasının fiziksel ömrü daha uzundur ve bağlayıcı bir resmî değerlendirme dönemi bulunamadı; 30 yıl (6428 md. 4 üst sınırı), 20 yıl (ulaştırma projelerinde yaygın dönem) ve 15,5 yıl (kesintiler sonrası kalan süre) alternatif olarak gösterilir.",
     "range": [
       5,
       50
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "6428 sayılı Kanun md. 4: KÖİ sözleşmesi üst sınırı (yatırım dönemi hariç)",
@@ -2438,7 +2565,7 @@
         ]
       }
     ],
-    "notes": "DOĞRULANDI: şehir hastanesi KÖİ sözleşmeleri 25 yıl — Sağlık Bakanı, TBMM PBK 10.11.2023: '25 yıllık sözleşme sürelerini kesmediğimiz bir şehir hastanesi olmadı'; Diken [27]: Bilkent ödemeleri 2019–2043 (25 yıl); Savaş vd. 2020 (maliyet_savas_2020, s. 2): '25 yıl sonra işletme kamuya kalır'. Yasal üst sınır 30 yıl + yatırım dönemi (6428 md. 4). Bakanın aynı konuşmasına göre sözleşmeler sonradan kısaltıldı (İzmir −10 yıl 3 ay, Etlik −7 yıl 8 ay, Bilkent −3 yıl 1 ay; ortalama kalan 15–16 yıl). Bu değeri planlama ufku olarak kullanmak bir modelleme tercihidir (hastane binasının fiziksel ömrü daha uzundur).",
+    "notes": "SÖZLEŞME SÜRESİ DOĞRULANDI: şehir hastanesi KÖİ sözleşmeleri 25 yıl — Sağlık Bakanı, TBMM PBK 10.11.2023: '25 yıllık sözleşme sürelerini kesmediğimiz bir şehir hastanesi olmadı'; Diken [27]: Bilkent ödemeleri 2019–2043 (25 yıl); Savaş vd. 2020 (maliyet_savas_2020, s. 2): '25 yıl sonra işletme kamuya kalır'. Yasal üst sınır 30 yıl + yatırım dönemi (6428 md. 4). Bakanın aynı konuşmasına göre sözleşmeler sonradan kısaltıldı (İzmir −10 yıl 3 ay, Etlik −7 yıl 8 ay, Bilkent −3 yıl 1 ay; ortalama kalan 15–16 yıl). Faz 1 temizliğinde durum 'kaynakli' → 'model_secimi' yapıldı: kaynak sözleşme süresini verir, planlama ufku olarak kullanılması bizim tercihimizdir.",
     "group": "G. Erişim",
     "domain": "erisim",
     "sources": [
@@ -2480,16 +2607,18 @@
     "label": "Sosyal iskonto oranı (r, reel)",
     "value": 0.05,
     "unit": "oran / yıl (reel)",
-    "status": "kaynakli",
+    "status": "model_secimi",
     "source_ids": [
-      "erisim_kalayci_oflaz_2022"
+      "erisim_kalayci_oflaz_2022",
+      "yatirim_rehber_2026_2028"
     ],
     "derivation": null,
-    "rationale": null,
+    "rationale": "MODEL SEÇİMİ: Türkiye'de bağlayıcı resmî bir sosyal iskonto oranı yok — SBB 2026-2028 Yatırım Programı Hazırlama Rehberi (md. 54) 'ekonomik analizde kullanılacak iskonto oranı … güncel veriler kullanılarak hesaplanacaktır' diyor. %5, Avrupa Komisyonu 'Guide to Cost-Benefit Analysis of Investment Projects 2014–2020' rehberinin uyum (cohesion) ülkelerindeki büyük projeler için önerdiği orandır; değer rehberin aslından değil, Kalaycı Oflaz (2022, s. 398) derlemesindeki ikincil aktarımdan alındı (ec.europa.eu bu ortamdan erişilemedi). Aynı derlemedeki Türkiye sosyal zaman tercihi tahmini %5,06 (Halıcıoğlu ve Karataş 2011) ile uyumludur. Kalkınma Bakanlığı'nın tek resmî tahmini olan %9,8 ekonomik indirgeme oranı (Uzunkaya ve Uzunkaya 2012; sermayenin fırsat maliyeti yaklaşımı) alternatif olarak görünür tutulur.",
     "range": [
       0.0,
       0.12
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "AB CBA rehberi 2014–2020, uyum ülkesi olmayan üye devletler; WHO sağlık değerlendirmeleri",
@@ -2532,7 +2661,7 @@
         ]
       }
     ],
-    "notes": "Varsayılan %5: Avrupa Komisyonu 'Guide to Cost-Benefit Analysis of Investment Projects 2014–2020' uyum ülkeleri için önerdiği sosyal iskonto oranı (hakemli derlemedeki aktarım; rehberin aslı ec.europa.eu bu ortamdan erişilemedi) ve Türkiye için tahmin edilen sosyal zaman tercihi oranı %5,06 ile uyumlu. Türkiye'de BAĞLAYICI resmî bir sosyal iskonto oranı bulunamadı: SBB 2026-2028 Yatırım Programı Hazırlama Rehberi (yatirim_rehber_2026_2028, md. 54) 'ekonomik analizde kullanılacak iskonto oranı … güncel veriler kullanılarak hesaplanacaktır' diyor. Kalkınma Bakanlığı'nın tek resmî tahmini (Uzunkaya ve Uzunkaya 2012) sermayenin fırsat maliyetine dayalı %9,8'dir → ÖĞRENCİ KARARI: %5 (sosyal zaman tercihi) mi, %9,8 (Türkiye ekonomik indirgeme oranı) mı? PV(25 yıl) = 14,09 (%5) / 9,22 (%9,8) / 17,41 (%3). Oran reel olduğundan tüm maliyetler sabit 2026 fiyatlarıyla kullanılmalı.",
+    "notes": "Faz 1 temizliğinde durum 'kaynakli' → 'model_secimi' yapıldı: %5 Türkiye için bağlayıcı bir değer değil, AB rehberinin uyum ülkeleri oranının ikincil aktarımıdır. ÖĞRENCİ KARARI: %5 (sosyal zaman tercihi) mi, %9,8 (Türkiye ekonomik indirgeme oranı, Uzunkaya ve Uzunkaya 2012) mı? PV(25 yıl) = 14,09 (%5) / 9,22 (%9,8) / 17,41 (%3). Oran reel olduğundan tüm maliyetler sabit 2026 fiyatlarıyla kullanılmalı.",
     "group": "G. Erişim",
     "domain": "erisim",
     "sources": [
@@ -2543,6 +2672,14 @@
         "url": "https://dergipark.org.tr/tr/download/article-file/2421920",
         "accessed": "2026-10-21",
         "kind": "akademik"
+      },
+      {
+        "id": "yatirim_rehber_2026_2028",
+        "title": "2026-2028 Dönemi Yatırım Programı Hazırlama Rehberi",
+        "publisher": "T.C. Cumhurbaşkanlığı Strateji ve Bütçe Başkanlığı (SBB)",
+        "url": "https://www.sbb.gov.tr/wp-content/uploads/2025/09/2026-2028_Donemi_Yatirim_Programi_Hazirlama_Rehberi.pdf",
+        "accessed": "2026-10-21",
+        "kind": "resmi"
       }
     ]
   },
@@ -2563,6 +2700,7 @@
       1.0,
       1.5
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Şartname varsayılanı (Bölüm 4.3/4.4; kaynaksız)",
@@ -2643,7 +2781,7 @@
         ]
       }
     ],
-    "notes": "Aralık: 1,0 = kuş uçuşu (fiziksel alt sınır); üst sınır = ölçülen en yüksek bant ortalaması + pay. Tablo: data/reference/circuity_ankara.csv; grafik: data/processed/circuity_ankara.png. Çekilen 4.800 çiftten 4.761 geçerli (bağlantı > 1000 m veya düğümler arası < 500 m olanlar atıldı). Nüfuslu hücrelerin %12,8'i (nüfusun %0,21'i) 1 km içinde araç yoluna bağlanamadı. Literatür: Boscoe, Henry & Zdeb 2012 ve Ballou, Rahardja & Sakai 2002 künyeleri Crossref'ten doğrulandı; tam metinlere erişilemediği (vekil sunucu 403) için katsayı değerleri kaydedilmedi.",
+    "notes": "Aralık: 1,0 = kuş uçuşu (fiziksel alt sınır); üst sınır = ölçülen en yüksek bant ortalaması + pay. Tablo: data/reference/circuity_ankara.csv; grafik: data/processed/circuity_ankara.png. Çekilen 4.800 çiftten 4.761 geçerli (bağlantı > 1000 m veya düğümler arası < 500 m olanlar atıldı). Nüfuslu hücrelerin %12,8'i (nüfusun %0,21'i) 1 km içinde araç yoluna bağlanamadı. Literatür: Boscoe, Henry & Zdeb 2012 (alan_literatur_lit_boscoe2012) ve Ballou, Rahardja & Sakai 2002 (alan_literatur_lit_ballou2002) künyeleri Crossref'ten doğrulandı; tam metinlere erişilemediği (vekil sunucu 403) için katsayı değerleri kaydedilmedi.",
     "group": "G. Erişim",
     "domain": "dolambac",
     "sources": [
@@ -2693,6 +2831,7 @@
       1.0,
       3.0
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [],
     "notes": null,
     "group": "G. Erişim",
@@ -2706,11 +2845,12 @@
     "status": "varsayim",
     "source_ids": [],
     "derivation": null,
-    "rationale": "İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur. Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Ön kontrol (oturum çalışma alanında, kalibre edilmemiş GHS-POP 2025 1 km'den 3 km bloklar): P_min = 250 ile tüm nüfuslu hücrelerin R içinde en az bir adayı var; P_min = 500'de ≈71 hücre (≈4.900 kişi) R dışında kalıyor — R ile P_min birlikte seçilmeli.",
+    "rationale": "İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur. Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Kapsama kontrolü (R içinde adayı olmayan nüfuslu hücre sayısı ve nüfusu, grid.candidate_min_pop'a göre) Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; R ile P_min birlikte seçilmeli.",
     "range": [
       10,
       100
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Kentsel alt sınır (varsayım; kaynak yok)",
@@ -2735,19 +2875,20 @@
     "status": "model_secimi",
     "source_ids": [],
     "derivation": null,
-    "rationale": "Şartname 4.3/4.6: 2, 3 ve 5 km ızgaralar üretilecek; canlı çözüm hedefi 3 km'de ≲15 sn, 2 km'de ≲60 sn. Varsayılan 3 km: sunum dizüstünde canlı çözüm hedefine uygun ve 300 yataklı bir hastanenin ≈0,04 km² inşaat alanına göre hücre (9 km²) arazi bakımından bağlayıcı değil. Ön sayım: il içinde ≈2.856 hücre (3 km), nüfuslu ≈1.876.",
+    "rationale": "Şartname 4.3/4.6: 2, 3 ve 5 km ızgaralar üretilecek; canlı çözüm hedefi 3 km'de ≲15 sn, 2 km'de ≲60 sn. Varsayılan 3 km: sunum dizüstünde canlı çözüm hedefine uygun ve 300 yataklı bir hastanenin ≈0,04 km² inşaat alanına göre hücre (9 km²) arazi bakımından bağlayıcı değil. Her hücre boyutundaki il içi ve nüfuslu hücre sayısı Faz 2'de kalibre edilmiş ızgaradan hesaplanacak.",
     "range": [
       2,
       5
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
-        "label": "2 km (ayrıntılı; il içi ≈6.498 hücre, nüfuslu ≈2.969)",
+        "label": "2 km (ayrıntılı; canlı çözüm hedefi ≲60 sn)",
         "value": 2,
         "status": "model_secimi"
       },
       {
-        "label": "5 km (hızlı; il içi ≈1.025 hücre, nüfuslu ≈911)",
+        "label": "5 km (hızlı, kaba)",
         "value": 5,
         "status": "model_secimi"
       }
@@ -2764,11 +2905,12 @@
     "status": "model_secimi",
     "source_ids": [],
     "derivation": null,
-    "rationale": "Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal varsayılan verilmemiş. 3 km ön sayım (kalibre edilmemiş GHS-POP 2025): P_min ≥ 1 → |J| ≈ 1.876; 100 → 899 (nüfusun %99,6'sı); 250 → 551 (%98,7); 500 → 356 (%97,6); 1.000 → 244 (%96,4). 250 seçildi çünkü R = 30 km (yol; kuş uçuşu ≈24,5 km) ile her nüfuslu hücrenin R içinde en az bir adayı kalıyor (P_min = 500'de ≈71 hücre/≈4.900 kişi R dışında), aday sayısı da çözüm süresi için makul. Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı (2 km'de 250 → ≈727 aday; 5 km'de ≈414).",
+    "rationale": "Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal varsayılan verilmemiş. 250 kişi / hücre (3 km'de 9 km² başına ≈28 kişi/km²) seyrek nüfuslu hücreleri aday kümesinden çıkarıp değişken sayısını azaltan düşük bir eşik olarak seçildi. Aday sayısı |J|, adayların kapsadığı nüfus payı ve R = 30 km (yol; kuş uçuşu ≈24,5 km) içinde hiç adayı kalmayan nüfuslu hücreler Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; P_min bu sonuçlara göre R ile birlikte denetlenecek. Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı.",
     "range": [
       0,
       5000
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Tüm nüfuslu hücreler",
@@ -2781,7 +2923,7 @@
         "status": "model_secimi"
       },
       {
-        "label": "Daha dar aday kümesi (R = 30 km ile bazı kırsal hücreler kapsanamıyor)",
+        "label": "Daha dar aday kümesi (R = 30 km ile kırsal kapsama Faz 2'de denetlenmeli)",
         "value": 500,
         "status": "model_secimi"
       }
@@ -2798,11 +2940,12 @@
     "status": "model_secimi",
     "source_ids": [],
     "derivation": null,
-    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). 3 km ve P_min = 250 ön sayımında R (24,5 km kuş uçuşu) içindeki aday sayısı medyan ≈30, nüfus ağırlıklı ortalama ≈137: k = 50 kırsal hücrelerde R içi adayların tamamını, kent çekirdeğinde ≈12 km yarıçaplı en yakın 50 adayı tutar. Atama değişkeni sayısı ≈ |I|·k ≈ 1.876 × 50 ≈ 94 bin (3 km) — canlı çözüm için makul. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).",
+    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir: seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak amaçlanır; atama değişkeni sayısı ≈ |I|·k olur. R içindeki aday sayısının dağılımı ve |I|·k Faz 2'de kalibre edilmiş ızgaradan hesaplanacak. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).",
     "range": [
       5,
       300
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Hızlı (daha az değişken, kısıtlayıcı olabilir)",
@@ -2832,6 +2975,7 @@
       5,
       600
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "2 km ızgara hedefi",
@@ -2856,6 +3000,7 @@
       0.0,
       0.1
     ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
         "label": "Sıkı (raporlama/önceden çözüm)",

@@ -8,7 +8,9 @@ Girdiler
 
 Çıktılar
   data/reference/parameters.json      anahtar -> {label, value, unit, status, source_ids, derivation, rationale,
-                                      range, alternatives, notes, group, domain, sources}; backend/frontend bunu okur
+                                      range, range_note, alternatives, notes, group, domain, sources};
+                                      backend/frontend bunu okur. range_note: kaydırıcı aralığı arayüz tercihidir
+                                      (varsayım), parametre notu aksini söylemedikçe (RANGE_NOTE)
   data/SOURCES.md                     Türkçe kaynak listesi, parametre tablosu, varsayımlar, Bölüm 3 karşılaştırması
 
 Hata varsa çıktı yazılmaz ve çıkış kodu 1 olur. Uyarılar çıktıyı engellemez.
@@ -53,6 +55,10 @@ STATUS_TR = {"kaynakli": "kaynaklı", "hesap": "hesap", "varsayim": "varsayım",
 KIND_TR = {"resmi": "resmî", "akademik": "akademik", "veri": "veri", "haber": "haber",
            "ikincil": "ikincil", "hesap": "hesap"}
 
+# Kaydırıcı aralıkları ('range') için genel kural: SOURCES.md'ye ve parameters.json'daki her aralıklı parametreye yazılır.
+RANGE_NOTE = ("Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça "
+              "kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.")
+
 SOURCE_REQUIRED = ("id", "title", "publisher", "url", "accessed", "kind")
 PARAM_REQUIRED = ("key", "label", "value", "unit", "status")
 
@@ -62,6 +68,25 @@ INTEGRATION_CHANGES: list[str] = [
     "(3,1458 ve 2,5841) `source_ids` listelerine resmî TÜİK kaynağı `tuik_bt_adnks2025_yogunluk` eklendi "
     "(Türkiye nüfusu 31.12.2025 = 86.092.168, sayfa 't3', satır 5, sütun B; dosyadan okunarak doğrulandı). "
     "Haber kaynağı `saglik_karar_adnks2025` çapraz kontrol olarak korundu. Değer değişmedi.",
+    "Faz 1 temizliği (alan-literatur, arazi-osm, tuik) — alanlar arası yinelenen kaynaklar birleştirildi (aynı belge, "
+    "arşivler sha256 olarak aynı): `arazi_osm_worldcover_2021_v200` → `alan_literatur_lit_zanaga2022`, "
+    "`arazi_osm_boscoe_2012` → `alan_literatur_lit_boscoe2012`, `arazi_osm_ballou_2002` → `alan_literatur_lit_ballou2002`; "
+    "eski kayıtların kullanım ve notları birleşik kayda taşındı. Değer değişmedi.",
+    "Faz 1 temizliği — Ankara yüzölçümü 25.632 km² birincil olarak resmî belgelere bağlandı (ÇŞB plan raporu [5] ve "
+    "Valilik ÇDR 2018 Çizelge E.85); HGM yalnız 'ikincil kopyalara göre HGM ile aynı'. Değer değişmedi.",
+    "Faz 1 temizliği — `arazi_osm_worldcover_tiles_s3`: 'Mollweide eşit alanlı, her hücre 1 ha' iddiası ve hücre "
+    "sayısından türetilen 25.679,25 km² kaldırıldı (PROJ Mollweide'i WGS84'te küresel; Ankara'da 100 m hücre ≈9.985–9.990 "
+    "m²). pipeline/13_landcover.py km² toplamlarını jeodezik hücre alanıyla yeniden üretti (il geneli ve göl sağlaması; "
+    "parametre değeri değişmedi).",
+    "Faz 1 temizliği — `population.province_2025` / `_2030` notlarına ADNKS ve projeksiyon kapsam tanımı (geçici koruma "
+    "altındaki Suriyeliler ve 3 aydan kısa kalan yabancılar hariç; 128.633 yabancı dahil) ve TÜİK yayın listesi arşivi "
+    "(`tuik_veriportali_press_listesi`) eklendi. Değer değişmedi.",
+    "Faz 1 son doğrulama — saglik kaydı `saglik_karar_adnks2025` (aynı Karar sayfası) `tuik_haber_karar_adnks2025` "
+    "kimliğinde birleştirildi; talep.yaml ve saglik_istatistikleri.csv atıfları taşındı, nufus.yaml'daki eski not "
+    "güncellendi. Bölüm 3 tablosundaki v satırı saglik alanının yeni değerlerine (6,917; varsayılan 7,622 = "
+    "656.167.336 / 86.092.168; 13,2 × 0,587 = 7,748 alternatif) eşitlendi; v ≠ toplam × pay bilinçli olduğundan "
+    "tutarlılık denetimi bu anahtar için çarpımı alternatiflerde arar. pipeline/15_circuity.py'nin dolambac.yaml "
+    "notu birleşik kaynak kimliklerini yazar. Değer değişmedi.",
 ]
 
 # ---------------------------------------------------------------- Bölüm 3 karşılaştırması (alan raporlarından)
@@ -88,10 +113,10 @@ SPEC_SECTION3: list[dict] = [
          yer="[4] PDF s. 2; göl dahil/hariç yazmıyor, kaynak göstermiyor",
          source_ids=["alan_literatur_csb_ref4_altindag"]),
     dict(konu="Yüzölçümü", spec="25.632 km² [5]", bulunan="25.632 km² (birebir alıntı)", durum="teyit",
-         yer="[5] PDF s. 3; HGM tablosunun iki ikincil kopyası ve Valilik ÇDR 2018 Çizelge E.85 toplamı da 25.632; "
-             "COD-AB özniteliği 25.631,76",
-         source_ids=["alan_literatur_csb_ref5_beypazari", "alan_literatur_hgm_ikincil_snrylmz",
-                     "alan_literatur_valilik_cdr_2018", "sinirlar_hdx_codab_tur"]),
+         yer="[5] PDF s. 3 (resmî, birebir) ve Valilik ÇDR 2018 Çizelge E.85 sınıf toplamı 25.632.000 da (resmî); "
+             "ikincil kopyalara göre HGM ile aynı; COD-AB özniteliği 25.631,76",
+         source_ids=["alan_literatur_csb_ref5_beypazari", "alan_literatur_valilik_cdr_2018",
+                     "alan_literatur_hgm_ikincil_snrylmz", "sinirlar_hdx_codab_tur"]),
     dict(konu="Yüzölçümü", spec="25.978 km² [6]", bulunan="25.978 km² (birebir alıntı)", durum="teyit",
          yer="[6] PDF s. 3; metin 'Ankara şehrinin' diyor (il değil), kaynak göstermiyor",
          source_ids=["alan_literatur_csb_ref6_cankaya"]),
@@ -119,9 +144,11 @@ SPEC_SECTION3: list[dict] = [
     dict(konu="Hekime müracaat 2024", spec="kişi başı 12,2; %43,3 birinci, %56,7 ikinci+üçüncü basamak [9]",
          bulunan="12,2; %43,3 / %56,7", durum="teyit",
          yer="SİY 2024 Haber Bülteni Tablo 16 ve metin (PDF s. 9)", source_ids=["saglik_sbsgm_bulten2024"]),
-    dict(konu="Kişi başı yıllık hastane başvurusu (hesap)", spec="12,2 × 0,567 ≈ 6,9", bulunan="6,92 (hesap)",
-         durum="teyit", yer="Varsayılan öğrenci kararıyla 2025: 13,2 × 0,587 = 7,75",
-         source_ids=["saglik_sbsgm_bulten2024", "saglik_sbsgm_bulten2025"]),
+    dict(konu="Kişi başı yıllık hastane başvurusu (hesap)", spec="12,2 × 0,567 ≈ 6,9",
+         bulunan="6,917 (hesap; 12,2 × 0,567 = 6,9174)", durum="teyit",
+         yer="Varsayılan öğrenci kararıyla 2025: hastanelerde müracaat 656.167.336 (SİY 2025 Haber Bülteni Tablo 11 ve "
+             "15) ÷ TÜİK Türkiye nüfusu 86.092.168 = 7,622; şartname yöntemiyle 13,2 × 0,587 = 7,748 (alternatif)",
+         source_ids=["saglik_sbsgm_bulten2024", "saglik_sbsgm_bulten2025", "tuik_bt_adnks2025_yogunluk"]),
     dict(konu="2026 yapı yaklaşık birim maliyetleri",
          spec="RG 03.02.2026/33157; IV-C 40.500, V-B 43.850, V-C 48.750, V-D 53.500, V-A 42.350 TL/m²; KDV hariç; "
               "%15 genel gider + %10 kâr dahil; arsa, çevre düzenlemesi, altyapı hariç [10]",
@@ -190,7 +217,8 @@ SPEC_SECTION3: list[dict] = [
 # Şartname Bölüm 4.3/4.4'teki varsayılanlar -> kayıttaki varsayılan (otomatik karşılaştırılır)
 SPEC_DEFAULTS: list[tuple[str, object, str, str]] = [
     ("demand.beds_per_1000", 3.12, "3,12 (2023)", "öğrenci kararı: 2025 verisi (31,5 / 10)"),
-    ("access.hospital_visits_per_capita", 6.9, "≈6,9 (2024)", "öğrenci kararı: 2025 verisi (13,2 × 0,587)"),
+    ("access.hospital_visits_per_capita", 6.9, "≈6,9 (2024)",
+     "öğrenci kararı: 2025 verisi (656.167.336 / 86.092.168; 13,2 × 0,587 = 7,748 alternatif)"),
     ("access.circuity", 1.3, "1,3 (kaynaksız)", "Ankara OSM yol ağında ölçüldü (5–40 km, nüfus ağırlıklı)"),
     ("cost.m2_per_bed.general", 130, "130", "2026 KYP yeni SB genel hastaneleri medyan 250 m²/yatak; bkz. Bölüm 3"),
     ("cost.m2_per_bed.city", 310, "≈310", "32 hastanelik KÖİ programı toplam/toplam; Eskişehir 308,3 alternatif"),
@@ -530,10 +558,17 @@ def _consistency(reg: Registry, root: Path) -> None:
          ("size.general_max_beds", "size.city_min_beds"),
          lambda: (P["size.general_max_beds"], P["size.city_min_beds"] - 1)),
     ]
+    # Varsayılanı bilinçli olarak başka yöntemle hesaplanan anahtarlar: çarpım bir alternatifte durmalı
+    alt_ok = {"access.hospital_visits_per_capita"}
     for name, keys, fn in checks:
         if all(k in P and _num(P[k]) for k in keys):
             a, b = fn()
             if _rel(a, b) > 0.005:
+                if keys[0] in alt_ok:
+                    alts = [x.get("value") for x in reg.params[keys[0]].get("alternatives") or []
+                            if isinstance(x, dict)]
+                    if any(_num(v) and _rel(v, b) <= 0.005 for v in alts):
+                        continue
                 reg.issues.append(Issue("UYARI", "tutarlılık", f"{name}: {a} ≠ {b:.4g}"))
     for lo, hi in (("size.general_min_beds", "size.general_max_beds"), ("size.city_min_beds", "size.city_max_beds"),
                    ("size.class_threshold_1", "size.class_threshold_2")):
@@ -550,14 +585,28 @@ def _consistency(reg: Registry, root: Path) -> None:
                                     f"TÜİK ilçe toplamı {total} ≠ population.province_2025"))
 
 
+def cross_domain_duplicates(reg: Registry) -> list[tuple[str, str, str]]:
+    """Alanlar arası aynı belge: aynı URL ya da aynı arşiv sha256'sı. (ölçüt, ilk id, yinelenen id) listesi."""
+    out = []
+    for crit in ("url", "sha256"):
+        seen: dict[str, str] = {}
+        for sid, s in reg.sources.items():
+            v = str(s.get(crit) or "")
+            if crit == "url" and not v.startswith("http"):
+                continue
+            if not v:
+                continue
+            if v in seen and reg.sources[seen[v]]["_domain"] != s["_domain"]:
+                out.append((crit, seen[v], sid))
+            seen.setdefault(v, sid)
+    return out
+
+
 def _duplicate_urls(reg: Registry) -> None:
-    seen: dict[str, str] = {}
-    for sid, s in reg.sources.items():
-        u = str(s.get("url"))
-        if u.startswith("http") and u in seen and reg.sources[seen[u]]["_domain"] != s["_domain"]:
-            reg.issues.append(Issue("UYARI", "yinelenen URL",
-                                    f"{sid} ve {seen[u]} aynı belgeyi gösteriyor (alanlar arası; birleştirilebilir)"))
-        seen.setdefault(u, sid)
+    for crit, first, sid in cross_domain_duplicates(reg):
+        what = "URL" if crit == "url" else "arşiv sha256"
+        reg.issues.append(Issue("UYARI", f"yinelenen {what}",
+                                f"{sid} ve {first} aynı belgeyi gösteriyor (alanlar arası; birleştirilebilir)"))
 
 
 # ---------------------------------------------------------------- çıktı: parameters.json
@@ -588,6 +637,7 @@ def build_parameters(reg: Registry) -> dict:
             "derivation": p.get("derivation"),
             "rationale": p.get("rationale"),
             "range": p.get("range"),
+            "range_note": RANGE_NOTE if p.get("range") is not None else None,
             "alternatives": p.get("alternatives") or [],
             "notes": p.get("notes"),
             "group": reg.schema.canonical.get(key),
@@ -718,6 +768,7 @@ def build_markdown(reg: Registry) -> str:
     w(f"- Doğrulama: {len(reg.errors)} hata, {len(reg.warnings)} uyarı (ayrıntı en sonda)")
     w("- Durumlar: **kaynaklı** = değer kaynakta yazıyor · **hesap** = kaynaklı girdilerden formülle · "
       "**varsayım** = kaynağı yok, gerekçeli · **model seçimi** = modelleme tercihi, gerekçeli")
+    w(f"- **Aralık notu:** {RANGE_NOTE} (`parameters.json`: aralıklı her parametrede `range_note` alanı)")
     w("- Ham belgeler `data/raw/<alan>/` altında (git dışı); her indirmenin url/tarih/sha256 kaydı aynı klasördeki "
       "`_manifest.jsonl` dosyasında.")
     w("")
@@ -763,7 +814,8 @@ def build_markdown(reg: Registry) -> str:
     w("## 2. Parametreler")
     w("")
     w("Değerler Türkçe sayı biçimindedir (`1.234.567,8`); oranlar 0–1 kesridir. Alternatifler, aralıklar ve uzun "
-      "notlar `data/reference/parameters.json` dosyasındadır.")
+      "notlar `data/reference/parameters.json` dosyasındadır. 'Aralık' sütunundaki kaydırıcı sınırları arayüz "
+      "tercihidir (**varsayım**); parametre notu aksini söylemedikçe kaynaklı değildir.")
     w("")
     groups: dict[str, list[str]] = {}
     for k in reg.schema.canonical:

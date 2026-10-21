@@ -1,6 +1,7 @@
 # Alan: maliyet — inşaat birim maliyetleri (tebliğ), hastane boyut örnekleri, yatak başına alan, arsa standardı, KDV
 # Spec 4.4 B, C ve D'nin bir kısmı. Arşiv: data/raw/maliyet/ (git dışı; _manifest.jsonl url/tarih/sha256 içerir).
-# Üreten betikler (oturum çalışma alanında): maliyet_fetch.py (indirme), maliyet_build.py (CSV'ler + türetmeler).
+# Üreten betik: pipeline/18_costs.py (eksik arşiv belgelerini indirir, var olanları atlar; CSV'ler + türetmeler →
+# data/reference/tebligat_2026_birim_maliyet.csv, data/reference/hastane_boyut_ornekleri.csv, data/processed/kyp_alan_yatak.json).
 
 # --- Yapı yaklaşık birim maliyetleri -------------------------------------------------------------
 
@@ -225,6 +226,7 @@
     - "Etlik Entegre Sağlık Kampüsü: 'toplamda 3566 yatak' (Bölge Hastanesi 718, Kalp Damar 362, Ortopedi-Nöroloji 478, Kadın Doğum 500, Çocuk 508, Onkoloji 494, Rehabilitasyon 300, Psikiyatri 106, YG Psikiyatri 100); '1.071.885 m2 arazi üzerinde' / '1 milyon 71 bin metrekare alanda yükselen' (PDF s. 5)"
     - "Bilkent Entegre Sağlık Kampüsü: '1.200.000 m2 inşaat alanı', 'toplamda 3704 yatak' (bileşenler 62+562+441+507+564+580+588+300+100) (PDF s. 5)"
     - "Ankara Eğitim ve Araştırma Hastanesi: 'Fiili yatak kapasitesi 616'dır'; müşahede, diyaliz dahil 678 (PDF s. 6)"
+    - "Bilkent kampüs kapsamı (hastane dışı kapalı alan): 'çok sayıda branş hastanesini ve Sağlık Bakanlığı’nın yeni idari binasını içerisinde bulunduracaktır'; kampüste Sağlık Bilimleri Üniversitesi, Kongre Merkezleri ve Ticari Alanlar, Yüksek Teknoloji Merkezi ve ARGE Merkezi; 'Projede, 8 bin araç kapasiteli kapalı otoparklar bodrum katlarda tasarlanmıştır'; Bakanlık ana hizmet binasının otoparkı 800 araç (PDF s. 5, Bilkent sütunu) → cost.m2_per_bed.city kapsam uyarısı"
   notes: "Spec kaynağı [17]. PDF meta verisi: oluşturma 17.01.2017, değişiklik 09.02.2017. Planlama dönemine ait (açılış öncesi) değerler."
 
 - id: maliyet_sygm_bahce_2021
@@ -290,19 +292,21 @@
 
 - id: maliyet_hesap_kyp_alan
   title: "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları"
-  publisher: "Proje hesabı (maliyet_build.py; girdi data/reference/yatirim_programi_2026_saglik.csv)"
-  url: "data/reference/yatirim_programi_2026_saglik.csv"
+  publisher: "Proje hesabı (pipeline/18_costs.py; girdi data/reference/yatirim_programi_2026_saglik.csv)"
+  url: "pipeline/18_costs.py"
   accessed: 2026-10-21
   kind: hesap
-  archived: null
+  archived: data/processed/kyp_alan_yatak.json
   used_for:
     - "SB genel hastaneleri (dahil_ana, şehir hastanesi değil, n = 47): m²/yatak medyan 250,0; toplam alan/toplam yatak 237,0; Ç1–Ç3 201,6–252,6"
     - "Sınıflara göre toplam/toplam: <200 yatak 266,1 (n = 6, hepsi 150 yatak) · 200–399: 243,5 (n = 15) · ≥400: 233,2 (n = 26)"
-    - "SB şehir hastaneleri (genel bütçe, n = 14): medyan 279,5, toplam/toplam 275,8; ≥1.000 yatak (n = 8): medyan 254,9"
-    - "alan = A0 + a·yatak (OLS): n = 47 → A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61), a = 228,4 (197,4…259,3), R² = 0,830; ≤600 yatak (n = 44) → A0 = 7.695 (−1.997…17.387; p = 0,12), a = 214,1"
+    - "SB şehir hastaneleri (genel bütçe, n = 14): medyan 279,5, proje başına ortalama 284,4, toplam/toplam 275,8; ≥1.000 yatak (n = 8): medyan 254,9"
+    - "alan = A0 + a·yatak (OLS): n = 47 → A0 = 3.361 m² (%95 GA −9.818…16.540; p = 0,61), a = 228,35 (197,4…259,3), R² = 0,830; ≤600 yatak (n = 44) → A0 = 7.695 (−1.997…17.387; p = 0,12), a = 214,13 (189,5…238,7), R² = 0,880"
     - "Sınıf ortalamalarıyla iki nokta: a = 219,9, A0 = 6.938 m²; a = 130 sabitken A0 = ort(alan − 130·yatak) = 41.552 m² (SH 3.654)"
     - "Makine-teçhizat / inşaat alt proje oranı (yer tutucu satırlar hariç): KTÜ Çocuk Hastanesi 225 yatak 0,158 (238.000.000 / 1.504.752.636; basılı s. 327); Gaziantep Ü. Acil Travma ve Yanık Hastanesi 134 yatak 0,320 (288.140.000 / 901.597.000; basılı s. 323); diş hastaneleri 0,16–0,46"
     - "SB genel hastaneleri proje tutarı / alan: medyan 53.556, toplam/toplam 54.461 TL/m² (KDV dahil)"
   notes: >-
     Girdi satırları yatirim alanının ayrıştırdığı yatirim_kyp2026 belgesindendir (sayfa numaraları CSV'de). KYP
     alanları plan normlarıyla üretilmiş (47 projenin 19'unda tam 200 ya da 250 m²/yatak), bu yüzden A0 tahmini zayıf.
+    Tüm sayılar (tam duyarlıkta, girdi CSV'nin sha256'sı ile) data/processed/kyp_alan_yatak.json'da; yeniden üretmek için
+    .venv/bin/python pipeline/18_costs.py --offline.

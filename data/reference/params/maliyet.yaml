@@ -1,6 +1,7 @@
 # Alan: maliyet — B. Hastane boyutu, C. İnşaat, D. Arsa (yalnız alan standartları) (spec 4.4)
 # Kaynaklar: data/sources/maliyet.yaml (+ yatirim alanının yatirim_kyp2026, yatirim_rehber_2026_2028 kayıtları)
 # Tablolar: data/reference/tebligat_2026_birim_maliyet.csv, data/reference/hastane_boyut_ornekleri.csv
+# Üreten betik: pipeline/18_costs.py (KYP alan hesapları → data/processed/kyp_alan_yatak.json)
 # Model sınıf eşlemesi (öneri): B < 200 → IV-C · 200 ≤ B < 400 → V-B · 400 ≤ B ≤ general_max → V-C · şehir hastanesi → V-D.
 # V-A (eğitim ve araştırma hastanesi) yatak eşiği olmayan ayrı bir sınıftır; yalnız alternatif olarak sunulur.
 
@@ -157,11 +158,11 @@
   source_ids: [maliyet_balcali_2019, maliyet_ehta_2021]
   range: [100, 350]
   alternatives:
-    - {label: "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)", value: 138.7, source_ids: [maliyet_aliefendioglu_2021]}
-    - {label: "Balcalı Hastanesi (190.651 ÷ 1.200)", value: 158.9, source_ids: [maliyet_balcali_2019]}
-    - {label: "2026 KYP SB genel hastaneleri, alan–yatak eğimi (n = 47)", value: 228.4, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
-    - {label: "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47)", value: 237.0, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
-    - {label: "2026 KYP SB genel hastaneleri, medyan (n = 47)", value: 250.0, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "SB mevcut hastane stoku (19 mn m² ÷ 137.000 yatak)", value: 138.7, status: hesap, source_ids: [maliyet_aliefendioglu_2021]}
+    - {label: "Balcalı Hastanesi (190.651 ÷ 1.200; makalede 158,87)", value: 158.9, status: kaynakli, source_ids: [maliyet_balcali_2019]}
+    - {label: "2026 KYP SB genel hastaneleri, alan–yatak OLS eğimi (n = 47; A0 = 3.361 m² ile birlikte) — gerçekleşen proje alanı", value: 228.35, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "2026 KYP SB genel hastaneleri, toplam/toplam (n = 47) — gerçekleşen proje alanı", value: 237.0, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "2026 KYP SB genel hastaneleri, medyan (n = 47) — gerçekleşen proje alanı", value: 250.0, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
   notes: >-
     Spec varsayılanı (130) korunuyor ve kaynakta yazıyor: Balcalı makalesi 2010 Kılavuzu'ndan 'İhtisas hastaneleri asgari
     alan büyüklüğü yatak sayısı ile 130 m²'nin çarpımı' (s. 211), EHTA 2021 'hastane binasının toplam inşaat alanı baz
@@ -172,6 +173,11 @@
     genel hastane projeleri ≈250 m²/yatak (medyan; 47 projenin 19'unda tam 200 ya da 250), yani ≈1,9 katı. Sınıflara göre
     toplam/toplam: <200 yatak 266,1 · 200–399: 243,5 · ≥400: 233,2. 130 ile hesaplanan inşaat maliyeti yeni projelerin
     yaklaşık yarısıdır (bkz. cost.core_area_m2 notu). Öğrenci kararı gerekli.
+    TEMEL FARKI: varsayılan 130 bir ASGARİ / imar standardıdır (plan ve tasarım alt sınırı); KYP alternatifleri ise
+    Bakanlığın yatırım programındaki gerçek projelerin karakteristiğinde yazan kapalı alandır (gerçekleşen proje alanı,
+    asgari değil). İkisi aynı büyüklüğü ölçmez: KYP eğimi (228,35) yalnız KYP kesişimiyle (A0 = 3.361 m²) birlikte,
+    ≤600 yatak eğimi (214,13) A0 = 7.695 m² ile birlikte anlamlıdır. Tüm KYP sayıları pipeline/18_costs.py ile
+    data/processed/kyp_alan_yatak.json'a yazılır. Varsayılan değiştirilmedi.
 
 - key: cost.m2_per_bed.city
   label: "Yatak başına kapalı alan — şehir hastanesi"
@@ -182,18 +188,26 @@
   derivation: "14.159.000 m² ÷ 42.199 yatak = 335,5 (Sağlık Bakanlığı KÖİ şehir hastanesi programı, 32 hastane, Aralık 2017; Savaş vd. 2020, s. 26)"
   range: [250, 400]
   alternatives:
-    - {label: "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310", value: 308.3, source_ids: [maliyet_memurlar_2018]}
-    - {label: "Manisa Şehir H. (178.204 ÷ 558)", value: 319.4, source_ids: [maliyet_memurlar_2018]}
-    - {label: "Bilkent, 2017 planı (1.200.000 ÷ 3.704)", value: 324.0, source_ids: [maliyet_kalkinma_ankara_2017]}
-    - {label: "Şehir hastaneleri (Aliefendioğlu & Bostancı 2021, yazıldığı gibi)", value: 331, source_ids: [maliyet_aliefendioglu_2021]}
-    - {label: "Bilkent (1.312.358 ÷ 3.810)", value: 344.5, source_ids: [maliyet_medikalakademi_bilkent]}
-    - {label: "2026 KYP genel bütçeli şehir hastaneleri, medyan (n = 14)", value: 279.5, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "Eskişehir Şehir H. (333.303 ÷ 1.081) — spec ≈310", value: 308.3, status: hesap, source_ids: [maliyet_memurlar_2018]}
+    - {label: "Manisa Şehir H. (178.204 ÷ 558)", value: 319.4, status: hesap, source_ids: [maliyet_memurlar_2018]}
+    - {label: "Bilkent, 2017 planı (1.200.000 ÷ 3.704) — Bakanlık idari binası ve bodrum otoparkları dahil, hastane m²/yatak'ı yüksek gösterir", value: 324.0, status: hesap, source_ids: [maliyet_kalkinma_ankara_2017]}
+    - {label: "Şehir hastaneleri (Aliefendioğlu & Bostancı 2021, yazıldığı gibi)", value: 331, status: kaynakli, source_ids: [maliyet_aliefendioglu_2021]}
+    - {label: "Bilkent (1.312.358 ÷ 3.810) — aynı kampüs; hastane dışı alanlar büyük olasılıkla dahil, yüksek gösterir", value: 344.5, status: hesap, source_ids: [maliyet_medikalakademi_bilkent, maliyet_kalkinma_ankara_2017]}
+    - {label: "2026 KYP genel bütçeli şehir hastaneleri, medyan (n = 14)", value: 279.5, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
+    - {label: "2026 KYP genel bütçeli şehir hastaneleri, proje başına ortalama (n = 14)", value: 284.4, status: hesap, source_ids: [maliyet_hesap_kyp_alan, yatirim_kyp2026]}
   notes: >-
     Spec 4.4 C 'şehir hastanesi ≈310' (Eskişehir) diyor, 4.2 '≈310–345'. Varsayılan olarak tek hastane yerine tüm KÖİ
     programının toplam/toplam oranı seçildi (spec aralığının içinde); Eskişehir değeri ilk alternatif. Kapalı alanlar
     kapalı otoparkları da içerir (ör. Bilkent 6.918 araçlık otopark). Bilkent'in yatak sayısı kaynaklar arasında çelişkili
     (3.704 / 3.711 / 3.810 / 4.050) — bkz. hastane_boyut_ornekleri.csv; 4.050 ile 324,0 m²/yatak çıkar.
-    Genel bütçeyle yapılan yeni şehir hastaneleri (2026 KYP) daha küçük: medyan 279,5, ≥1.000 yatak (n = 8) medyan 254,9.
+    Genel bütçeyle yapılan yeni şehir hastaneleri (2026 KYP) daha küçük: medyan 279,5, ortalama 284,4 (n = 14; proje başına
+    alan/yatak ortalaması, pipeline/18_costs.py → data/processed/kyp_alan_yatak.json), ≥1.000 yatak (n = 8) medyan 254,9.
+    KAPSAM UYARISI: Bilkent/KÖİ kampüs alanları hastane dışı kapalı alan da içerir. Kalkınma 2017 (PDF s. 5): Bilkent'in
+    1.200.000 m² inşaat alanı 'Sağlık Bakanlığı'nın yeni idari binasını' da içinde bulundurur; kampüste Sağlık Bilimleri
+    Üniversitesi, kongre merkezleri, ticari alanlar, yüksek teknoloji ve AR-GE merkezi de yer alır; '8 bin araç kapasiteli
+    kapalı otoparklar bodrum katlarda' (Bakanlık ana hizmet binasının otoparkı 800 araç). Bu yüzden Bilkent oranları
+    (324,0; 344,5) hastane m²/yatak değerini olduğundan yüksek gösterir; varsayılan 335,5 de Bilkent ve Etlik kampüslerini
+    içeren program toplamından hesaplandığı için kısmen yüksektir. Varsayılan değiştirilmedi; öğrenci kararı.
 
 - key: cost.core_area_m2
   label: "Yataktan bağımsız çekirdek alan (A0)"
@@ -227,8 +241,15 @@
   label: "Altyapı + çevre düzenlemesi oranı (φ_alt)"
   value: 0.15
   unit: "inşaat maliyetine oran"
-  status: kaynakli
+  status: varsayim
   source_ids: [yatirim_rehber_2026_2028, maliyet_rg_2026_birim_maliyet_teblig]
+  rationale: >-
+    Hastaneye özgü bir altyapı + çevre düzenlemesi oranı bulunamadı. %15, SBB 2026-2028 Yatırım Programı Hazırlama
+    Rehberi EK 3'teki İDARİ HİZMET BİNASI gerekçe raporu şablonundan (PDF s. 51: 'd) Çevre Düzenlemesi (%15) c x %15')
+    BENZETMEYLE alındı: şablon hastaneler için değildir ve yalnız 'çevre düzenlemesi'ni adlandırır; tebliğ md. 2(4)'ün
+    ayrıca hariç tuttuğu altyapıyı (zemin iyileştirme, bina dışı şebekeler) açıkça kapsamaz. Kaynakta yazan bir hastane
+    oranı olmadığı için değer varsayımdır; alt uca yakın, temkinli bir seçimdir ve duyarlılık analizinde aralık
+    [0,05; 0,30] taranmalıdır.
   range: [0.05, 0.30]
   notes: >-
     SBB 2026-2028 Yatırım Programı Hazırlama Rehberi, EK 3 (İdari Hizmet Binası Gerekçe Raporu), 'Ödenek Talebine Esas

@@ -1,6 +1,9 @@
 # Alan: saglik — talep (spec 4.4 A) ve başvuru oranı (spec 4.4 G: v) için sağlık istatistikleri
 # Ham belgeler: data/raw/saglik/ (git dışı; _manifest.jsonl'de url/tarih/sha256)
 # Tablo: data/reference/saglik_istatistikleri.csv ; parametreler: data/reference/params/talep.yaml, muracaat.yaml
+# Betik: pipeline/17_health_stats.py (indirme + ayrıştırma + kontroller; arşivden çevrimdışı yeniden üretilebilir)
+# 2025 nüfus paydası (86.092.168) nufus alanının kaynağından: tuik_bt_adnks2025_yogunluk (Karar haberi:
+# tuik_haber_karar_adnks2025, yalnız çapraz kontrol)
 
 - id: saglik_sbsgm_bulten2025
   title: "Sağlık İstatistikleri Yıllığı 2025 Haber Bülteni (Sayı: 14)"
@@ -17,7 +20,7 @@
     - "Nitelikli yatak 184.965 (%83,1; yoğun bakım hariç) — Tablo 8; yoğun bakım yatağı 48.360 — Tablo 9"
     - "10.000 kişiye düşen hastane yatağı 2025: 31,5 — Tablo 11"
     - "Toplam hekime müracaat 1.138.060.185; kişi başı 13,2; birinci basamak %41,3, ikinci+üçüncü basamak %58,7 — Tablo 15 ve PDF s. 9 metni"
-    - "Hastanelerde hekime müracaat 656.167.336 (kişi başı 7,6); ikinci+üçüncü basamak toplamı 667.703.533 (kişi başı 7,8) — Tablo 15"
+    - "Hastanelerde hekime müracaat 656.167.336 (kişi başı 7,6) — Tablo 15 ve Tablo 11 (PDF s. 7); ikinci+üçüncü basamak toplamı 667.703.533 (kişi başı 7,8) — Tablo 15"
     - "Yatak doluluk %54,5; ortalama kalış 4,0 gün; yatak devir hızı 50,3; devir aralığı 3,3 gün (Türkiye) — Tablo 16"
     - "Batı Anadolu (TR5) 2025: 138 hastane, 33.159 yatak, kişi başı müracaat 14,0, doluluk %59,5, kalış 4,3 gün, devir hızı 50,8 — Tablo 6, 7, 16"
   notes: >-
@@ -207,24 +210,6 @@
     Tam metin okunamadı: bmj.com, pmc.ncbi.nlm.nih.gov, www.ebi.ac.uk ve europepmc.org vekil sunucuda 403 (politika
     reddi). %85 eşiği Aydemir (2019) üzerinden aktarılıyor (saglik_aydemir2019). Arşivlenen dosya yalnız Crossref JSON'u.
 
-- id: saglik_karar_adnks2025
-  title: "TÜİK açıkladı: Türkiye'nin nüfusu 86 milyon 92 bin 168'e yükseldi"
-  publisher: "Karar (gazete)"
-  url: "https://www.karar.com/guncel-haberler/son-dakika-tuik-acikladi-turkiye-nufusu-86-milyon-92-bin-168e-yukseldi-2027851"
-  accessed: 2026-10-21
-  published: 2026-02-09
-  kind: haber
-  archived: data/raw/saglik/karar_tuik_adnks2025.html
-  sha256: "b335df874c934399111d3db1ce06b738b5904edd42fad6e6098484d41d1f81f8"
-  used_for:
-    - "Türkiye nüfusu 31.12.2025 (TÜİK ADNKS): 86.092.168 — 2025 kişi başı/1000 kişi başı oranların paydası"
-    - "Ankara nüfusu 31.12.2025: 5.910.320 (spec [3]; nüfus alanının TÜİK teyidiyle değiştirilmeli)"
-  notes: >-
-    Haber kaynağı; resmî TÜİK bülteni (https://data.tuik.gov.tr/Bulten/Index?p=Adrese-Dayali-Nufus-Kayit-Sistemi-Sonuclari-2025-53899)
-    veriportali.tuik.gov.tr'ye yönleniyor ve yalnız JavaScript ile açılıyor; betikle okunamadı. Çapraz kontrol: SİY 2025
-    bülteni Tablo 12+14'ten türeyen nüfus (≈86,09 milyon) bu değerle tutarlı. Resmî nüfus kaynağı 'nufus' alanına aittir;
-    o alan TÜİK kaynağını kaydedince bu satırın source_id'si onunla değiştirilebilir.
-
 - id: saglik_zenodo_kaya2026
   title: "Türkiye Sağlık İstatistikleri Arşivi: Sağlık Bakanlığı yıllıklarından derlenmiş il ve ulusal veri seti, 1964–2024 (v1.1.0)"
   publisher: "Emin Kaya (Isparta Uygulamalı Bilimler Üniversitesi) — Zenodo, doi:10.5281/zenodo.23325100, CC BY 4.0"
@@ -232,9 +217,17 @@
   accessed: 2026-10-21
   published: 2026-10-12
   kind: ikincil
+  archived: data/raw/saglik/zenodo/il_verileri_yilliklardan.csv
+  sha256: "87376fed8a2c30a9aec97d6eca528f1ac680093dfb9e7de91548c12b655acd8e"
   used_for:
     - "YALNIZ ÇAPRAZ KONTROL (atıf kaynağı değil): 2023–2024 Ankara ve Türkiye satırları (yatak, yatak/10.000, yatan hasta, yatılan gün, doluluk, kalış, müracaat, nüfus) resmî yıllıklardan okunan değerlerle birebir aynı"
   notes: >-
-    Üçüncü taraf derleme; dosyalar oturumun geçici klasöründe incelendi (il_verileri_yilliklardan.csv), repoya
-    arşivlenmedi. Sağladığı tablo/sayfa referansları (SİY2024 Tablo 7.20 PDF s. 191–192, Tablo 8.26 PDF s. 233–236;
+    Üçüncü taraf derleme. Arşiv: data/raw/saglik/zenodo/ — il_verileri_yilliklardan.csv, gostergeler.csv,
+    kaynaklar.csv ve kayıt üst verisi zenodo_23325100_record.json (https://zenodo.org/api/records/23325100);
+    _manifest.jsonl'de url/tarih/sha256; dosyaların md5'i kayıt üst verisindeki sağlama toplamlarıyla aynı.
+    pipeline/17_health_stats.py çapraz kontrolü: SİY 2024/2023 il tablolarından okunan 72 değerin tümü (2 yıl × Ankara
+    ve Türkiye × 18 gösterge: nüfus, hastane, yatak, yatak/10.000, nitelikli ve yoğun bakım yatağı ve oranları,
+    birinci ve ikinci+üçüncü basamak müracaat, kişi başı müracaat, yatan hasta, yatılan gün, ameliyat, doluluk, kalış,
+    devir hızı/aralığı) bu derlemeyle birebir aynı.
+    Sağladığı tablo/sayfa referansları (SİY2024 Tablo 7.20 PDF s. 191–192, Tablo 8.26 PDF s. 233–236;
     SİY2023 Tablo 7.19 PDF s. 181–182, Tablo 8.25 PDF s. 223–226) bizim okumamızla aynı. 2025 verisi içermiyor.

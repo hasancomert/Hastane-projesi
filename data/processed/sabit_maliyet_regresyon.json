@@ -7,7 +7,7 @@
       339,
       366
     ],
-    "fiyat_bazi": "2026 yılı fiyatları, TL (program açıklaması, PDF s. 26)",
+    "fiyat_bazi": "2026 yılı fiyatları, TL (program açıklaması, PDF s. 26 = basılı s. 1)",
     "birim": "TL (Bin TL değil)"
   },
   "model": "proje_tutari_tl = F0 + v · yatak (OLS, statsmodels)",

@@ -1,5 +1,6 @@
 # Alan: erisim — G. Erişim maliyeti (yakıt, tüketim, zaman değeri, hız, ufuk, iskonto, R), D. Arsa fiyatı, F. İşletme
 # Arşiv: data/raw/erisim/ (git dışı; _manifest.jsonl url/tarih/sha256 içerir). Türetmeler: data/reference/erisim_turetim.md
+# Arşivleme ve hesap betiği: pipeline/19_access_params.py (varsa indirmez; --offline ile yalnız arşivden çalışır)
 # Bu ortamdan ERİŞİLEMEYEN (vekil sunucu 403/bağlantı reddi; yeniden denenmedi): bildirim.epdk.gov.tr, lisans(ws).epdk.gov.tr,
 # petrolofisi.com.tr, opet.com.tr, shell.com.tr, bp/aytemiz/totalenergies, dunya.com, tomtom.com, theicct.org, iea.org,
 # ec.europa.eu, gov.uk, transportation.gov, worldbank.org, sayistay.gov.tr, sgk.gov.tr, csgb.gov.tr, kgm.gov.tr, uab.gov.tr,
@@ -61,6 +62,7 @@
   used_for:
     - "Eylül 2026 aylık ortalama nihai satış fiyatı, İstanbul Avrupa Yakası: K. Benzin 95 Oktan 78,826 TL/lt (Tablo-1, s. 4); Motorin 91,543 TL/lt (Tablo-2, s. 5); LPG (Otogaz) 35,780 TL/lt (Tablo-5, s. 10)"
     - "Ağustos 2026: benzin 70,686; motorin 79,768; otogaz 34,421 TL/lt (aynı tablolar)"
+    - "s. 2: 'Brent petrol varil fiyatının ortalama 115,79 dolar civarında gerçekleştiği görülmektedir' (Eylül 2026)"
   notes: >-
     Resmî, fakat İstanbul Avrupa yakası (gösterge) ve aylık ortalama; Ankara/Ekim değil. Rapor listesi:
     https://www.epdk.gov.tr/Detay/Icerik/3-0-143/fiyatlandirma-raporu (arşiv: data/raw/erisim/epdk_3-0-143_fiyatlandirma_raporu_liste.html).
@@ -91,7 +93,7 @@
     - "Ankara, 21.10.2026: benzin 80,60 TL/L; motorin 97,80 TL/L; LPG 41,29 TL/L"
     - "İstanbul Avrupa 79,60/96,70/41,20; Anadolu 79,40/96,50/40,60; İzmir 80,80/98,00/41,20"
     - "Benzinde 20.10.2026'da 4,30 TL indirim yansıdı; 22.10.2026'dan itibaren 3,35 TL ek indirim bekleniyor"
-  notes: "Dağıtıcı adı belirtilmiyor ('paylaşılan güncel litre fiyatları'). Resmî il bazında günlük kaynak (EPDK bildirim portalı, dağıtıcı siteleri) bu ortamdan erişilemediği için kullanıldı; iki haber kaynağıyla çapraz kontrol edildi."
+  notes: "Dağıtıcı adı belirtilmiyor ('paylaşılan güncel litre fiyatları'). Resmî il bazında günlük kaynak (EPDK bildirim portalı, dağıtıcı siteleri) bu ortamdan erişilemediği için kullanıldı; iki haber kaynağıyla çapraz kontrol edildi. Tek günün fiyatıdır: 22.10.2026 benzin indirimi (−3,35 TL → 77,25 TL/L) uygulanırsa c = 6,17 TL/km olur (hesap: pipeline/19_access_params.py)."
 
 - id: erisim_haber_birgun_akaryakit_20261020
   title: "20 Ekim 2026 Benzin ve Motorin Fiyatlarında İndirim, Zam Var mı? Güncel Akaryakıt Fiyatları"
@@ -130,7 +132,9 @@
   sha256: "0b7295452a6f4ed97dfa2c495db72b01a6a94ed6c7f355a1576687172acfa982"
   used_for:
     - "Tablo 7 (s. 950): otomobil yakıt tüketimi benzin 8,5 · dizel 7,3 · LPG 11,2 litre/100 km ('IPCC Kılavuzunda araç gruplarının ülkemiz için uygunluğu belirlenmiş olan yakıt tüketim değerleri'; IPCC/UNEP/OECD/IEA 1997–2006)"
-  notes: "Hakemli; değerler IPCC kılavuzunun varsayılanları (eski filo, gerçek kullanım). Yeni araçlarda daha düşük olabilir; resmî Türkiye filo ortalaması (TÜİK/Bakanlık) bulunamadı."
+    - "Tablo 8 (s. 951): otomobil ortalama yıllık menzil (km) benzin / dizel / LPG — 2015: 3.492 / 4.276 / 5.085; 2016: 3.530 / 4.425 / 5.162; 2017: 3.405 / 4.654 / 5.048; 2018: 3.444 / 5.090 / 5.242"
+    - "Hesap (Tablo 8, 2018 ile araç-km ağırlığı): c = 6,19 TL/km, tüketim 8,99 L/100 km, litre ağırlıklı fiyat 68,79 TL/L (Ankara 21.10.2026 fiyatları, TÜİK Eylül 2026 filo payları)"
+  notes: "Hakemli; değerler IPCC kılavuzunun varsayılanları (eski filo, gerçek kullanım). Yeni araçlarda daha düşük olabilir; resmî Türkiye filo ortalaması (TÜİK/Bakanlık) bulunamadı. Tablo 8 Çanakkale içindir ve ölçüm değildir: yazarlar menzilleri 'kesin bir kaynak bulunmamakla birlikte' Türkiye toplam yakıt tüketimiyle yakıt dengesi kuracak şekilde ortalama değer olarak elde etmiştir (s. 951). Tablolar PDF metin katmanından okunur (pipeline/19_access_params.py)."
 
 - id: erisim_bagdatli_akbiyikli_2015
   title: "Ulaştırma yapıları ekonomik analizlerinde iskonto oranı: bir durum çalışması"
@@ -197,8 +201,10 @@
   archived: data/raw/erisim/tuik_press_53700_kazanc_yapisi_2023.json
   sha256: "d372cec6eecfe273d446e4efa129254b09f7355ea1df4b61b79ebf745f103c79"
   used_for:
-    - "'Saatlik ortalama brüt ücret-maaş 119 TL'; 'referans dönemi olan 2023 Kasım ayında aylık brüt asgari ücret 13 bin 414,5 TL'; 'Aylık ücretli çalışılan saat 200'"
-    - "Hesap: ortalama/asgari saatlik oran 119 / (13.414,5/225) = 1,996 → 2026 ortalama saatlik brüt ≈ 146,80 × 1,996 = 293,0 TL/sa"
+    - "'aylık ortalama kişi başı brüt ücret-maaş 23 bin 789 TL'; 'referans dönemi olan 2023 Kasım ayında aylık brüt asgari ücret 13 bin 414,5 TL'"
+    - "'Saatlik ortalama brüt ücret-maaş 119 TL'; 'Aylık ücretli çalışılan saat 200' (119 TL, 200 ücretli saat tabanındadır: 23.789 / 200 ≈ 119)"
+    - "Hesap (225 sa tabanı): aylık ortalama / aylık asgari = 23.789 / 13.414,5 = 1,7734 → 2026 ortalama saatlik brüt ≈ 146,80 × 1,7734 = 260,3 TL/sa (146,80 = 33.030 / 225, varsayılan VOT ile aynı taban)"
+  notes: "Önceki hesap (119 / (13.414,5/225) = 1,996 → 293,0 TL/sa) 200 saatlik TÜİK tabanını 225 saatlik asgari ücret tabanıyla karıştırdığı için Faz 1 temizliğinde düzeltildi. Oranın Kasım 2023'ten 2026'ya sabit kaldığı varsayılır."
 
 - id: erisim_demirci_2025
   title: "Sakaltutan Geçidi Yerine Önerilen Eğimsiz Tünelin Emisyon, Yakıt Tüketimi ve Ekonomik Analizi"

@@ -575,7 +575,8 @@ def write_param(tab, P, hdr, pbf_url, n_drawn, in_scc, cells, far):
             f"Çekilen {common.fmt_tr(n_drawn)} çiftten {common.fmt_tr(len(P))} geçerli (bağlantı > {int(MAX_SNAP_M)} m veya düğümler arası "
             f"< {int(MIN_EUCLID_M)} m olanlar atıldı). Nüfuslu hücrelerin %{common.fmt_tr(100 * far.mean(), 1)}'i "
             f"(nüfusun %{common.fmt_tr(100 * cells.loc[far, 'pop'].sum() / cells['pop'].sum(), 2)}'i) 1 km içinde araç yoluna bağlanamadı. "
-            "Literatür: Boscoe, Henry & Zdeb 2012 ve Ballou, Rahardja & Sakai 2002 künyeleri Crossref'ten doğrulandı; "
+            "Literatür: Boscoe, Henry & Zdeb 2012 (alan_literatur_lit_boscoe2012) ve Ballou, Rahardja & Sakai 2002 "
+            "(alan_literatur_lit_ballou2002) künyeleri Crossref'ten doğrulandı; "
             "tam metinlere erişilemediği (vekil sunucu 403) için katsayı değerleri kaydedilmedi."
         ),
     }]

@@ -1,5 +1,6 @@
 # Alan: erisim — G. Erişim maliyeti parametreleri (spec 4.4 G, 4.5 λ)
 # Kaynaklar: data/sources/erisim.yaml ; tüm türetmeler: data/reference/erisim_turetim.md
+# Hesap ve denetim (arşivden, çevrimdışı): .venv/bin/python pipeline/19_access_params.py --offline
 # λ = PV(T, r) · v · round_trip_factor · (cost_tl_per_km + value_of_time_tl_per_h / speed_kmh)   [TL / (kişi·km)]
 # v = access.hospital_visits_per_capita (saglik alanı). Dolambaç katsayısı access.circuity arazi-osm alanındadır.
 # Tüm parasal değerler Ekim 2026 (yakıt) / 2026 (ücret) fiyatlarıyla, KDV dahil pompa fiyatı; iskonto oranı reeldir.
@@ -26,10 +27,12 @@
     · LPG 41,29 TL/L. Filo payları s (TÜİK, Eylül 2026 sonu trafiğe kayıtlı otomobil; hibrit benzine katıldı, elektrik
     %2,7 ve bilinmeyen %0,2 dışarıda): benzin 6.532.695/17.594.516 = 0,37129 · motorin 5.793.543/17.594.516 = 0,32928 ·
     LPG 5.268.278/17.594.516 = 0,29943. Tüketimler q: 8,5 / 7,3 / 11,2 L/100 km. Σ s·q·p = 627,93; Σ s·q = 8,9133
-    → p = 627,93 / 8,9133 = 70,448 ≈ 70,45 TL/L.
+    → p = 627,93 / 8,9133 = 70,448 ≈ 70,45 TL/L. VARSAYIM: her yakıt türündeki otomobil yılda aynı km'yi yapar
+    (araç-km payı = filo payı s_f); yakıt türüne göre km farkı alternatifte (Tablo 8).
   range: [40, 120]
   alternatives:
     - {label: "Filo payı ağırlıklı (Σ s_f·p_f; görev tanımındaki basit ağırlık)", value: 74.49, status: hesap, source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit]}
+    - {label: "Yakıt türüne göre yıllık km ağırlıklı, litre ağırlıklı (Yalılı Kılıç vd. 2021 Tablo 8, 2018; araç-km payı 0,283 / 0,370 / 0,347)", value: 68.79, status: hesap, source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
     - {label: "EPDK resmî Eylül 2026 ortalaması (İstanbul Avrupa), litre ağırlıklı", value: 66.06, status: hesap, source_ids: [erisim_epdk_fiyatlandirma_2026_09, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
     - {label: "EPDK resmî Eylül 2026 ortalaması (İstanbul Avrupa), filo payı ağırlıklı", value: 70.12, status: hesap, source_ids: [erisim_epdk_fiyatlandirma_2026_09, erisim_tuik_mkt_eylul2026_yakit]}
     - {label: "Yalnız benzin, Ankara 21.10.2026", value: 80.60, status: kaynakli, source_ids: [erisim_haber_birgun_akaryakit_20261021]}
@@ -39,11 +42,17 @@
     NEDEN LİTRE AĞIRLIKLI: LPG'li araç litre başına ucuz ama daha çok litre yakıyor (11,2 vs 8,5 L/100 km). Basit filo
     payı ağırlıklı fiyat (74,49) ortalama tüketimle (8,91) çarpılınca km maliyeti 6,64 TL çıkıyor; yakıt türüne özgü doğru
     toplam 6,28 TL/km. Litre ağırlıklı fiyat, fiyat × tüketim = km maliyeti eşitliğini korur (arayüz kaydırıcıları tutarlı).
-    KAYNAK UYARISI: Ankara günlük fiyatı haber kaynağı (kind: haber; iki bağımsız haber birebir aynı). Resmî il bazında
-    EPDK sorgusu (bildirim.epdk.gov.tr) ve dağıtıcı siteleri (Petrol Ofisi, Opet, Shell) bu ortamdan erişilemedi. Resmî
-    EPDK Eylül 2026 aylık ortalaması (İstanbul Avrupa: 78,826 / 91,543 / 35,780) alternatif olarak verildi. Fiyatlar çok
-    oynak: benzine 20.10.2026'da 4,30 TL indirim geldi, 22.10.2026'dan itibaren 3,35 TL ek indirim bekleniyor (BirGün);
-    Brent Eylül 2026 ortalaması ≈115,8 $/varil (EPDK raporu s. 2). Yakıt payları Türkiye geneli (il kırılımı yok).
+    AYNI KM VARSAYIMI: ağırlıklar filo payıdır, yani her yakıt türündeki otomobilin yılda aynı km'yi yaptığı varsayılır.
+    Yalılı Kılıç vd. 2021 Tablo 8'e göre (Çanakkale, 2018; yazarların yakıt dengesinden tahmini) dizel ve LPG'li
+    otomobiller benzinliden ≈%48 / %52 daha çok km yapıyor; araç-km ağırlığıyla fiyat 68,79 TL/L, tüketim 8,99 L/100 km,
+    c = 6,19 TL/km (alternatif; 2015–2018 satırlarıyla c 6,15–6,19).
+    KAYNAK UYARISI: Ankara fiyatı TEK GÜNÜN (21.10.2026) haber fiyatıdır (kind: haber; iki bağımsız haber birebir aynı,
+    20.10.2026 haberi de aynı). Resmî il bazında EPDK sorgusu (bildirim.epdk.gov.tr) ve dağıtıcı siteleri (Petrol Ofisi,
+    Opet, Shell) bu ortamdan erişilemedi. Resmî EPDK Eylül 2026 aylık ortalaması (İstanbul Avrupa: 78,826 / 91,543 /
+    35,780) alternatif olarak verildi. Fiyatlar çok oynak: benzine 20.10.2026'da 4,30 TL indirim geldi; 22.10.2026'dan
+    itibaren 3,35 TL ek benzin indirimi bekleniyor (BirGün). Bu indirim uygulanırsa (benzin 77,25 TL/L) litre ağırlıklı
+    fiyat 69,26 TL/L, c = 6,17 TL/km (−%1,7) olur; değer güncel pompa fiyatlarıyla yenilenmelidir. Brent Eylül 2026
+    ortalaması 115,79 $/varil (EPDK raporu s. 2). Yakıt payları Türkiye geneli (il kırılımı yok).
 
 - key: access.fuel_l_per_100km
   label: "Ortalama yakıt tüketimi (otomobil filosu)"
@@ -53,12 +62,14 @@
   source_ids: [erisim_yalilikilic_2021, erisim_tuik_mkt_eylul2026_yakit]
   derivation: >-
     Σ s_f·q_f = 0,37129 × 8,5 + 0,32928 × 7,3 + 0,29943 × 11,2 = 3,156 + 2,404 + 3,354 = 8,913 ≈ 8,91 L/100 km
-    (q_f: Yalılı Kılıç vd. 2021, Tablo 7; s_f: TÜİK Eylül 2026 filo payları).
+    (q_f: Yalılı Kılıç vd. 2021, Tablo 7; s_f: TÜİK Eylül 2026 filo payları). Ağırlık filo payıdır: her yakıt türündeki
+    otomobilin yılda aynı km'yi yaptığı varsayılır (bkz. access.fuel_price_tl_per_l notu).
   range: [4, 12]
   alternatives:
     - {label: "Benzinli otomobil (IPCC kılavuz değeri)", value: 8.5, status: kaynakli, source_ids: [erisim_yalilikilic_2021]}
     - {label: "Dizel otomobil", value: 7.3, status: kaynakli, source_ids: [erisim_yalilikilic_2021]}
     - {label: "LPG'li otomobil", value: 11.2, status: kaynakli, source_ids: [erisim_yalilikilic_2021]}
+    - {label: "Yakıt türüne göre yıllık km ağırlıklı (Yalılı Kılıç vd. 2021 Tablo 8, 2018: 3.444 / 5.090 / 5.242 km; Σ w_f·q_f)", value: 8.99, status: hesap, source_ids: [erisim_yalilikilic_2021, erisim_tuik_mkt_eylul2026_yakit]}
   notes: >-
     Resmî bir Türkiye filo ortalaması (TÜİK, Ulaştırma Bakanlığı) bulunamadı; ICCT/IEA/EEA gerçek kullanım raporları bu
     ortamdan erişilemedi. Değerler IPCC kılavuzunun varsayılanları olup hakemli bir Türkiye çalışmasında kullanılmıştır;
@@ -74,18 +85,23 @@
   derivation: >-
     c = Σ s_f·p_f·q_f / 100 = (0,37129 × 80,60 × 8,5 + 0,32928 × 97,80 × 7,3 + 0,29943 × 41,29 × 11,2) / 100
     = 2,544 + 2,351 + 1,385 = 6,279 ≈ 6,28 TL/km  (= access.fuel_price_tl_per_l × access.fuel_l_per_100km / 100
-    = 70,45 × 8,91 / 100).
+    = 70,45 × 8,91 / 100). VARSAYIM: her yakıt türündeki otomobil yılda aynı km'yi yapar (ağırlık = filo payı s_f).
   range: [2, 15]
   alternatives:
     - {label: "Filo payı ağırlıklı fiyat × ortalama tüketim (74,49 × 8,91 / 100)", value: 6.64, status: hesap, source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
     - {label: "EPDK Eylül 2026 resmî ortalama fiyatlarla (İstanbul Avrupa)", value: 5.89, status: hesap, source_ids: [erisim_epdk_fiyatlandirma_2026_09, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
     - {label: "KGM taşıt işletme maliyeti 2013 (0,26029 TL/km; yakıt dışı giderler dahil) × TÜFE 2013→Eylül 2026 (19,648)", value: 5.11, status: hesap, source_ids: [erisim_bagdatli_akbiyikli_2015, erisim_tuik_tufe_tt10]}
+    - {label: "Yakıt türüne göre yıllık km ağırlıklı: Σ w_f·p_f·q_f / 100, w_f = s_f·m_f / Σ s·m (m_f: Yalılı Kılıç vd. 2021 Tablo 8, 2018 — benzin 3.444 · dizel 5.090 · LPG 5.242 km/yıl; w = 0,283 / 0,370 / 0,347)", value: 6.19, status: hesap, source_ids: [erisim_haber_birgun_akaryakit_20261021, erisim_tuik_mkt_eylul2026_yakit, erisim_yalilikilic_2021]}
   notes: >-
     YALNIZ YAKIT: lastik, bakım, amortisman, sigorta, otopark ve köprü/otoyol ücretleri hariç (resmî güncel bir 'km başı'
     taşıt işletme maliyeti bulunamadı; KGM sitesi erişilemedi). Alternatifteki KGM 2013 değeri bütün işletme
     giderlerini kapsar ama TÜFE ile güncellendiğinde yakıt-yalnız değerin altında kalıyor, çünkü 2026'da akaryakıt
     fiyatları genel fiyat düzeyinden hızlı arttı. Toplu taşıma, taksi, ambulans ve yürüyüş modellenmedi (tüm yolculuklar
     otomobille varsayılır). Kişi başına yük paylaşımı (araç doluluğu) uygulanmadı: 1 başvuru = 1 araç yolculuğu.
+    Km ağırlıklı alternatif (6,19): Tablo 8 Çanakkale 2015–2018 için yazarların yakıt dengesinden tahmin ettiği ortalama
+    yıllık menzillerdir (ölçüm değil; 2015–2018 satırlarıyla c = 6,15–6,19); dizel/LPG'li araçların daha çok km yapması
+    ağırlığı benzinden dizel ve LPG'ye kaydırır ve c'yi ≈%1,5 düşürür. Tek günlük haber fiyatı ve 22.10.2026 beklenen benzin
+    indirimi (c ≈ 6,17) için bkz. access.fuel_price_tl_per_l notu.
 
 - key: access.value_of_time_tl_per_h
   label: "Yolculuk zamanı değeri (kişi başı)"
@@ -105,11 +121,16 @@
   alternatives:
     - {label: "Zaman maliyeti dahil değil (yalnız yakıt)", value: 0, status: model_secimi}
     - {label: "Saatlik brüt asgari ücretin tamamı (f = 1)", value: 146.8, status: hesap, source_ids: [erisim_rg_asgari_ucret_2026, erisim_mevzuat_4857_is_kanunu]}
-    - {label: "2026 ortalama saatlik brüt ücret tahmini (KYA 2023 ortalama/asgari oranı 1,996 × 146,80)", value: 293.0, status: hesap, source_ids: [erisim_tuik_kya_2023, erisim_rg_asgari_ucret_2026]}
+    - {label: "2026 ortalama saatlik brüt ücret tahmini, 225 sa tabanı: 146,80 × (TÜİK KYA 2023 aylık ortalama brüt ücret-maaş 23.789 / aylık brüt asgari ücret 13.414,5 = 1,7734)", value: 260.3, status: hesap, source_ids: [erisim_tuik_kya_2023, erisim_rg_asgari_ucret_2026, erisim_mevzuat_4857_is_kanunu]}
     - {label: "Karayolu Ulaştırma Ana Planı yolcu zaman değeri (orta senaryo; fiyat yılı belirsiz, Demirci 2025 aktarımı)", value: 100, status: kaynakli, source_ids: [erisim_demirci_2025]}
   notes: >-
     Brüt ücret kullanıldı (net asgari ücret RG kararında yok). KUAP değeri (100 TL/sa) ikincil aktarım; fiyat yılı
-    bilinmediği için güncellenmedi. Erişim maliyetinde zaman bileşeni km başına VOT / hız = 73,4 / 28,5 = 2,58 TL/km.
+    bilinmediği için güncellenmedi. Ortalama ücret alternatifi (260,3): aylık ortalama ücretin aylık asgari ücrete oranı
+    saat tabanından bağımsızdır; 2026 asgari ücretin saatlik karşılığı (33.030 / 225 = 146,80) ile çarpılınca varsayılanla
+    aynı 225 saatlik tabana oturur. Oranın Kasım 2023'ten 2026'ya sabit kaldığı varsayılır (çapraz kontrol: TÜFE ile
+    23.789 / 225 × 137,23 / 56,7505 = 255,7 TL/sa). Önceki 293,0 alternatifi saat tabanlarını karıştırıyordu: TÜİK'in
+    saatlik 119 TL'si ayda 200 ücretli saat tabanında (23.789 / 200 ≈ 119), asgari ücret ise 225 saate bölünmüştü
+    (119 / (13.414,5 / 225) = 1,996). Erişim maliyetinde zaman bileşeni km başına VOT / hız = 73,4 / 28,5 = 2,58 TL/km.
 
 - key: access.speed_kmh
   label: "Ortalama yolculuk hızı (Ankara)"
@@ -133,27 +154,42 @@
   label: "Planlama ufku (T)"
   value: 25
   unit: "yıl"
-  status: kaynakli
+  status: model_secimi
   source_ids: [erisim_tbmm_haber_saglik_butce_2024, erisim_haber_diken_536163, erisim_mevzuat_6428, maliyet_savas_2020]
+  rationale: >-
+    MODEL SEÇİMİ: planlama ufku olarak şehir hastanesi KÖİ sözleşme süresi (25 yıl) kullanıldı. Kaynaklı olan sözleşme
+    süresidir (Sağlık Bakanı, TBMM PBK 10.11.2023; Diken [27]: Bilkent ödemeleri 2019–2043; Savaş vd. 2020); bu sürenin
+    erişim maliyetlerinin bugünkü değeri için ufuk alınması bizim tercihimizdir. Hastane binasının fiziksel ömrü daha
+    uzundur ve bağlayıcı bir resmî değerlendirme dönemi bulunamadı; 30 yıl (6428 md. 4 üst sınırı), 20 yıl (ulaştırma
+    projelerinde yaygın dönem) ve 15,5 yıl (kesintiler sonrası kalan süre) alternatif olarak gösterilir.
   range: [5, 50]
   alternatives:
     - {label: "6428 sayılı Kanun md. 4: KÖİ sözleşmesi üst sınırı (yatırım dönemi hariç)", value: 30, status: kaynakli, source_ids: [erisim_mevzuat_6428]}
     - {label: "Ulaştırma projelerinde en yaygın değerlendirme dönemi", value: 20, status: kaynakli, source_ids: [erisim_bagdatli_akbiyikli_2015]}
     - {label: "Şehir hastanelerinde kesintiler sonrası ortalama kalan ödeme süresi ('15-16 yıl', 2023)", value: 15.5, status: hesap, source_ids: [erisim_tbmm_haber_saglik_butce_2024]}
   notes: >-
-    DOĞRULANDI: şehir hastanesi KÖİ sözleşmeleri 25 yıl — Sağlık Bakanı, TBMM PBK 10.11.2023: '25 yıllık sözleşme
+    SÖZLEŞME SÜRESİ DOĞRULANDI: şehir hastanesi KÖİ sözleşmeleri 25 yıl — Sağlık Bakanı, TBMM PBK 10.11.2023: '25 yıllık sözleşme
     sürelerini kesmediğimiz bir şehir hastanesi olmadı'; Diken [27]: Bilkent ödemeleri 2019–2043 (25 yıl); Savaş vd. 2020
     (maliyet_savas_2020, s. 2): '25 yıl sonra işletme kamuya kalır'. Yasal üst sınır 30 yıl + yatırım dönemi (6428 md. 4).
     Bakanın aynı konuşmasına göre sözleşmeler sonradan kısaltıldı (İzmir −10 yıl 3 ay, Etlik −7 yıl 8 ay, Bilkent −3 yıl
-    1 ay; ortalama kalan 15–16 yıl). Bu değeri planlama ufku olarak kullanmak bir modelleme tercihidir (hastane binasının
-    fiziksel ömrü daha uzundur).
+    1 ay; ortalama kalan 15–16 yıl). Faz 1 temizliğinde durum 'kaynakli' → 'model_secimi' yapıldı: kaynak sözleşme
+    süresini verir, planlama ufku olarak kullanılması bizim tercihimizdir.
 
 - key: access.discount_rate
   label: "Sosyal iskonto oranı (r, reel)"
   value: 0.05
   unit: "oran / yıl (reel)"
-  status: kaynakli
-  source_ids: [erisim_kalayci_oflaz_2022]
+  status: model_secimi
+  source_ids: [erisim_kalayci_oflaz_2022, yatirim_rehber_2026_2028]
+  rationale: >-
+    MODEL SEÇİMİ: Türkiye'de bağlayıcı resmî bir sosyal iskonto oranı yok — SBB 2026-2028 Yatırım Programı Hazırlama
+    Rehberi (md. 54) 'ekonomik analizde kullanılacak iskonto oranı … güncel veriler kullanılarak hesaplanacaktır' diyor.
+    %5, Avrupa Komisyonu 'Guide to Cost-Benefit Analysis of Investment Projects 2014–2020' rehberinin uyum (cohesion)
+    ülkelerindeki büyük projeler için önerdiği orandır; değer rehberin aslından değil, Kalaycı Oflaz (2022, s. 398)
+    derlemesindeki ikincil aktarımdan alındı (ec.europa.eu bu ortamdan erişilemedi). Aynı derlemedeki Türkiye sosyal
+    zaman tercihi tahmini %5,06 (Halıcıoğlu ve Karataş 2011) ile uyumludur. Kalkınma Bakanlığı'nın tek resmî tahmini
+    olan %9,8 ekonomik indirgeme oranı (Uzunkaya ve Uzunkaya 2012; sermayenin fırsat maliyeti yaklaşımı) alternatif
+    olarak görünür tutulur.
   range: [0.0, 0.12]
   alternatives:
     - {label: "AB CBA rehberi 2014–2020, uyum ülkesi olmayan üye devletler; WHO sağlık değerlendirmeleri", value: 0.03, status: kaynakli, source_ids: [erisim_kalayci_oflaz_2022]}
@@ -162,13 +198,9 @@
     - {label: "Türkiye ulaştırma projelerinde son uygulama (≈%8)", value: 0.08, status: kaynakli, source_ids: [erisim_bagdatli_akbiyikli_2015]}
     - {label: "Türkiye ekonomik indirgeme oranı 1987–2006 (Kalkınma Bakanlığı; duyarlılık %9,0–11,9)", value: 0.098, status: kaynakli, source_ids: [erisim_uzunkaya_2012]}
   notes: >-
-    Varsayılan %5: Avrupa Komisyonu 'Guide to Cost-Benefit Analysis of Investment Projects 2014–2020' uyum ülkeleri için
-    önerdiği sosyal iskonto oranı (hakemli derlemedeki aktarım; rehberin aslı ec.europa.eu bu ortamdan erişilemedi) ve
-    Türkiye için tahmin edilen sosyal zaman tercihi oranı %5,06 ile uyumlu. Türkiye'de BAĞLAYICI resmî bir sosyal iskonto
-    oranı bulunamadı: SBB 2026-2028 Yatırım Programı Hazırlama Rehberi (yatirim_rehber_2026_2028, md. 54) 'ekonomik
-    analizde kullanılacak iskonto oranı … güncel veriler kullanılarak hesaplanacaktır' diyor. Kalkınma Bakanlığı'nın tek
-    resmî tahmini (Uzunkaya ve Uzunkaya 2012) sermayenin fırsat maliyetine dayalı %9,8'dir → ÖĞRENCİ KARARI: %5 (sosyal
-    zaman tercihi) mi, %9,8 (Türkiye ekonomik indirgeme oranı) mı? PV(25 yıl) = 14,09 (%5) / 9,22 (%9,8) / 17,41 (%3).
+    Faz 1 temizliğinde durum 'kaynakli' → 'model_secimi' yapıldı: %5 Türkiye için bağlayıcı bir değer değil, AB
+    rehberinin uyum ülkeleri oranının ikincil aktarımıdır. ÖĞRENCİ KARARI: %5 (sosyal zaman tercihi) mi, %9,8 (Türkiye
+    ekonomik indirgeme oranı, Uzunkaya ve Uzunkaya 2012) mı? PV(25 yıl) = 14,09 (%5) / 9,22 (%9,8) / 17,41 (%3).
     Oran reel olduğundan tüm maliyetler sabit 2026 fiyatlarıyla kullanılmalı.
 
 - key: access.alpha
@@ -193,9 +225,9 @@
     EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık
     Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur.
     Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu
-    karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Ön kontrol (oturum çalışma alanında, kalibre edilmemiş GHS-POP
-    2025 1 km'den 3 km bloklar): P_min = 250 ile tüm nüfuslu hücrelerin R içinde en az bir adayı var; P_min = 500'de
-    ≈71 hücre (≈4.900 kişi) R dışında kalıyor — R ile P_min birlikte seçilmeli.
+    karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Kapsama kontrolü (R içinde adayı olmayan nüfuslu hücre sayısı ve
+    nüfusu, grid.candidate_min_pop'a göre) Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; R ile P_min birlikte
+    seçilmeli.
   range: [10, 100]
   alternatives:
     - {label: "Kentsel alt sınır (varsayım; kaynak yok)", value: 15, status: varsayim}

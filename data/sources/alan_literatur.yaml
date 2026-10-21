@@ -1,7 +1,8 @@
 # Alan: alan-literatur — Ankara yüzölçümü kaynakları (spec 3 'Ankara yüzölçümü', 4.3 madde 3) ve kaynakça (spec 7 madde 14)
-# Betik: scratchpad alan_literatur.py (raporda yolu var); ham belgeler: data/raw/alan/, data/raw/literatur/ (git dışı;
+# Üreten: pipeline/20_area_literature.py (elle düzenlemeyin); ham belgeler: data/raw/alan/, data/raw/literatur/ (git dışı;
 # _manifest.jsonl'de url/tarih/sha256). Tablo: data/reference/ankara_alan_kaynaklari.csv ; künyeler: data/reference/literatur.yaml
 # Not: TÜİK satırları nufus alanının (tuik_bt_adnks20xx_yogunluk), COD-AB satırı sinirlar alanının (sinirlar_hdx_codab_tur) kaydına bağlanır.
+# Birleştirilen kayıtlar (alanlar arası aynı belge): arazi_osm_worldcover_2021_v200 → alan_literatur_lit_zanaga2022; arazi_osm_boscoe_2012 → alan_literatur_lit_boscoe2012; arazi_osm_ballou_2002 → alan_literatur_lit_ballou2002
 
 - id: alan_literatur_csb_ref4_altindag
   title: Ankara İli, Altındağ İlçesi, Gümüşdere Mahallesi 19734 Ada 9 Parsele Ait 1/5000 Ölçekli Nazım İmar Planı Değişikliği
@@ -20,9 +21,10 @@
     metin s. 32)]'
   notes: Spec kaynağı [4]. Yükleme 24.05.2021 (Last-Modified). 63 sayfa. webdosya.csb.gov.tr eksik TLS zinciri gönderiyor;
     ara sertifika (subject=C = AE, O = SSL2BUY EMEA LLC, CN = SSL2BUY EMEA RSA Organization Validation Secure Server CA)
-    CCADB yansısından alındı, SHA-256 F7AD61C4F2A74D1B… CCADB değeriyle aynı, kök R46 ile openssl verify OK; birleşik CA
-    dosyası REQUESTS_CA_BUNDLE ile verildi (doğrulama kapatılmadı). Belge ÇŞB Ankara İl Müdürlüğü sitesinde plan askı ilanı
-    ekidir; raporu planlama bürosu hazırlamıştır, alan değeri için kaynak göstermez.
+    CCADB yansısından alındı ve repoda pipeline/certs/ssl2buy_emea_rsa_ov_ca.pem olarak saklanıyor, SHA-256 F7AD61C4F2A74D1B…
+    CCADB değeriyle aynı, kök R46 ile openssl verify OK; birleşik CA dosyası çalışma sırasında kurulup REQUESTS_CA_BUNDLE
+    ile verildi (doğrulama kapatılmadı). Belge ÇŞB Ankara İl Müdürlüğü sitesinde plan askı ilanı ekidir; raporu planlama
+    bürosu hazırlamıştır, alan değeri için kaynak göstermez.
 
 - id: alan_literatur_csb_ref5_beypazari
   title: Ankara İli, Beypazarı İlçesi, Macun Mahallesi 116 Ada 2-3 Nolu Parsellere İlişkin Enerji Üretim Alanı Amaçlı (GES)
@@ -37,7 +39,9 @@
   sha256: 2ac5b58cb6d5d2c48699f76a9dc400cbecc850bd59467d9646b2d6bd6060c1dd
   used_for:
   - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş [PDF s. 3 (basılı s. 1; aynı metin PDF s. 41)]'
-  notes: Spec kaynağı [5]. URL zaman damgası 17.11.2025. 83 sayfa. Aynı TLS çözümü.
+  notes: 'Spec kaynağı [5]. 25.632 km²''yi birebir yazan resmî belge: Valilik ÇDR 2018 Çizelge E.85 ile birlikte bu değerin
+    birincil dayanağı; ikincil kopyalara göre HGM ile aynı (HGM tablosu doğrudan okunamadı). URL zaman damgası 17.11.2025.
+    83 sayfa. Aynı TLS çözümü.'
 
 - id: alan_literatur_csb_ref6_cankaya
   title: Ankara İli, Çankaya İlçesi, Yukarı Bahçelievler Mahallesi 7289 Ada 5 Parsel (Milli Kütüphane) 1/1000 Ölçekli Uygulama
@@ -98,8 +102,10 @@
   - 'Ankara yüzölçümü: 25.654,75 km² — CORINE poligonları toplamı (su yapıları ve sulak alanlar dahil) [PDF s. 171 (basılı
     s. 158), Çizelge E.86, sütun 2006/2012]'
   - 'Ankara yüzölçümü: 26.897 km² — atlasın kapsadığı alan (il yüzölçümü olarak verilmemiş) [PDF s. 144 (basılı s. 131)]'
-  notes: Valiliğin resmî raporu; il yüzölçümünü tek sayı olarak yazmıyor, arazi kullanım tablosu (Çizelge E.85, kaynak Tarım
-    ve Orman İl Müd.) 25.632.000 da'ya toplanıyor. ankara.gov.tr ve ankara.bel.tr vekil sunucuda engelli (403). 182 sayfa.
+  notes: 'Valiliğin resmî raporu; il yüzölçümünü tek sayı olarak yazmıyor, arazi kullanım tablosu (Çizelge E.85, kaynak
+    Tarım ve Orman İl Müd.) 25.632.000 da''ya toplanıyor (= 25.632 km²; toplama bizim hesabımız): [5] ile birlikte 25.632
+    km²''nin resmî dayanağı; ikincil kopyalara göre HGM ile aynı. ankara.gov.tr ve ankara.bel.tr vekil sunucuda engelli
+    (403). 182 sayfa.'
 
 - id: alan_literatur_valilik_cdr_2017
   title: Ankara İli 2017 Yılı Çevre Durum Raporu (Ankara, 2018)
@@ -127,7 +133,9 @@
   used_for:
   - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş (HGM tablosu) [js/il-ilce.json, Ankara kaydı]'
   notes: 'HGM''nin kendi sayfası (www.harita.gov.tr/il-ve-ilce-yuzolcumleri) ve PDF''i vekil sunucuda engelli (403), web.archive.org
-    da engelli → HGM değeri yalnız ikincil kopyalardan. README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md.'
+    da engelli → HGM değeri yalnız ikincil kopyalardan. README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md. Yalnız
+    ''ikincil kopyalara göre HGM ile aynı'' notunun dayanağı; 25.632 km²''nin birincil dayanağı resmî belgeler (alan_literatur_csb_ref5_beypazari,
+    alan_literatur_valilik_cdr_2018).'
 
 - id: alan_literatur_hgm_ikincil_brkunver
   title: turkiye-provinces-dataset (GitHub brkunver) — data/provinces.csv area_km2 + metadata/sources.json
@@ -140,7 +148,8 @@
   used_for:
   - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş (HGM) [data/provinces.csv, Ankara satırı]'
   notes: 'sources.json (data/raw/alan/ikincil/github_brkunver_sources.json) Ankara notu: ''Area 25632 HGM (26897/25437/24521
-    rejected)''.'
+    rejected)''. Yalnız ''ikincil kopyalara göre HGM ile aynı'' notunun dayanağı; 25.632 km²''nin birincil dayanağı resmî
+    belgeler (alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018).'
 
 - id: alan_literatur_lit_hakimi1964
   title: Optimum Locations of Switching Centers and the Absolute Centers and Medians of a Graph
@@ -231,13 +240,21 @@
     doi:10.1080/00330124.2011.583586'
   url: https://api.crossref.org/works/10.1080/00330124.2011.583586
   accessed: 2026-10-21
+  published: 2012-05
   kind: akademik
   archived: data/raw/literatur/crossref_boscoe2012.json
   sha256: 841d85e71d8151dccb7af078b22ac4733b17559f4c7f9e86d1366864fe435cc4
   used_for:
   - Kaynakça künyesi (boscoe2012) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  - 'Kaynakça: hastaneye sürüş mesafesi ile kuş uçuşu mesafe karşılaştırması (dolambaç katsayısı literatürü; access.circuity
+    notu)'
   notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1080/00330124.2011.583586); tür journal-article; basılı
-    2012-05, çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+    2012-05, çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli). Denenen tam metin adresleri pmc.ncbi.nlm.nih.gov
+    (PMC3835347), www.ebi.ac.uk (Europe PMC), api.openalex.org, api.semanticscholar.org vekil tarafından reddedildi (403);
+    doi.org yönlendirmesi http://www.tandfonline.com çözümlenemedi. Bu nedenle makalenin raporladığı oran/katsayı DEĞERİ
+    KAYDEDİLMEDİ (uydurma yok). Aynı dosya pipeline/15_circuity.py tarafından data/raw/osm/crossref_boscoe_2012.json olarak
+    da arşivlendi (sha256 aynı). Alanlar arası yinelenen kayıt arazi_osm_boscoe_2012 bu kimlikte birleştirildi (arazi_osm
+    alanı ve access.circuity notu bu kimliği kullanır).'
 
 - id: alan_literatur_lit_ballou2002
   title: Selected country circuity factors for road travel distance estimation
@@ -245,13 +262,19 @@
     36(9): 843–848 (2002); doi:10.1016/S0965-8564(01)00044-1'
   url: https://api.crossref.org/works/10.1016/S0965-8564(01)00044-1
   accessed: 2026-10-21
+  published: 2002-11
   kind: akademik
   archived: data/raw/literatur/crossref_ballou2002.json
   sha256: 5d2f00bd857f4364b6b87f4e04e2cf549089e8d4545b8881d8473ea14c05342a
   used_for:
   - Kaynakça künyesi (ballou2002) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  - 'Kaynakça: ülke bazında dolambaç katsayıları (circuity factor) kavramı (access.circuity notu)'
   notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1016/s0965-8564(01)00044-1); tür journal-article; basılı
-    2002-11, çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+    2002-11, çevrimiçi —. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli). Tam metin açık erişimde bulunamadı;
+    linkinghub.elsevier.com, arxiv.org (ikincil kaynak olarak Boeing 2019), dspace.mit.edu, hcup-us.ahrq.gov vekil tarafından
+    reddedildi (403). Katsayı DEĞERİ KAYDEDİLMEDİ. Aynı dosya pipeline/15_circuity.py tarafından data/raw/osm/crossref_ballou_2002.json
+    olarak da arşivlendi (sha256 aynı). Alanlar arası yinelenen kayıt arazi_osm_ballou_2002 bu kimlikte birleştirildi (arazi_osm
+    alanı ve access.circuity notu bu kimliği kullanır).'
 
 - id: alan_literatur_lit_daskin2013
   title: 'Network and Discrete Location: Models, Algorithms, and Applications, Second Edition'
@@ -341,9 +364,18 @@
     (2022); doi:10.5281/zenodo.7254221
   url: https://zenodo.org/api/records/7254221
   accessed: 2026-10-21
+  published: 2022-10-28
   kind: veri
   archived: data/raw/literatur/zenodo_7254221_worldcover_v200.json
   sha256: 5a4c8c5f203fd182dfd9e0029a403d37cb27b549c6854e7bf9d74fb1328e9a32
   used_for:
   - Kaynakça künyesi (zanaga2022) — yalnız üst veri; bu kaynaktan sayı alınmadı
-  notes: 'Doğrulama: Zenodo REST API kaydı 7254221 (yayım 2022-10-28, sürüm v200, lisans cc-by-4.0).'
+  - 'Arazi örtüsü sınıfları 80 (kalıcı su), 90 (otsu sulak alan), 50 (yapılaşmış alan) — aday hücre su filtresi (karolar:
+    arazi_osm_worldcover_tiles_s3; pipeline/13_landcover.py)'
+  notes: 'Doğrulama: Zenodo REST API kaydı 7254221 (yayım 2022-10-28, sürüm v200, lisans cc-by-4.0). Kayıt açıklaması: 2020
+    (v100) ve 2021 (v200) haritaları farklı algoritma sürümleriyle üretildiği için yıllar arası farklar dikkatle yorumlanmalı.
+    Lisans karo GeoTIFF etiketlerinde de yazıyor ("CC-BY 4.0"). Gösterimde atıf: "© ESA WorldCover project 2021 / Contains
+    modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium" (karo ''copyright'' etiketi). Konsorsiyum:
+    VITO, Brockmann Consult, Gamma Remote Sensing, IIASA, Wageningen Üniv. Aynı dosya pipeline/13_landcover.py tarafından
+    data/raw/arazi/zenodo_7254221_record.json olarak da arşivlendi (sha256 aynı). Alanlar arası yinelenen kayıt arazi_osm_worldcover_2021_v200
+    bu kimlikte birleştirildi (arazi_osm alanı (WorldCover su maskesi) bu kimliği kullanır).'

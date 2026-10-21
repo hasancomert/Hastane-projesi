@@ -1,0 +1,385 @@
+{
+  "aciklama": "2026 KYP Sağlık Bakanlığı hastane projelerinden yatak başına kapalı alan, çekirdek alan (A0) ve makine-teçhizat oranı hesapları (kaynak kaydı: maliyet_hesap_kyp_alan). Alanlar KYP proje karakteristiğindeki kapalı alandır (m²); tutarlar KDV dahil TL.",
+  "uretici": "pipeline/18_costs.py",
+  "girdi": {
+    "dosya": "data/reference/yatirim_programi_2026_saglik.csv",
+    "sha256": "f44400536898a3e04c2ef889030c0de631a44b3f2fc3acf4bc90f948efb59fd7",
+    "kaynak_id": "yatirim_kyp2026",
+    "suzgec": "dahil_ana == True, yatak ve alan_m2 dolu; genel = sehir_hastanesi False, sehir = sehir_hastanesi True (genel bütçeli şehir hastaneleri)"
+  },
+  "m2_per_yatak": {
+    "genel": {
+      "n": 47,
+      "medyan": 250.0,
+      "ortalama": 240.197227,
+      "toplam_bolu_toplam": 237.009534,
+      "c1": 201.65,
+      "c3": 252.55,
+      "min": 170.6,
+      "max": 347.678667
+    },
+    "sehir": {
+      "n": 14,
+      "medyan": 279.5,
+      "ortalama": 284.365709,
+      "toplam_bolu_toplam": 275.787097,
+      "c1": 245.95,
+      "c3": 311.975,
+      "min": 225.0,
+      "max": 380.0
+    },
+    "sehir_1000": {
+      "n": 8,
+      "medyan": 254.85,
+      "ortalama": 272.991658,
+      "toplam_bolu_toplam": 265.217179,
+      "c1": 236.25,
+      "c3": 298.025,
+      "min": 225.0,
+      "max": 380.0
+    }
+  },
+  "sehir_projeleri": [
+    {
+      "proje_no": "2020I00-147132",
+      "proje_adi": "Denizli Şehir Hastanesi",
+      "yatak": 1000,
+      "alan_m2": 310390,
+      "m2_per_yatak": 310.39,
+      "basili_sayfa": 334
+    },
+    {
+      "proje_no": "2020I00-147133",
+      "proje_adi": "Diyarbakır Kayapınar Şehir Hastanesi",
+      "yatak": 1000,
+      "alan_m2": 265082,
+      "m2_per_yatak": 265.082,
+      "basili_sayfa": 335
+    },
+    {
+      "proje_no": "2020I00-147134",
+      "proje_adi": "Ordu Şehir Hastanesi",
+      "yatak": 900,
+      "alan_m2": 315724,
+      "m2_per_yatak": 350.804444,
+      "basili_sayfa": 332
+    },
+    {
+      "proje_no": "2020I00-147136",
+      "proje_adi": "Rize Şehir Hastanesi",
+      "yatak": 800,
+      "alan_m2": 250000,
+      "m2_per_yatak": 312.5,
+      "basili_sayfa": 332
+    },
+    {
+      "proje_no": "2020I00-147137",
+      "proje_adi": "Sakarya Şehir Hastanesi",
+      "yatak": 1000,
+      "alan_m2": 380000,
+      "m2_per_yatak": 380.0,
+      "basili_sayfa": 332
+    },
+    {
+      "proje_no": "2020I00-147138",
+      "proje_adi": "Samsun Şehir Hastanesi",
+      "yatak": 900,
+      "alan_m2": 305547,
+      "m2_per_yatak": 339.496667,
+      "basili_sayfa": 332
+    },
+    {
+      "proje_no": "2020I00-147139",
+      "proje_adi": "İstanbul Sancaktepe Şehir Hastanesi 1. Etap",
+      "yatak": 4050,
+      "alan_m2": 990500,
+      "m2_per_yatak": 244.567901,
+      "basili_sayfa": 335
+    },
+    {
+      "proje_no": "2020I00-147140",
+      "proje_adi": "Trabzon Şehir Hastanesi",
+      "yatak": 900,
+      "alan_m2": 264947,
+      "m2_per_yatak": 294.385556,
+      "basili_sayfa": 332
+    },
+    {
+      "proje_no": "2020I00-156704",
+      "proje_adi": "Şanlıurfa Şehir Hastanesi",
+      "yatak": 1700,
+      "alan_m2": 499559,
+      "m2_per_yatak": 293.858235,
+      "basili_sayfa": 332
+    },
+    {
+      "proje_no": "2023I00-215945",
+      "proje_adi": "Kahramanmaraş Yörükselim Şehir Hastanesi",
+      "yatak": 1000,
+      "alan_m2": 225000,
+      "m2_per_yatak": 225.0,
+      "basili_sayfa": 335
+    },
+    {
+      "proje_no": "2024I00-234460",
+      "proje_adi": "Van Şehir Hastanesi",
+      "yatak": 800,
+      "alan_m2": 200000,
+      "m2_per_yatak": 250.0,
+      "basili_sayfa": 336
+    },
+    {
+      "proje_no": "2024I00-234462",
+      "proje_adi": "Muğla Şehir Hastanesi",
+      "yatak": 700,
+      "alan_m2": 175000,
+      "m2_per_yatak": 250.0,
+      "basili_sayfa": 336
+    },
+    {
+      "proje_no": "2024I00-234473",
+      "proje_adi": "Hatay Şehir Hastanesi",
+      "yatak": 1000,
+      "alan_m2": 225000,
+      "m2_per_yatak": 225.0,
+      "basili_sayfa": 336
+    },
+    {
+      "proje_no": "2025I00-262439",
+      "proje_adi": "İstanbul Süreyyapaşa Şehir Hastanesi",
+      "yatak": 1765,
+      "alan_m2": 423662,
+      "m2_per_yatak": 240.035127,
+      "basili_sayfa": 337
+    }
+  ],
+  "siniflar_genel": {
+    "<200": {
+      "n": 6,
+      "alan_toplam_m2": 239507.0,
+      "yatak_toplam": 900.0,
+      "m2_per_yatak_toplam_bolu_toplam": 266.118889,
+      "ortalama_yatak": 150.0
+    },
+    "200-399": {
+      "n": 15,
+      "alan_toplam_m2": 937351.0,
+      "yatak_toplam": 3850.0,
+      "m2_per_yatak_toplam_bolu_toplam": 243.467792,
+      "ortalama_yatak": 256.666667
+    },
+    ">=400": {
+      "n": 26,
+      "alan_toplam_m2": 3148566.0,
+      "yatak_toplam": 13500.0,
+      "m2_per_yatak_toplam_bolu_toplam": 233.227111,
+      "ortalama_yatak": 519.230769
+    }
+  },
+  "iki_nokta_sinif_ortalamalari": {
+    "tanim": "(<200) ve (>=400) sınıflarının ortalama hastane alanı / ortalama yatak noktalarından doğru",
+    "a_m2_per_yatak": 219.864826,
+    "A0_m2": 6938.109375
+  },
+  "ols_alan_yatak": {
+    "genel": {
+      "n": 47,
+      "A0_m2": 3360.856116,
+      "A0_ci95": [
+        -9818.38408,
+        16540.096312
+      ],
+      "A0_p": 0.610031,
+      "a_m2_per_yatak": 228.354179,
+      "a_ci95": [
+        197.377252,
+        259.331105
+      ],
+      "r2": 0.830475,
+      "sabit_a_ile_A0": {
+        "130": {
+          "A0_m2": 41551.574468,
+          "se": 3654.43296
+        },
+        "158.87": {
+          "A0_m2": 30341.414894,
+          "se": 3189.040534
+        }
+      }
+    },
+    "genel_le600": {
+      "n": 44,
+      "A0_m2": 7694.702813,
+      "A0_ci95": [
+        -1997.328658,
+        17386.734284
+      ],
+      "A0_p": 0.116608,
+      "a_m2_per_yatak": 214.13113,
+      "a_ci95": [
+        189.513345,
+        238.748914
+      ],
+      "r2": 0.880046,
+      "sabit_a_ile_A0": {
+        "130": {
+          "A0_m2": 38287.840909,
+          "se": 2656.530064
+        },
+        "158.87": {
+          "A0_m2": 27789.659091,
+          "se": 2219.527047
+        }
+      }
+    }
+  },
+  "tl_per_m2_genel_kdv_dahil": {
+    "medyan": 53556.0,
+    "toplam_bolu_toplam": 54460.511444
+  },
+  "makine_techizat_insaat_orani": [
+    {
+      "ust_proje_no": "2014I00-2082",
+      "proje_adi": "Çocuk Hastanesi",
+      "yatak": 225,
+      "makine_tl": 238000000,
+      "insaat_tl": 1504752636,
+      "oran": 0.158166,
+      "basili_sayfa": 327
+    },
+    {
+      "ust_proje_no": "2014I00-2086",
+      "proje_adi": "Diş Hastanesi",
+      "yatak": null,
+      "makine_tl": 342425000,
+      "insaat_tl": 880102000,
+      "oran": 0.389074,
+      "basili_sayfa": 322
+    },
+    {
+      "ust_proje_no": "2017I00-3649",
+      "proje_adi": "Diş Hekimliği Hastanesi",
+      "yatak": null,
+      "makine_tl": 132596000,
+      "insaat_tl": 849950000,
+      "oran": 0.156004,
+      "basili_sayfa": 326
+    },
+    {
+      "ust_proje_no": "2020I00-166774",
+      "proje_adi": "Diş Hekimliği Uygulama ve Araştırma Hastanesi",
+      "yatak": null,
+      "makine_tl": 240280000,
+      "insaat_tl": 665295000,
+      "oran": 0.361163,
+      "basili_sayfa": 322
+    },
+    {
+      "ust_proje_no": "2021I00-187767",
+      "proje_adi": "Diş Hekimliği Uygulama ve Araştırma Hastanesi",
+      "yatak": null,
+      "makine_tl": 250000000,
+      "insaat_tl": 541908000,
+      "oran": 0.461333,
+      "basili_sayfa": 317
+    },
+    {
+      "ust_proje_no": "2022I00-178281",
+      "proje_adi": "Diş Hekimliği Fakültesi ve Uygulama Hastanesi",
+      "yatak": null,
+      "makine_tl": 20000000,
+      "insaat_tl": 1002251000,
+      "oran": 0.019955,
+      "basili_sayfa": 341
+    },
+    {
+      "ust_proje_no": "2022I00-183763",
+      "proje_adi": "Acil Travma ve Yanık Hastanesi",
+      "yatak": 134,
+      "makine_tl": 288140000,
+      "insaat_tl": 901597000,
+      "oran": 0.319588,
+      "basili_sayfa": 323
+    },
+    {
+      "ust_proje_no": "2022I00-212722",
+      "proje_adi": "Acil Servis ve Onkoloji Hastanesi 1. Kısım İkmal ve 2. Kısım İnşaat",
+      "yatak": 424,
+      "makine_tl": 10000000,
+      "insaat_tl": 5073949000,
+      "oran": 0.001971,
+      "basili_sayfa": 322
+    },
+    {
+      "ust_proje_no": "2023I00-193014",
+      "proje_adi": "Hastane Reorganizasyon İşi-3",
+      "yatak": null,
+      "makine_tl": 144398000,
+      "insaat_tl": 299655000,
+      "oran": 0.481881,
+      "basili_sayfa": 320
+    },
+    {
+      "ust_proje_no": "2023I00-214185",
+      "proje_adi": "Diş Hekimliği Uygulama ve Araştırma Hastanesi",
+      "yatak": null,
+      "makine_tl": 10000000,
+      "insaat_tl": 886710000,
+      "oran": 0.011278,
+      "basili_sayfa": 320
+    },
+    {
+      "ust_proje_no": "2023I00-227919",
+      "proje_adi": "Diş Hekimliği Uygulama ve Araştırma Hastanesi",
+      "yatak": null,
+      "makine_tl": 5006000,
+      "insaat_tl": 875000000,
+      "oran": 0.005721,
+      "basili_sayfa": 329
+    }
+  ],
+  "sehir_hastanesi_belge_adaylari": {
+    "adaylar": {
+      "Eskişehir": {
+        "yatak": 1081,
+        "kapali_alan_m2": 333303,
+        "m2_per_yatak": 308.3284,
+        "source_id": "maliyet_memurlar_2018"
+      },
+      "Manisa": {
+        "yatak": 558,
+        "kapali_alan_m2": 178204,
+        "m2_per_yatak": 319.362007,
+        "source_id": "maliyet_memurlar_2018"
+      },
+      "Bilkent (3.810)": {
+        "yatak": 3810,
+        "kapali_alan_m2": 1312358,
+        "m2_per_yatak": 344.450919,
+        "source_id": "maliyet_medikalakademi_bilkent"
+      },
+      "Bilkent (3.704, 2017 plan, 1,2 mn m²)": {
+        "yatak": 3704,
+        "kapali_alan_m2": 1200000,
+        "m2_per_yatak": 323.974082,
+        "source_id": "maliyet_kalkinma_ankara_2017"
+      },
+      "Program 32 hastane": {
+        "yatak": 42199,
+        "kapali_alan_m2": 14159000,
+        "m2_per_yatak": 335.529278,
+        "source_id": "maliyet_savas_2020"
+      }
+    },
+    "bilkent_kapsam_ifadeleri": {
+      "belge": "data/raw/maliyet/kalkinmakutuphanesi_ankara_saglik_termal_2017.pdf",
+      "sayfa": "PDF s. 5",
+      "ifadeler": [
+        "Sağlık Bakanlığı’nın yeni idari binasını",
+        "Sağlık Bilimleri Üniversitesi, Kongre Merkezleri",
+        "8 bin araç kapasiteli kapalı otoparklar bodrum",
+        "800 araç kapasiteli olacak"
+      ]
+    }
+  }
+}
