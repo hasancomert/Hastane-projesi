@@ -1,0 +1,11 @@
+# Sunum / çalışma zamanı (backend). Windows: Python 3.12–3.14, 64-bit.
+highspy==1.15.1
+numpy==2.5.4
+scipy==1.18.1
+fastapi==0.156.8
+starlette==1.9.0
+uvicorn==0.54.0
+sse-starlette==3.5.0
+pydantic==2.14.1
+orjson==3.13.0
+pyyaml==6.0.3

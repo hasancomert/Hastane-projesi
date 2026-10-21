@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ham indirmeler ve önbellek (git'e girmez)
+data/raw/
+cache/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Editör / sistem
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
