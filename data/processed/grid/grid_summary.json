@@ -1,0 +1,1324 @@
+{
+  "generated_by": "pipeline/22_grids.py",
+  "generated": "2026-10-21",
+  "province_2025": 5910320,
+  "province_2030": 6062005,
+  "default_source": "wp",
+  "rule_params": {
+    "grid.candidate_min_pop": 250,
+    "grid.candidate_near_density": 1500,
+    "grid.candidate_min_inside": 0.5,
+    "grid.candidate_max_water": 0.5
+  },
+  "near_threshold_per_cell": {
+    "2km": 6000.0,
+    "3km": 13500.0,
+    "5km": 37500.0
+  },
+  "R_km": 30.0,
+  "k_nearest": 50,
+  "k_tie_tol_km": 1e-09,
+  "circuity": {
+    "mode": "mesafeye_bagli",
+    "scale": 1.0,
+    "min_factor": 1.1811,
+    "prefilter_euclid_km": 25.4000508001016,
+    "R_euclid_km": 24.99639751115631,
+    "R_euclid_km_note": "road_km(e) = R olan kuş uçuşu e (varsayılan dolambaç modu ve profiliyle)",
+    "R_euclid_km_constant_mode": 24.529844643960296
+  },
+  "intra_cell_euclid_km": {
+    "2km": 0.7651957164642127,
+    "3km": 1.147793574696319,
+    "5km": 1.9129892911605317
+  },
+  "intra_cell_road_km": {
+    "2km": 1.0592604303014097,
+    "3km": 1.5888906454521146,
+    "5km": 2.6481510757535243
+  },
+  "calibration": {
+    "wp": {
+      "factor_min": 0.9600477429574227,
+      "factor_max": 1.2288824327914378,
+      "source_province_2025": 5933578.166976557,
+      "source_province_2030": 6022593.183927874,
+      "rescale_2030": 1.0105048649046997,
+      "phase1_max_abs_diff": 0.04970875114668161,
+      "districts": {
+        "akyurt": {
+          "factor": 1.1204277879490445,
+          "growth_source": 1.0150020242301552,
+          "pop2030": 48161,
+          "growth_final": 1.02566232217395,
+          "annual_rate_2025_2030": 0.005080576960957872,
+          "flags": [
+            "buyuk_fark"
+          ]
+        },
+        "altindag": {
+          "factor": 0.9766377553307222,
+          "growth_source": 1.0150660007073384,
+          "pop2030": 428829,
+          "growth_final": 1.0257300177959778,
+          "annual_rate_2025_2030": 0.005093844048409624,
+          "flags": []
+        },
+        "ayas": {
+          "factor": 0.9946028000392876,
+          "growth_source": 1.0150015940513988,
+          "pop2030": 13473,
+          "growth_final": 1.0256546894031668,
+          "annual_rate_2025_2030": 0.005079081035382238,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "bala": {
+          "factor": 0.9715311129661084,
+          "growth_source": 1.015003158364947,
+          "pop2030": 20625,
+          "growth_final": 1.0256601521706699,
+          "annual_rate_2025_2030": 0.005080151668939603,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "beypazari": {
+          "factor": 0.9785168486251852,
+          "growth_source": 1.0150014718099118,
+          "pop2030": 49600,
+          "growth_final": 1.0256622345375215,
+          "annual_rate_2025_2030": 0.005080559785387795,
+          "flags": []
+        },
+        "camlidere": {
+          "factor": 1.2288824327914378,
+          "growth_source": 1.0150218593408646,
+          "pop2030": 10465,
+          "growth_final": 1.025678721944526,
+          "annual_rate_2025_2030": 0.005083791076382571,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "cankaya": {
+          "factor": 0.9861381858067371,
+          "growth_source": 1.0150012602008869,
+          "pop2030": 976635,
+          "growth_final": 1.0256637800121404,
+          "annual_rate_2025_2030": 0.005080862677608433,
+          "flags": []
+        },
+        "cubuk": {
+          "factor": 1.0342302423623495,
+          "growth_source": 1.0150058329040632,
+          "pop2030": 104041,
+          "growth_final": 1.0256711062038506,
+          "annual_rate_2025_2030": 0.005082298507592675,
+          "flags": []
+        },
+        "elmadag": {
+          "factor": 0.9989070014405594,
+          "growth_source": 1.01500468035317,
+          "pop2030": 46816,
+          "growth_final": 1.0256769783542197,
+          "annual_rate_2025_2030": 0.005083449360110404,
+          "flags": []
+        },
+        "etimesgut": {
+          "factor": 1.0229395771852798,
+          "growth_source": 1.01500150304944,
+          "pop2030": 648689,
+          "growth_final": 1.0256633642075836,
+          "annual_rate_2025_2030": 0.005080781185548666,
+          "flags": []
+        },
+        "evren": {
+          "factor": 0.9776381420077196,
+          "growth_source": 1.015001661150656,
+          "pop2030": 3002,
+          "growth_final": 1.0256235052955245,
+          "annual_rate_2025_2030": 0.005072969256094462,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "golbasi": {
+          "factor": 1.1204626730507241,
+          "growth_source": 1.0150166947782597,
+          "pop2030": 177248,
+          "growth_final": 1.0256813841791563,
+          "annual_rate_2025_2030": 0.005084312831594939,
+          "flags": [
+            "buyuk_fark"
+          ]
+        },
+        "gudul": {
+          "factor": 0.9748822155619199,
+          "growth_source": 1.015007548566577,
+          "pop2030": 8234,
+          "growth_final": 1.0256601893373194,
+          "annual_rate_2025_2030": 0.005080158953118863,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "haymana": {
+          "factor": 0.9661818409464076,
+          "growth_source": 1.0150019820869327,
+          "pop2030": 26460,
+          "growth_final": 1.0256609039460423,
+          "annual_rate_2025_2030": 0.0050802990070772935,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "kahramankazan": {
+          "factor": 1.0375269608201183,
+          "growth_source": 1.0150019756428934,
+          "pop2030": 64763,
+          "growth_final": 1.0256560505519219,
+          "annual_rate_2025_2030": 0.005079347803803813,
+          "flags": []
+        },
+        "kalecik": {
+          "factor": 0.9600477429574227,
+          "growth_source": 1.0150014906778437,
+          "pop2030": 12886,
+          "growth_final": 1.0256287806431073,
+          "annual_rate_2025_2030": 0.0050740031829346055,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "kecioren": {
+          "factor": 0.9663120509100065,
+          "growth_source": 1.0149966620691495,
+          "pop2030": 955629,
+          "growth_final": 1.0256589411863195,
+          "annual_rate_2025_2030": 0.005079914331668212,
+          "flags": []
+        },
+        "kizilcahamam": {
+          "factor": 1.0278325476474084,
+          "growth_source": 1.0150076022918337,
+          "pop2030": 28556,
+          "growth_final": 1.0256815487949427,
+          "annual_rate_2025_2030": 0.0050843450936084444,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "mamak": {
+          "factor": 0.9831540185030967,
+          "growth_source": 1.0149675837033179,
+          "pop2030": 708022,
+          "growth_final": 1.025629808395707,
+          "annual_rate_2025_2030": 0.00507420461390562,
+          "flags": []
+        },
+        "nallihan": {
+          "factor": 0.9673054652537332,
+          "growth_source": 1.0149959387436758,
+          "pop2030": 26752,
+          "growth_final": 1.0256488900816625,
+          "annual_rate_2025_2030": 0.005077944436491455,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "polatli": {
+          "factor": 1.0014031205889753,
+          "growth_source": 1.0150019766691245,
+          "pop2030": 135279,
+          "growth_final": 1.025664548804343,
+          "annual_rate_2025_2030": 0.005081013350394903,
+          "flags": []
+        },
+        "pursaklar": {
+          "factor": 1.012474067380904,
+          "growth_source": 1.0149968054743028,
+          "pop2030": 173214,
+          "growth_final": 1.0256571195101876,
+          "annual_rate_2025_2030": 0.0050795573062834,
+          "flags": []
+        },
+        "sincan": {
+          "factor": 1.0265328695897789,
+          "growth_source": 1.0150055575297479,
+          "pop2030": 620905,
+          "growth_final": 1.0256687689761235,
+          "annual_rate_2025_2030": 0.005081840444897345,
+          "flags": [
+            "buyuk_fark"
+          ]
+        },
+        "sereflikochisar": {
+          "factor": 0.9733889957498228,
+          "growth_source": 1.0149806272053747,
+          "pop2030": 33673,
+          "growth_final": 1.0256464926441473,
+          "annual_rate_2025_2030": 0.005077474565398976,
+          "flags": [
+            "yon_celiskili"
+          ]
+        },
+        "yenimahalle": {
+          "factor": 0.9805288725419761,
+          "growth_source": 1.0150005857629627,
+          "pop2030": 740048,
+          "growth_final": 1.0256634850061883,
+          "annual_rate_2025_2030": 0.005080804860441157,
+          "flags": []
+        }
+      },
+      "flagged": [
+        "Akyurt",
+        "Ayaş",
+        "Bala",
+        "Çamlıdere",
+        "Evren",
+        "Gölbaşı",
+        "Güdül",
+        "Haymana",
+        "Kalecik",
+        "Kızılcahamam",
+        "Nallıhan",
+        "Sincan",
+        "Şereflikoçhisar"
+      ]
+    },
+    "ghs": {
+      "factor_min": 0.5384590933267629,
+      "factor_max": 3.357299378498406,
+      "source_province_2025": 6351089.845335259,
+      "source_province_2030": 6684636.174333026,
+      "rescale_2030": 0.9760049161800431,
+      "phase1_max_abs_diff": 0.049505864175444,
+      "districts": {
+        "akyurt": {
+          "factor": 0.5384590933267629,
+          "growth_source": 1.0274698115768859,
+          "pop2030": 47088,
+          "growth_final": 1.002811142346026,
+          "annual_rate_2025_2030": 0.0005615973317336653,
+          "flags": [
+            "buyuk_fark"
+          ]
+        },
+        "altindag": {
+          "factor": 0.785594051360553,
+          "growth_source": 1.0465883380214505,
+          "pop2030": 427050,
+          "growth_final": 1.0214747698960944,
+          "annual_rate_2025_2030": 0.004258529053221327,
+          "flags": []
+        },
+        "ayas": {
+          "factor": 0.9513162564821094,
+          "growth_source": 1.102924458401638,
+          "pop2030": 14140,
+          "growth_final": 1.0764311814859926,
+          "annual_rate_2025_2030": 0.014839245925119648,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "bala": {
+          "factor": 0.902913381343773,
+          "growth_source": 1.0911991726269454,
+          "pop2030": 21416,
+          "growth_final": 1.0649957730369486,
+          "annual_rate_2025_2030": 0.012673806527894405,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "beypazari": {
+          "factor": 0.8056743716192637,
+          "growth_source": 1.1032088464041303,
+          "pop2030": 52070,
+          "growth_final": 1.0767385595235635,
+          "annual_rate_2025_2030": 0.014897197362659487,
+          "flags": []
+        },
+        "camlidere": {
+          "factor": 1.1252950722959543,
+          "growth_source": 1.086692497122192,
+          "pop2030": 10822,
+          "growth_final": 1.0606684308536705,
+          "annual_rate_2025_2030": 0.011849516710142893,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "cankaya": {
+          "factor": 1.2123082671161352,
+          "growth_source": 1.051692468391769,
+          "pop2030": 977390,
+          "growth_final": 1.0264566823286754,
+          "annual_rate_2025_2030": 0.005236212733461754,
+          "flags": []
+        },
+        "cubuk": {
+          "factor": 2.3107424450776928,
+          "growth_source": 0.8398386882474294,
+          "pop2030": 83147,
+          "growth_final": 0.819691039758668,
+          "annual_rate_2025_2030": -0.03898528514115007,
+          "flags": [
+            "kuculuyor",
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "elmadag": {
+          "factor": 1.5400601197603263,
+          "growth_source": 1.0938377440706055,
+          "pop2030": 48729,
+          "growth_final": 1.0675882919989483,
+          "annual_rate_2025_2030": 0.013166357476673163,
+          "flags": []
+        },
+        "etimesgut": {
+          "factor": 0.8532996040020323,
+          "growth_source": 1.050798020306795,
+          "pop2030": 648639,
+          "growth_final": 1.025584307574574,
+          "annual_rate_2025_2030": 0.005065286676304792,
+          "flags": []
+        },
+        "evren": {
+          "factor": 3.357299378498406,
+          "growth_source": 1.0797153591646638,
+          "pop2030": 3085,
+          "growth_final": 1.053980184489238,
+          "annual_rate_2025_2030": 0.010570203963274682,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "golbasi": {
+          "factor": 1.0284170853661658,
+          "growth_source": 1.0998253663218591,
+          "pop2030": 185500,
+          "growth_final": 1.0734332503906023,
+          "annual_rate_2025_2030": 0.014273336428522576,
+          "flags": [
+            "buyuk_fark"
+          ]
+        },
+        "gudul": {
+          "factor": 0.6459995299677755,
+          "growth_source": 1.099889634276715,
+          "pop2030": 8618,
+          "growth_final": 1.0734927752864973,
+          "annual_rate_2025_2030": 0.014284585041439701,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "haymana": {
+          "factor": 0.9281963641914275,
+          "growth_source": 1.0948087739907073,
+          "pop2030": 27566,
+          "growth_final": 1.068532444375533,
+          "annual_rate_2025_2030": 0.013345498671474498,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "kahramankazan": {
+          "factor": 1.0474177091698873,
+          "growth_source": 1.0988143845188327,
+          "pop2030": 67718,
+          "growth_final": 1.0724545872068163,
+          "annual_rate_2025_2030": 0.014088323682050152,
+          "flags": []
+        },
+        "kalecik": {
+          "factor": 0.8283429989377157,
+          "growth_source": 1.0946695595092326,
+          "pop2030": 13423,
+          "growth_final": 1.0683699458771092,
+          "annual_rate_2025_2030": 0.013314675622443373,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "kecioren": {
+          "factor": 0.9102090773856977,
+          "growth_source": 1.0464264100342235,
+          "pop2030": 951584,
+          "growth_final": 1.0213175174569238,
+          "annual_rate_2025_2030": 0.004227606737090772,
+          "flags": []
+        },
+        "kizilcahamam": {
+          "factor": 1.052640099850312,
+          "growth_source": 1.105057594798028,
+          "pop2030": 30028,
+          "growth_final": 1.0785532128874682,
+          "annual_rate_2025_2030": 0.015239053111282708,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "mamak": {
+          "factor": 0.7197203326740074,
+          "growth_source": 1.0485132636486945,
+          "pop2030": 706451,
+          "growth_final": 1.0233540818942852,
+          "annual_rate_2025_2030": 0.004627784912456079,
+          "flags": []
+        },
+        "nallihan": {
+          "factor": 0.686545113441723,
+          "growth_source": 1.099863140142011,
+          "pop2030": 27999,
+          "growth_final": 1.0734578077675114,
+          "annual_rate_2025_2030": 0.014277977176267997,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "polatli": {
+          "factor": 1.0261049523416221,
+          "growth_source": 1.0987043981731275,
+          "pop2030": 141435,
+          "growth_final": 1.072338392951916,
+          "annual_rate_2025_2030": 0.014066348608150703,
+          "flags": []
+        },
+        "pursaklar": {
+          "factor": 0.6033934661977406,
+          "growth_source": 1.0486246566384423,
+          "pop2030": 172843,
+          "growth_final": 1.0234603063695737,
+          "annual_rate_2025_2030": 0.004648640182516095,
+          "flags": []
+        },
+        "sincan": {
+          "factor": 0.7737821239234637,
+          "growth_source": 1.0511448548970683,
+          "pop2030": 621059,
+          "growth_final": 1.0259231605342884,
+          "annual_rate_2025_2030": 0.005131692596104909,
+          "flags": [
+            "buyuk_fark"
+          ]
+        },
+        "sereflikochisar": {
+          "factor": 0.8227947256860926,
+          "growth_source": 1.0998480064333713,
+          "pop2030": 35243,
+          "growth_final": 1.0734671499497426,
+          "annual_rate_2025_2030": 0.014279742599490275,
+          "flags": [
+            "yon_celiskili",
+            "buyuk_fark"
+          ]
+        },
+        "yenimahalle": {
+          "factor": 1.5554150683643577,
+          "growth_source": 1.0493367087458263,
+          "pop2030": 738962,
+          "growth_final": 1.0241583521705928,
+          "annual_rate_2025_2030": 0.004785645890305501,
+          "flags": []
+        }
+      },
+      "flagged": [
+        "Akyurt",
+        "Ayaş",
+        "Bala",
+        "Çamlıdere",
+        "Çubuk",
+        "Evren",
+        "Gölbaşı",
+        "Güdül",
+        "Haymana",
+        "Kalecik",
+        "Kızılcahamam",
+        "Nallıhan",
+        "Sincan",
+        "Şereflikoçhisar"
+      ]
+    }
+  },
+  "growth_flag_rule": {
+    "near_zero_annual": 0.0025,
+    "max_gap_annual": 0.02,
+    "basis": "TÜİK ADNKS 2024→2025 ilçe değişimi",
+    "note": "kuculuyor: senaryoda 2030 < 2025; yon_celiskili: senaryo 2025→2030 yıllık hızının işareti TÜİK 2024→2025 değişiminin tersi (ikisi de |r| ≥ %0,25); buyuk_fark: fark > 2 puan/yıl. Yalnız raporlama (model_secimi eşikler)."
+  },
+  "landcover": {
+    "pixels_inside_province": 2567925,
+    "pixels_valid": 2567925
+  },
+  "sizes": {
+    "2km": {
+      "cell_km": 2,
+      "n_cells": 6825,
+      "n_cells_fully_inside": 5976,
+      "sum_inside_area_km2": 25629.92,
+      "n_admissible": 6240,
+      "n_excluded_inside_frac": 425,
+      "n_excluded_water": 160,
+      "n_demand_cells": {
+        "wp_2025": 4842,
+        "wp_2030": 4856,
+        "ghs_2025": 2816,
+        "ghs_2030": 2832
+      },
+      "sum_pop": {
+        "wp_2025": 5910320,
+        "wp_2030": 6062005,
+        "ghs_2025": 5910320,
+        "ghs_2030": 6062005
+      },
+      "max_cell_pop": {
+        "wp_2025": 120369,
+        "wp_2030": 123208,
+        "ghs_2025": 134680,
+        "ghs_2030": 137170
+      },
+      "n_pieces": 5255,
+      "n_cells_multi_district": 372,
+      "majority_district_ties": {
+        "integer_ties": 24,
+        "still_tied_after_raw": 0,
+        "still_tied_after_area": 0
+      },
+      "J_table": {
+        "source": "wp",
+        "year": 2025,
+        "near_density_per_km2": 1500.0,
+        "near_threshold_per_cell": 6000.0,
+        "rows": [
+          {
+            "P_min": 0,
+            "J_without_near": 6240,
+            "J_with_near": 6240,
+            "added_by_near": 0,
+            "pop_in_candidates_without_near": 5908253,
+            "pop_in_candidates_with_near": 5908253
+          },
+          {
+            "P_min": 100,
+            "J_without_near": 1311,
+            "J_with_near": 1347,
+            "added_by_near": 36,
+            "pop_in_candidates_without_near": 5849440,
+            "pop_in_candidates_with_near": 5850749
+          },
+          {
+            "P_min": 250,
+            "J_without_near": 825,
+            "J_with_near": 890,
+            "added_by_near": 65,
+            "pop_in_candidates_without_near": 5770496,
+            "pop_in_candidates_with_near": 5776927
+          },
+          {
+            "P_min": 500,
+            "J_without_near": 553,
+            "J_with_near": 659,
+            "added_by_near": 106,
+            "pop_in_candidates_without_near": 5674696,
+            "pop_in_candidates_with_near": 5696588
+          },
+          {
+            "P_min": 1000,
+            "J_without_near": 386,
+            "J_with_near": 542,
+            "added_by_near": 156,
+            "pop_in_candidates_without_near": 5557006,
+            "pop_in_candidates_with_near": 5615969
+          },
+          {
+            "P_min": 2500,
+            "J_without_near": 248,
+            "J_with_near": 462,
+            "added_by_near": 214,
+            "pop_in_candidates_without_near": 5344728,
+            "pop_in_candidates_with_near": 5495634
+          }
+        ]
+      },
+      "J_table_ghs_2025": [
+        {
+          "P_min": 0,
+          "J_without_near": 6240,
+          "J_with_near": 6240,
+          "added_by_near": 0,
+          "pop_in_candidates_without_near": 5908069,
+          "pop_in_candidates_with_near": 5908069
+        },
+        {
+          "P_min": 100,
+          "J_without_near": 1182,
+          "J_with_near": 1231,
+          "added_by_near": 49,
+          "pop_in_candidates_without_near": 5867207,
+          "pop_in_candidates_with_near": 5868581
+        },
+        {
+          "P_min": 250,
+          "J_without_near": 698,
+          "J_with_near": 782,
+          "added_by_near": 84,
+          "pop_in_candidates_without_near": 5787930,
+          "pop_in_candidates_with_near": 5794762
+        },
+        {
+          "P_min": 500,
+          "J_without_near": 462,
+          "J_with_near": 566,
+          "added_by_near": 104,
+          "pop_in_candidates_without_near": 5706066,
+          "pop_in_candidates_with_near": 5720347
+        },
+        {
+          "P_min": 1000,
+          "J_without_near": 334,
+          "J_with_near": 465,
+          "added_by_near": 131,
+          "pop_in_candidates_without_near": 5614424,
+          "pop_in_candidates_with_near": 5649178
+        },
+        {
+          "P_min": 2500,
+          "J_without_near": 222,
+          "J_with_near": 398,
+          "added_by_near": 176,
+          "pop_in_candidates_without_near": 5441768,
+          "pop_in_candidates_with_near": 5551301
+        }
+      ],
+      "coverage_default": {
+        "source": "wp",
+        "year": 2025,
+        "J_rule": 890,
+        "J_repaired": 891,
+        "uncovered_before_cells": 4,
+        "uncovered_before_pop": 33,
+        "added_cells": 1,
+        "uncovered_after_cells": 0,
+        "uncovered_after_pop": 0,
+        "no_admissible_within_R_cells": 0,
+        "no_admissible_within_R_pop": 0,
+        "added_cell_ids": [
+          "2km_168_2233"
+        ],
+        "added_self": 1,
+        "uncovered_before_ids": [
+          "2km_168_2232",
+          "2km_168_2233",
+          "2km_169_2233",
+          "2km_169_2234"
+        ],
+        "uncovered_before_pop_by_cell": [
+          1,
+          11,
+          11,
+          10
+        ]
+      },
+      "coverage_other_scenarios": {
+        "wp_2030": {
+          "source": "wp",
+          "year": 2030,
+          "J_rule": 909,
+          "J_repaired": 910,
+          "uncovered_before_cells": 4,
+          "uncovered_before_pop": 34,
+          "added_cells": 1,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 1
+        },
+        "ghs_2025": {
+          "source": "ghs",
+          "year": 2025,
+          "J_rule": 782,
+          "J_repaired": 782,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        },
+        "ghs_2030": {
+          "source": "ghs",
+          "year": 2030,
+          "J_rule": 820,
+          "J_repaired": 820,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        }
+      },
+      "neighbors_default": {
+        "n_demand": 4842,
+        "n_candidates": 891,
+        "R_km": 30.0,
+        "k": 50,
+        "candidates_within_R_mean": 76.44299876084263,
+        "candidates_within_R_median": 35.0,
+        "candidates_within_R_min": 1,
+        "candidates_within_R_max": 404,
+        "share_demand_cells_truncated_by_k": 0.39219330855018586,
+        "nnz_all_within_R": 370137,
+        "nnz_k_nearest": 162497,
+        "k_list_tie_extra_pairs": 2841,
+        "k_list_rows_longer_than_k": 1158,
+        "k_list_row_len_mean": 33.55989260636101,
+        "k_list_row_len_max": 59,
+        "nearest_candidate_road_km_popweighted_mean": 1.1687430369882772,
+        "nearest_candidate_road_km_max": 23.12285731224995
+      },
+      "density_per_km2": {
+        "demand_cells": {
+          "n_cells": 4842,
+          "min": 0.25,
+          "median": 4.5,
+          "p90": 155.62500000000068,
+          "max": 30092.25,
+          "max_over_median": 6687.166666666667
+        },
+        "candidate_cells": {
+          "n_cells": 891,
+          "min": 0.0,
+          "median": 194.75,
+          "p90": 5027.5,
+          "max": 30092.25,
+          "max_over_median": 154.5173299101412
+        }
+      }
+    },
+    "3km": {
+      "cell_km": 3,
+      "n_cells": 3111,
+      "n_cells_fully_inside": 2572,
+      "sum_inside_area_km2": 25629.92,
+      "n_admissible": 2776,
+      "n_excluded_inside_frac": 260,
+      "n_excluded_water": 75,
+      "n_demand_cells": {
+        "wp_2025": 2604,
+        "wp_2030": 2609,
+        "ghs_2025": 1806,
+        "ghs_2030": 1806
+      },
+      "sum_pop": {
+        "wp_2025": 5910320,
+        "wp_2030": 6062005,
+        "ghs_2025": 5910320,
+        "ghs_2030": 6062005
+      },
+      "max_cell_pop": {
+        "wp_2025": 253355,
+        "wp_2030": 259307,
+        "ghs_2025": 258362,
+        "ghs_2030": 263120
+      },
+      "n_pieces": 2947,
+      "n_cells_multi_district": 311,
+      "majority_district_ties": {
+        "integer_ties": 12,
+        "still_tied_after_raw": 0,
+        "still_tied_after_area": 0
+      },
+      "J_table": {
+        "source": "wp",
+        "year": 2025,
+        "near_density_per_km2": 1500.0,
+        "near_threshold_per_cell": 13500.0,
+        "rows": [
+          {
+            "P_min": 0,
+            "J_without_near": 2776,
+            "J_with_near": 2776,
+            "added_by_near": 0,
+            "pop_in_candidates_without_near": 5908623,
+            "pop_in_candidates_with_near": 5908623
+          },
+          {
+            "P_min": 100,
+            "J_without_near": 957,
+            "J_with_near": 964,
+            "added_by_near": 7,
+            "pop_in_candidates_without_near": 5873648,
+            "pop_in_candidates_with_near": 5873993
+          },
+          {
+            "P_min": 250,
+            "J_without_near": 617,
+            "J_with_near": 634,
+            "added_by_near": 17,
+            "pop_in_candidates_without_near": 5817366,
+            "pop_in_candidates_with_near": 5819526
+          },
+          {
+            "P_min": 500,
+            "J_without_near": 395,
+            "J_with_near": 419,
+            "added_by_near": 24,
+            "pop_in_candidates_without_near": 5739231,
+            "pop_in_candidates_with_near": 5744011
+          },
+          {
+            "P_min": 1000,
+            "J_without_near": 269,
+            "J_with_near": 311,
+            "added_by_near": 42,
+            "pop_in_candidates_without_near": 5653653,
+            "pop_in_candidates_with_near": 5672169
+          },
+          {
+            "P_min": 2500,
+            "J_without_near": 179,
+            "J_with_near": 247,
+            "added_by_near": 68,
+            "pop_in_candidates_without_near": 5511331,
+            "pop_in_candidates_with_near": 5572874
+          }
+        ]
+      },
+      "J_table_ghs_2025": [
+        {
+          "P_min": 0,
+          "J_without_near": 2776,
+          "J_with_near": 2776,
+          "added_by_near": 0,
+          "pop_in_candidates_without_near": 5908590,
+          "pop_in_candidates_with_near": 5908590
+        },
+        {
+          "P_min": 100,
+          "J_without_near": 885,
+          "J_with_near": 903,
+          "added_by_near": 18,
+          "pop_in_candidates_without_near": 5882776,
+          "pop_in_candidates_with_near": 5883256
+        },
+        {
+          "P_min": 250,
+          "J_without_near": 544,
+          "J_with_near": 575,
+          "added_by_near": 31,
+          "pop_in_candidates_without_near": 5827029,
+          "pop_in_candidates_with_near": 5829880
+        },
+        {
+          "P_min": 500,
+          "J_without_near": 342,
+          "J_with_near": 382,
+          "added_by_near": 40,
+          "pop_in_candidates_without_near": 5757507,
+          "pop_in_candidates_with_near": 5763497
+        },
+        {
+          "P_min": 1000,
+          "J_without_near": 235,
+          "J_with_near": 289,
+          "added_by_near": 54,
+          "pop_in_candidates_without_near": 5683674,
+          "pop_in_candidates_with_near": 5700121
+        },
+        {
+          "P_min": 2500,
+          "J_without_near": 151,
+          "J_with_near": 224,
+          "added_by_near": 73,
+          "pop_in_candidates_without_near": 5551782,
+          "pop_in_candidates_with_near": 5600179
+        }
+      ],
+      "coverage_default": {
+        "source": "wp",
+        "year": 2025,
+        "J_rule": 634,
+        "J_repaired": 634,
+        "uncovered_before_cells": 0,
+        "uncovered_before_pop": 0,
+        "added_cells": 0,
+        "uncovered_after_cells": 0,
+        "uncovered_after_pop": 0,
+        "no_admissible_within_R_cells": 0,
+        "no_admissible_within_R_pop": 0,
+        "added_cell_ids": [],
+        "added_self": 0,
+        "uncovered_before_ids": [],
+        "uncovered_before_pop_by_cell": []
+      },
+      "coverage_other_scenarios": {
+        "wp_2030": {
+          "source": "wp",
+          "year": 2030,
+          "J_rule": 646,
+          "J_repaired": 646,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        },
+        "ghs_2025": {
+          "source": "ghs",
+          "year": 2025,
+          "J_rule": 575,
+          "J_repaired": 575,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        },
+        "ghs_2030": {
+          "source": "ghs",
+          "year": 2030,
+          "J_rule": 597,
+          "J_repaired": 597,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        }
+      },
+      "neighbors_default": {
+        "n_demand": 2604,
+        "n_candidates": 634,
+        "R_km": 30.0,
+        "k": 50,
+        "candidates_within_R_mean": 47.64362519201229,
+        "candidates_within_R_median": 28.0,
+        "candidates_within_R_min": 1,
+        "candidates_within_R_max": 206,
+        "share_demand_cells_truncated_by_k": 0.3068356374807988,
+        "nnz_all_within_R": 124064,
+        "nnz_k_nearest": 81288,
+        "k_list_tie_extra_pairs": 1527,
+        "k_list_rows_longer_than_k": 568,
+        "k_list_row_len_mean": 31.216589861751153,
+        "k_list_row_len_max": 58,
+        "nearest_candidate_road_km_popweighted_mean": 1.6660911754849654,
+        "nearest_candidate_road_km_max": 29.088489514850114
+      },
+      "density_per_km2": {
+        "demand_cells": {
+          "n_cells": 2604,
+          "min": 0.1111111111111111,
+          "median": 4.841626260723961,
+          "p90": 125.87777777777859,
+          "max": 28150.555555555555,
+          "max_over_median": 5814.276864762842
+        },
+        "candidate_cells": {
+          "n_cells": 634,
+          "min": 0.4444444444444444,
+          "median": 78.33333333333333,
+          "p90": 2307.8666666666777,
+          "max": 28150.555555555555,
+          "max_over_median": 359.36879432624113
+        }
+      }
+    },
+    "5km": {
+      "cell_km": 5,
+      "n_cells": 1178,
+      "n_cells_fully_inside": 876,
+      "sum_inside_area_km2": 25629.92,
+      "n_admissible": 1004,
+      "n_excluded_inside_frac": 155,
+      "n_excluded_water": 19,
+      "n_demand_cells": {
+        "wp_2025": 1073,
+        "wp_2030": 1072,
+        "ghs_2025": 917,
+        "ghs_2030": 919
+      },
+      "sum_pop": {
+        "wp_2025": 5910320,
+        "wp_2030": 6062005,
+        "ghs_2025": 5910320,
+        "ghs_2030": 6062005
+      },
+      "max_cell_pop": {
+        "wp_2025": 551382,
+        "wp_2030": 564958,
+        "ghs_2025": 625549,
+        "ghs_2030": 637449
+      },
+      "n_pieces": 1335,
+      "n_cells_multi_district": 230,
+      "majority_district_ties": {
+        "integer_ties": 4,
+        "still_tied_after_raw": 0,
+        "still_tied_after_area": 0
+      },
+      "J_table": {
+        "source": "wp",
+        "year": 2025,
+        "near_density_per_km2": 1500.0,
+        "near_threshold_per_cell": 37500.0,
+        "rows": [
+          {
+            "P_min": 0,
+            "J_without_near": 1004,
+            "J_with_near": 1004,
+            "added_by_near": 0,
+            "pop_in_candidates_without_near": 5905622,
+            "pop_in_candidates_with_near": 5905622
+          },
+          {
+            "P_min": 100,
+            "J_without_near": 612,
+            "J_with_near": 613,
+            "added_by_near": 1,
+            "pop_in_candidates_without_near": 5892584,
+            "pop_in_candidates_with_near": 5892650
+          },
+          {
+            "P_min": 250,
+            "J_without_near": 451,
+            "J_with_near": 454,
+            "added_by_near": 3,
+            "pop_in_candidates_without_near": 5865527,
+            "pop_in_candidates_with_near": 5865914
+          },
+          {
+            "P_min": 500,
+            "J_without_near": 285,
+            "J_with_near": 289,
+            "added_by_near": 4,
+            "pop_in_candidates_without_near": 5806742,
+            "pop_in_candidates_with_near": 5807423
+          },
+          {
+            "P_min": 1000,
+            "J_without_near": 179,
+            "J_with_near": 188,
+            "added_by_near": 9,
+            "pop_in_candidates_without_near": 5732738,
+            "pop_in_candidates_with_near": 5737576
+          },
+          {
+            "P_min": 2500,
+            "J_without_near": 117,
+            "J_with_near": 137,
+            "added_by_near": 20,
+            "pop_in_candidates_without_near": 5638050,
+            "pop_in_candidates_with_near": 5659978
+          }
+        ]
+      },
+      "J_table_ghs_2025": [
+        {
+          "P_min": 0,
+          "J_without_near": 1004,
+          "J_with_near": 1004,
+          "added_by_near": 0,
+          "pop_in_candidates_without_near": 5906015,
+          "pop_in_candidates_with_near": 5906015
+        },
+        {
+          "P_min": 100,
+          "J_without_near": 592,
+          "J_with_near": 597,
+          "added_by_near": 5,
+          "pop_in_candidates_without_near": 5896599,
+          "pop_in_candidates_with_near": 5896843
+        },
+        {
+          "P_min": 250,
+          "J_without_near": 413,
+          "J_with_near": 419,
+          "added_by_near": 6,
+          "pop_in_candidates_without_near": 5867093,
+          "pop_in_candidates_with_near": 5867458
+        },
+        {
+          "P_min": 500,
+          "J_without_near": 250,
+          "J_with_near": 260,
+          "added_by_near": 10,
+          "pop_in_candidates_without_near": 5809340,
+          "pop_in_candidates_with_near": 5811217
+        },
+        {
+          "P_min": 1000,
+          "J_without_near": 163,
+          "J_with_near": 180,
+          "added_by_near": 17,
+          "pop_in_candidates_without_near": 5748230,
+          "pop_in_candidates_with_near": 5755382
+        },
+        {
+          "P_min": 2500,
+          "J_without_near": 107,
+          "J_with_near": 131,
+          "added_by_near": 24,
+          "pop_in_candidates_without_near": 5661118,
+          "pop_in_candidates_with_near": 5680429
+        }
+      ],
+      "coverage_default": {
+        "source": "wp",
+        "year": 2025,
+        "J_rule": 454,
+        "J_repaired": 454,
+        "uncovered_before_cells": 0,
+        "uncovered_before_pop": 0,
+        "added_cells": 0,
+        "uncovered_after_cells": 0,
+        "uncovered_after_pop": 0,
+        "no_admissible_within_R_cells": 0,
+        "no_admissible_within_R_pop": 0,
+        "added_cell_ids": [],
+        "added_self": 0,
+        "uncovered_before_ids": [],
+        "uncovered_before_pop_by_cell": []
+      },
+      "coverage_other_scenarios": {
+        "wp_2030": {
+          "source": "wp",
+          "year": 2030,
+          "J_rule": 460,
+          "J_repaired": 460,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        },
+        "ghs_2025": {
+          "source": "ghs",
+          "year": 2025,
+          "J_rule": 419,
+          "J_repaired": 419,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        },
+        "ghs_2030": {
+          "source": "ghs",
+          "year": 2030,
+          "J_rule": 432,
+          "J_repaired": 432,
+          "uncovered_before_cells": 0,
+          "uncovered_before_pop": 0,
+          "added_cells": 0,
+          "uncovered_after_cells": 0,
+          "uncovered_after_pop": 0,
+          "no_admissible_within_R_cells": 0,
+          "no_admissible_within_R_pop": 0,
+          "added_self": 0
+        }
+      },
+      "neighbors_default": {
+        "n_demand": 1073,
+        "n_candidates": 454,
+        "R_km": 30.0,
+        "k": 50,
+        "candidates_within_R_mean": 26.60111835973905,
+        "candidates_within_R_median": 22.0,
+        "candidates_within_R_min": 1,
+        "candidates_within_R_max": 69,
+        "share_demand_cells_truncated_by_k": 0.12581547064305684,
+        "nnz_all_within_R": 28543,
+        "nnz_k_nearest": 27639,
+        "k_list_tie_extra_pairs": 410,
+        "k_list_rows_longer_than_k": 119,
+        "k_list_row_len_mean": 25.75862068965517,
+        "k_list_row_len_max": 57,
+        "nearest_candidate_road_km_popweighted_mean": 2.6886918130618525,
+        "nearest_candidate_road_km_max": 27.01780226481915
+      },
+      "density_per_km2": {
+        "demand_cells": {
+          "n_cells": 1073,
+          "min": 0.04,
+          "median": 7.44,
+          "p90": 118.912,
+          "max": 22055.28,
+          "max_over_median": 2964.4193548387093
+        },
+        "candidate_cells": {
+          "n_cells": 454,
+          "min": 2.64,
+          "median": 28.68,
+          "p90": 657.8879999999998,
+          "max": 22055.28,
+          "max_over_median": 769.0125523012551
+        }
+      }
+    }
+  },
+  "timings_note": "makineye bağlı; deterministik değildir (geliştirme kabı, Linux, 4 çekirdek)",
+  "timings": {
+    "2km": {
+      "neighbor_lists_s_median": 0.08606944499842939,
+      "neighbor_lists_s_min": 0.08501059999980498,
+      "runs": 3
+    },
+    "3km": {
+      "neighbor_lists_s_median": 0.03260539000075369,
+      "neighbor_lists_s_min": 0.030319804998725886,
+      "runs": 3
+    },
+    "5km": {
+      "neighbor_lists_s_median": 0.006639151999479509,
+      "neighbor_lists_s_min": 0.00657223999951384,
+      "runs": 3
+    }
+  }
+}

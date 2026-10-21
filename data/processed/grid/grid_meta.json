@@ -1,0 +1,374 @@
+{
+  "generated_by": "pipeline/22_grids.py",
+  "crs": "EPSG:32636",
+  "crs_web": "EPSG:4326",
+  "cell_sizes_km": [
+    2,
+    3,
+    5
+  ],
+  "origin_utm_m": [
+    0.0,
+    0.0
+  ],
+  "alignment": "hücre kenarları UTM 36N koordinatlarında s'nin katları: hücre (ix, iy) = [ix·s, (ix+1)·s) × [iy·s, (iy+1)·s) m",
+  "id_format": "<s>km_<ix>_<iy>",
+  "cell_selection": "il poligonuyla kesişim alanı > 0 olan her hücre",
+  "default_source": "wp",
+  "source_keys": {
+    "worldpop_r2025a": "wp",
+    "ghs_pop_r2023a": "ghs"
+  },
+  "sources": {
+    "wp": {
+      "name": "WorldPop R2025A (constrained, 100 m)",
+      "registry_value": "worldpop_r2025a",
+      "files": [
+        "data/processed/pop/worldpop_2025_100m.tif",
+        "data/processed/pop/worldpop_2030_100m.tif"
+      ],
+      "source_ids": [
+        "nufus_izgara_worldpop_2025",
+        "nufus_izgara_worldpop_2030",
+        "nufus_izgara_worldpop_release_statement"
+      ]
+    },
+    "ghs": {
+      "name": "GHS-POP R2023A E2025/E2030 (100 m)",
+      "registry_value": "ghs_pop_r2023a",
+      "files": [
+        "data/processed/pop/ghs_pop_e2025_100m.tif",
+        "data/processed/pop/ghs_pop_e2030_100m.tif"
+      ],
+      "source_ids": [
+        "nufus_izgara_ghs_pop_e2025_100m",
+        "nufus_izgara_ghs_pop_e2030_100m"
+      ]
+    }
+  },
+  "landcover": {
+    "file": "data/processed/landcover/worldcover_ankara_100m.tif",
+    "source_ids": [
+      "alan_literatur_lit_zanaga2022"
+    ],
+    "bands": "1 = % su (80), 2 = % sulak alan (90), 3 = % yapılaşma (50)"
+  },
+  "boundaries": {
+    "il": "data/processed/ankara_il.geojson",
+    "ilceler": "data/processed/ankara_ilceler.geojson"
+  },
+  "assignment_rule": "piksel merkezi poligonda (rasterio.features.rasterize, all_touched=False; ilçeler ilce_key sırasıyla, Faz 1 ile aynı) ve piksel merkezinin UTM 36N'deki hücresi",
+  "calibration_2025": "factor_d = TÜİK2025_d / Σ kaynak_d; (hücre, ilçe) parçaları ilçe içinde en büyük kalanla tam sayı",
+  "scenario_2030": "T30_d = TÜİK2025_d × S30_d / S25_d; Σ T30 = population.province_2030 olacak şekilde ölçek; ilçe tam sayıları en büyük kalanla; ilçe içi dağılım kaynağın 2030 katmanı",
+  "province_2025": 5910320,
+  "province_2030": 6062005,
+  "districts": [
+    {
+      "idx": 0,
+      "ilce": "Akyurt",
+      "ilce_key": "akyurt",
+      "tuik_2025": 46956,
+      "pop2030_wp": 48161,
+      "pop2030_ghs": 47088
+    },
+    {
+      "idx": 1,
+      "ilce": "Altındağ",
+      "ilce_key": "altindag",
+      "tuik_2025": 418072,
+      "pop2030_wp": 428829,
+      "pop2030_ghs": 427050
+    },
+    {
+      "idx": 2,
+      "ilce": "Ayaş",
+      "ilce_key": "ayas",
+      "tuik_2025": 13136,
+      "pop2030_wp": 13473,
+      "pop2030_ghs": 14140
+    },
+    {
+      "idx": 3,
+      "ilce": "Bala",
+      "ilce_key": "bala",
+      "tuik_2025": 20109,
+      "pop2030_wp": 20625,
+      "pop2030_ghs": 21416
+    },
+    {
+      "idx": 4,
+      "ilce": "Beypazarı",
+      "ilce_key": "beypazari",
+      "tuik_2025": 48359,
+      "pop2030_wp": 49600,
+      "pop2030_ghs": 52070
+    },
+    {
+      "idx": 5,
+      "ilce": "Çamlıdere",
+      "ilce_key": "camlidere",
+      "tuik_2025": 10203,
+      "pop2030_wp": 10465,
+      "pop2030_ghs": 10822
+    },
+    {
+      "idx": 6,
+      "ilce": "Çankaya",
+      "ilce_key": "cankaya",
+      "tuik_2025": 952198,
+      "pop2030_wp": 976635,
+      "pop2030_ghs": 977390
+    },
+    {
+      "idx": 7,
+      "ilce": "Çubuk",
+      "ilce_key": "cubuk",
+      "tuik_2025": 101437,
+      "pop2030_wp": 104041,
+      "pop2030_ghs": 83147
+    },
+    {
+      "idx": 8,
+      "ilce": "Elmadağ",
+      "ilce_key": "elmadag",
+      "tuik_2025": 45644,
+      "pop2030_wp": 46816,
+      "pop2030_ghs": 48729
+    },
+    {
+      "idx": 9,
+      "ilce": "Etimesgut",
+      "ilce_key": "etimesgut",
+      "tuik_2025": 632458,
+      "pop2030_wp": 648689,
+      "pop2030_ghs": 648639
+    },
+    {
+      "idx": 10,
+      "ilce": "Evren",
+      "ilce_key": "evren",
+      "tuik_2025": 2927,
+      "pop2030_wp": 3002,
+      "pop2030_ghs": 3085
+    },
+    {
+      "idx": 11,
+      "ilce": "Gölbaşı",
+      "ilce_key": "golbasi",
+      "tuik_2025": 172810,
+      "pop2030_wp": 177248,
+      "pop2030_ghs": 185500
+    },
+    {
+      "idx": 12,
+      "ilce": "Güdül",
+      "ilce_key": "gudul",
+      "tuik_2025": 8028,
+      "pop2030_wp": 8234,
+      "pop2030_ghs": 8618
+    },
+    {
+      "idx": 13,
+      "ilce": "Haymana",
+      "ilce_key": "haymana",
+      "tuik_2025": 25798,
+      "pop2030_wp": 26460,
+      "pop2030_ghs": 27566
+    },
+    {
+      "idx": 14,
+      "ilce": "Kahramankazan",
+      "ilce_key": "kahramankazan",
+      "tuik_2025": 63143,
+      "pop2030_wp": 64763,
+      "pop2030_ghs": 67718
+    },
+    {
+      "idx": 15,
+      "ilce": "Kalecik",
+      "ilce_key": "kalecik",
+      "tuik_2025": 12564,
+      "pop2030_wp": 12886,
+      "pop2030_ghs": 13423
+    },
+    {
+      "idx": 16,
+      "ilce": "Keçiören",
+      "ilce_key": "kecioren",
+      "tuik_2025": 931722,
+      "pop2030_wp": 955629,
+      "pop2030_ghs": 951584
+    },
+    {
+      "idx": 17,
+      "ilce": "Kızılcahamam",
+      "ilce_key": "kizilcahamam",
+      "tuik_2025": 27841,
+      "pop2030_wp": 28556,
+      "pop2030_ghs": 30028
+    },
+    {
+      "idx": 18,
+      "ilce": "Mamak",
+      "ilce_key": "mamak",
+      "tuik_2025": 690329,
+      "pop2030_wp": 708022,
+      "pop2030_ghs": 706451
+    },
+    {
+      "idx": 19,
+      "ilce": "Nallıhan",
+      "ilce_key": "nallihan",
+      "tuik_2025": 26083,
+      "pop2030_wp": 26752,
+      "pop2030_ghs": 27999
+    },
+    {
+      "idx": 20,
+      "ilce": "Polatlı",
+      "ilce_key": "polatli",
+      "tuik_2025": 131894,
+      "pop2030_wp": 135279,
+      "pop2030_ghs": 141435
+    },
+    {
+      "idx": 21,
+      "ilce": "Pursaklar",
+      "ilce_key": "pursaklar",
+      "tuik_2025": 168881,
+      "pop2030_wp": 173214,
+      "pop2030_ghs": 172843
+    },
+    {
+      "idx": 22,
+      "ilce": "Sincan",
+      "ilce_key": "sincan",
+      "tuik_2025": 605366,
+      "pop2030_wp": 620905,
+      "pop2030_ghs": 621059
+    },
+    {
+      "idx": 23,
+      "ilce": "Şereflikoçhisar",
+      "ilce_key": "sereflikochisar",
+      "tuik_2025": 32831,
+      "pop2030_wp": 33673,
+      "pop2030_ghs": 35243
+    },
+    {
+      "idx": 24,
+      "ilce": "Yenimahalle",
+      "ilce_key": "yenimahalle",
+      "tuik_2025": 721531,
+      "pop2030_wp": 740048,
+      "pop2030_ghs": 738962
+    }
+  ],
+  "arrays": {
+    "id": "hücre kimliği '<s>km_<ix>_<iy>'",
+    "ix, iy": "hücre indisleri: hücre = [ix·s, (ix+1)·s) × [iy·s, (iy+1)·s) m (EPSG:32636)",
+    "x, y": "hücre merkezi, UTM 36N (m)",
+    "lon, lat": "hücre merkezi, WGS84",
+    "inside_frac": "alan(hücre ∩ il) / alan(hücre), UTM",
+    "area_km2": "hücrenin il içindeki alanı (km², UTM)",
+    "district": "çoğunluk ilçesi (TÜİK sırasında indis): varsayılan kaynağın 2025 tam sayı nüfusuna göre; eşitlikte yuvarlanmamış kalibre nüfus, sonra hücredeki ilçe alanı; nüfus yoksa alana göre",
+    "district_area": "alana göre çoğunluk ilçesi",
+    "pop2025_wp, pop2025_ghs": "TÜİK 2025'e kalibre tam sayı nüfus (WorldPop / GHS-POP dağılımı)",
+    "pop2030_wp, pop2030_ghs": "2030 senaryosu tam sayı nüfus (il = population.province_2030)",
+    "popx2025_*, popy2025_*": "2025 nüfus ağırlık merkezi (UTM m; kaynak pikseli yoksa hücre merkezi)",
+    "water_pct, wetland_pct, built_pct": "WorldCover %: hücreye merkezi düşen il içi 100 m piksellerin ortalaması",
+    "water_frac": "(water_pct + wetland_pct) / 100",
+    "lc_pixels": "ortalamaya giren WorldCover piksel sayısı",
+    "nbr8": "8 komşu hücre indisi (sıra: GB, G, GD, B, D, KB, K, KD; yoksa −1)",
+    "nbr_max_pop<yıl>_<kaynak>": "8 komşudaki en büyük nüfus (yakınlık kuralı: ≥ grid.candidate_near_density × s²)",
+    "admissible": "inside_frac ≥ grid.candidate_min_inside ve water_frac < grid.candidate_max_water",
+    "candidate": "varsayılan aday kuralı (varsayılan kaynak 2025; kapsama onarımı HARİÇ)",
+    "cell_km, crs, district_keys, district_names": "üst veri"
+  },
+  "geojson_properties": {
+    "id": "hücre kimliği",
+    "pop": "2025 kalibre nüfus (wp)",
+    "pop_ghs": "2025 kalibre nüfus (GHS-POP dağılımı)",
+    "pop2030": "2030 senaryosu (wp)",
+    "dens": "pop / il içi alan (kişi/km²)",
+    "water": "% su + sulak alan",
+    "built": "% yapılaşma",
+    "ilce": "çoğunluk ilçesi",
+    "aday": "varsayılan kural (onarım hariç)"
+  },
+  "files": {
+    "2km": {
+      "npz": "data/processed/grid/grid_2km.npz",
+      "pieces": "data/processed/grid/grid_2km_pieces.csv",
+      "cells_geojson": "data/processed/grid/grid_2km_cells.geojson",
+      "geojson_bytes": 2067464
+    },
+    "3km": {
+      "npz": "data/processed/grid/grid_3km.npz",
+      "pieces": "data/processed/grid/grid_3km_pieces.csv",
+      "cells_geojson": "data/processed/grid/grid_3km_cells.geojson",
+      "geojson_bytes": 946258
+    },
+    "5km": {
+      "npz": "data/processed/grid/grid_5km.npz",
+      "pieces": "data/processed/grid/grid_5km_pieces.csv",
+      "cells_geojson": "data/processed/grid/grid_5km_cells.geojson",
+      "geojson_bytes": 357461
+    },
+    "neighbors_3km_default": "data/processed/grid/neighbors_3km_default.npz",
+    "calibration_table": "data/processed/grid/ilce_kalibrasyon.csv",
+    "summary": "data/processed/grid/grid_summary.json"
+  },
+  "inputs_sha256": {
+    "data/processed/ankara_il.geojson": "29e5910a87b0f6c0adb4824237b2fbf4979186819198920b64e18851964b53d1",
+    "data/processed/ankara_ilceler.geojson": "54eb235def237de3a9eb0dc81b4c8d39f7de95c653f662a99cdac8fe8b24142c",
+    "data/reference/tuik_adnks_ankara.csv": "fa9bc260c79103f319aced28c3a4781273c7e70c21322decf1fff46100107447",
+    "data/processed/ilce_nufus_kaynaklar.csv": "5762ed8d5a7b3594bdaac5a8881af65a7d8ba406ee8ee5eb2f6f73babfdd4838",
+    "data/processed/landcover/worldcover_ankara_100m.tif": "edee48432858723a5ea8e8eb088985e8de1e8c0c770c9ff2c98b86af6d0edfe3",
+    "data/processed/pop/worldpop_2025_100m.tif": "9e1f4e16da619bd7bb8fd0145382de12f4600f3176518e3d6c429e239cdef0f8",
+    "data/processed/pop/worldpop_2030_100m.tif": "6aded1e51dd0936278b9f50d611ebeac311c45c3d76a7b5049346129c2518afd",
+    "data/processed/pop/ghs_pop_e2025_100m.tif": "70075fe8385100c1ca4a08e72e0cc519a59f1d3f734d8796ed937512b7d971bb",
+    "data/processed/pop/ghs_pop_e2030_100m.tif": "3b1da22f067b61a648859c3e595523fd6619fb820afc6f9c43ab4f50bcdbb74c"
+  },
+  "params_used": {
+    "population.province_2025": 5910320,
+    "population.province_2030": 6062005,
+    "population.grid_source": "worldpop_r2025a",
+    "grid.cell_km": 3,
+    "grid.candidate_min_pop": 250,
+    "grid.candidate_near_density": 1500,
+    "grid.candidate_min_inside": 0.5,
+    "grid.candidate_max_water": 0.5,
+    "grid.k_nearest": 50,
+    "access.max_distance_km": 30,
+    "access.circuity_mode": "mesafeye_bagli",
+    "access.circuity_profile": [
+      [
+        3.06,
+        1.3843
+      ],
+      [
+        7.63,
+        1.2808
+      ],
+      [
+        14.77,
+        1.2316
+      ],
+      [
+        26.94,
+        1.1942
+      ],
+      [
+        59.48,
+        1.1942
+      ],
+      [
+        107.12,
+        1.1811
+      ]
+    ],
+    "access.circuity_scale": 1.0,
+    "access.circuity": 1.223
+  }
+}

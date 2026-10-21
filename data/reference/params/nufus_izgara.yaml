@@ -15,4 +15,4 @@
     - {label: "GHS-POP R2023A E2025 100 m (spec'in ana kaynağı)", value: ghs_pop_r2023a, status: model_secimi, source_ids: [nufus_izgara_ghs_pop_e2025_100m]}
   notes: >-
     2030 senaryosunda il toplamı TÜİK projeksiyonu (population.province_2030), ilçe içi ve ilçeler arası dağılım seçilen
-    kaynağın 2030 katmanından (WorldPop 2030 ya da GHS-POP E2030) alınır; hesap Faz 2 ızgara betiğindedir.
+    kaynağın 2030 katmanından (WorldPop 2030 ya da GHS-POP E2030) alınır; hesap pipeline/22_grids.py betiğindedir.

@@ -59,6 +59,6 @@ Her alan (ör. `nufus`, `saglik`, `maliyet`) kendi dosyasını yazar. Dosya bir 
 | E. Sabit | `cost.fixed_per_hospital` |
 | F. İşletme | `opex.include`, `opex.fixed_per_hospital_year`, `opex.per_bed_year` |
 | G. Erişim | `access.visits_per_capita_total`, `access.share_hospital_visits`, `access.hospital_visits_per_capita`, `access.round_trip_factor`, `access.fuel_price_tl_per_l`, `access.fuel_l_per_100km`, `access.cost_tl_per_km`, `access.value_of_time_tl_per_h`, `access.speed_kmh`, `access.horizon_years`, `access.discount_rate`, `access.circuity`, `access.circuity_mode`, `access.circuity_profile`, `access.circuity_scale`, `access.alpha`, `access.max_distance_km` |
-| H. Izgara/çözücü | `grid.cell_km`, `grid.candidate_min_pop`, `grid.k_nearest`, `solver.time_limit_s`, `solver.mip_gap` |
+| H. Izgara/çözücü | `grid.cell_km`, `grid.candidate_min_pop`, `grid.k_nearest`, `solver.time_limit_s`, `solver.mip_gap`, `grid.candidate_min_inside`, `grid.candidate_max_water`, `grid.candidate_near_density` |
 
 Bir anahtar için kaynak bulunamazsa yine yazılır: `status: varsayim` + `rationale`.

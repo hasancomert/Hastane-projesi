@@ -121,6 +121,7 @@
     - "Kodlama float64, NoData -200 (§2.5.3, Tablo 19, PDF s. 53 / basılı s. 48)"
     - "Atıf (§2.5.5, PDF s. 53): Schiavina M., Freire S., Carioli A., MacManus K. (2023) GHS-POP R2023A, doi:10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE"
     - "Belge lisansı CC BY 4.0 (PDF s. 2)"
+    - "Kentleşme Derecesi 'Urban Centre' ölçütü: kalıcı kara alanında en az 1.500 kişi/km² yoğunluklu bitişik 1 km² hücreler, kümede en az 50.000 kişi (§2.6.2, PDF s. 55 / basılı s. 50) — yerleşime yakınlık eşiği grid.candidate_near_density"
   notes: >-
     ghsl.jrc.ec.europa.eu/documents/GHSL_Data_Package_2023.pdf adresi bu URL'ye yönlendiriyor (sunucuda Last-Modified
     2024-09-24). Kapakta '2024' yazıyor; künye ve DOI kaydı 2023. Tablo 20 (PDF s. 53): 1 km ızgaradan küresel toplam 2025 = 8.191.988.536.

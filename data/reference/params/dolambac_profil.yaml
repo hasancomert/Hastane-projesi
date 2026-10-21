@@ -38,7 +38,7 @@
     → 1,204 (izotonik 1,194); 107,1 km → 1,181. Artmayan ağırlıklı izotonik regresyon (ağırlık = çift sayısı); ara
     mesafelerde doğrusal enterpolasyon, ilk noktadan kısa ve son noktadan uzun mesafelerde uç değer. Üretim: pipeline/21_circuity_profile.py.'
   notes: Yol mesafesi d_ij = kuş uçuşu_ij × k(kuş uçuşu_ij) × access.circuity_scale. Aynı hücre içi yolculukta kuş
-    uçuşu mesafe hücre içi ortalama mesafe olarak alınır (Faz 2 ızgara betiği).
+    uçuşu mesafe hücre içi ortalama mesafe olarak alınır (backend/model/distance.py, pipeline/22_grids.py).
 - key: access.circuity_scale
   label: Dolambaç profili çarpanı
   value: 1.0

@@ -1,0 +1,68 @@
+# Alan: izgara — Faz 2 hesapları (2/3/5 km ızgaralar, kalibre nüfus, adaylar, kapsama; Ankara'nın büyüklük ölçüleri).
+# Üreten: pipeline/22_grids.py, pipeline/23_ankara_measures.py. Girdilerin hepsi git'te (data/processed/…); girdi
+# sha256'ları data/processed/grid/grid_meta.json 'inputs_sha256' ve data/processed/ankara_olculer.json 'meta.inputs'.
+
+- id: izgara_kalibre_nufus_hesap
+  title: "İlçe bazında TÜİK 2025'e kalibre hücre nüfusu ve 2030 senaryosu (WorldPop R2025A ve GHS-POP R2023A dağılımı)"
+  publisher: "Bu proje (pipeline/22_grids.py)"
+  url: "pipeline/22_grids.py"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: data/processed/grid/ilce_kalibrasyon.csv
+  used_for:
+    - "Kalibrasyon katsayısı TÜİK2025_d / Σkaynak_d: WorldPop 0,960 (Kalecik) – 1,229 (Çamlıdere); GHS-POP 0,538 (Akyurt) – 3,357 (Evren)"
+    - "Kalibre tam sayı hücre nüfusu (2, 3, 5 km; iki kaynak): her ilçe TÜİK 2025'e, il toplamı 5.910.320'ye birebir (en büyük kalan yöntemi, ilçe içinde)"
+    - "Kaynak ilçe toplamları Faz 1 tablosunu (data/processed/ilce_nufus_kaynaklar.csv) yeniden üretir: il toplamı WorldPop 2025 5.933.578,2, 2030 6.022.593,2; GHS-POP E2025 6.351.089,8, E2030 6.684.636,2"
+    - "2030 senaryosu T30_d = TÜİK2025_d × S30_d / S25_d, sonra Σ = 6.062.005 (TÜİK il projeksiyonu): ölçek WorldPop 1,01050, GHS-POP 0,97600"
+    - "WorldPop'un 2030/2025 oranı her ilçede 1,0150–1,0151 → senaryoda her ilçe ×1,0256–1,0257 (ilçeler arası farklılaşma yok)"
+    - "GHS-POP senaryosunda ilçe büyümesi 0,8197 (Çubuk) – 1,0785 (Kızılcahamam); Çubuk 2030'da 83.147 kişi (2025: 101.437) — TÜİK 2024→2025 değişimi +%0,68 iken küçülüyor (bayrak 'kuculuyor')"
+  notes: >-
+    Piksel merkezi kuralı Faz 1 ile aynı (rasterio rasterize, all_touched=False, ilçeler ilce_key sırasıyla); piksel
+    merkezleri hücreye UTM 36N'de atanır. 2030 bayrakları (yalnız raporlama): kuculuyor = senaryoda 2030 < 2025;
+    yon_celiskili = senaryo 2025→2030 yıllık hızının işareti TÜİK 2024→2025 değişiminin tersi (ikisi de |r| ≥ %0,25);
+    buyuk_fark = fark > 2 puan/yıl. TÜİK'in 2024→2025 verisinde kırsal ilçeler küçülürken (ör. Bala −%8,1) iki kaynak da
+    2030'da büyüme veriyor; 2030 senaryosu kırsal nüfusu olduğundan yüksek gösterebilir. Ayrıntı:
+    data/processed/grid/ilce_kalibrasyon.csv ve grid_summary.json 'calibration'.
+
+- id: izgara_aday_kapsama_hesap
+  title: "Ankara 2/3/5 km ızgaraları: hücre sayıları, aday hücreler |J|, kapsama denetimi ve seyrek mesafe listeleri"
+  publisher: "Bu proje (pipeline/22_grids.py, backend/model/grid_io.py, backend/model/distance.py)"
+  url: "pipeline/22_grids.py"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: data/processed/grid/grid_summary.json
+  used_for:
+    - "Hücre sayısı (il ile kesişen, UTM 36N'de kenarları s'nin katlarına hizalı): 2 km 6.825, 3 km 3.111, 5 km 1.178; nüfuslu (WorldPop, 2025) 4.842 / 2.604 / 1.073"
+    - "|J| varsayılan kural (P_min 250, yakınlık eşiği 1.500 kişi/km² × s² = 6.000 / 13.500 / 37.500 kişi/hücre, il içi ≥ 0,5, su + sulak alan < 0,5): 2 km 890 (+1 kapsama onarımı = 891), 3 km 634, 5 km 454"
+    - "Kapsama (R = 30 km yol, mesafeye bağlı dolambaç; R ≈ 25,0 km kuş uçuşu): onarım öncesi R içinde adayı olmayan talep hücresi 2 km 4 (33 kişi), 3 km 0, 5 km 0; R içinde uygun hücresi olmayan talep hücresi her boyutta 0"
+    - "Talep hücresi başına R içindeki aday sayısı (ortalama / en çok): 2 km 76,4 / 404, 3 km 47,6 / 206, 5 km 26,6 / 69; k = 50 ile kırpılan talep hücresi %39,2 / %30,7 / %12,6"
+    - "k-en-yakın listesinde k'ıncı mesafeye eşit adayların hepsi tutulur: 3 km'de 79.761 yerine 81.288 çift (+1.527; 568 satır 50'den uzun, satır en çok 58)"
+    - "3 km hücre yoğunluğu (kişi/km², il içi alana göre): talep hücreleri ortanca 4,8, %90'lık dilim 126, en çok 28.151; varsayılan aday hücreler ortanca 78,3, %90'lık dilim 2.308, en çok 28.151"
+    - "Hücre içi ortalama kuş uçuşu mesafe s·(√2 + ln(1+√2))/6: 2 km 0,765, 3 km 1,148, 5 km 1,913 km (yol: 1,059 / 1,589 / 2,648 km)"
+  notes: >-
+    Aday kuralı: uygun = inside_frac ≥ grid.candidate_min_inside ve water_frac < grid.candidate_max_water; aday = uygun
+    ve (nüfus ≥ grid.candidate_min_pop veya 8 komşudan en kalabalığının nüfusu ≥ grid.candidate_near_density × s²).
+    Kapsama onarımı (grid_io.coverage_repair): R içinde adayı olmayan her talep hücresi için nüfus ağırlık merkezine en
+    yakın uygun hücre aday yapılır. Hücrenin çoğunluk ilçesi tam sayı nüfusa göre; eşitlikte yuvarlanmamış kalibre nüfus,
+    sonra hücredeki ilçe alanı. Süre ölçümleri (grid_summary.json 'timings') makineye bağlıdır.
+
+- id: izgara_ankara_olculer_hesap
+  title: "Ankara'nın büyüklük ölçüleri ('Toplam mesafe' kartı): alan, çevre, genişlik, en uzak iki nokta, Kızılay mesafeleri"
+  publisher: "Bu proje (pipeline/23_ankara_measures.py)"
+  url: "pipeline/23_ankara_measures.py"
+  accessed: 2026-10-21
+  kind: hesap
+  archived: data/processed/ankara_olculer.json
+  used_for:
+    - "İl alanı (WGS84 elipsoidinde jeodezik): 25.647,9 km² (EPSG:6933 ile fark %0,00007); kalıcı su (WorldCover) 748,4 km², su hariç 24.899,5 km²"
+    - "İl çevresi (jeodezik, 4.748 köşeli sınır): 1.590,3 km; web sürümü (3.262 köşe) 1.586,9 km — çevre sınır çözünürlüğüne bağlıdır"
+    - "Genişlik: UTM 36N sınırlayıcı kutusu 261,1 km (doğu–batı) × 232,2 km (kuzey–güney); en batı ile en doğu sınır noktası arası 287,7 km, en kuzey ile en güney arası 239,0 km (jeodezik)"
+    - "En uzak iki sınır noktası (çap): 293,8 km, Nallıhan ↔ Şereflikoçhisar (dışbükey örtü; 11.269.378 köşe çiftinin kaba kuvvet taramasıyla doğrulandı)"
+    - "Kızılay → en uzak il sınırı noktası 173,4 km (Nallıhan), → en yakın il sınırı 35,4 km (Elmadağ), → ilin alan ağırlık merkezi 27,0 km (il merkezli LAEA eşit alanlı projeksiyon; Etimesgut)"
+  notes: >-
+    Girdiler: il ve ilçe sınırları (sinirlar_geoboundaries_tur_adm1, sinirlar_geoboundaries_tur_adm2), Kızılay noktası
+    (OSM, data/reference/kizilay.yaml), ESA WorldCover 2021 (arazi_osm_worldcover_tiles_s3), TÜİK ADNKS 2025 ilçe
+    nüfusları. Mesafeler pyproj.Geod (WGS84) ile jeodezik; en yakın sınır noktası Kızılay merkezli aeqd düzleminde
+    aranır; ağırlık merkezi +proj=laea +lat_0=39.7 +lon_0=32.8 düzleminde (küresel silindirik EPSG:6933'te bulunan
+    nokta 0,384 km ötededir; karşılaştırma JSON'da 'centroid.comparison_epsg6933'). Yöntem metinleri ve arayüz kartı
+    JSON'un 'card' alanında.

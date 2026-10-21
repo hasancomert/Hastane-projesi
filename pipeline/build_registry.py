@@ -49,6 +49,7 @@ DOMAINS: dict[str, tuple[str, str]] = {
     "yatirim": ("2026 Kamu Yatırım Programı ve sabit maliyet regresyonu", "yatirim_"),
     "erisim": ("Erişim maliyeti, arsa fiyatı, işletme gideri, ızgara/çözücü", "erisim_"),
     "alan_literatur": ("Ankara yüzölçümü kaynakları ve literatür", "alan_literatur_"),
+    "izgara": ("Izgaralar, kalibre nüfus, aday hücreler ve Ankara ölçüleri (Faz 2 hesapları)", "izgara_"),
 }
 
 STATUS_TR = {"kaynakli": "kaynaklı", "hesap": "hesap", "varsayim": "varsayım", "model_secimi": "model seçimi"}

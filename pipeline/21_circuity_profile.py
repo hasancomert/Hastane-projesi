@@ -94,7 +94,8 @@ def main() -> None:
             ),
             "notes": (
                 "Yol mesafesi d_ij = kuş uçuşu_ij × k(kuş uçuşu_ij) × access.circuity_scale. Aynı hücre içi "
-                "yolculukta kuş uçuşu mesafe hücre içi ortalama mesafe olarak alınır (Faz 2 ızgara betiği)."
+                "yolculukta kuş uçuşu mesafe hücre içi ortalama mesafe olarak alınır (backend/model/distance.py, "
+                "pipeline/22_grids.py)."
             ),
         },
         {

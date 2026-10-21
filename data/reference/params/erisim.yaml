@@ -217,17 +217,21 @@
 - key: access.max_distance_km
   label: "Azami erişim mesafesi (R, yol mesafesi)"
   value: 30
-  unit: "km (yol; d_ij = kuş uçuşu × access.circuity)"
+  unit: "km (yol; d_ij = kuş uçuşu_ij × k(kuş uçuşu_ij) × access.circuity_scale)"
   status: varsayim
   rationale: >-
     İkinci basamak hastaneler için Türkiye'de resmî bir erişim mesafesi/süresi standardı bulunamadı: Kamu Sağlık
     Tesisleri Ruhsatlandırma Yönetmeliği (erisim_mevzuat_33805_ruhsatlandirma) ve Mekânsal Planlar Yapım Yönetmeliği
     EK-2 (maliyet_mpyy_ek2; yalnız m²/yatak alan standardı) mesafe ölçütü içermiyor; Sağlık Bakanlığı 'Yataklı Sağlık
     Tesisleri Planlama Rehberi' ve rol tanımlama belgelerine bu ortamdan erişilemedi. Şartname varsayılanı 30 km korunur.
-    Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Kuş uçuşu
-    karşılığı 30 / 1,223 (access.circuity) ≈ 24,5 km. Kapsama kontrolü (R içinde adayı olmayan nüfuslu hücre sayısı ve
-    nüfusu, grid.candidate_min_pop'a göre) Faz 2'de kalibre edilmiş ızgaradan hesaplanacak; R ile P_min birlikte
-    seçilmeli.
+    Süre karşılığı: 30 km / 28,5 km/sa ≈ 63 dk (TomTom ortalaması), serbest akışta (44,4 km/sa) ≈ 41 dk. Yol mesafesi
+    varsayılan olarak mesafeye bağlı dolambaç profiliyle hesaplanır (access.circuity_mode = mesafeye_bagli,
+    access.circuity_profile, ölçek 1,0): R = 30 yol km ≈25,0 km kuş uçuşuna karşılık gelir ('sabit' modunda
+    30 / 1,223 ≈ 24,5 km; ters hesap backend/model/distance.py euclid_for_road_km, grid_summary.json 'circuity').
+    Kalibre ızgarada kapsama denetimi (pipeline/22_grids.py, data/processed/grid/grid_summary.json; varsayılan aday
+    kuralı, P_min = 250, WorldPop 2025): 3 km ve 5 km ızgarada her talep hücresinin R içinde en az bir adayı var; 2 km
+    ızgarada 4 talep hücresi (33 kişi) adaysız kaldı ve kapsama onarımı 1 uygun hücreyi aday yaptı. R ile P_min birlikte
+    seçilmeli: R küçülürse onarımla eklenen aday sayısı artar.
   range: [10, 100]
   alternatives:
     - {label: "Kentsel alt sınır (varsayım; kaynak yok)", value: 15, status: varsayim}

@@ -1,0 +1,1359 @@
+{
+  "meta": {
+    "title": "Ankara'nın büyüklük ölçüleri ('Toplam mesafe' kartı) ve hastane arsası / hücre karşılaştırması",
+    "spec": "Bölüm 4.3 madde 3 ve 6; hocanın 4. maddesi",
+    "generated_by": "pipeline/23_ankara_measures.py",
+    "generated": "2026-10-21",
+    "ellipsoid": "WGS84",
+    "crs": {
+      "map": "EPSG:4326",
+      "metric": "EPSG:32636",
+      "equal_area": "EPSG:6933",
+      "centroid": "+proj=laea +lat_0=39.7 +lon_0=32.8 +datum=WGS84 +units=m +no_defs",
+      "raster": "ESRI:54009"
+    },
+    "inputs": [
+      {
+        "file": "data/processed/ankara_il.geojson",
+        "sha256": "29e5910a87b0f6c0adb4824237b2fbf4979186819198920b64e18851964b53d1"
+      },
+      {
+        "file": "data/processed/web/ankara_il.geojson",
+        "sha256": "31ef63c0daf5342c0b08884f42a5a14eb155a76e10af25cdd7094fcfcb971877"
+      },
+      {
+        "file": "data/processed/ankara_ilceler.geojson",
+        "sha256": "54eb235def237de3a9eb0dc81b4c8d39f7de95c653f662a99cdac8fe8b24142c"
+      },
+      {
+        "file": "data/processed/landcover/worldcover_ankara_100m.tif",
+        "sha256": "edee48432858723a5ea8e8eb088985e8de1e8c0c770c9ff2c98b86af6d0edfe3"
+      },
+      {
+        "file": "data/reference/tuik_adnks_ankara.csv",
+        "sha256": "fa9bc260c79103f319aced28c3a4781273c7e70c21322decf1fff46100107447"
+      },
+      {
+        "file": "data/reference/kizilay.yaml",
+        "sha256": "d19d890ebae6a796e22c813c422e538b500110dddf6a06ee5c32581634c6214a"
+      },
+      {
+        "file": "data/reference/ankara_alan_kaynaklari.csv",
+        "sha256": "ccbd3d1d72f33a3650306199b4b61baeb1da3e890034fef77019d74759774343"
+      },
+      {
+        "file": "data/reference/parameters.json",
+        "sha256": "eed0eaf6f758f968d1fcea70d5da37844abaa56f089a8d06280288d13561d056"
+      }
+    ],
+    "source_ids": [
+      "sinirlar_geoboundaries_tur_adm1",
+      "sinirlar_geoboundaries_tur_adm2",
+      "arazi_osm_osm_turkey_pbf",
+      "arazi_osm_worldcover_tiles_s3",
+      "tuik_st_il_ilce_2025",
+      "maliyet_mpyy_ek2"
+    ],
+    "number_format_note": "JSON sayıları nokta ondalıklı; 'text' alanları Türkçe biçimde (1.234,5)."
+  },
+  "boundary": {
+    "file": "data/processed/ankara_il.geojson",
+    "source": "geoBoundaries gbOpen TUR ADM1 (OSM, 2023-08-31; build 2023-12-12)",
+    "geometry_type": "Polygon",
+    "parts": 1,
+    "holes": 0,
+    "vertex_count": 4748,
+    "segment_km": {
+      "mean": 0.3349,
+      "median": 0.2548,
+      "max": 10.321,
+      "min_m": 6.57
+    },
+    "note": "Tam çözünürlüklü il sınırı tek parçalı, deliksiz bir çokgen: 4.748 köşe (kapanış noktası hariç), kenar uzunluğu medyanı 255 m, en uzun kenar 10,32 km."
+  },
+  "area": {
+    "geodesic_km2": {
+      "value": 25647.883,
+      "unit": "km²",
+      "method": "WGS84 elipsoidinde jeodezik alan (pyproj.Geod.geometry_area_perimeter; kenarlar jeodezik, Karney 2013).",
+      "text": "25.647,9 km²"
+    },
+    "epsg6933_km2": {
+      "value": 25647.9,
+      "unit": "km²",
+      "method": "EPSG:6933 (WGS 84 / NSIDC EASE-Grid 2.0 Global, silindirik eşit alanlı) projeksiyonunda düzlem alanı (shapely).",
+      "text": "25.647,9 km²"
+    },
+    "utm36n_km2": {
+      "value": 25629.92,
+      "unit": "km²",
+      "method": "UTM 36N (EPSG:32636) düzlem alanı — eşit alanlı değil, yalnız karşılaştırma.",
+      "text": "25.629,9 km²"
+    },
+    "rel_diff_epsg6933_vs_geodesic_pct": 6.6e-05,
+    "rel_diff_utm36n_vs_geodesic_pct": -0.07004,
+    "phase1_property_area_km2_epsg6933": 25647.9,
+    "note": "Jeodezik alan ile EPSG:6933 alanı arasındaki fark 0,017 km² (%0,00007); UTM 36N eşit alanlı olmadığı için −%0,070 sapar."
+  },
+  "perimeter": {
+    "geodesic_km": {
+      "value": 1590.334,
+      "unit": "km",
+      "method": "WGS84 elipsoidinde jeodezik çevre (pyproj.Geod.geometry_area_perimeter).",
+      "text": "1.590,3 km"
+    },
+    "utm36n_km": 1589.824,
+    "web": {
+      "file": "data/processed/web/ankara_il.geojson",
+      "vertex_count": 3262,
+      "perimeter_km": 1586.882,
+      "area_km2": 25647.334,
+      "perimeter_diff_km": -3.452,
+      "perimeter_diff_pct": -0.217,
+      "area_diff_km2": -0.549,
+      "area_diff_pct": -0.0021,
+      "method": "pipeline/11_boundaries.py: ortak sınırlar tek yay olarak 0,0004° (≈35–45 m) toleransla sadeleştirilmiş, koordinatlar 5 ondalığa yuvarlanmış."
+    },
+    "simplification_series": [
+      {
+        "tolerance_m": 50,
+        "vertex_count": 2999,
+        "perimeter_km": 1584.372,
+        "area_km2": 25647.461,
+        "perimeter_diff_pct": -0.375,
+        "area_diff_pct": -0.0016
+      },
+      {
+        "tolerance_m": 100,
+        "vertex_count": 2118,
+        "perimeter_km": 1564.826,
+        "area_km2": 25647.24,
+        "perimeter_diff_pct": -1.604,
+        "area_diff_pct": -0.0025
+      },
+      {
+        "tolerance_m": 250,
+        "vertex_count": 1041,
+        "perimeter_km": 1495.486,
+        "area_km2": 25648.137,
+        "perimeter_diff_pct": -5.964,
+        "area_diff_pct": 0.001
+      },
+      {
+        "tolerance_m": 500,
+        "vertex_count": 553,
+        "perimeter_km": 1419.52,
+        "area_km2": 25643.457,
+        "perimeter_diff_pct": -10.741,
+        "area_diff_pct": -0.0173
+      },
+      {
+        "tolerance_m": 1000,
+        "vertex_count": 277,
+        "perimeter_km": 1332.087,
+        "area_km2": 25611.411,
+        "perimeter_diff_pct": -16.239,
+        "area_diff_pct": -0.1422
+      },
+      {
+        "tolerance_m": 2500,
+        "vertex_count": 116,
+        "perimeter_km": 1209.39,
+        "area_km2": 25493.169,
+        "perimeter_diff_pct": -23.954,
+        "area_diff_pct": -0.6032
+      },
+      {
+        "tolerance_m": 5000,
+        "vertex_count": 55,
+        "perimeter_km": 1085.99,
+        "area_km2": 25443.162,
+        "perimeter_diff_pct": -31.713,
+        "area_diff_pct": -0.7982
+      }
+    ],
+    "simplification_method": "Tam sınır UTM 36N'de Douglas–Peucker ile (shapely.simplify, topoloji korunarak) verilen toleranslarla sadeleştirilip jeodezik çevre ve alan yeniden hesaplandı. Tolerans dizisi gösterim tercihidir (model_secimi).",
+    "note": "Çevre sınırın çözünürlüğüne bağlıdır (kıyı çizgisi etkisi): web sürümünde köşe sayısı 4.748 → 3.262, çevre 1.590,3 → 1.586,9 km (−%0,22); 5 km toleransla 55 köşede çevre 1.086,0 km (−%31,7). Alan ise neredeyse hiç değişmez (web −%0,0021; 5 km −%0,798). Daha ayrıntılı bir sınır (ör. OSM'nin tam çözünürlüğü) daha uzun bir çevre verir; çevre için 'tek doğru' değer yoktur."
+  },
+  "extent": {
+    "utm_bbox": {
+      "crs": "EPSG:32636",
+      "xmin_m": 315546.9,
+      "ymin_m": 4279306.2,
+      "xmax_m": 576623.9,
+      "ymax_m": 4511490.3,
+      "width_km": {
+        "value": 261.077,
+        "unit": "km",
+        "method": "UTM 36N (EPSG:32636) sınırlayıcı kutusunun doğu–batı kenarı (sınır köşelerinin en büyük − en küçük x'i).",
+        "text": "261,1 km"
+      },
+      "height_km": {
+        "value": 232.184,
+        "unit": "km",
+        "method": "UTM 36N sınırlayıcı kutusunun kuzey–güney kenarı (sınır köşelerinin en büyük − en küçük y'si).",
+        "text": "232,2 km"
+      },
+      "note": "Kutu UTM ızgara kuzeyine hizalıdır; il sınırında ızgara ile coğrafi kuzey arasındaki açı (meridyen yakınsaması) −1,39° … 0,56°, UTM ölçek çarpanı 0,99960 … 1,00002; bu yüzden kutu kenarları gerçek uzunluklardan en çok %0,040 sapar."
+    },
+    "west": {
+      "lon": 30.836104,
+      "lat": 40.097871,
+      "label": "en batı",
+      "x_utm": 315546.9,
+      "y_utm": 4440864.1,
+      "district": {
+        "ilce": "Nallıhan",
+        "ilce_key": "nallihan",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      }
+    },
+    "east": {
+      "lon": 33.885227,
+      "lat": 39.027878,
+      "label": "en doğu",
+      "x_utm": 576623.9,
+      "y_utm": 4320243.0,
+      "district": {
+        "ilce": "Evren",
+        "ilce_key": "evren",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      }
+    },
+    "north": {
+      "lon": 32.666988,
+      "lat": 40.753889,
+      "label": "en kuzey",
+      "x_utm": 471889.3,
+      "y_utm": 4511490.3,
+      "district": {
+        "ilce": "Kızılcahamam",
+        "ilce_key": "kizilcahamam",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      }
+    },
+    "south": {
+      "lon": 33.323685,
+      "lat": 38.661884,
+      "label": "en güney",
+      "x_utm": 528161.4,
+      "y_utm": 4279306.2,
+      "district": {
+        "ilce": "Şereflikoçhisar",
+        "ilce_key": "sereflikochisar",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      }
+    },
+    "west_east_geodesic_km": {
+      "value": 287.679,
+      "unit": "km",
+      "method": "En batı ve en doğu sınır köşeleri (en küçük / en büyük boylam) arasındaki jeodezik mesafe (pyproj.Geod.inv, WGS84).",
+      "text": "287,7 km"
+    },
+    "north_south_geodesic_km": {
+      "value": 239.001,
+      "unit": "km",
+      "method": "En kuzey ve en güney sınır köşeleri (en büyük / en küçük enlem) arasındaki jeodezik mesafe (pyproj.Geod.inv, WGS84).",
+      "text": "239,0 km"
+    },
+    "west_east_azimuth_deg": 113.41,
+    "north_south_azimuth_deg": 166.16,
+    "lon_span_deg": 3.04912,
+    "lat_span_deg": 2.09201,
+    "utm_scale_factor_min": 0.9996,
+    "utm_scale_factor_max": 1.000019,
+    "meridian_convergence_deg_min": -1.394,
+    "meridian_convergence_deg_max": 0.557,
+    "note": "En batı ve en doğu noktalar aynı enlemde değildir; aralarındaki jeodezik mesafe kuzey–güney bileşeni de içerir (en kuzey/en güney için tersi). Kenarlar GeoJSON'da boylam–enlem doğrusu olduğundan uç noktalar köşelerdedir."
+  },
+  "diameter": {
+    "distance_km": {
+      "value": 293.778,
+      "unit": "km",
+      "method": "Sınır köşelerinin UTM 36N'deki dışbükey örtüsünün köşe çiftleri arasında en büyük jeodezik mesafe (pyproj.Geod.inv, WGS84); tüm köşe çiftleriyle doğrulandı.",
+      "text": "293,8 km"
+    },
+    "p1": {
+      "lon": 30.8483,
+      "lat": 40.153064,
+      "x_utm": 316735.0,
+      "y_utm": 4446965.6,
+      "district": {
+        "ilce": "Nallıhan",
+        "ilce_key": "nallihan",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      }
+    },
+    "p2": {
+      "lon": 33.73455,
+      "lat": 38.740494,
+      "x_utm": 563838.1,
+      "y_utm": 4288235.7,
+      "district": {
+        "ilce": "Şereflikoçhisar",
+        "ilce_key": "sereflikochisar",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      }
+    },
+    "azimuth_deg": 121.34,
+    "vertex_count": 4748,
+    "hull_vertex_count": 29,
+    "hull_pairs": 406,
+    "bruteforce_pairs": 11269378,
+    "bruteforce_distance_km": 293.778428,
+    "bruteforce_same_pair": true,
+    "utm36n_euclid_km": 293.692,
+    "utm36n_max_pair_same": true,
+    "proof": "Düzlemde (UTM 36N) sabit bir a noktası için f(b) = |a − b| dışbükey bir fonksiyondur; dışbükey bir fonksiyonun dışbükey bir çokgen üzerindeki en büyük değeri çokgenin bir köşesinde alınır. Bu yüzden önce b, sonra a için uygulanınca bir nokta kümesinin en uzak iki noktasının ikisi de dışbükey örtünün köşeleridir. Örtüde 29 köşe (406 çift) kaldı ve hepsi Geod.inv ile tarandı. Jeodezik mesafe UTM Öklid mesafesiyle birebir aynı olmadığından (ölçek çarpanı ≈1, bkz. extent) sonuç ayrıca tüm 4.748 köşenin 11.269.378 çiftinin jeodezik kaba kuvvet taramasıyla doğrulandı: aynı çift, aynı mesafe."
+  },
+  "kizilay": {
+    "point": {
+      "lon": 32.854018,
+      "lat": 39.920993,
+      "name": "Kızılay Meydanı",
+      "osm": "node/9456598160",
+      "source_id": "arazi_osm_osm_turkey_pbf",
+      "district": {
+        "ilce": "Çankaya",
+        "ilce_key": "cankaya",
+        "inside": true,
+        "distance_to_district_m": 0.0
+      },
+      "inside_province": true
+    },
+    "farthest": {
+      "lon": 30.836104,
+      "lat": 40.097871,
+      "district": {
+        "ilce": "Nallıhan",
+        "ilce_key": "nallihan",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      },
+      "distance_km": {
+        "value": 173.406,
+        "unit": "km",
+        "method": "Kızılay'dan tüm il sınırı köşelerine jeodezik mesafelerin en büyüğü (pyproj.Geod.inv, WGS84). Uzaklık aeqd düzleminde dışbükey olduğundan sınır üzerindeki en uzak nokta bir köşedir.",
+        "text": "173,4 km"
+      },
+      "azimuth_deg": 277.15
+    },
+    "nearest": {
+      "lon": 33.258104,
+      "lat": 39.85395,
+      "district": {
+        "ilce": "Elmadağ",
+        "ilce_key": "elmadag",
+        "inside": false,
+        "distance_to_district_m": 0.0
+      },
+      "distance_km": {
+        "value": 35.356,
+        "unit": "km",
+        "method": "Kızılay merkezli eşit uzaklıklı azimutal projeksiyonda (aeqd, WGS84) 0.0005° aralıkla sıklaştırılmış il sınırı çizgisinin Kızılay'a en yakın noktası; mesafe Geod.inv ile.",
+        "text": "35,4 km"
+      },
+      "azimuth_deg": 102.02
+    },
+    "nearest_vertex": {
+      "lon": 33.258104,
+      "lat": 39.85395,
+      "distance_km": 35.356
+    },
+    "aeqd_check_max_abs_diff_m": 0.0
+  },
+  "centroid": {
+    "point": {
+      "lon": 32.583013,
+      "lat": 39.796693,
+      "district": {
+        "ilce": "Etimesgut",
+        "ilce_key": "etimesgut",
+        "inside": true,
+        "distance_to_district_m": 0.0
+      },
+      "inside_province": true
+    },
+    "projection": "+proj=laea +lat_0=39.7 +lon_0=32.8 +datum=WGS84 +units=m +no_defs",
+    "method": "İl poligonunun il merkezli Lambert azimutal eşit alanlı projeksiyondaki (LAEA, merkez 39,7° K, 32,8° D, WGS84) alan ağırlık merkezi, WGS84'e geri çevrildi.",
+    "distance_to_kizilay_km": {
+      "value": 26.986,
+      "unit": "km",
+      "method": "Kızılay ile eşit alanlı (il merkezli LAEA) ağırlık merkezi arasındaki jeodezik mesafe (pyproj.Geod.inv).",
+      "text": "27,0 km"
+    },
+    "azimuth_from_kizilay_deg": 239.33,
+    "comparison_epsg6933": {
+      "lon": 32.581642,
+      "lat": 39.793403,
+      "distance_to_kizilay_km": 27.275,
+      "shift_from_laea_km": 0.384,
+      "note": "Küresel silindirik eşit alanlı EPSG:6933 düzleminde bulunan ağırlık merkezi. Alanlar her iki projeksiyonda korunur ama düzlemdeki ağırlık merkezi projeksiyonun şekil bozulmasına bağlıdır; il merkezli LAEA'da bozulma en azdır, bu yüzden o kullanılır."
+    }
+  },
+  "water": {
+    "permanent_water_km2": {
+      "value": 748.394,
+      "unit": "km²",
+      "method": "ESA WorldCover 2021 sınıf 80 (kalıcı su) payı, 100 m Mollweide hücrelerinde: Σ (hücrenin %su'yu × hücrenin il içinde kalan payı × hücrenin gerçek alanı). İl içi pay 10 × 10 alt örneklemeyle (10 m alt piksel merkezi poligonda), hücre alanı satır başına WGS84 jeodezik alan (EPSG:6933 ile sağlandı); Mollweide hücre sayısı × 1 ha kullanılmadı.",
+      "text": "748,4 km²"
+    },
+    "wetland_km2": {
+      "value": 2.414,
+      "unit": "km²",
+      "method": "Aynı yöntemle WorldCover sınıf 90 (otsu sulak alan).",
+      "text": "2,4 km²"
+    },
+    "water_share_pct": 2.918,
+    "land_area_km2": {
+      "value": 24899.489,
+      "unit": "km²",
+      "method": "Jeodezik il alanı − kalıcı su (WorldCover 80): göller hariç kaynak değerleriyle karşılaştırma içindir.",
+      "text": "24.899,5 km²"
+    },
+    "land_area_excl_wetland_km2": {
+      "value": 24897.075,
+      "unit": "km²",
+      "method": "Jeodezik il alanı − kalıcı su − otsu sulak alan (WorldCover 80 + 90).",
+      "text": "24.897,1 km²"
+    },
+    "province_density_per_km2": 230.44,
+    "province_density_land_per_km2": 237.37,
+    "checks": {
+      "raster_province_area_km2": 25647.898,
+      "raster_vs_polygon_area_pct": 6e-05,
+      "pixel_centre_water_km2": 748.442,
+      "pixel_centre_method": "Faz 1 yöntemi (pipeline/13_landcover.py): yalnız merkezi il poligonunda olan hücreler, jeodezik hücre alanıyla.",
+      "nominal_1ha_water_km2": 749.48,
+      "nominal_1ha_province_area_km2": 25679.26,
+      "nominal_1ha_note": "Yanlış yöntem (yalnız karşılaştırma): Mollweide hücre sayısı × 1 ha. PROJ'un Mollweide'i küre formülüyle çalıştığından 100 m hücre elipsoit üzerinde 9.985,1–9.990,0 m²dir; bu yöntem su alanını %0,145 fazla verir.",
+      "cell_area_m2_min": 9985.119,
+      "cell_area_m2_max": 9990.027,
+      "cell_area_geodesic_vs_epsg6933_max_rel_diff": 5.0754573877043185e-09,
+      "nodata_cells_in_province": 0,
+      "rounding_note": "Raster bant değerleri tam sayı yüzdedir (0–100); hücre başına ±0,5 puan yuvarlama içerir."
+    },
+    "source_ids": [
+      "arazi_osm_worldcover_tiles_s3",
+      "alan_literatur_lit_zanaga2022"
+    ],
+    "districts_water_sum_km2": 748.394
+  },
+  "area_comparison": {
+    "reference_km2": 25647.883,
+    "reference": "Bu çalışmanın jeodezik il alanı",
+    "rows": [
+      {
+        "source": "ÇŞB plan raporu [4] — göller hariç",
+        "source_full": "ÇŞB Ankara İl Müd. ilanı — Altındağ Gümüşdere 19734 ada 9 parsel 1/5000 NİP değişikliği açıklama raporu (Ankara, 2020) [spec 4]",
+        "value_km2": 24521.0,
+        "scope": "göller hariç ('Göller dışında')",
+        "source_id": "alan_literatur_csb_ref4_altindag",
+        "status": "kaynakli",
+        "lakes_excluded": true,
+        "diff_km2": -1126.883,
+        "diff_pct": -4.394,
+        "text": "24.521 km²",
+        "diff_vs_land_km2": -378.489,
+        "diff_vs_land_pct": -1.52
+      },
+      {
+        "source": "ÇŞB plan raporu [4]",
+        "source_full": "ÇŞB Ankara İl Müd. ilanı — Altındağ plan açıklama raporu [spec 4]",
+        "value_km2": 25706.0,
+        "scope": "belirtilmemiş (aynı sayfada 'göller dışında 24.521' ile birlikte)",
+        "source_id": "alan_literatur_csb_ref4_altindag",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": 58.117,
+        "diff_pct": 0.227,
+        "text": "25.706 km²"
+      },
+      {
+        "source": "ÇŞB plan raporu [5]",
+        "source_full": "ÇŞB Ankara İl Müd. ilanı — Beypazarı Macun 116 ada 2-3 parsel GES amaçlı 1/5000 NİP açıklama raporu (2025) [spec 5]",
+        "value_km2": 25632.0,
+        "scope": "belirtilmemiş",
+        "source_id": "alan_literatur_csb_ref5_beypazari",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": -15.883,
+        "diff_pct": -0.062,
+        "text": "25.632 km²"
+      },
+      {
+        "source": "ÇŞB plan raporu [6]",
+        "source_full": "ÇŞB Ankara İl Müd. ilanı — Çankaya Yukarı Bahçelievler 7289 ada 5 parsel (Milli Kütüphane) 1/1000 UİP değişikliği açıklama raporu (2020) [spec 6]",
+        "value_km2": 25978.0,
+        "scope": "belirtilmemiş ('Ankara şehrinin' deniyor)",
+        "source_id": "alan_literatur_csb_ref6_cankaya",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": 330.117,
+        "diff_pct": 1.287,
+        "text": "25.978 km²"
+      },
+      {
+        "source": "ÇŞB Polatlı plan raporu 2025",
+        "source_full": "ÇŞB Ankara İl Müd. ilanı — Polatlı Zafer Mah. 2970 ada 4 ve 7 parsel 1/5000 NİP açıklama raporu (Haziran 2025)",
+        "value_km2": 26897.0,
+        "scope": "belirtilmemiş",
+        "source_id": "alan_literatur_csb_polatli_2025",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": 1249.117,
+        "diff_pct": 4.87,
+        "text": "26.897 km²"
+      },
+      {
+        "source": "ÇŞB Karakusunlar 2020 — göller hariç",
+        "source_full": "ÇŞB Ankara İl Müd. ilanı — Çankaya Karakusunlar 13911 ada 11 ve 13 parsel 1/5000 NİP değişikliği açıklama raporu (2020)",
+        "value_km2": 24521.0,
+        "scope": "göller hariç ('Göller dışında')",
+        "source_id": "alan_literatur_csb_karakusunlar_2020",
+        "status": "kaynakli",
+        "lakes_excluded": true,
+        "diff_km2": -1126.883,
+        "diff_pct": -4.394,
+        "text": "24.521 km²",
+        "diff_vs_land_km2": -378.489,
+        "diff_vs_land_pct": -1.52
+      },
+      {
+        "source": "Valilik ÇDR 2018, Çizelge E.85",
+        "source_full": "Ankara Valiliği Çevre ve Şehircilik İl Müd. — Ankara İli 2018 Yılı Çevre Durum Raporu, Çizelge E.85 (Tarım ve Orman İl Müd., 2018)",
+        "value_km2": 25632.0,
+        "scope": "arazi kullanım sınıflarının toplamı (tarım + çayır-mera + orman/diğer + yerleşim/diğer); göl ayrımı yok",
+        "source_id": "alan_literatur_valilik_cdr_2018",
+        "status": "hesap",
+        "lakes_excluded": false,
+        "diff_km2": -15.883,
+        "diff_pct": -0.062,
+        "text": "25.632 km²"
+      },
+      {
+        "source": "CORINE 1990 (ÇDR 2018, E.86)",
+        "source_full": "Ankara Valiliği ÇDR 2018, Çizelge E.86 — CORINE arazi sınıflandırması (Tarım ve Orman Bak., Corine) — 1990",
+        "value_km2": 25476.2524,
+        "scope": "CORINE poligonları toplamı (su yapıları ve sulak alanlar dahil)",
+        "source_id": "alan_literatur_valilik_cdr_2018",
+        "status": "hesap",
+        "lakes_excluded": false,
+        "diff_km2": -171.631,
+        "diff_pct": -0.669,
+        "text": "25.476,25 km²"
+      },
+      {
+        "source": "CORINE 2006/2012 (ÇDR 2018, E.86)",
+        "source_full": "Ankara Valiliği ÇDR 2018, Çizelge E.86 — CORINE arazi sınıflandırması — 2006 ve 2012",
+        "value_km2": 25654.748,
+        "scope": "CORINE poligonları toplamı (su yapıları ve sulak alanlar dahil)",
+        "source_id": "alan_literatur_valilik_cdr_2018",
+        "status": "hesap",
+        "lakes_excluded": false,
+        "diff_km2": 6.865,
+        "diff_pct": 0.027,
+        "text": "25.654,75 km²"
+      },
+      {
+        "source": "Biyoçeşitlilik Atlası çalışma alanı",
+        "source_full": "Ankara Valiliği ÇDR 2018 — 'Ankara İlinin Bioçeşitlilik Atlası' çalışma alanı",
+        "value_km2": 26897.0,
+        "scope": "atlasın kapsadığı alan (il yüzölçümü olarak verilmemiş)",
+        "source_id": "alan_literatur_valilik_cdr_2018",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": 1249.117,
+        "diff_pct": 4.87,
+        "text": "26.897 km²"
+      },
+      {
+        "source": "TÜİK 2023 (nüfus ÷ yoğunluk) — göller hariç",
+        "source_full": "TÜİK ADNKS 2023 bülten tablosu — nüfus / nüfus yoğunluğu (örtük alan)",
+        "value_km2": 24521.0,
+        "scope": "doğal göller ve baraj gölleri hariç (TÜİK metaverisi; HGK 1/1.000.000 harita)",
+        "source_id": "tuik_bt_adnks2023_yogunluk",
+        "status": "hesap",
+        "lakes_excluded": true,
+        "diff_km2": -1126.883,
+        "diff_pct": -4.394,
+        "text": "24.521 km²",
+        "diff_vs_land_km2": -378.489,
+        "diff_vs_land_pct": -1.52
+      },
+      {
+        "source": "TÜİK 2025 (nüfus ÷ yoğunluk) — göller hariç",
+        "source_full": "TÜİK ADNKS 2025 (ve 2024) bülten tablosu — nüfus / nüfus yoğunluğu (örtük alan)",
+        "value_km2": 24842.63,
+        "scope": "doğal göller ve baraj gölleri hariç (TÜİK metaverisi; HGK 1/1.000.000 harita)",
+        "source_id": "tuik_bt_adnks2025_yogunluk",
+        "status": "hesap",
+        "lakes_excluded": true,
+        "diff_km2": -805.253,
+        "diff_pct": -3.14,
+        "text": "24.842,63 km²",
+        "diff_vs_land_km2": -56.859,
+        "diff_vs_land_pct": -0.228
+      },
+      {
+        "source": "HDX COD-AB (HGK sınırı) özniteliği",
+        "source_full": "HDX COD-AB Türkiye (kaynak: Harita Genel Komutanlığı, 1:1.000.000) — tur_admin1 'area_sqkm' özniteliği",
+        "value_km2": 25631.758,
+        "scope": "idari sınır poligonu alanı (göl ayrımı yok; öznitelik OCHA/UNHCR tarafından poligondan üretilmiş olabilir)",
+        "source_id": "sinirlar_hdx_codab_tur",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": -16.125,
+        "diff_pct": -0.063,
+        "text": "25.631,76 km²"
+      },
+      {
+        "source": "HGM tablosu — ikincil kopya (snrylmz)",
+        "source_full": "HGM 'il_ilce_alanlari.pdf' — İKİNCİL kopya: GitHub snrylmz/il-ilce-json (js/il-ilce.json)",
+        "value_km2": 25632.0,
+        "scope": "belirtilmemiş (HGM tablosu)",
+        "source_id": "alan_literatur_hgm_ikincil_snrylmz",
+        "status": "kaynakli_ikincil",
+        "lakes_excluded": false,
+        "diff_km2": -15.883,
+        "diff_pct": -0.062,
+        "text": "25.632 km²"
+      },
+      {
+        "source": "HGM tablosu — ikincil kopya (brkunver)",
+        "source_full": "HGM — İKİNCİL kopya: GitHub brkunver/turkiye-provinces-dataset (data/provinces.csv)",
+        "value_km2": 25632.0,
+        "scope": "belirtilmemiş (HGM)",
+        "source_id": "alan_literatur_hgm_ikincil_brkunver",
+        "status": "kaynakli_ikincil",
+        "lakes_excluded": false,
+        "diff_km2": -15.883,
+        "diff_pct": -0.062,
+        "text": "25.632 km²"
+      }
+    ],
+    "own_rows": [
+      {
+        "source": "Bu çalışma — il poligonu, jeodezik (WGS84)",
+        "value_km2": 25647.883,
+        "scope": "geoBoundaries ADM1 il poligonu (göller dahil)",
+        "reference": true,
+        "diff_km2": 0.0,
+        "diff_pct": 0.0,
+        "text": "25.647,9 km²"
+      },
+      {
+        "source": "Bu çalışma — il poligonu, EPSG:6933",
+        "value_km2": 25647.9,
+        "scope": "aynı poligon, eşit alanlı projeksiyon",
+        "diff_km2": 0.017,
+        "diff_pct": 0.0001,
+        "text": "25.647,9 km²"
+      },
+      {
+        "source": "Bu çalışma — poligon − kalıcı su (WorldCover 80)",
+        "value_km2": 24899.489,
+        "scope": "göller ve barajlar hariç (göller hariç değerlerle karşılaştırılır)",
+        "diff_km2": -748.394,
+        "diff_pct": -2.918,
+        "text": "24.899,5 km²"
+      },
+      {
+        "source": "Bu çalışma — poligon − kalıcı su − sulak alan (80 + 90)",
+        "value_km2": 24897.075,
+        "scope": "su ve otsu sulak alan hariç",
+        "diff_km2": -750.808,
+        "diff_pct": -2.9274,
+        "text": "24.897,1 km²"
+      }
+    ],
+    "note": "Kaynaklar 24.521–26.897 km² arasında. Göller hariç değerler (24.521, 24.842,63 km²) poligon − kalıcı su (24.899,5 km²) ile karşılaştırılmalıdır; TÜİK 2025'in örtük alanı bundan 56,9 km² (%0,23) küçük. Göl ayrımı belirtilmeyen değerler poligon alanıyla karşılaştırılır; en sık değer 25.632 km² (4 kaynak) poligondan 15,9 km² (%0,06) küçük.",
+    "method": "fark = kaynak değeri − bu çalışmanın jeodezik alanı; % = fark / jeodezik alan. Göller hariç satırlarda ayrıca poligon − kalıcı su ile fark verilir. Kaynak tablosu: data/reference/ankara_alan_kaynaklari.csv"
+  },
+  "districts": {
+    "rows": [
+      {
+        "ilce": "Keçiören",
+        "ilce_key": "kecioren",
+        "area_geodesic_km2": 153.175,
+        "area_epsg6933_km2_phase1": 153.175,
+        "area_raster_km2": 153.177,
+        "perimeter_km": 94.065,
+        "vertex_count": 472,
+        "pop_2025": 931722,
+        "density_per_km2": 6082.73,
+        "water_km2": 0.151,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.098,
+        "density_land_per_km2": 6088.71
+      },
+      {
+        "ilce": "Yenimahalle",
+        "ilce_key": "yenimahalle",
+        "area_geodesic_km2": 232.7,
+        "area_epsg6933_km2_phase1": 232.7,
+        "area_raster_km2": 232.7,
+        "perimeter_km": 94.847,
+        "vertex_count": 450,
+        "pop_2025": 721531,
+        "density_per_km2": 3100.69,
+        "water_km2": 0.157,
+        "wetland_km2": 0.005,
+        "water_share_pct": 0.067,
+        "density_land_per_km2": 3102.78
+      },
+      {
+        "ilce": "Altındağ",
+        "ilce_key": "altindag",
+        "area_geodesic_km2": 161.444,
+        "area_epsg6933_km2_phase1": 161.444,
+        "area_raster_km2": 161.443,
+        "perimeter_km": 91.484,
+        "vertex_count": 501,
+        "pop_2025": 418072,
+        "density_per_km2": 2589.59,
+        "water_km2": 0.076,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.047,
+        "density_land_per_km2": 2590.81
+      },
+      {
+        "ilce": "Etimesgut",
+        "ilce_key": "etimesgut",
+        "area_geodesic_km2": 283.142,
+        "area_epsg6933_km2_phase1": 283.142,
+        "area_raster_km2": 283.144,
+        "perimeter_km": 119.524,
+        "vertex_count": 564,
+        "pop_2025": 632458,
+        "density_per_km2": 2233.71,
+        "water_km2": 0.325,
+        "wetland_km2": 0.001,
+        "water_share_pct": 0.115,
+        "density_land_per_km2": 2236.28
+      },
+      {
+        "ilce": "Çankaya",
+        "ilce_key": "cankaya",
+        "area_geodesic_km2": 455.46,
+        "area_epsg6933_km2_phase1": 455.46,
+        "area_raster_km2": 455.465,
+        "perimeter_km": 164.259,
+        "vertex_count": 1143,
+        "pop_2025": 952198,
+        "density_per_km2": 2090.63,
+        "water_km2": 1.531,
+        "wetland_km2": 0.025,
+        "water_share_pct": 0.336,
+        "density_land_per_km2": 2097.68
+      },
+      {
+        "ilce": "Mamak",
+        "ilce_key": "mamak",
+        "area_geodesic_km2": 341.17,
+        "area_epsg6933_km2_phase1": 341.169,
+        "area_raster_km2": 341.173,
+        "perimeter_km": 112.485,
+        "vertex_count": 701,
+        "pop_2025": 690329,
+        "density_per_km2": 2023.41,
+        "water_km2": 0.894,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.262,
+        "density_land_per_km2": 2028.73
+      },
+      {
+        "ilce": "Pursaklar",
+        "ilce_key": "pursaklar",
+        "area_geodesic_km2": 133.006,
+        "area_epsg6933_km2_phase1": 133.006,
+        "area_raster_km2": 133.006,
+        "perimeter_km": 86.149,
+        "vertex_count": 400,
+        "pop_2025": 168881,
+        "density_per_km2": 1269.72,
+        "water_km2": 0.107,
+        "wetland_km2": 0.012,
+        "water_share_pct": 0.081,
+        "density_land_per_km2": 1270.75
+      },
+      {
+        "ilce": "Sincan",
+        "ilce_key": "sincan",
+        "area_geodesic_km2": 862.883,
+        "area_epsg6933_km2_phase1": 862.883,
+        "area_raster_km2": 862.881,
+        "perimeter_km": 237.69,
+        "vertex_count": 702,
+        "pop_2025": 605366,
+        "density_per_km2": 701.56,
+        "water_km2": 1.469,
+        "wetland_km2": 0.003,
+        "water_share_pct": 0.17,
+        "density_land_per_km2": 702.76
+      },
+      {
+        "ilce": "Akyurt",
+        "ilce_key": "akyurt",
+        "area_geodesic_km2": 374.194,
+        "area_epsg6933_km2_phase1": 374.195,
+        "area_raster_km2": 374.195,
+        "perimeter_km": 129.081,
+        "vertex_count": 468,
+        "pop_2025": 46956,
+        "density_per_km2": 125.49,
+        "water_km2": 0.13,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.035,
+        "density_land_per_km2": 125.53
+      },
+      {
+        "ilce": "Gölbaşı",
+        "ilce_key": "golbasi",
+        "area_geodesic_km2": 1513.59,
+        "area_epsg6933_km2_phase1": 1513.592,
+        "area_raster_km2": 1513.593,
+        "perimeter_km": 313.616,
+        "vertex_count": 956,
+        "pop_2025": 172810,
+        "density_per_km2": 114.17,
+        "water_km2": 11.83,
+        "wetland_km2": 1.599,
+        "water_share_pct": 0.782,
+        "density_land_per_km2": 115.07
+      },
+      {
+        "ilce": "Kahramankazan",
+        "ilce_key": "kahramankazan",
+        "area_geodesic_km2": 615.413,
+        "area_epsg6933_km2_phase1": 615.413,
+        "area_raster_km2": 615.414,
+        "perimeter_km": 153.417,
+        "vertex_count": 479,
+        "pop_2025": 63143,
+        "density_per_km2": 102.6,
+        "water_km2": 4.211,
+        "wetland_km2": 0.056,
+        "water_share_pct": 0.684,
+        "density_land_per_km2": 103.31
+      },
+      {
+        "ilce": "Çubuk",
+        "ilce_key": "cubuk",
+        "area_geodesic_km2": 1175.245,
+        "area_epsg6933_km2_phase1": 1175.245,
+        "area_raster_km2": 1175.238,
+        "perimeter_km": 228.977,
+        "vertex_count": 799,
+        "pop_2025": 101437,
+        "density_per_km2": 86.31,
+        "water_km2": 3.292,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.28,
+        "density_land_per_km2": 86.55
+      },
+      {
+        "ilce": "Elmadağ",
+        "ilce_key": "elmadag",
+        "area_geodesic_km2": 632.072,
+        "area_epsg6933_km2_phase1": 632.073,
+        "area_raster_km2": 632.071,
+        "perimeter_km": 167.451,
+        "vertex_count": 328,
+        "pop_2025": 45644,
+        "density_per_km2": 72.21,
+        "water_km2": 0.222,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.035,
+        "density_land_per_km2": 72.24
+      },
+      {
+        "ilce": "Polatlı",
+        "ilce_key": "polatli",
+        "area_geodesic_km2": 3528.267,
+        "area_epsg6933_km2_phase1": 3528.267,
+        "area_raster_km2": 3528.266,
+        "perimeter_km": 459.366,
+        "vertex_count": 1461,
+        "pop_2025": 131894,
+        "density_per_km2": 37.38,
+        "water_km2": 3.793,
+        "wetland_km2": 0.016,
+        "water_share_pct": 0.108,
+        "density_land_per_km2": 37.42
+      },
+      {
+        "ilce": "Beypazarı",
+        "ilce_key": "beypazari",
+        "area_geodesic_km2": 1755.46,
+        "area_epsg6933_km2_phase1": 1755.46,
+        "area_raster_km2": 1755.463,
+        "perimeter_km": 317.312,
+        "vertex_count": 1291,
+        "pop_2025": 48359,
+        "density_per_km2": 27.55,
+        "water_km2": 8.955,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.51,
+        "density_land_per_km2": 27.69
+      },
+      {
+        "ilce": "Kızılcahamam",
+        "ilce_key": "kizilcahamam",
+        "area_geodesic_km2": 1619.199,
+        "area_epsg6933_km2_phase1": 1619.199,
+        "area_raster_km2": 1619.199,
+        "perimeter_km": 313.433,
+        "vertex_count": 926,
+        "pop_2025": 27841,
+        "density_per_km2": 17.19,
+        "water_km2": 8.331,
+        "wetland_km2": 0.003,
+        "water_share_pct": 0.515,
+        "density_land_per_km2": 17.28
+      },
+      {
+        "ilce": "Şereflikoçhisar",
+        "ilce_key": "sereflikochisar",
+        "area_geodesic_km2": 2098.616,
+        "area_epsg6933_km2_phase1": 2098.633,
+        "area_raster_km2": 2098.638,
+        "perimeter_km": 276.527,
+        "vertex_count": 662,
+        "pop_2025": 32831,
+        "density_per_km2": 15.64,
+        "water_km2": 561.643,
+        "wetland_km2": 0.547,
+        "water_share_pct": 26.763,
+        "density_land_per_km2": 21.36
+      },
+      {
+        "ilce": "Güdül",
+        "ilce_key": "gudul",
+        "area_geodesic_km2": 603.564,
+        "area_epsg6933_km2_phase1": 603.564,
+        "area_raster_km2": 603.557,
+        "perimeter_km": 229.566,
+        "vertex_count": 571,
+        "pop_2025": 8028,
+        "density_per_km2": 13.3,
+        "water_km2": 0.579,
+        "wetland_km2": 0.0,
+        "water_share_pct": 0.096,
+        "density_land_per_km2": 13.31
+      },
+      {
+        "ilce": "Ayaş",
+        "ilce_key": "ayas",
+        "area_geodesic_km2": 990.933,
+        "area_epsg6933_km2_phase1": 990.934,
+        "area_raster_km2": 990.933,
+        "perimeter_km": 284.204,
+        "vertex_count": 767,
+        "pop_2025": 13136,
+        "density_per_km2": 13.26,
+        "water_km2": 1.648,
+        "wetland_km2": 0.002,
+        "water_share_pct": 0.166,
+        "density_land_per_km2": 13.28
+      },
+      {
+        "ilce": "Nallıhan",
+        "ilce_key": "nallihan",
+        "area_geodesic_km2": 1994.418,
+        "area_epsg6933_km2_phase1": 1994.419,
+        "area_raster_km2": 1994.418,
+        "perimeter_km": 318.126,
+        "vertex_count": 824,
+        "pop_2025": 26083,
+        "density_per_km2": 13.08,
+        "water_km2": 53.18,
+        "wetland_km2": 0.0,
+        "water_share_pct": 2.666,
+        "density_land_per_km2": 13.44
+      },
+      {
+        "ilce": "Çamlıdere",
+        "ilce_key": "camlidere",
+        "area_geodesic_km2": 782.84,
+        "area_epsg6933_km2_phase1": 782.84,
+        "area_raster_km2": 782.838,
+        "perimeter_km": 178.412,
+        "vertex_count": 552,
+        "pop_2025": 10203,
+        "density_per_km2": 13.03,
+        "water_km2": 14.97,
+        "wetland_km2": 0.008,
+        "water_share_pct": 1.912,
+        "density_land_per_km2": 13.29
+      },
+      {
+        "ilce": "Kalecik",
+        "ilce_key": "kalecik",
+        "area_geodesic_km2": 1045.459,
+        "area_epsg6933_km2_phase1": 1045.459,
+        "area_raster_km2": 1045.465,
+        "perimeter_km": 243.302,
+        "vertex_count": 723,
+        "pop_2025": 12564,
+        "density_per_km2": 12.02,
+        "water_km2": 6.915,
+        "wetland_km2": 0.035,
+        "water_share_pct": 0.661,
+        "density_land_per_km2": 12.1
+      },
+      {
+        "ilce": "Evren",
+        "ilce_key": "evren",
+        "area_geodesic_km2": 245.496,
+        "area_epsg6933_km2_phase1": 245.495,
+        "area_raster_km2": 245.491,
+        "perimeter_km": 104.612,
+        "vertex_count": 376,
+        "pop_2025": 2927,
+        "density_per_km2": 11.92,
+        "water_km2": 48.273,
+        "wetland_km2": 0.001,
+        "water_share_pct": 19.663,
+        "density_land_per_km2": 14.84
+      },
+      {
+        "ilce": "Haymana",
+        "ilce_key": "haymana",
+        "area_geodesic_km2": 2219.801,
+        "area_epsg6933_km2_phase1": 2219.8,
+        "area_raster_km2": 2219.8,
+        "perimeter_km": 306.603,
+        "vertex_count": 837,
+        "pop_2025": 25798,
+        "density_per_km2": 11.62,
+        "water_km2": 0.977,
+        "wetland_km2": 0.033,
+        "water_share_pct": 0.044,
+        "density_land_per_km2": 11.63
+      },
+      {
+        "ilce": "Bala",
+        "ilce_key": "bala",
+        "area_geodesic_km2": 1830.334,
+        "area_epsg6933_km2_phase1": 1830.334,
+        "area_raster_km2": 1830.327,
+        "perimeter_km": 382.831,
+        "vertex_count": 1125,
+        "pop_2025": 20109,
+        "density_per_km2": 10.99,
+        "water_km2": 14.736,
+        "wetland_km2": 0.064,
+        "water_share_pct": 0.805,
+        "density_land_per_km2": 11.08
+      }
+    ],
+    "count": 25,
+    "sum_area_geodesic_km2": 25647.881,
+    "province_area_geodesic_km2": 25647.883,
+    "sum_minus_province_km2": -0.002,
+    "sum_pop_2025": 5910320,
+    "method": "Alan: her ilçe poligonunun WGS84 jeodezik alanı (pyproj.Geod). Yoğunluk = TÜİK ADNKS 2025 nüfusu / jeodezik alan (kişi/km²); kara yoğunluğu = nüfus / (alan − kalıcı su). Su: il ile aynı yöntem (10 × 10 alt örneklemeli ilçe payı × jeodezik hücre alanı). Satırlar yoğunluğa göre azalan sırada.",
+    "source_ids": [
+      "sinirlar_geoboundaries_tur_adm2",
+      "tuik_st_il_ilce_2025",
+      "arazi_osm_worldcover_tiles_s3"
+    ]
+  },
+  "hospital_land": {
+    "cells": [
+      {
+        "cell_km": 2.0,
+        "area_km2": 4.0,
+        "default": false
+      },
+      {
+        "cell_km": 3.0,
+        "area_km2": 9.0,
+        "default": true
+      },
+      {
+        "cell_km": 5.0,
+        "area_km2": 25.0,
+        "default": false
+      }
+    ],
+    "cases": [
+      {
+        "key": "general_300",
+        "label": "300 yataklı genel hastane",
+        "beds": 300,
+        "beds_basis": "spec 4.3 madde 6 örneği",
+        "class": "genel",
+        "land_m2_per_bed": 130.0,
+        "land_basis": "MPYY EK-2: devlet / eğitim-araştırma hastaneleri, yatak başına 130 m² (land.m2_per_bed)",
+        "land_m2": 39000.0,
+        "land_km2": 0.039,
+        "floor_area_m2": 71866.0,
+        "floor_area_method": "Kapalı alan = A0 + a·yatak = 3.361 + yatak × 228,35 m² (cost.core_area_m2, cost.m2_per_bed.general)",
+        "floor_to_land_ratio": 1.843,
+        "shares": [
+          {
+            "cell_km": 2.0,
+            "cell_area_km2": 4.0,
+            "share_pct": 0.975,
+            "fits_per_cell": 102
+          },
+          {
+            "cell_km": 3.0,
+            "cell_area_km2": 9.0,
+            "share_pct": 0.4333,
+            "fits_per_cell": 230
+          },
+          {
+            "cell_km": 5.0,
+            "cell_area_km2": 25.0,
+            "share_pct": 0.156,
+            "fits_per_cell": 641
+          }
+        ],
+        "text": "300 yataklı genel hastane: arsa 300 × 130 m² = 39.000 m² (≈0,039 km²); 2 km hücre (4 km²) %0,98; 3 km hücre (9 km²) %0,43; 5 km hücre (25 km²) %0,16"
+      },
+      {
+        "key": "city_1000_std",
+        "label": "1.000 yataklı şehir hastanesi (130 m²/yatak)",
+        "beds": 1000,
+        "beds_basis": "size.city_min_beds",
+        "class": "sehir",
+        "land_m2_per_bed": 130.0,
+        "land_basis": "MPYY EK-2: devlet / eğitim-araştırma hastaneleri, yatak başına 130 m² (land.m2_per_bed)",
+        "land_m2": 130000.0,
+        "land_km2": 0.13,
+        "floor_area_m2": 279500.0,
+        "floor_area_method": "Kapalı alan = yatak × 279,5 m² (cost.m2_per_bed.city; KYP şehir hastaneleri medyan oranı)",
+        "floor_to_land_ratio": 2.15,
+        "shares": [
+          {
+            "cell_km": 2.0,
+            "cell_area_km2": 4.0,
+            "share_pct": 3.25,
+            "fits_per_cell": 30
+          },
+          {
+            "cell_km": 3.0,
+            "cell_area_km2": 9.0,
+            "share_pct": 1.4444,
+            "fits_per_cell": 69
+          },
+          {
+            "cell_km": 5.0,
+            "cell_area_km2": 25.0,
+            "share_pct": 0.52,
+            "fits_per_cell": 192
+          }
+        ],
+        "text": "1.000 yataklı şehir hastanesi (130 m²/yatak): arsa 1.000 × 130 m² = 130.000 m² (≈0,130 km²); 2 km hücre (4 km²) %3,25; 3 km hücre (9 km²) %1,44; 5 km hücre (25 km²) %0,52"
+      },
+      {
+        "key": "city_1000_campus",
+        "label": "1.000 yataklı şehir hastanesi (kampüs, 220 m²/yatak)",
+        "beds": 1000,
+        "beds_basis": "size.city_min_beds",
+        "class": "sehir",
+        "land_m2_per_bed": 220.0,
+        "land_basis": "MPYY EK-2: Sağlık kampüsleri (şehir hastanesi) standardı, yatak başına 220 m² (land.m2_per_bed alternatifi)",
+        "land_m2": 220000.0,
+        "land_km2": 0.22,
+        "floor_area_m2": 279500.0,
+        "floor_area_method": "Kapalı alan = yatak × 279,5 m² (cost.m2_per_bed.city; KYP şehir hastaneleri medyan oranı)",
+        "floor_to_land_ratio": 1.27,
+        "shares": [
+          {
+            "cell_km": 2.0,
+            "cell_area_km2": 4.0,
+            "share_pct": 5.5,
+            "fits_per_cell": 18
+          },
+          {
+            "cell_km": 3.0,
+            "cell_area_km2": 9.0,
+            "share_pct": 2.4444,
+            "fits_per_cell": 40
+          },
+          {
+            "cell_km": 5.0,
+            "cell_area_km2": 25.0,
+            "share_pct": 0.88,
+            "fits_per_cell": 113
+          }
+        ],
+        "text": "1.000 yataklı şehir hastanesi (kampüs, 220 m²/yatak): arsa 1.000 × 220 m² = 220.000 m² (≈0,220 km²); 2 km hücre (4 km²) %5,50; 3 km hücre (9 km²) %2,44; 5 km hücre (25 km²) %0,88"
+      },
+      {
+        "key": "city_4000_std",
+        "label": "4.000 yataklı şehir hastanesi (130 m²/yatak)",
+        "beds": 4000,
+        "beds_basis": "size.city_max_beds",
+        "class": "sehir",
+        "land_m2_per_bed": 130.0,
+        "land_basis": "MPYY EK-2: devlet / eğitim-araştırma hastaneleri, yatak başına 130 m² (land.m2_per_bed)",
+        "land_m2": 520000.0,
+        "land_km2": 0.52,
+        "floor_area_m2": 1118000.0,
+        "floor_area_method": "Kapalı alan = yatak × 279,5 m² (cost.m2_per_bed.city; KYP şehir hastaneleri medyan oranı)",
+        "floor_to_land_ratio": 2.15,
+        "shares": [
+          {
+            "cell_km": 2.0,
+            "cell_area_km2": 4.0,
+            "share_pct": 13.0,
+            "fits_per_cell": 7
+          },
+          {
+            "cell_km": 3.0,
+            "cell_area_km2": 9.0,
+            "share_pct": 5.7778,
+            "fits_per_cell": 17
+          },
+          {
+            "cell_km": 5.0,
+            "cell_area_km2": 25.0,
+            "share_pct": 2.08,
+            "fits_per_cell": 48
+          }
+        ],
+        "text": "4.000 yataklı şehir hastanesi (130 m²/yatak): arsa 4.000 × 130 m² = 520.000 m² (≈0,520 km²); 2 km hücre (4 km²) %13,00; 3 km hücre (9 km²) %5,78; 5 km hücre (25 km²) %2,08"
+      },
+      {
+        "key": "city_4000_campus",
+        "label": "4.000 yataklı şehir hastanesi (kampüs, 220 m²/yatak)",
+        "beds": 4000,
+        "beds_basis": "size.city_max_beds",
+        "class": "sehir",
+        "land_m2_per_bed": 220.0,
+        "land_basis": "MPYY EK-2: Sağlık kampüsleri (şehir hastanesi) standardı, yatak başına 220 m² (land.m2_per_bed alternatifi)",
+        "land_m2": 880000.0,
+        "land_km2": 0.88,
+        "floor_area_m2": 1118000.0,
+        "floor_area_method": "Kapalı alan = yatak × 279,5 m² (cost.m2_per_bed.city; KYP şehir hastaneleri medyan oranı)",
+        "floor_to_land_ratio": 1.27,
+        "shares": [
+          {
+            "cell_km": 2.0,
+            "cell_area_km2": 4.0,
+            "share_pct": 22.0,
+            "fits_per_cell": 4
+          },
+          {
+            "cell_km": 3.0,
+            "cell_area_km2": 9.0,
+            "share_pct": 9.7778,
+            "fits_per_cell": 10
+          },
+          {
+            "cell_km": 5.0,
+            "cell_area_km2": 25.0,
+            "share_pct": 3.52,
+            "fits_per_cell": 28
+          }
+        ],
+        "text": "4.000 yataklı şehir hastanesi (kampüs, 220 m²/yatak): arsa 4.000 × 220 m² = 880.000 m² (≈0,880 km²); 2 km hücre (4 km²) %22,00; 3 km hücre (9 km²) %9,78; 5 km hücre (25 km²) %3,52"
+      }
+    ],
+    "min_parcel": {
+      "m2": 6500.0,
+      "beds": 50,
+      "share_pct_smallest_cell": 0.1625,
+      "method": "land.min_parcel_m2 = land.m2_per_bed × size.general_min_beds"
+    },
+    "province_total": {
+      "beds": 18617.5,
+      "land_km2": 2.4203,
+      "share_of_province_pct": 0.00944,
+      "method": "Tüm il yatak talebi (oran modu, varsayılan parametreler): nüfus 2025 × demand.beds_per_1000 / 1000 × (1 + demand.safety_margin) = 5.910.320 × 3,15 / 1000 × 1,00; arsa = yatak × 130 m². Yalnız ölçek göstergesidir; modelin talebi Faz 3'te hücre bazında hesaplanır."
+    },
+    "land_m2_per_bed_registry_max": 220.0,
+    "conclusion": "Arazi bağlayıcı değil. 300 yataklı genel hastanenin arsası 300 × 130 m² = 39.000 m² (≈0,04 km²); bu, varsayılan 3 km hücrenin (9 km²) yalnız %0,43 kadarıdır. En büyük durumda bile — 4.000 yataklı şehir hastanesi, kampüs standardı 220 m²/yatak, 0,88 km² — arsa 2 km hücrenin %22,0, 3 km hücrenin %9,8 kadarını kaplar. Genel hastanenin kapalı alanı (71.866 m²) arsasından büyüktür, yani bina çok katlıdır (kapalı alan / arsa ≈ 1,84). Bu yüzden 'her hücrede en fazla 1 hastane' kısıtı arazi yetersizliğinden değil modelleme tercihinden gelir; bağlayıcı olan talep, maliyet ve erişimdir.",
+    "caveat": "Hücrenin tamamı uygun arazi değildir (su, mevcut yapılaşma, eğim, koruma alanları); aday filtresi suyu büyük oranda kaplanan hücreleri eler. Bu karşılaştırma yalnız alan ölçeğini gösterir.",
+    "source_ids": [
+      "maliyet_mpyy_ek2",
+      "maliyet_hesap_kyp_alan",
+      "yatirim_kyp2026"
+    ],
+    "params_used": [
+      "land.m2_per_bed",
+      "land.min_parcel_m2",
+      "cost.core_area_m2",
+      "cost.m2_per_bed.general",
+      "cost.m2_per_bed.city",
+      "size.general_min_beds",
+      "size.city_min_beds",
+      "size.city_max_beds",
+      "grid.cell_km",
+      "demand.beds_per_1000",
+      "demand.safety_margin",
+      "population.province_2025"
+    ]
+  },
+  "card": {
+    "title": "Toplam mesafe — Ankara'nın büyüklüğü",
+    "items": [
+      {
+        "key": "area",
+        "label": "Alan (jeodezik)",
+        "value_text": "25.647,9 km²",
+        "tooltip": "WGS84 elipsoidinde; EPSG:6933 ile fark %0,00007."
+      },
+      {
+        "key": "land_area",
+        "label": "Alan, kalıcı su hariç",
+        "value_text": "24.899,5 km²",
+        "tooltip": "Kalıcı su (WorldCover) 748,4 km²; göller hariç kaynak değerleriyle karşılaştırılır."
+      },
+      {
+        "key": "perimeter",
+        "label": "Çevre (jeodezik)",
+        "value_text": "1.590,3 km",
+        "tooltip": "4.748 köşeli sınırla; çevre çözünürlüğe bağlıdır (web sürümü 1.586,9 km)."
+      },
+      {
+        "key": "width_ew",
+        "label": "Doğu–batı genişlik (UTM kutusu)",
+        "value_text": "261,1 km",
+        "tooltip": "En batı ↔ en doğu nokta jeodezik: 287,7 km."
+      },
+      {
+        "key": "height_ns",
+        "label": "Kuzey–güney genişlik (UTM kutusu)",
+        "value_text": "232,2 km",
+        "tooltip": "En kuzey ↔ en güney nokta jeodezik: 239,0 km."
+      },
+      {
+        "key": "diameter",
+        "label": "En uzak iki sınır noktası",
+        "value_text": "293,8 km",
+        "tooltip": "Nallıhan ↔ Şereflikoçhisar (dışbükey örtü + kaba kuvvet)."
+      },
+      {
+        "key": "kizilay_far",
+        "label": "Kızılay → en uzak sınır noktası",
+        "value_text": "173,4 km",
+        "tooltip": "Nallıhan sınırında."
+      },
+      {
+        "key": "kizilay_near",
+        "label": "Kızılay → en yakın il sınırı",
+        "value_text": "35,4 km",
+        "tooltip": "Elmadağ sınırında."
+      },
+      {
+        "key": "centroid",
+        "label": "Kızılay → ilin ağırlık merkezi",
+        "value_text": "27,0 km",
+        "tooltip": "İl merkezli eşit alanlı (LAEA) projeksiyonda alan ağırlık merkezi; Etimesgut ilçesinde."
+      }
+    ],
+    "hospital_land_conclusion": "Arazi bağlayıcı değil. 300 yataklı genel hastanenin arsası 300 × 130 m² = 39.000 m² (≈0,04 km²); bu, varsayılan 3 km hücrenin (9 km²) yalnız %0,43 kadarıdır. En büyük durumda bile — 4.000 yataklı şehir hastanesi, kampüs standardı 220 m²/yatak, 0,88 km² — arsa 2 km hücrenin %22,0, 3 km hücrenin %9,8 kadarını kaplar. Genel hastanenin kapalı alanı (71.866 m²) arsasından büyüktür, yani bina çok katlıdır (kapalı alan / arsa ≈ 1,84). Bu yüzden 'her hücrede en fazla 1 hastane' kısıtı arazi yetersizliğinden değil modelleme tercihinden gelir; bağlayıcı olan talep, maliyet ve erişimdir."
+  }
+}

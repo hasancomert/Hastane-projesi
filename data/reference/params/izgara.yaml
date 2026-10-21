@@ -1,6 +1,7 @@
 # Alan: erisim — H. Izgara ve çözücü (spec 4.3, 4.4 H, 4.6). Hepsi modelleme tercihi (model_secimi).
-# Hücre/aday sayıları ve kapsama istatistikleri burada verilmez: Faz 2'de kalibre edilmiş ızgaradan (UTM 36N hücreleri,
-# TÜİK ilçe toplamlarına kalibre nüfus) hesaplanıp raporlanacak. Parametre değerleri değişmedi.
+# Hücre/aday sayıları ve kapsama istatistikleri pipeline/22_grids.py'nin kalibre ızgarasından (UTM 36N hücreleri, TÜİK
+# 2025 ilçe toplamlarına kalibre WorldPop dağılımı) alınmıştır: data/processed/grid/grid_summary.json
+# (kaynak kaydı izgara_aday_kapsama_hesap). Faz 1 parametre değerleri değişmedi; aday kuralının üç anahtarı Faz 2 ile eklendi.
 
 - key: grid.cell_km
   label: "Hücre boyutu"
@@ -10,12 +11,17 @@
   rationale: >-
     Şartname 4.3/4.6: 2, 3 ve 5 km ızgaralar üretilecek; canlı çözüm hedefi 3 km'de ≲15 sn, 2 km'de ≲60 sn. Varsayılan
     3 km: sunum dizüstünde canlı çözüm hedefine uygun ve 300 yataklı bir hastanenin ≈0,04 km² inşaat alanına göre hücre
-    (9 km²) arazi bakımından bağlayıcı değil. Her hücre boyutundaki il içi ve nüfuslu hücre sayısı Faz 2'de kalibre
-    edilmiş ızgaradan hesaplanacak.
+    (9 km²) arazi bakımından bağlayıcı değil.
+  source_ids: [izgara_aday_kapsama_hesap]
   range: [2, 5]
   alternatives:
     - {label: "2 km (ayrıntılı; canlı çözüm hedefi ≲60 sn)", value: 2, status: model_secimi}
     - {label: "5 km (hızlı, kaba)", value: 5, status: model_secimi}
+  notes: >-
+    Kalibre ızgara (pipeline/22_grids.py): il poligonuyla kesişen hücre sayısı 2 km 6.825, 3 km 3.111, 5 km 1.178
+    (tamamı il içinde 5.976 / 2.572 / 876); nüfuslu talep hücresi |I| (WorldPop dağılımı, 2025) 4.842 / 2.604 / 1.073,
+    GHS-POP dağılımıyla 2.816 / 1.806 / 917. En kalabalık hücre 3 km'de 253.355 kişi. Hücrelerin il içi alan toplamı
+    25.629,9 km² (UTM 36N). Varsayılan kuralla aday sayısı |J| 891 / 634 / 454 (2 km'de 1 hücre kapsama onarımıyla).
 
 - key: grid.candidate_min_pop
   label: "Aday hücre için asgari nüfus (P_min)"
@@ -25,15 +31,26 @@
   rationale: >-
     Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal
     varsayılan verilmemiş. 250 kişi / hücre (3 km'de 9 km² başına ≈28 kişi/km²) seyrek nüfuslu hücreleri aday
-    kümesinden çıkarıp değişken sayısını azaltan düşük bir eşik olarak seçildi. Aday sayısı |J|, adayların kapsadığı
-    nüfus payı ve R = 30 km (yol; kuş uçuşu ≈24,5 km) içinde hiç adayı kalmayan nüfuslu hücreler Faz 2'de kalibre
-    edilmiş ızgaradan hesaplanacak; P_min bu sonuçlara göre R ile birlikte denetlenecek. Eşik hücre başına olduğundan
-    hücre boyutu değişince yeniden ayarlanmalı.
+    kümesinden çıkarıp değişken sayısını azaltan düşük bir eşik olarak seçildi. Kalibre ızgarada R ile birlikte
+    denetlendi: 3 km'de |J| = 634 aday nüfusun %98,5'ini barındırıyor ve R = 30 km (yol, mesafeye bağlı dolambaç)
+    içinde adayı olmayan nüfuslu hücre yok (ayrıntı notlarda). Eşik hücre başına olduğundan hücre boyutu değişince
+    yeniden ayarlanmalı.
+  source_ids: [izgara_aday_kapsama_hesap]
   range: [0, 5000]
   alternatives:
     - {label: "Tüm nüfuslu hücreler", value: 1, status: model_secimi}
     - {label: "Daha geniş aday kümesi", value: 100, status: model_secimi}
-    - {label: "Daha dar aday kümesi (R = 30 km ile kırsal kapsama Faz 2'de denetlenmeli)", value: 500, status: model_secimi}
+    - {label: "Daha dar aday kümesi (3 km'de |J| = 419; R = 30 km kapsaması tam)", value: 500, status: model_secimi}
+  notes: >-
+    |J| (aday sayısı) — WorldPop dağılımı, 2025, il içi ≥ 0,5, su < 0,5; "P_min → yakınlık kuralıyla / kuralsız"
+    (ikisi eşitse tek sayı; grid.candidate_near_density = 1.500 kişi/km² → hücre başına eşik 2 km 6.000, 3 km 13.500,
+    5 km 37.500). 3 km: 0 → 2.776; 100 → 964 / 957; 250 → 634 / 617; 500 → 419 / 395; 1.000 → 311 / 269;
+    2.500 → 247 / 179. 2 km: 0 → 6.240; 100 → 1.347 / 1.311; 250 → 890 / 825; 500 → 659 / 553; 1.000 → 542 / 386;
+    2.500 → 462 / 248. 5 km: 0 → 1.004; 100 → 613 / 612; 250 → 454 / 451; 500 → 289 / 285; 1.000 → 188 / 179;
+    2.500 → 137 / 117. P_min = 250 ile aday hücrelerdeki nüfus payı 2 km %97,7, 3 km %98,5, 5 km %99,2. Kapsama
+    (P_min = 250, R = 30 km yol): onarım öncesi R içinde adayı olmayan talep hücresi 3 km ve 5 km'de 0; 2 km'de
+    4 hücre / 33 kişi (onarım 1 uygun hücreyi aday yapar → 891). R içinde hiç UYGUN hücresi olmayan talep hücresi her
+    boyutta 0. GHS-POP dağılımıyla 3 km |J| = 575; 2030 senaryosunda (WorldPop) 646.
 
 - key: grid.k_nearest
   label: "Her talep hücresi için tutulan en yakın aday sayısı (k)"
@@ -43,13 +60,24 @@
   rationale: >-
     Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir:
     seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak
-    amaçlanır; atama değişkeni sayısı ≈ |I|·k olur. R içindeki aday sayısının dağılımı ve |I|·k Faz 2'de kalibre
-    edilmiş ızgaradan hesaplanacak. Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi
-    Faz 3'te raporlanacak).
+    amaçlanır; atama değişkeni sayısı ≈ |I|·k olur (k'ıncı mesafeye eşit adayların hepsi tutulduğundan biraz fazla;
+    kalibre ızgarada dağılım notlarda). Çözümde talep sıklıkla
+    k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).
+  source_ids: [izgara_aday_kapsama_hesap]
   range: [5, 300]
   alternatives:
     - {label: "Hızlı (daha az değişken, kısıtlayıcı olabilir)", value: 20, status: model_secimi}
     - {label: "Geniş (R içindeki adayların neredeyse tamamı)", value: 150, status: model_secimi}
+  notes: >-
+    Varsayılan adaylarla (P_min = 250, R = 30 km yol) talep hücresi başına R içindeki aday sayısı: 3 km ortalama 47,6,
+    ortanca 28, en az 1, en çok 206; talep hücrelerinin %30,7'sinde R içinde 50'den fazla aday var (k kırpıyor).
+    k'ıncı yol mesafesine eşit (1e-9 km içinde) adayların hepsi tutulur (backend/model/distance.py neighbor_lists;
+    düzenli ızgarada simetrik hücreler aynı mesafededir, eşitliği aday sırasıyla kesmek belirli bir yöndekileri
+    sistematik olarak atardı). Atama değişkeni (seyrek çift) sayısı 3 km'de R içindeki tümü 124.064 → k = 50 ile
+    81.288 (eşitlik nedeniyle +1.527; 568 satır 50'den uzun, satır uzunluğu ortalama 31,22, en çok 58). 2 km:
+    ortalama 76,4, en çok 404, kırpılan %39,2, 370.137 → 162.497 (+2.841; satır en çok 59). 5 km: ortalama 26,6,
+    en çok 69, kırpılan %12,6, 28.543 → 27.639 (+410; satır en çok 57). Nüfus ağırlıklı en yakın aday yol mesafesi
+    3 km'de 1,67 km (hücre içi ortalama yolculuk 1,59 km); en uzak talep hücresinin en yakın adayı 29,1 km.
 
 - key: solver.time_limit_s
   label: "Çözücü süre sınırı"
@@ -76,3 +104,49 @@
   alternatives:
     - {label: "Sıkı (raporlama/önceden çözüm)", value: 0.0001, status: model_secimi}
     - {label: "Gevşek (çok hızlı keşif)", value: 0.05, status: model_secimi}
+
+- key: grid.candidate_min_inside
+  label: "Aday hücre için asgari il içi alan payı"
+  value: 0.5
+  unit: "oran (0–1)"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.3.6 "il içinde" koşulunun karşılığı: hücre alanının en az yarısı il poligonunun içinde olmalı (UTM 36N'de
+    alan(hücre ∩ il) / alan(hücre) ≥ 0,5). Çoğunluğu komşu ilde kalan sınır hücresine hastane konmaz; bu hücrelerin
+    nüfusu yine talep sayılır ve il içindeki adaylara atanır. Eşikle aday dışı kalan hücre: 2 km 425, 3 km 260, 5 km 155.
+  source_ids: [izgara_aday_kapsama_hesap]
+  range: [0.0, 1.0]
+
+- key: grid.candidate_max_water
+  label: "Aday hücre için azami su + sulak alan payı"
+  value: 0.5
+  unit: "oran (0–1)"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.3.6 "büyük kısmı su olmayan" ifadesinin doğrudan karşılığı: ESA WorldCover 2021 kalıcı su (sınıf 80) +
+    otsu sulak alan (sınıf 90) payı %50'nin altında. Pay, hücreye merkezi düşen il içi 100 m piksellerinin ortalamasıdır
+    (data/processed/landcover/worldcover_ankara_100m.tif). İl içi koşulunu sağlayıp bu eşiğe takılan hücre: 2 km 160,
+    3 km 75, 5 km 19 (çoğu Tuz Gölü ve baraj gölleri).
+  source_ids: [izgara_aday_kapsama_hesap, alan_literatur_lit_zanaga2022]
+  range: [0.05, 1.0]
+
+- key: grid.candidate_near_density
+  label: "Yerleşime yakınlık eşiği (8 komşudan en kalabalığının nüfus yoğunluğu)"
+  value: 1500
+  unit: "kişi/km²"
+  status: model_secimi
+  rationale: >-
+    Şartname 4.3.6 "yerleşime yakın" ifadesinin karşılığı: nüfusu P_min'in altında kalsa da 8 komşusundan en kalabalığının
+    nüfusu ≥ eşik × hücre alanı (s² km², s = hücre kenarı) olan uygun hücre adaydır (yoğun kentin hemen kenarındaki
+    seyrek/boş hücreler: arazisi olan kent saçağı). Eşik, GHSL Kentleşme Derecesi yönteminin "kent merkezi" yoğunluk
+    eşiğidir: ≥ 1.500 kişi/km² (GHSL Data Package 2023, §2.6.2, PDF s. 55 / basılı s. 50). Yoğunluk olarak tanımlandığı
+    için hücre boyutuyla birlikte ölçeklenir: hücre başına eşik 2 km'de 6.000, 3 km'de 13.500, 5 km'de 37.500 kişidir
+    (yöntemdeki yoğunluk 1 km hücrede ve kalıcı kara alanında ölçülür; burada komşu hücrenin tüm alanına yaklaşık
+    uygulanır). Yalnız yoğun kent hücrelerinin komşularını ekler, kümeyi şişirmez: P_min = 250 ile |J| 3 km'de
+    617 → 634 (+17), 2 km'de 825 → 890 (+65), 5 km'de 451 → 454 (+3).
+  source_ids: [nufus_izgara_ghsl_data_package_2023, izgara_aday_kapsama_hesap]
+  range: [0, 10000]
+  notes: >-
+    Kural backend/model/grid_io.py candidate_mask'tedir (RuleParams.near_threshold = yoğunluk × s²); near_rule=False ile
+    kapatılabilir (yalnız P_min). |J| tablosu yakınlık kuralıyla ve kuralsız: grid.candidate_min_pop notları ve
+    data/processed/grid/grid_summary.json.
