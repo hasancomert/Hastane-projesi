@@ -264,9 +264,17 @@
         "source_ids": [
           "saglik_sbsgm_siy2023"
         ]
+      },
+      {
+        "label": "Sağlık Bakanlığı 2024–2028 Stratejik Planı hedefi, 2028: 38 / 10 (PG4.2.1, tüm sektörler; başlangıç 30,7 (2022))",
+        "value": 3.8,
+        "status": "hesap",
+        "source_ids": [
+          "saglik_sb_stratejik_plan_2024_2028"
+        ]
       }
     ],
-    "notes": "Şartname 4.4 A varsayılanı 3,12 (2023) idi; öğrencinin kararıyla varsayılan 2025'e (3,15) geçti, 3,12 resmî yıllıkla doğrulandı ve alternatif olarak duruyor. Tanım: SİY'de 'hastane yatağı' yoğun bakım, prematüre/yenidoğan (kuvöz, açık bebek yatağı), yanık ve nitelikli yatakları İÇERİR (SİY 2024 Bölüm 7 açıklamaları, PDF s. 193). Aralık gerekçesi: Türkiye yoğun bakım hariç (2,58) ile Ankara (4,25–4,31) değerlerini kapsar. Ankara 5.910.320 kişi ile oran yöntemi: 3,15 → 18.618 yatak (3,12 → 18.440).",
+    "notes": "Şartname 4.4 A varsayılanı 3,12 (2023) idi; öğrencinin kararıyla varsayılan 2025'e (3,15) geçti, 3,12 resmî yıllıkla doğrulandı ve alternatif olarak duruyor. Tanım: SİY'de 'hastane yatağı' yoğun bakım, prematüre/yenidoğan (kuvöz, açık bebek yatağı), yanık ve nitelikli yatakları İÇERİR (SİY 2024 Bölüm 7 açıklamaları, PDF s. 193). Aralık gerekçesi: Türkiye yoğun bakım hariç (2,58) ile Ankara (4,25–4,31) değerlerini kapsar. Ankara 5.910.320 kişi ile oran yöntemi: 3,15 → 18.618 yatak (3,12 → 18.440). Resmî hedef: Stratejik Plan 2024–2028 PG4.2.1 '10.000 Kişiye Düşen Hastane Yatağı Sayısı (Tüm Sektörler)' yıllık hedefleri 32,5 / 34,5 / 36 / 37 / 38 (2024–2028; PDF s. 156); 2025 hedefi 34,5 iken gerçekleşen 31,5. Hedef bir politika hedefidir, talep ölçüsü değildir; yalnız karşılaştırma için alternatif olarak eklendi.",
     "group": "A. Talep",
     "domain": "talep",
     "sources": [
@@ -482,11 +490,13 @@
     "unit": "oran (0–1)",
     "status": "model_secimi",
     "source_ids": [
+      "saglik_bagust1999",
+      "alan_literatur_lit_ravaghi2020",
       "saglik_aydemir2019",
       "saglik_cirakli2019"
     ],
     "derivation": null,
-    "rationale": "Kaynaklar tek bir planlama hedefi vermiyor, genel hastaneler için 'olumlu' kabul edilen %80–85 ARALIĞINI veriyor; üstelik bu aralık ikinci el: Aydemir (2019) Ağırbaş (2016), Çıraklı (2019) Ağırbaş (2012) ders kitabından aktarıyor (kitap okunmadı); %85 'kabul görmüş standart' ifadesi de Bagust vd. (1999) için yalnız Aydemir üzerinden aktarılıyor (tam metin okunamadı). 0,85 bu aralığın üst ucu olarak seçildi: aynı talep için en az yatağı veren (yatakların verimli kullanımı) ama Bagust vd.'nin %85 eşiğini (aşılınca erişim engeli, uzun bekleme, yüksek mortalite) aşmayan değer. Aralığın alt ucu (0,80) ve diğer değerler alternatif olarak duruyor; kaydırıcıyla duyarlılık analizi yapılabilir.",
+    "rationale": "Kaynaklar tek bir planlama hedefi vermiyor, büyük/genel hastaneler için %80–85 ARALIĞINI veriyor: Ravaghi vd. (2020, sistematik tarama; tam metin okundu) 'the target bed occupancy rate is usually considered to be 80–85% of the total bed capacity for large hospitals, and 45% for small hospitals'; Aydemir (2019) ve Çıraklı (2019) aynı aralığı Ağırbaş'ın ders kitabından aktarıyor (kitap okunmadı). 0,85 bu aralığın üst ucu olarak seçildi: aynı talep için en az yatağı veren (yatakların verimli kullanımı) ama Bagust vd. (1999; tam metin okundu) simülasyonunda risklerin belirdiği eşiği aşmayan değer ('Risks are discernible when average bed occupancy rates exceed about 85%'; %90 ve üstünde düzenli yatak krizi). Sağlık Bakanlığı'nın resmî bir doluluk hedefi bulunamadı (Stratejik Plan 2024–2028, 2026 Performans Programı ve KHGM GÖREN 2026 göstergelerinde doluluk yok), bu yüzden değer model seçimidir. Aralığın alt ucu (0,80) ve diğer değerler alternatif olarak duruyor; kaydırıcıyla duyarlılık analizi yapılabilir.",
     "range": [
       0.5,
       0.95
@@ -494,10 +504,11 @@
     "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
-        "label": "Genel hastaneler için kabul edilen aralığın alt ucu (%80; Aydemir 2019, Çıraklı 2019)",
+        "label": "Büyük/genel hastaneler için kabul edilen aralığın alt ucu (%80; Ravaghi 2020, Aydemir 2019, Çıraklı 2019)",
         "value": 0.8,
         "status": "kaynakli",
         "source_ids": [
+          "alan_literatur_lit_ravaghi2020",
           "saglik_aydemir2019",
           "saglik_cirakli2019"
         ]
@@ -519,10 +530,26 @@
         ]
       }
     ],
-    "notes": "Aydemir (2019, USAYSAD 5(2), dergi s. 233 / PDF s. 4): 'Yatak doluluk oranının genel hastanelerde %80-85 ... olması olumlu olarak değerlendirilir'; aynı sayfada Bagust vd. (1999, BMJ 319:155–8) için 'kabul görmüş standart (%85)' aşıldığında erişim engeli, uzun bekleme ve yüksek mortalite, %80'in altında ise tesislerin boşta kaldığı aktarılıyor. Çıraklı (2019, s. 43) aynı %80–85 aralığını teyit ediyor. Bagust vd. tam metni okunamadı (bmj.com/PMC vekil sunucuda engelli); künyesi Crossref ile doğrulandı. Sağlık Bakanlığı stratejik planı/hedef gösterge belgeleri (sgb.saglik.gov.tr, khgm.saglik.gov.tr, khgmickontrol.saglik.gov.tr) vekil sunucuda 403 verdiği için okunamadı. ÖNEMLİ: 2025'te gerçekleşen doluluk %54,5 olduğundan Hill-Burton (%85) oran yöntemine göre ≈%36 daha az yatak verir. Aralık (0,50–0,95) varsayımdır.",
+    "notes": "Bagust vd. (1999, BMJ 319:155–8; PMC28163) özet, Results: 'Risks are discernible when average bed occupancy rates exceed about 85%, and an acute hospital can expect regular bed shortages and periodic bed crises if average bed occupancy rises to 90% or more.' Gövde, Results: 'Risks are minimal so long as the mean bed occupancy remains below about 85%. Above this level the risks become substantial (at 85%, a hospital can expect to be short of beds for admissions on four days in a year) ...'. Makale %85'i 'standart' ya da 'hedef' diye adlandırmıyor ve mortaliteden söz etmiyor: Aydemir'in (2019, USAYSAD 5(2), dergi s. 233 / PDF s. 4) 'kabul görmüş standart (%85) ... yüksek mortalite' aktarımı aslından güçlü. Ravaghi vd. (2020, BMC HSR 20:186; PMC7060560) Table 4 'Formula method': 'Based on target occupancy rates (80–85% for large hospitals and 45% for small hospitals)'; yöntem yatak ihtiyacını (ort. kalış × yatış oranı × nüfus) / (dönem süresi × hedef doluluk) olarak hesaplıyor. Aynı formül 'Hill-Burton formula' adıyla Nates vd. (2023, Crit Care Med 51:1552–65; PMC11192408) Table 2'de: yıllık yatış × ort. kalış / (365 × ideal doluluk) (alan_literatur_lit_nates2023). Çıraklı (2019, s. 43) ve Aydemir (2019) %80–85'i 'olumlu' aralık olarak veriyor. Resmî hedef aranan belgeler: Sağlık Bakanlığı 2024–2028 Stratejik Planı (saglik_sb_stratejik_plan_2024_2028), 2026 Performans Programı (saglik_sb_performans_programi_2026), KHGM GÖREN 2026 kılavuzu (saglik_khgm_goren_kilavuz_2026): hiçbirinde doluluk hedefi/göstergesi YOK. Plan yalnız '10.000 kişiye düşen hastane yatağı' için 2028 hedefi 38 veriyor (demand.beds_per_1000 alternatifi) ve 'mevcut hastane yataklarının kullanım etkinliği yükseltilecektir' diyor; GÖREN yatak devir hızını izliyor. ÖNEMLİ: 2025'te gerçekleşen doluluk %54,5 olduğundan Hill-Burton (%85) oran yöntemine göre ≈%36 daha az yatak verir. Aralık (0,50–0,95) varsayımdır.",
     "group": "A. Talep",
     "domain": "talep",
     "sources": [
+      {
+        "id": "saglik_bagust1999",
+        "title": "Dynamics of bed use in accommodating emergency admissions: stochastic simulation model",
+        "publisher": "Bagust A., Place M., Posnett J.W. — BMJ 1999; 319(7203): 155–158. doi:10.1136/bmj.319.7203.155 (PubMed Central: PMC28163)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:28163&metadataPrefix=pmc_fm",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      },
+      {
+        "id": "alan_literatur_lit_ravaghi2020",
+        "title": "Models and methods for determining the optimal number of beds in hospitals and regions: a systematic scoping review",
+        "publisher": "Ravaghi, Hamid; Alidoost, Saeide; Mannion, Russell; Bélorgeot, Victoria D. — BMC Health Services Research 20(1): 186 (2020); doi:10.1186/s12913-020-5023-z",
+        "url": "https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:7060560&metadataPrefix=pmc",
+        "accessed": "2026-10-21",
+        "kind": "akademik"
+      },
       {
         "id": "saglik_aydemir2019",
         "title": "Bir Kamu Hastanesinde Yatak Kullanım Etkinliğinin Değerlendirilmesi (Assessment of Bed Utilization Efficiency in a Public Hospital)",

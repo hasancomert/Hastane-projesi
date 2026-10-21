@@ -2,6 +2,7 @@
 # Üreten: pipeline/20_area_literature.py (elle düzenlemeyin); ham belgeler: data/raw/alan/, data/raw/literatur/ (git dışı;
 # _manifest.jsonl'de url/tarih/sha256). Tablo: data/reference/ankara_alan_kaynaklari.csv ; künyeler: data/reference/literatur.yaml
 # Not: TÜİK satırları nufus alanının (tuik_bt_adnks20xx_yogunluk), COD-AB satırı sinirlar alanının (sinirlar_hdx_codab_tur) kaydına bağlanır.
+# WorldPop künyesi (literatur.yaml: bondarenko2025_worldpop) nufus_izgara alanının nufus_izgara_worldpop_doi kaydına bağlanır.
 # Birleştirilen kayıtlar (alanlar arası aynı belge): arazi_osm_worldcover_2021_v200 → alan_literatur_lit_zanaga2022; arazi_osm_boscoe_2012 → alan_literatur_lit_boscoe2012; arazi_osm_ballou_2002 → alan_literatur_lit_ballou2002
 
 - id: alan_literatur_csb_ref4_altindag
@@ -40,8 +41,9 @@
   used_for:
   - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş [PDF s. 3 (basılı s. 1; aynı metin PDF s. 41)]'
   notes: 'Spec kaynağı [5]. 25.632 km²''yi birebir yazan resmî belge: Valilik ÇDR 2018 Çizelge E.85 ile birlikte bu değerin
-    birincil dayanağı; ikincil kopyalara göre HGM ile aynı (HGM tablosu doğrudan okunamadı). URL zaman damgası 17.11.2025.
-    83 sayfa. Aynı TLS çözümü.'
+    birincil dayanağı. HGM''nin güncel tablosu (2026) Ankara için 25.664 km² veriyor (alan_literatur_hgm_il_ilce_yuzolcumleri);
+    25.632 yalnız HGM tablosunun ikincil kopyalarında (büyük olasılıkla eski baskı). URL zaman damgası 17.11.2025. 83 sayfa.
+    Aynı TLS çözümü.'
 
 - id: alan_literatur_csb_ref6_cankaya
   title: Ankara İli, Çankaya İlçesi, Yukarı Bahçelievler Mahallesi 7289 Ada 5 Parsel (Milli Kütüphane) 1/1000 Ölçekli Uygulama
@@ -104,8 +106,9 @@
   - 'Ankara yüzölçümü: 26.897 km² — atlasın kapsadığı alan (il yüzölçümü olarak verilmemiş) [PDF s. 144 (basılı s. 131)]'
   notes: 'Valiliğin resmî raporu; il yüzölçümünü tek sayı olarak yazmıyor, arazi kullanım tablosu (Çizelge E.85, kaynak
     Tarım ve Orman İl Müd.) 25.632.000 da''ya toplanıyor (= 25.632 km²; toplama bizim hesabımız): [5] ile birlikte 25.632
-    km²''nin resmî dayanağı; ikincil kopyalara göre HGM ile aynı. ankara.gov.tr ve ankara.bel.tr vekil sunucuda engelli
-    (403). 182 sayfa.'
+    km²''nin resmî dayanağı. HGM''nin güncel tablosu (2026) Ankara için 25.664 km² veriyor (alan_literatur_hgm_il_ilce_yuzolcumleri);
+    25.632 yalnız HGM tablosunun ikincil kopyalarında (büyük olasılıkla eski baskı). ankara.gov.tr ve ankara.bel.tr vekil
+    sunucuda engelli (403). 182 sayfa.'
 
 - id: alan_literatur_valilik_cdr_2017
   title: Ankara İli 2017 Yılı Çevre Durum Raporu (Ankara, 2018)
@@ -122,6 +125,33 @@
   notes: İl yüzölçümü sayısı yok; ormanlık alan 471.975,7 ha = il yüzölçümünün '% 18,3'ü (PDF s. 147) → ≈25.791 km² (yuvarlamalı,
     kullanılmadı).
 
+- id: alan_literatur_hgm_il_ilce_yuzolcumleri
+  title: İl ve İlçe Yüz Ölçümleri (il_ilce_alanlari.xlsx) — 2026 yılında üretilen 1:1.000.000 ölçekli Türkiye Mülki İdare
+    Bölümleri Haritasından hesaplanmış
+  publisher: T.C. Millî Savunma Bakanlığı, Harita Genel Müdürlüğü (HGM) — harita.gov.tr
+  url: https://www.harita.gov.tr/uploads/files-folder/il_ilce_alanlari.xlsx
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/alan/hgm/il_ilce_alanlari.xlsx
+  sha256: e6054762f2e03e72b56ef85cb430ea00b012ccc5eba3a8fea08e3a631d3b6447
+  used_for:
+  - 'Ankara yüzölçümü: 25.664 km² — belirtilmemiş (HGM: 1:1.000.000 ölçekli harita sınırlarından hesaplanmış, ''itibari'')
+    [Sayfa1, satır 83 (sütun C ''İL / İLÇE'', D ''ALAN (km²)''); açıklama: hücre A2]'
+  - Ankara'nın 25 ilçesinin yüzölçümü (Sayfa1 satır 84–108; toplam 25.664 km²) → data/reference/ankara_ilce_alanlari_hgm.csv
+  - 'Türkiye: "Türkiye yüz ölçümü itibari olarak 780 043 km²’dir." (son satır)'
+  notes: 'Sayfa https://www.harita.gov.tr/il-ve-ilce-yuzolcumleri (arşiv: data/raw/alan/hgm/hgm_il_ve_ilce_yuzolcumleri.html):
+    "İl ve İlçe Yüz ölçümlerini XLSX (Excel) formatında indirmek için tıklayınız." "Türkiye yüz ölçümü itibari olarak 780.043
+    km²’dir." "Bu haritadaki ülke, il ve ilçe sınırları gösterim amaçlı farklı kaynaklardan itibari olarak türetilmiştir,
+    bu ve bu veri kullanılarak türetilen hiçbir veri resmî nitelik taşımamaktadır." Tablo açıklaması (A2): "AÇIKLAMA: Aşağıda
+    verilen yüz ölçümleri; 2026 yılında üretilen 1:1.000.000 ölçekli Türkiye Mülki İdare Bölümleri Haritasından yararlanılarak
+    hesaplanmıştır. Bu haritadaki ülke, il ve ilçe sınırları ile bunlardan hesaplanan yüz ölçümleri itibaridir, resmî nitelik
+    taşımamaktadır. İl ve ilçe yüz ölçümleri Harita Genel Müdürlüğü tarafından her yıl güncellenmektedir. İl, ilçe ve bucak
+    bağlılıklarının ve sınırlarının belirlenmesi, değiştirilmesi ve yayımlanması yetki ve sorumluluğu 5442 Sayılı İl İdaresi
+    Kanunu gereği İçişleri Bakanlığında bulunmaktadır." Yani değerler itibari ve her yıl güncelleniyor; Ankara 25.664 km²,
+    25.632 km²''yi DOĞRULAMIYOR (+32 km²). Dosya özellikleri: oluşturma 2021-03-11, son değişiklik 2026-06-16 (docProps).
+    Eski PDF adresi (https://www.harita.gov.tr/images/urun/il_ilce_alanlari.pdf) 21.10.2026''da HGM''nin /404 sayfasına
+    yönleniyor. Tabloda göl dahil/hariç bilgisi yok.'
+
 - id: alan_literatur_hgm_ikincil_snrylmz
   title: 'il-ilce-json (GitHub snrylmz) — illerin yüzölçümü; README: kaynak https://www.harita.gov.tr/images/urun/il_ilce_alanlari.pdf'
   publisher: GitHub kullanıcısı snrylmz (ikincil; HGM tablosundan aktarım)
@@ -132,9 +162,10 @@
   sha256: a071f7ea74377057c8a48c46fe47fddc0a6ba4f9abab1b34c6ff068b9a9496a4
   used_for:
   - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş (HGM tablosu) [js/il-ilce.json, Ankara kaydı]'
-  notes: 'HGM''nin kendi sayfası (www.harita.gov.tr/il-ve-ilce-yuzolcumleri) ve PDF''i vekil sunucuda engelli (403), web.archive.org
-    da engelli → HGM değeri yalnız ikincil kopyalardan. README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md. Yalnız
-    ''ikincil kopyalara göre HGM ile aynı'' notunun dayanağı; 25.632 km²''nin birincil dayanağı resmî belgeler (alan_literatur_csb_ref5_beypazari,
+  notes: 'README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md (kaynak: https://www.harita.gov.tr/images/urun/il_ilce_alanlari.pdf;
+    bu adres artık yayında değil). HGM''nin güncel tablosu (alan_literatur_hgm_il_ilce_yuzolcumleri, 2026) 25.664 km² veriyor:
+    bu kopyanın 25.632''si güncel tabloyla DOĞRULANMADI; kopya 81 ilin çoğunda güncel tablodan farklı (bkz. ankara_alan_kaynaklari.csv
+    notu) → büyük olasılıkla tablonun eski baskısı. 25.632 km²''nin birincil dayanağı resmî belgeler (alan_literatur_csb_ref5_beypazari,
     alan_literatur_valilik_cdr_2018).'
 
 - id: alan_literatur_hgm_ikincil_brkunver
@@ -148,8 +179,9 @@
   used_for:
   - 'Ankara yüzölçümü: 25.632 km² — belirtilmemiş (HGM) [data/provinces.csv, Ankara satırı]'
   notes: 'sources.json (data/raw/alan/ikincil/github_brkunver_sources.json) Ankara notu: ''Area 25632 HGM (26897/25437/24521
-    rejected)''. Yalnız ''ikincil kopyalara göre HGM ile aynı'' notunun dayanağı; 25.632 km²''nin birincil dayanağı resmî
-    belgeler (alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018).'
+    rejected)''. HGM''nin güncel tablosu (alan_literatur_hgm_il_ilce_yuzolcumleri, 2026) 25.664 km² veriyor: bu kopyanın
+    25.632''si güncel tabloyla DOĞRULANMADI (büyük olasılıkla eski baskı; bkz. ankara_alan_kaynaklari.csv notu). 25.632
+    km²''nin birincil dayanağı resmî belgeler (alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018).'
 
 - id: alan_literatur_lit_hakimi1964
   title: Optimum Locations of Switching Centers and the Absolute Centers and Medians of a Graph
@@ -224,15 +256,48 @@
   title: 'Models and methods for determining the optimal number of beds in hospitals and regions: a systematic scoping review'
   publisher: 'Ravaghi, Hamid; Alidoost, Saeide; Mannion, Russell; Bélorgeot, Victoria D. — BMC Health Services Research
     20(1): 186 (2020); doi:10.1186/s12913-020-5023-z'
-  url: https://api.crossref.org/works/10.1186/s12913-020-5023-z
+  url: https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:7060560&metadataPrefix=pmc
   accessed: 2026-10-21
   kind: akademik
-  archived: data/raw/literatur/crossref_ravaghi2020.json
-  sha256: c9129cdab0db724e4f6ad7debf8109106c71cfe37d420c6659f3a8a0cb156736
+  archived: data/raw/literatur/pmc/pmc_oai_PMC7060560_ravaghi2020.xml
+  sha256: d1be45480985fbbcb0133701e215e55834de8f06de6dcad5a8b8eb18aff33d37
   used_for:
-  - Kaynakça künyesi (ravaghi2020) — yalnız üst veri; bu kaynaktan sayı alınmadı
+  - 'Kaynakça künyesi (ravaghi2020); tam metinden birebir:'
+  - '"Calculated by dividing the total length of stay (average length of stay × admission rate × projected population size)
+    by (period duration × target bed occupancy rate)" [Table 4 (''General characteristics of identified models and methods
+    used to determine required numbers of hospital beds''), ''Formula method'' satırı]'
+  - '"Based on target occupancy rates (80–85% for large hospitals and 45% for small hospitals)" [Table 4, ''Formula method''
+    satırı]'
+  - '"Introduced in 1984" [Table 4, ''Formula method'' satırı]'
+  - '"the target bed occupancy rate is usually considered to be 80–85% of the total bed capacity for large hospitals, and
+    45% for small hospitals (due to lack of economies of scale)" [Discussion]'
+  - '"The formula method which considers target bed occupancy rates is used as the foundation for many models." [Discussion]'
   notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1186/s12913-020-5023-z); tür journal-article; basılı 2020-12,
-    çevrimiçi 2020-03-06. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli).'
+    çevrimiçi 2020-03-06; tam metin: PMC OAI-PMH JATS XML (PMC7060560, data/raw/literatur/pmc/pmc_oai_PMC7060560_ravaghi2020.xml).
+    Arşiv PMC OAI-PMH JATS XML''i (makale sayfası https://pmc.ncbi.nlm.nih.gov/articles/PMC7060560/ betik isteklerine reCAPTCHA
+    ara sayfası döndürüyor); künye üst verisi data/raw/literatur/crossref_ravaghi2020.json.'
+
+- id: alan_literatur_lit_nates2023
+  title: Flow-Sizing Critical Care Resources
+  publisher: 'Nates, Joseph L.; Oropello, John M.; Badjatia, Neeraj; Beilman, Gregory vd. — Critical Care Medicine 51(11):
+    1552–1565 (2023); doi:10.1097/CCM.0000000000005967'
+  url: https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:11192408&metadataPrefix=pmc
+  accessed: 2026-10-21
+  kind: akademik
+  archived: data/raw/literatur/pmc/pmc_oai_PMC11192408_nates2023.xml
+  sha256: 17d881f0d9f9b65c81b7e247b67cb356273b6132c824c25e224764b05ace00e6
+  used_for:
+  - 'Kaynakça künyesi (nates2023); tam metinden birebir:'
+  - '"The formula includes the number of patient admissions annually multiplied by the average LOS in days, which is then
+    divided by 365 d multiplied by the ideal occupancy rate, the product of this equation equals “needs."" [TABLE 2 (''Methods
+    to Determine Unit Size''), ''Hill-Burton’s formula'' satırı]'
+  - '"Since the approval of the Hill-Burton Construction Bill known as the Hospital Survey and Construction Act in the 1940s
+    (16), the Hill-Burton formula has been very popular and used for its simplicity and practicality (22)." [TABLE 2, ''Hill-Burton’s
+    formula'' satırı]'
+  notes: 'Doğrulama: Crossref REST API (api.crossref.org/works/10.1097/ccm.0000000000005967); tür journal-article; basılı
+    2023-11, çevrimiçi 2023-06-14; tam metin: PMC OAI-PMH JATS XML (PMC11192408, data/raw/literatur/pmc/pmc_oai_PMC11192408_nates2023.xml).
+    Arşiv PMC OAI-PMH JATS XML''i (makale sayfası https://pmc.ncbi.nlm.nih.gov/articles/PMC11192408/ betik isteklerine reCAPTCHA
+    ara sayfası döndürüyor); künye üst verisi data/raw/literatur/crossref_nates2023.json.'
 
 - id: alan_literatur_lit_boscoe2012
   title: A Nationwide Comparison of Driving Distance Versus Straight-Line Distance to Hospitals

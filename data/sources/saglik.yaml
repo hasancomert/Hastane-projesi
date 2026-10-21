@@ -180,7 +180,8 @@
   notes: >-
     Alıntılar PDF s. 4 (dergi s. 233, '1.1. Yatak Doluluk Oranı') ve PDF s. 10 (dergi s. 239); kaynakça PDF s. 12.
     Hakemli ikincil akademik kaynak: %80–85 ve %72 değerleri Ağırbaş, İ. (2016) 'Hastane Yönetimi ve Organizasyon'
-    (Siyasal Kitabevi) ders kitabından aktarılmış; kitabın kendisi okunmadı.
+    (Siyasal Kitabevi) ders kitabından aktarılmış; kitabın kendisi okunmadı. Bagust vd. aktarımı aslından güçlü: makale
+    (saglik_bagust1999, tam metin okundu) %85'i 'standart' diye adlandırmıyor ve mortaliteden söz etmiyor.
 
 - id: saglik_cirakli2019
   title: "Türkiye'de Yataklı Sağlık Kurumlarında Poliklinik ve Klinik Hizmetlerinin 2008-2017 Yılları Arası Gelişimi ve Mevcut Durumu"
@@ -197,18 +198,86 @@
 
 - id: saglik_bagust1999
   title: "Dynamics of bed use in accommodating emergency admissions: stochastic simulation model"
-  publisher: "Bagust A., Place M., Posnett J.W. — BMJ 1999; 319(7203): 155–158. doi:10.1136/bmj.319.7203.155"
-  url: "https://doi.org/10.1136/bmj.319.7203.155"
+  publisher: "Bagust A., Place M., Posnett J.W. — BMJ 1999; 319(7203): 155–158. doi:10.1136/bmj.319.7203.155 (PubMed Central: PMC28163)"
+  url: "https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:28163&metadataPrefix=pmc_fm"
   accessed: 2026-10-21
   published: 1999-07-17
   kind: akademik
-  archived: data/raw/saglik/crossref_bagust1999.json
-  sha256: "e27940a36801644642dfbd9dddb9283eb11b14e9abcc9959e2c69c1006dd71ef"
+  archived: data/raw/saglik/pmc_oai_fm_PMC28163_bagust1999.xml
+  sha256: "4c5d55a95b5ed358a94f3ca1794625bcd42d42567c7f9a7d465341a78227ac3a"
   used_for:
-    - "Yalnız künye (Crossref üst verisiyle doğrulandı: başlık, yazarlar, cilt 319, sayı 7203, s. 155–158, 17.07.1999). Bu kaynaktan doğrudan değer ALINMADI."
+    - "Özet, Results (birebir): 'Risks are discernible when average bed occupancy rates exceed about 85%, and an acute hospital can expect regular bed shortages and periodic bed crises if average bed occupancy rises to 90% or more.'"
+    - "Key messages, 1. madde: 'Acute hospitals which operate at bed occupancy levels of 90% or more face regular bed crises, with the associated risks to patients'"
+    - "Results, 1. paragraf (PMC makale sayfası): 'Risks are minimal so long as the mean bed occupancy remains below about 85%. Above this level the risks become substantial (at 85%, a hospital can expect to be short of beds for admissions on four days in a year), and above a mean bed occupancy of 90% the system is regularly subject to bed crises.'"
+    - "Discussion, 2. paragraf (PMC makale sayfası): 'At rates above 85% risks become discernible, and above 90% the hospital system is subject to regular bed crises.'"
   notes: >-
-    Tam metin okunamadı: bmj.com, pmc.ncbi.nlm.nih.gov, www.ebi.ac.uk ve europepmc.org vekil sunucuda 403 (politika
-    reddi). %85 eşiği Aydemir (2019) üzerinden aktarılıyor (saglik_aydemir2019). Arşivlenen dosya yalnız Crossref JSON'u.
+    Tam metin PubMed Central'dan okundu (PMC28163; bmj.com vekil sunucuda engelli). İki arşiv: (1) bu kayıttaki PMC
+    OAI-PMH 'pmc_fm' XML'i (özet ve 'Key messages'; makale PMC açık erişim alt kümesinde olmadığı için gövde OAI'de yok);
+    (2) makale sayfası data/raw/saglik/pmc_PMC28163_bagust1999.html (sha256 89341f70950a4775…; gövdedeki Results ve
+    Discussion alıntıları buradan). PMC makale sayfası tarayıcı UA'lı betik isteklerine reCAPTCHA ara sayfası döndürdüğü
+    için sayfa curl UA'sıyla indirildi (pipeline/17_health_stats.py, ensure_pmc_page). Künye Crossref ile doğrulandı
+    (data/raw/saglik/crossref_bagust1999.json). Yöntem: İngiltere'de varsayımsal bir akut hastanede acil yatışların ayrık
+    olaylı stokastik simülasyonu (Setting: 'Hypothetical acute hospital in England'). ÖNEMLİ: makale %85'i bir 'standart'
+    ya da 'hedef' olarak adlandırmıyor ve mortaliteden söz etmiyor ('mortality' geçmiyor); %85 risklerin 'fark
+    edilir' hâle geldiği eşik, %90 ve üstü düzenli yatak krizi. Aydemir (2019)'un 'kabul görmüş standart (%85) ... yüksek
+    mortalite' aktarımı makalenin söylediğinden güçlü. Alıntılar her çalıştırmada arşivde yeniden aranır
+    (pipeline/17_health_stats.py, check_occupancy_targets).
+
+- id: saglik_sb_stratejik_plan_2024_2028
+  title: "T.C. Sağlık Bakanlığı 2024-2028 Stratejik Planı"
+  publisher: "T.C. Sağlık Bakanlığı (Strateji Geliştirme Başkanlığı sayfasından yayımlanan PDF)"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/47452/0/saglik-bakanligi-stratejik-plan-2024-2028pdf.pdf"
+  accessed: 2026-10-21
+  published: "2024-03"
+  kind: resmi
+  archived: data/raw/saglik/sb_stratejik_plan_2024_2028.pdf
+  sha256: "8072e584b8fc39a4c071ed97e7d7aa2d871300993deb329dad089ca2870129f5"
+  used_for:
+    - "Resmî yatak DOLULUK hedefi ya da göstergesi YOK: 222 sayfalık metinde 'doluluk' hiç geçmiyor (pipeline/17_health_stats.py, check_occupancy_targets)"
+    - "Temel performans göstergesi: '10.000 Kişiye Düşen Hastane Yatağı Sayısı 30,7 38 (Tüm Sektörler)' — plan başlangıcı 30,7, plan dönemi sonu hedefi 38 (Tablo 1, PDF s. 19 / basılı s. 14; başlangıç değerinin kaynağı 'Sağlık İstatistikleri Yıllığı 2022 Ön Sonuç')"
+    - "PG4.2.1 '10.000 Kişiye Düşen Hastane Yatağı Sayısı (Tüm Sektörler)': başlangıç 30,7 (2022); hedefler 2024: 32,5 · 2025: 34,5 · 2026: 36 · 2027: 37 · 2028: 38 (Hedef H4.2, PDF s. 156 / basılı s. 151)"
+    - "PG4.2.2 nitelikli yatak oranı (SB, yoğun bakım hariç): 79,6 (2022) → 2028: 90 (PDF s. 156)"
+    - "Üst politika belgesi (12. Kalkınma Planı) 711.5: 'Fiziki altyapının dengeli dağılımı sağlanacak, mevcut hastane yataklarının kullanım etkinliği yükseltilecektir.' — sayısal hedef yok (PDF s. 36 / basılı s. 31)"
+  notes: >-
+    Sayfa: https://sgb.saglik.gov.tr/TR-102640/stratejik-plan-2024-2028.html (ve TR-59133) bu PDF'e yönleniyor
+    (dosyamerkez sunucusunda Last-Modified 26.03.2024; PDF oluşturma 25.03.2024 → published ay düzeyinde). Basılı sayfa =
+    PDF sayfası − 5. Gerçekleşme karşılaştırması (yorum): 2025 hedefi 34,5 iken SİY 2025 Haber Bülteni 31,5 yatak/10.000
+    veriyor (saglik_sbsgm_bulten2025). Hedef doluluk (demand.hb.target_occupancy) için resmî dayanak bu belgede yok.
+
+- id: saglik_sb_performans_programi_2026
+  title: "T.C. Sağlık Bakanlığı 2026 Yılı Performans Programı"
+  publisher: "T.C. Sağlık Bakanlığı (Strateji Geliştirme Başkanlığı sayfasından yayımlanan PDF)"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/53814/0/2026-performans-programipdf.pdf"
+  accessed: 2026-10-21
+  published: "2026-01"
+  kind: resmi
+  archived: data/raw/saglik/sb_performans_programi_2026.pdf
+  sha256: "834fdbcc189a2972bccafcfee15b86e489072b6b6f6328717a25bd028f0b65ce"
+  used_for:
+    - "Resmî yatak DOLULUK hedefi ya da göstergesi YOK: 175 sayfalık metinde 'doluluk' hiç geçmiyor (pipeline/17_health_stats.py, check_occupancy_targets)"
+    - "711.5: 'Fiziki altyapının dengeli dağılımı sağlanacak, mevcut hastane yataklarının kullanım etkinliği yükseltilecektir.' (PDF s. 28 / basılı s. 22) — sayısal hedef yok"
+  notes: >-
+    Sayfa: https://sgb.saglik.gov.tr/TR-59135/performans-programi-2026.html bu PDF'e yönleniyor (Last-Modified 30.01.2026;
+    PDF oluşturma 28.01.2026). Tedavi Edici programın anahtar göstergeleri hekim/hemşire sayıları ve nitelikli yatak oranı
+    (PDF s. 72–74); doluluk yok.
+
+- id: saglik_khgm_goren_kilavuz_2026
+  title: "Kurum Hedef (GÖREN) Göstergeleri Kılavuzu 2026 (gorenkilavuzguncel-2026)"
+  publisher: "T.C. Sağlık Bakanlığı, Kamu Hastaneleri Genel Müdürlüğü (KHGM)"
+  url: "https://dosyamerkez.saglik.gov.tr/Eklenti/54107/0/gorenkilavuzguncel-2026pdf.pdf"
+  accessed: 2026-10-21
+  kind: resmi
+  archived: data/raw/saglik/khgm_goren_kilavuz_2026.pdf
+  sha256: "bcb5dc74ab4f4964d2e91e217efb4e1b0bee7c9cdd659d1f1f58ead6755c28e1"
+  used_for:
+    - "Kamu hastanelerinin kurum hedef göstergelerinde yatak DOLULUK göstergesi YOK; yatakla ilgili göstergeler 'SYPG-BH-16 Servis Yatak Devir Hızı' ve 'SYPG-BH-17 Yoğun Bakım Yatak Devir Hızı' (PDF s. 2)"
+  notes: >-
+    Sayfa: https://khgm.saglik.gov.tr/TR-119310/kurum-hedef-goren-gostergesi.html ('Gören Gösterge Kılavuzu'). 13 sayfalık
+    yatay tablo; dikey yazılmış sütunlar metin katmanında karışık çıktığından yalnız dik karakterler okundu. Devir hızı
+    göstergelerinin puanlama eşikleri metin katmanında okunamadı → DEĞER KAYDEDİLMEDİ. Göz atılan ama arşivlenmeyen
+    diğer KHGM belgeleri: 'Hastane Yatak Sayısı ve Tanımlar Genelgesi 2008/65' (metninde 'doluluk' yok);
+    'Yataklı Sağlık Tesisleri Rollerinin Belirlenmesine İlişkin Kriterler' (2023 PDF'i taranmış görüntü, metin katmanı
+    yok → okunamadı, DOĞRULANMADI).
 
 - id: saglik_zenodo_kaya2026
   title: "Türkiye Sağlık İstatistikleri Arşivi: Sağlık Bakanlığı yıllıklarından derlenmiş il ve ulusal veri seti, 1964–2024 (v1.1.0)"

@@ -78,8 +78,9 @@ SHORT_LABELS = {
     ("tuik_bt_adnks2023_yogunluk", 24521.0): "TÜİK 2023 (nüfus ÷ yoğunluk) — göller hariç",
     ("tuik_bt_adnks2025_yogunluk", 24842.63): "TÜİK 2025 (nüfus ÷ yoğunluk) — göller hariç",
     ("sinirlar_hdx_codab_tur", 25631.758): "HDX COD-AB (HGK sınırı) özniteliği",
-    ("alan_literatur_hgm_ikincil_snrylmz", 25632.0): "HGM tablosu — ikincil kopya (snrylmz)",
-    ("alan_literatur_hgm_ikincil_brkunver", 25632.0): "HGM tablosu — ikincil kopya (brkunver)",
+    ("alan_literatur_hgm_il_ilce_yuzolcumleri", 25664.0): "HGM il ve ilçe yüzölçümleri (2026)",
+    ("alan_literatur_hgm_ikincil_snrylmz", 25632.0): "HGM eski tablosu — ikincil kopya (snrylmz)",
+    ("alan_literatur_hgm_ikincil_brkunver", 25632.0): "HGM eski tablosu — ikincil kopya (brkunver)",
 }
 
 # Renkler (diğer Faz 1 şekilleriyle aynı)

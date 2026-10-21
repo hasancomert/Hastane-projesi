@@ -4,6 +4,8 @@ Kaynaklar (ayrıntı ve kaynak kimlikleri data/sources/saglik.yaml):
   - SBSGM 'Sağlık İstatistikleri Yıllığı Haber Bülteni' 2025 (Sayı 14), 2024 (13), 2023 (12): Türkiye ve İBBS-1
   - 'Sağlık İstatistikleri Yıllığı' 2024 ve 2023 (tam metin): il tabloları (Ankara) ve Türkiye toplamları
   - SBSGM duyuru/liste sayfaları (yayım tarihi kanıtı), DergiPark makaleleri (hedef doluluk), Crossref künyesi
+  - Hedef doluluk denetimi: Bagust vd. 1999 tam metni (PMC28163), SB Stratejik Plan 2024–2028, SB 2026 Performans
+    Programı, KHGM GÖREN gösterge kılavuzu 2026 (check_occupancy_targets; CSV'ye değer yazmaz)
   - 2025 nüfus paydası: TÜİK ADNKS 2025 bülten tablosu, sayfa 't3' (nufus alanının arşivi; 10_tuik_population.py
     indirir). Karar haberi (aynı arşiv) yalnız çapraz kontrol.
   - Çapraz kontrol (ikincil, atıf kaynağı değil): Zenodo 'Türkiye Sağlık İstatistikleri Arşivi' v1.1.0 (Kaya 2026)
@@ -70,8 +72,18 @@ DOCS = [  # (dosya adı, URL)
     # Hedef doluluk için akademik kaynaklar (DergiPark)
     ("dergipark_795199_aydemir2019_usaysad.pdf", "https://dergipark.org.tr/tr/download/article-file/795199"),
     ("dergipark_747322_cirakli2019_skad.pdf", "https://dergipark.org.tr/tr/download/article-file/747322"),
-    # Bagust vd. 1999 künyesi (tam metin bmj.com/PMC vekil sunucuda engelli)
+    # Bagust vd. 1999: künye (Crossref) ve tam metin (BMJ makalesinin PMC kopyası, PMC28163; bmj.com vekilde engelli)
     ("crossref_bagust1999.json", "https://api.crossref.org/works/10.1136/bmj.319.7203.155"),
+    # PMC OAI-PMH 'pmc_fm' kaydı: özet + 'Key messages' (makale PMC açık erişim alt kümesinde değil, gövde OAI'de yok)
+    ("pmc_oai_fm_PMC28163_bagust1999.xml",
+     "https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:28163"
+     "&metadataPrefix=pmc_fm"),
+    # Sağlık Bakanlığı hedef belgeleri: resmî bir yatak doluluk hedefi/göstergesi var mı? (check_occupancy_targets)
+    # Stratejik Plan sayfası sgb.saglik.gov.tr/TR-102640 ve Performans Programı sayfası TR-59135 bu PDF'lere yönleniyor.
+    ("sb_stratejik_plan_2024_2028.pdf", DOSYA + "47452/0/saglik-bakanligi-stratejik-plan-2024-2028pdf.pdf"),
+    ("sb_performans_programi_2026.pdf", DOSYA + "53814/0/2026-performans-programipdf.pdf"),
+    # KHGM Kurum Hedef (GÖREN) gösterge kılavuzu 2026 (sayfa: khgm.saglik.gov.tr/TR-119310)
+    ("khgm_goren_kilavuz_2026.pdf", DOSYA + "54107/0/gorenkilavuzguncel-2026pdf.pdf"),
 ]
 # Not: Karar haberi (2025 nüfusu) artık burada indirilmiyor; nufus alanı arşivliyor (tuik_haber_karar_adnks2025).
 
@@ -114,9 +126,51 @@ def _md5(path: Path) -> str:
     return h.hexdigest()
 
 
+PMC_PAGE = ("pmc_PMC28163_bagust1999.html", "https://pmc.ncbi.nlm.nih.gov/articles/PMC28163/")
+PMC_PAGE_UA = "curl/8.5.0"
+PMC_CHALLENGE = "Checking your browser"
+
+
+def _drop_manifest_record(dest: Path) -> None:
+    man = dest.parent / "_manifest.jsonl"
+    rel = str(dest.relative_to(common.ROOT))
+    keep = [ln for ln in man.read_text(encoding="utf-8").splitlines()
+            if ln.strip() and json.loads(ln).get("file") != rel]
+    man.write_text("".join(ln + "\n" for ln in keep), encoding="utf-8")
+
+
+def ensure_pmc_page(offline: bool) -> None:
+    """Bagust vd. PMC makale sayfası (gövde metni; isteğe bağlı kanıt, özet ve 'Key messages' OAI kaydında).
+
+    PMC, tarayıcı UA'sı taşıyan betik isteklerine reCAPTCHA ara sayfası ('Checking your browser') döndürüyor. Bu
+    yüzden yalnız bu indirmede common.USER_AGENT geçici olarak curl UA'sına çevrilir (common.py değişmez). Ara sayfa
+    gelirse dosya ve manifest kaydı silinir; gövde alıntıları o zaman denetlenmez.
+    """
+    name, url = PMC_PAGE
+    dest = RAWS / name
+    if _manifest_has(dest, url) or offline:
+        return
+    old = common.USER_AGENT
+    common.USER_AGENT = PMC_PAGE_UA
+    try:
+        rec = common.download(url, dest, timeout=120)
+    except OSError as e:
+        print(f"  uyarı: PMC sayfası alınamadı ({type(e).__name__}); gövde alıntıları denetlenmeyecek")
+        return
+    finally:
+        common.USER_AGENT = old
+    if PMC_CHALLENGE in dest.read_text(encoding="utf-8", errors="replace"):
+        dest.unlink()
+        _drop_manifest_record(dest)
+        print("  uyarı: PMC ara sayfa (reCAPTCHA) döndürdü; dosya silindi, gövde alıntıları denetlenmeyecek")
+    else:
+        print(f"  indirildi: {rec['file']} ({rec['bytes']:,} B)")
+
+
 def fetch(offline: bool) -> None:
     for name, url in DOCS:
         ensure(url, RAWS / name, offline=offline)
+    ensure_pmc_page(offline)
     # Zenodo (yalnız çapraz kontrol): eksikse uyarı, hata değil
     try:
         ensure(ZENODO_API, ZENODO_DIR / ZENODO_RECORD, offline=offline)
@@ -514,6 +568,76 @@ def crosscheck_zenodo(t: Table) -> None:
     print(f"  Zenodo (Kaya 2026): {n} yıllık il tablosu değeri birebir aynı; derlemede olmayan: {missing or 'yok'}")
 
 
+# ---------------------------------------------------------------- 5. hedef doluluk kanıtları (yalnız denetim)
+# saglik.yaml (saglik_bagust1999, saglik_sb_*, saglik_khgm_goren_kilavuz_2026) ve talep.yaml'daki alıntılar burada
+# arşivden yeniden aranır; CSV'ye değer yazılmaz.
+BAGUST_OAI = "pmc_oai_fm_PMC28163_bagust1999.xml"
+BAGUST_FM_QUOTES = {  # OAI 'pmc_fm' kaydındaki bölüm -> birebir cümle
+    "Abstract, Results": "Risks are discernible when average bed occupancy rates exceed about 85%, and an acute "
+                         "hospital can expect regular bed shortages and periodic bed crises if average bed occupancy "
+                         "rises to 90% or more.",
+    "Key messages, 1. madde": "Acute hospitals which operate at bed occupancy levels of 90% or more face regular bed "
+                              "crises, with the associated risks to patients",
+}
+BAGUST_BODY_QUOTES = {  # PMC makale sayfasındaki gövde metni (PMC_PAGE arşivi varsa denetlenir)
+    "Results, 1. paragraf": "Risks are minimal so long as the mean bed occupancy remains below about 85%. Above this "
+                            "level the risks become substantial (at 85%, a hospital can expect to be short of beds for "
+                            "admissions on four days in a year), and above a mean bed occupancy of 90% the system is "
+                            "regularly subject to bed crises.",
+    "Discussion, 2. paragraf": "At rates above 85% risks become discernible, and above 90% the hospital system is "
+                               "subject to regular bed crises.",
+}
+SP_DOC, PP_DOC, GOREN_DOC = ("sb_stratejik_plan_2024_2028.pdf", "sb_performans_programi_2026.pdf",
+                             "khgm_goren_kilavuz_2026.pdf")
+SP_QUOTES = {  # PDF sayfası -> birebir metin (satır sonları boşluğa çevrilmiş)
+    19: "10.000 Kişiye Düşen Hastane Yatağı Sayısı 30,7 38 (Tüm Sektörler) 11",
+    156: "PG4.2.1 10.000 Kişiye Düşen 30,7 Hastane Yatağı 30 32,5 34,5 36 37 38 (2022) Sayısı (Tüm Sektörler)136",
+}
+PP_QUOTE = (28, "711.5. Fiziki altyapının dengeli dağılımı sağlanacak, mevcut hastane yataklarının kullanım "
+                "etkinliği yükseltilecektir.")
+GOREN_INDICATORS = ("SYPG-BH-16 Servis Yatak Devir Hızı", "SYPG-BH-17 Yoğun Bakım Yatak Devir Hızı")
+
+
+def _flat(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def check_occupancy_targets() -> None:
+    """Bagust vd. alıntıları tam metinde mi; Bakanlık belgelerinde yatak doluluk hedefi/göstergesi var mı?"""
+    import html as html_mod
+
+    def text_of(name: str) -> str:
+        return _flat(html_mod.unescape(re.sub(r"<[^>]+>", " ", (RAWS / name).read_text(encoding="utf-8"))))
+
+    fm = text_of(BAGUST_OAI)
+    assert "PMC28163" in fm and "10.1136/bmj.319.7203.155" in fm
+    for where, q in BAGUST_FM_QUOTES.items():
+        assert q in fm, f"Bagust vd. alıntısı OAI kaydında yok ({where})"
+    n, body = len(BAGUST_FM_QUOTES), ""
+    if (RAWS / PMC_PAGE[0]).exists():
+        body = text_of(PMC_PAGE[0])
+        for where, q in BAGUST_BODY_QUOTES.items():
+            assert q in body, f"Bagust vd. alıntısı PMC sayfasında yok ({where})"
+        n += len(BAGUST_BODY_QUOTES)
+    # makale %85'i 'standart' ya da 'hedef' diye adlandırmıyor ve mortaliteden söz etmiyor (Aydemir 2019'un aktarımı)
+    absent = [w for w in ("mortality", "target occupancy", "standard of 85") if w in (fm + body).lower()]
+    print(f"  Bagust vd. 1999 (PMC28163): {n} alıntı birebir bulundu (gövde sayfası "
+          f"{'var' if body else 'YOK — yalnız özet'}); 'mortality'/'standard' kontrolü: {'temiz' if not absent else absent}")
+    for doc in (SP_DOC, PP_DOC):
+        with pdfplumber.open(RAWS / doc) as pdf:
+            n_occ = sum(len(re.findall(r"(?i)doluluk", p.extract_text() or "")) for p in pdf.pages)
+        assert n_occ == 0, f"{doc}: 'doluluk' geçiyor ({n_occ}); kaydı güncelleyin"
+    for pg, q in SP_QUOTES.items():
+        assert q in _flat(page_text(SP_DOC, pg)), (SP_DOC, pg)
+    assert PP_QUOTE[1] in _flat(page_text(PP_DOC, PP_QUOTE[0])), PP_DOC
+    with pdfplumber.open(RAWS / GOREN_DOC) as pdf:  # tablo dikey yazılı sütunlar içeriyor: yalnız dik karakterler
+        gt = " ".join(p.filter(lambda o: o.get("object_type") != "char" or o.get("upright", True)).extract_text() or ""
+                      for p in pdf.pages)
+    assert all(i in gt for i in GOREN_INDICATORS) and not re.search(r"(?i)doluluk", gt), GOREN_DOC
+    print("  Stratejik Plan 2024–2028, Performans Programı 2026, GÖREN kılavuzu 2026: yatak doluluk hedefi/göstergesi "
+          "YOK; PG4.2.1 (10.000 kişiye yatak 30,7 → 2028: 38) ve GÖREN SYPG-BH-16/17 (yatak devir hızı) var")
+
+
 # ---------------------------------------------------------------- yazım ve ana akış
 def write_csv(t: Table) -> None:
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
@@ -542,6 +666,7 @@ def main() -> None:
     add_population_2025(t, pop25)
     add_derived(t, pop25["Türkiye"])
     crosscheck_zenodo(t)
+    check_occupancy_targets()
 
     write_csv(t)
     print(f"3) {len(t.rows)} satır -> {OUT_CSV.relative_to(common.ROOT)}")

@@ -88,6 +88,14 @@ INTEGRATION_CHANGES: list[str] = [
     "656.167.336 / 86.092.168; 13,2 × 0,587 = 7,748 alternatif) eşitlendi; v ≠ toplam × pay bilinçli olduğundan "
     "tutarlılık denetimi bu anahtar için çarpımı alternatiflerde arar. pipeline/15_circuity.py'nin dolambac.yaml "
     "notu birleşik kaynak kimliklerini yazar. Değer değişmedi.",
+    "Kaynak boşlukları (yeni açılan sunucular) — HGM 'İl ve İlçe Yüz Ölçümleri' tablosu arşivlendi "
+    "(`alan_literatur_hgm_il_ilce_yuzolcumleri`: Ankara 25.664 km², 25 ilçe → data/reference/ankara_ilce_alanlari_hgm.csv); "
+    "25.632'yi doğrulamıyor, ikincil HGM kopyalarının notları buna göre düzeltildi. Hill-Burton formülü PMC tam "
+    "metinlerine bağlandı (`alan_literatur_lit_nates2023`, `alan_literatur_lit_ravaghi2020`). Bagust vd. 1999 tam metni "
+    "okundu (`saglik_bagust1999`); SB Stratejik Plan 2024–2028, 2026 Performans Programı ve KHGM GÖREN 2026'da doluluk "
+    "hedefi yok (`demand.hb.target_occupancy` 0,85 / model_secimi korundu; `demand.beds_per_1000`'e Stratejik Plan 2028 "
+    "hedefi 3,8 alternatif olarak eklendi). WorldPop DOI'si DataCite ile doğrulandı (`nufus_izgara_worldpop_doi`; "
+    "literatur.yaml `bondarenko2025_worldpop`). Varsayılan değer değişmedi.",
 ]
 
 # ---------------------------------------------------------------- Bölüm 3 karşılaştırması (alan raporlarından)
@@ -115,19 +123,22 @@ SPEC_SECTION3: list[dict] = [
          source_ids=["alan_literatur_csb_ref4_altindag"]),
     dict(konu="Yüzölçümü", spec="25.632 km² [5]", bulunan="25.632 km² (birebir alıntı)", durum="teyit",
          yer="[5] PDF s. 3 (resmî, birebir) ve Valilik ÇDR 2018 Çizelge E.85 sınıf toplamı 25.632.000 da (resmî); "
-             "ikincil kopyalara göre HGM ile aynı; COD-AB özniteliği 25.631,76",
+             "COD-AB özniteliği 25.631,76. HGM'nin güncel tablosu (2026, itibari) 25.664 km² veriyor (+32 km²): "
+             "25.632 yalnız HGM tablosunun ikincil kopyalarında (büyük olasılıkla eski baskı)",
          source_ids=["alan_literatur_csb_ref5_beypazari", "alan_literatur_valilik_cdr_2018",
-                     "alan_literatur_hgm_ikincil_snrylmz", "sinirlar_hdx_codab_tur"]),
+                     "alan_literatur_hgm_il_ilce_yuzolcumleri", "alan_literatur_hgm_ikincil_snrylmz",
+                     "sinirlar_hdx_codab_tur"]),
     dict(konu="Yüzölçümü", spec="25.978 km² [6]", bulunan="25.978 km² (birebir alıntı)", durum="teyit",
          yer="[6] PDF s. 3; metin 'Ankara şehrinin' diyor (il değil), kaynak göstermiyor",
          source_ids=["alan_literatur_csb_ref6_cankaya"]),
     dict(konu="Yüzölçümü — ek değerler (Bölüm 3'te yok)", spec="—",
          bulunan="26.897 (Polatlı raporu 2025); 24.842,63 (TÜİK 2024–2025 yoğunluk esası, göller hariç, hesap); "
-                 "CORINE 25.476,25 / 25.654,75; poligon (EPSG:6933) geoBoundaries 25.647,90, Kontur 25.568,17, "
-                 "COD-AB 25.631,76",
-         durum="ek bulgu", yer="alan karşılaştırma tablosuna (Faz 2 kartı) eklenecek",
+                 "CORINE 25.476,25 / 25.654,75; HGM İl ve İlçe Yüz Ölçümleri 2026: 25.664 (25 ilçe toplamı da "
+                 "25.664); poligon (EPSG:6933) geoBoundaries 25.647,90, Kontur 25.568,17, COD-AB 25.631,76",
+         durum="ek bulgu", yer="alan karşılaştırma tablosu (data/reference/ankara_alan_kaynaklari.csv; Faz 2 kartı); "
+                               "HGM ilçe alanları: data/reference/ankara_ilce_alanlari_hgm.csv",
          source_ids=["alan_literatur_csb_polatli_2025", "tuik_bt_adnks2025_yogunluk", "alan_literatur_valilik_cdr_2018",
-                     "sinirlar_secim_hesap"]),
+                     "alan_literatur_hgm_il_ilce_yuzolcumleri", "sinirlar_secim_hesap"]),
     dict(konu="10.000 kişiye hastane yatağı, Türkiye 2023", spec="31,2 → b ≈ 3,12 [7]", bulunan="31,2",
          durum="teyit", yer="SİY 2023 Tablo 7.19 (PDF s. 182). Varsayılan öğrenci kararıyla 2025 = 31,5 → 3,15",
          source_ids=["saglik_sbsgm_siy2023", "saglik_sbsgm_bulten2025"]),
@@ -211,8 +222,12 @@ SPEC_SECTION3: list[dict] = [
                  "2024: %59,8, 4,2 gün, 13.881.750 yatan (162,05/1000)",
          durum="bulundu (Bölüm 3'te değer yoktu)",
          yer="SİY 2025 Haber Bülteni Tablo 16 (PDF s. 10); SİY 2024 Tablo 8.26 (PDF s. 236). 2025 tam yıllığı henüz "
-             "yayımlanmadı; 2025'teki düşüş yıllıkla yeniden kontrol edilmeli",
-         source_ids=["saglik_sbsgm_bulten2025", "saglik_sbsgm_bulten2024", "saglik_sbsgm_siy2024"]),
+             "yayımlanmadı; 2025'teki düşüş yıllıkla yeniden kontrol edilmeli. Formül (yatak = nüfus × yatış oranı × "
+             "ort. kalış / (365 × hedef doluluk)): Nates vd. 2023 Table 2 ('Hill-Burton formula'), Ravaghi vd. 2020 "
+             "Table 4 ('Formula method'); hedef doluluk %85 için resmî hedef yok (SB Stratejik Plan 2024–2028)",
+         source_ids=["saglik_sbsgm_bulten2025", "saglik_sbsgm_bulten2024", "saglik_sbsgm_siy2024",
+                     "alan_literatur_lit_nates2023", "alan_literatur_lit_ravaghi2020",
+                     "saglik_sb_stratejik_plan_2024_2028"]),
 ]
 
 # Şartname Bölüm 4.3/4.4'teki varsayılanlar -> kayıttaki varsayılan (otomatik karşılaştırılır)

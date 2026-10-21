@@ -220,14 +220,19 @@ def test_listed_pipeline_scripts_exist():
 
 
 def test_area_25632_primary_sources():
-    # 25.632 km²: birincil dayanak resmî belgeler ([5] ve Valilik ÇDR 2018 Çizelge E.85); HGM yalnız ikincil
+    # 25.632 km²: birincil dayanak resmî belgeler ([5] ve Valilik ÇDR 2018 Çizelge E.85); HGM'nin güncel (2026) tablosu
+    # 25.664 km² veriyor, 25.632 yalnız HGM tablosunun ikincil kopyalarında
     df = pd.read_csv(AREA_CSV)
     rows = df[df["deger_km2"].astype(float) == 25632]
     official = rows[rows["status"].isin(["kaynakli", "hesap"])]
     assert set(official["source_id"]) == {"alan_literatur_csb_ref5_beypazari", "alan_literatur_valilik_cdr_2018"}
     hgm = rows[rows["source_id"].str.startswith("alan_literatur_hgm_")]
     assert len(hgm) == 2 and (hgm["status"] == "kaynakli_ikincil").all()
-    assert official["notlar"].str.contains("kopyalara göre HGM ile aynı", regex=False).all()   # 'İ' küçültmesi güvenilmez
+    assert official["notlar"].str.contains("HGM'nin güncel tablosu (2026) 25.664 km²", regex=False).all()
+    current = df[df["source_id"] == "alan_literatur_hgm_il_ilce_yuzolcumleri"]
+    assert len(current) == 1 and current["status"].iloc[0] == "kaynakli"
+    districts = pd.read_csv(common.REFERENCE / "ankara_ilce_alanlari_hgm.csv")
+    assert len(districts) == 25 and districts["deger_km2"].sum() == float(current["deger_km2"].iloc[0])
 
 
 # ---------------------------------------------------------------- rasterler

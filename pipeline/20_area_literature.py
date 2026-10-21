@@ -2,9 +2,11 @@
 
 Çıktılar (repo içinde):
   data/reference/ankara_alan_kaynaklari.csv   — kaynaklardaki yüzölçümü değerleri (birebir alıntı + sayfa)
-  data/reference/literatur.yaml               — Crossref/Zenodo/JRC ile doğrulanmış kaynakça
+  data/reference/ankara_ilce_alanlari_hgm.csv — HGM 'İl ve İlçe Yüz Ölçümleri' tablosundaki 25 ilçe alanı
+  data/reference/literatur.yaml               — Crossref/Zenodo/JRC/DataCite ile doğrulanmış kaynakça
   data/sources/alan_literatur.yaml            — bu alanın kaynak kayıtları (elle düzenlemeyin; bu betik üretir)
-Ham belgeler: data/raw/alan/, data/raw/literatur/ (git dışı; _manifest.jsonl'de url/tarih/sha256).
+Ham belgeler: data/raw/alan/ (HGM tablosu: data/raw/alan/hgm/), data/raw/literatur/ (PMC tam metinleri:
+data/raw/literatur/pmc/) — git dışı; _manifest.jsonl'de url/tarih/sha256.
 
 Çalıştırma (repo kökünden):
   .venv/bin/python pipeline/20_area_literature.py
@@ -71,7 +73,16 @@ AREA_DOCS = {
     "csb_valilik_cdr_2018.pdf": CSB + "ced/icerikler/ankara_2018_-cdr_son-20190903153406.pdf",
     "csb_valilik_cdr_2017.pdf": CSB + "ankara/menu/ankara-ili-2017-cevre-durum-raporu-5_20190225023932.pdf",
 }
-SECONDARY = {  # HGM tablosunun ikincil kopyaları (harita.gov.tr vekil sunucuda engelli)
+HGM_PAGE_URL = "https://www.harita.gov.tr/il-ve-ilce-yuzolcumleri"
+HGM_DOCS = {  # Harita Genel Müdürlüğü: sayfa (açıklama metni) + sayfanın bağladığı tablo
+    "hgm/hgm_il_ve_ilce_yuzolcumleri.html": HGM_PAGE_URL,
+    "hgm/il_ilce_alanlari.xlsx": "https://www.harita.gov.tr/uploads/files-folder/il_ilce_alanlari.xlsx",
+}
+HGM_OLD_PDF = "https://www.harita.gov.tr/images/urun/il_ilce_alanlari.pdf"  # ikincil kopyaların gösterdiği eski adres
+OUT_DISTRICT_CSV = common.REFERENCE / "ankara_ilce_alanlari_hgm.csv"
+TUIK_DISTRICT_CSV = common.REFERENCE / "tuik_adnks_ankara.csv"  # ilçe adları/anahtarları (nufus alanı, yalnız okunur)
+HGM_NAME_ALIASES = {"kazan": "kahramankazan"}  # HGM tablosu ilçenin eski adını (Kazan; 2016'dan beri Kahramankazan) yazıyor
+SECONDARY = {  # HGM tablosunun ikincil kopyaları (eski baskı; güncel tablo HGM_DOCS)
     "ikincil/github_snrylmz_il-ilce.json": "https://raw.githubusercontent.com/snrylmz/il-ilce-json/master/js/il-ilce.json",
     "ikincil/github_snrylmz_README.md": "https://raw.githubusercontent.com/snrylmz/il-ilce-json/master/README.md",
     "ikincil/github_brkunver_provinces.csv":
@@ -234,8 +245,103 @@ def codab_area() -> float:
     raise ValueError("TUR006 yok")
 
 
-def build_area_rows() -> list[dict]:
+def html_text(path: Path) -> str:
+    t = path.read_text(encoding="utf-8", errors="replace")
+    t = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", t, flags=re.S)
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t))).strip()
+
+
+def hgm_table() -> dict:
+    """HGM 'İL VE İLÇE YÜZ ÖLÇÜMLERİ' tablosu (Sayfa1): il satırları, Ankara'nın 25 ilçesi, açıklama, Türkiye toplamı.
+
+    İl satırında A ve B sütunları boş, C il adı, D alan (km²); ilçe satırlarında A genel sıra, B il içi sıra.
+    Hücreler formül değil sayı olmalı (data_only=False ile okunur).
+    """
+    import openpyxl
+
+    path = RAW_ALAN / "hgm/il_ilce_alanlari.xlsx"
+    wb = openpyxl.load_workbook(path, data_only=False)
+    ws = wb.worksheets[0]
+    rows = [[c.value for c in r[:4]] for r in ws.iter_rows()]
+    header_row = next(i + 1 for i, r in enumerate(rows) if r[2] == "İL / İLÇE" and r[3] == "ALAN (km²)")
+    provinces, districts, cur = {}, {}, None
+    for i, (a, b, c, d) in enumerate(rows, start=1):
+        if i <= header_row or not isinstance(c, str):
+            continue
+        if not isinstance(d, (int, float)):
+            raise ValueError(f"HGM tablosu satır {i}: alan sayı değil: {d!r}")
+        if a is None and b is None:
+            cur = c.strip()
+            provinces[cur] = {"row": i, "value": d}
+        else:
+            districts.setdefault(cur, []).append({"row": i, "no": a, "no_in_province": b, "name": c.strip(), "value": d})
+    note = rows[1][0]
+    total_line = next(r[0] for r in reversed(rows) if isinstance(r[0], str) and r[0].startswith("Türkiye yüz ölçümü"))
+    ank = provinces["ANKARA"]
+    return {"file": path, "ws": ws.title, "header_row": header_row, "provinces": provinces,
+            "ankara": ank, "ankara_districts": districts["ANKARA"], "note": note, "total_line": total_line,
+            "created": wb.properties.created, "modified": wb.properties.modified}
+
+
+def hgm_page_sentences() -> dict:
+    t = html_text(RAW_ALAN / "hgm/hgm_il_ve_ilce_yuzolcumleri.html")
+    pats = {"turkey": r"Türkiye yüz ölçümü itibari olarak [\d.]+ km²’dir\.",
+            "disclaimer": r"Bu haritadaki ülke, il ve ilçe sınırları gösterim amaçlı farklı kaynaklardan itibari olarak "
+                          r"türetilmiştir, bu ve bu veri kullanılarak türetilen hiçbir veri resmî nitelik taşımamaktadır\.",
+            "link": r"İl ve İlçe Yüz ölçümlerini XLSX \(Excel\) formatında indirmek için tıklayınız\."}
+    out = {}
+    for k, p in pats.items():
+        m = re.search(p, t)
+        if not m:
+            raise ValueError(f"HGM sayfasında desen yok: {p}")
+        out[k] = m.group(0)
+    return out
+
+
+def secondary_vs_hgm(hgm: dict) -> dict:
+    """İki ikincil kopyanın 81 il değeri: birbiriyle ve güncel HGM tablosuyla kaç ilde birebir aynı? (hesap)"""
+    off = {common.norm_name(k): v["value"] for k, v in hgm["provinces"].items()}
+    sj = json.loads((RAW_ALAN / "ikincil/github_snrylmz_il-ilce.json").read_text(encoding="utf-8"))
+    sn = {common.norm_name(x["il_adi"]): float(x["yuzolcumu"].replace(".", "").replace(",", ".")) for x in sj["data"]}
+    with open(RAW_ALAN / "ikincil/github_brkunver_provinces.csv", encoding="utf-8") as f:
+        bk = {common.norm_name(r["province_name"]): float(r["area_km2"]) for r in csv.DictReader(f)}
+    assert set(off) == set(sn) == set(bk) and len(off) == 81, "il listeleri uyuşmuyor"
+    return {"n": len(off), "sn_eq_off": sum(sn[k] == off[k] for k in off), "bk_eq_off": sum(bk[k] == off[k] for k in off),
+            "sn_eq_bk": sum(sn[k] == bk[k] for k in off)}
+
+
+def write_district_csv(hgm: dict) -> None:
+    """Ankara'nın 25 ilçesi (HGM tablosu); ilçe adı ve anahtarı TÜİK tablosundan (data/reference/tuik_adnks_ankara.csv)."""
+    with open(TUIK_DISTRICT_CSV, encoding="utf-8") as f:
+        tuik = {r["ilce_key"]: r["ilce"] for r in csv.DictReader(f)}
     rows = []
+    for d in hgm["ankara_districts"]:
+        key = common.norm_name(d["name"])
+        key = HGM_NAME_ALIASES.get(key, key)
+        if key not in tuik:
+            raise ValueError(f"HGM ilçesi TÜİK listesinde yok: {d['name']}")
+        rows.append({"ilce": tuik[key], "ilce_key": key, "hgm_adi": d["name"], "deger_km2": d["value"],
+                     "source_id": "alan_literatur_hgm_il_ilce_yuzolcumleri",
+                     "konum": f"{hgm['ws']}, satır {d['row']} (il içi sıra {d['no_in_province']}, genel sıra {d['no']})"})
+    if {r["ilce_key"] for r in rows} != set(tuik) or len(rows) != 25:
+        raise ValueError("HGM ilçe listesi TÜİK'in 25 ilçesiyle aynı değil")
+    with open(OUT_DISTRICT_CSV, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    print("yazıldı:", rel(OUT_DISTRICT_CSV), len(rows), "ilçe; toplam", sum(r["deger_km2"] for r in rows), "km²")
+
+
+def hgm_vs_25632(hgm: dict) -> str:
+    """25.632 km² satırlarına eklenen ortak not (HGM'nin güncel tablosu bu değeri doğrulamıyor)."""
+    v = hgm["ankara"]["value"]
+    return (f"HGM'nin güncel tablosu (2026) {common.fmt_tr(v)} km² veriyor (+{common.fmt_tr(v - 25632)} km²); 25.632 "
+            "yalnız HGM tablosunun ikincil kopyalarında (büyük olasılıkla eski baskı) — bkz. HGM satırları.")
+
+
+def build_area_rows(hgm: dict) -> list[dict]:
+    rows = []
+    hgm_note = hgm_vs_25632(hgm)
 
     def add(label, value_km2, scope, sid, excerpt, page, status, note=""):
         # CSV sütun adları Türkçe (veri sözlüğü): kaynak, deger_km2, kapsam, alinti, sayfa, notlar
@@ -258,8 +364,7 @@ def build_area_rows() -> list[dict]:
         quote(f5, 3, r"25\.632 km2 lik yüzölçümü ile Türkiye’nin üçüncü büyük ili konumundadır\."),
         "PDF s. 3 (basılı s. 1; aynı metin PDF s. 41)", "kaynakli",
         "25.632 km²'nin birincil dayanağı: resmî belgede birebir yazıyor. Valilik ÇDR 2018 Çizelge E.85'teki dört arazi "
-        "sınıfı da tam 25.632.000 da = 25.632 km²'ye toplanıyor (aşağıdaki satır). İkincil kopyalara göre HGM ile aynı "
-        "(bkz. HGM satırları; HGM tablosu doğrudan okunamadı).")
+        "sınıfı da tam 25.632.000 da = 25.632 km²'ye toplanıyor (aşağıdaki satır). " + hgm_note)
     f6 = "csb_ref6_cankaya_plan_aciklama_20200624102357.pdf"
     add("ÇŞB Ankara İl Müd. ilanı — Çankaya Yukarı Bahçelievler 7289 ada 5 parsel (Milli Kütüphane) 1/1000 UİP değişikliği açıklama raporu (2020) [spec 6]",
         25978, "belirtilmemiş ('Ankara şehrinin' deniyor)", "alan_literatur_csb_ref6_cankaya",
@@ -283,7 +388,7 @@ def build_area_rows() -> list[dict]:
         "alan_literatur_valilik_cdr_2018", q85, "PDF s. 172 (basılı s. 159); tablo: Çizelge E.85, PDF s. 171 (basılı s. 158)", "hesap",
         f"Toplam = 11.839.649 + 4.124.040 + 4.412.420 + 5.255.891 = {common.fmt_tr(tot_da)} da = {common.fmt_tr(tot_da/1000, 3)} km² (1 km² = 1.000 da). "
         "Çizelgede toplam satırı yok, toplama bizim hesabımız. [5]'te birebir yazan 25.632 km² ile aynı: bu değerin ikinci resmî "
-        "dayanağı. İkincil kopyalara göre HGM ile aynı.")
+        "dayanağı. " + hgm_note)
     q86 = quote(fc, 171, r"TOPLAM 2\.547\.625,24 100,00 2\.547\.624,79 100,00 2\.565\.474,80 100,00 2\.565\.474,8 100,00")
     add("Ankara Valiliği ÇDR 2018, Çizelge E.86 — CORINE arazi sınıflandırması (Tarım ve Orman Bak., Corine) — 1990",
         round(2_547_625.24 / 100, 4), "CORINE poligonları toplamı (su yapıları ve sulak alanlar dahil)",
@@ -320,7 +425,28 @@ def build_area_rows() -> list[dict]:
         "sinirlar_hdx_codab_tur",
         f"adm1_pcode TUR006 (Ankara): area_sqkm = {ca}", "tur_admin1.geojson, öznitelik", "kaynakli",
         "Resmî bir yüzölçümü tablosu değil, HGK 1:1.000.000 sınırından türeyen veri özniteliği; [5] ve Valilik ÇDR 2018 "
-        "Çizelge E.85'teki 25.632 km² ile 0,24 km² farkla uyumlu (ikincil kopyalara göre HGM ile aynı).")
+        f"Çizelge E.85'teki 25.632 km² ile {common.fmt_tr(25632 - ca, 2)} km² farkla uyumlu; HGM'nin güncel (2026) "
+        f"tablosundaki {common.fmt_tr(hgm['ankara']['value'])} km²'den {common.fmt_tr(hgm['ankara']['value'] - ca, 2)} km² "
+        "küçük (hesap).")
+    # HGM'nin kendi (güncel) tablosu
+    a, ds = hgm["ankara"], hgm["ankara_districts"]
+    pg = hgm_page_sentences()
+    cmpx = secondary_vs_hgm(hgm)
+    dsum = sum(d["value"] for d in ds)
+    note3 = re.match(r"(AÇIKLAMA: .*?güncellenmektedir\.)", hgm["note"]).group(1)
+    add("HGM — 'İl ve İlçe Yüz Ölçümleri' tablosu (il_ilce_alanlari.xlsx; 2026 tarihli 1:1.000.000 Türkiye Mülki İdare "
+        "Bölümleri Haritasından)",
+        a["value"], "belirtilmemiş (HGM: 1:1.000.000 ölçekli harita sınırlarından hesaplanmış, 'itibari')",
+        "alan_literatur_hgm_il_ilce_yuzolcumleri", f"ANKARA | {a['value']}  ·  {re.sub(r'\s+', ' ', note3)}",
+        f"{hgm['ws']}, satır {a['row']} (sütun C 'İL / İLÇE', D 'ALAN (km²)'); açıklama: hücre A2", "kaynakli",
+        f"HGM'nin güncel tablosu (harita.gov.tr sayfasından bağlı). 25 ilçe (satır {ds[0]['row']}–{ds[-1]['row']}) "
+        f"toplamı {common.fmt_tr(dsum)} km²{' = il değeri' if dsum == a['value'] else ' ≠ il değeri'} (hesap; ilçeler: "
+        f"{rel(OUT_DISTRICT_CSV)}). 25.632 km²'yi DOĞRULAMIYOR: fark +{common.fmt_tr(a['value'] - 25632)} km² "
+        f"(%{common.fmt_tr(100 * (a['value'] / 25632 - 1), 2)}). HGM değerleri kendi ifadesiyle itibari; sayfa: "
+        f"\"{pg['disclaimer']}\" İkincil kopyalar (eski PDF adresi; 21.10.2026'da HGM'nin /404 sayfasına yönleniyor) "
+        f"bu tabloyla 81 ilin yalnız {cmpx['sn_eq_off']} (snrylmz) ve {cmpx['bk_eq_off']} (brkunver) ilinde aynı, "
+        f"birbirleriyle {cmpx['sn_eq_bk']} ilde aynı (hesap) → tablonun başka, büyük olasılıkla eski bir baskısını "
+        "aktarıyorlar. Göl dahil/hariç yazmıyor.")
     sj = json.loads((RAW_ALAN / "ikincil/github_snrylmz_il-ilce.json").read_text(encoding="utf-8"))
     ank = next(x for x in sj["data"] if x["il_adi"] == "Ankara")
     readme = (RAW_ALAN / "ikincil/github_snrylmz_README.md").read_text(encoding="utf-8")
@@ -329,8 +455,10 @@ def build_area_rows() -> list[dict]:
         float(ank["yuzolcumu"].replace(".", "").replace(",", ".")), "belirtilmemiş (HGM tablosu)",
         "alan_literatur_hgm_ikincil_snrylmz", f"\"il_adi\": \"Ankara\", … \"yuzolcumu\": \"{ank['yuzolcumu']}\"  ·  README: {rq}",
         "js/il-ilce.json, Ankara kaydı", "kaynakli_ikincil",
-        "harita.gov.tr vekil sunucuda engelli (403) → HGM tablosu doğrudan okunamadı. Yalnız 'ikincil kopyalara göre HGM ile "
-        "aynı' notunun dayanağı; 25.632'nin birincil dayanağı resmî belgeler ([5], Valilik ÇDR 2018 Çizelge E.85).")
+        f"README'nin gösterdiği PDF ({HGM_OLD_PDF}) artık yayında değil. HGM'nin güncel (2026) tablosu "
+        f"{common.fmt_tr(a['value'])} km² veriyor: bu kopya güncel tabloyu DOĞRULAMIYOR (81 ilin {cmpx['sn_eq_off']}'ünde "
+        "aynı; hesap) → büyük olasılıkla tablonun eski baskısı. 25.632'nin birincil dayanağı resmî belgeler ([5], Valilik "
+        "ÇDR 2018 Çizelge E.85).")
     bj = json.loads((RAW_ALAN / "ikincil/github_brkunver_sources.json").read_text(encoding="utf-8"))
     bnote = bj["Ankara"]["geo_admin"]["note"]
     with open(RAW_ALAN / "ikincil/github_brkunver_provinces.csv", encoding="utf-8") as f:
@@ -340,7 +468,9 @@ def build_area_rows() -> list[dict]:
         f"area_km2 = {brow['area_km2']}  ·  metadata/sources.json: \"{bnote}\"", "data/provinces.csv, Ankara satırı",
         "kaynakli_ikincil", "DATA_SOURCES.md: " + re.search(r"Resmi yüzölçümleri; çelişkide HGM önceliklidir",
         (RAW_ALAN / "ikincil/github_brkunver_DATA_SOURCES.md").read_text(encoding="utf-8")).group(0) + ". "
-        "Yalnız 'ikincil kopyalara göre HGM ile aynı' notunun dayanağı; birincil dayanak [5] ve Valilik ÇDR 2018 Çizelge E.85.")
+        f"HGM'nin güncel (2026) tablosu {common.fmt_tr(a['value'])} km² veriyor: bu kopya güncel tabloyu DOĞRULAMIYOR "
+        f"(81 ilin {cmpx['bk_eq_off']}'ünde aynı; snrylmz kopyasıyla {cmpx['sn_eq_bk']} ilde aynı; hesap) → büyük "
+        "olasılıkla eski baskı. Birincil dayanak [5] ve Valilik ÇDR 2018 Çizelge E.85.")
     return rows
 
 
@@ -369,8 +499,11 @@ LIT = [
          notes="Maksimal kapsama (MCLP) problemi."),
     dict(id="hill_burton1946", doi=None, expect={},
          notes="ABD Hospital Survey and Construction Act (Hill-Burton Act)."),
-    dict(id="ravaghi2020", doi="10.1186/s12913-020-5023-z", expect={},
+    dict(id="ravaghi2020", doi="10.1186/s12913-020-5023-z", pmc="PMC7060560", expect={},
          notes="Yatak ihtiyacı modellerinin sistematik taraması (Hill-Burton formülünün girdileri için)."),
+    dict(id="nates2023", doi="10.1097/CCM.0000000000005967", pmc="PMC11192408",
+         expect=dict(journal="Critical Care Medicine", volume="51", issue="11", pages="1552-1565", year=2023),
+         notes="Hill-Burton yatak ihtiyacı formülünü adıyla ve açıkça yazan, tam metni okunmuş kaynak."),
     dict(id="boscoe2012", doi="10.1080/00330124.2011.583586", expect=dict(year=2012),
          notes="Kuş uçuşu ve karayolu mesafesi karşılaştırması (dolambaç katsayısı)."),
     dict(id="ballou2002", doi="10.1016/S0965-8564(01)00044-1", expect=dict(year=2002),
@@ -389,11 +522,82 @@ LIT = [
          notes="geoBoundaries idari sınırlar (ana sınır kümesi)."),
     dict(id="zanaga2022", doi="10.5281/zenodo.7254221", expect=dict(year=2022),
          notes="ESA WorldCover 10 m 2021 v200 (su maskesi)."),
+    dict(id="bondarenko2025_worldpop", doi="10.5258/SOTON/WP00839", expect=dict(year=2025),
+         notes="Nüfus ızgarası WorldPop R2025A (varsayılan dağılım kaynağı; docs/KARARLAR.md #6)."),
 ]
+# PMC tam metni: OAI-PMH 'pmc' (JATS XML). PMC makale sayfaları tarayıcı UA'lı betik isteklerine reCAPTCHA ara sayfası
+# döndürüyor; OAI servisi common.USER_AGENT ile çalışıyor.
+PMC_OAI = ("https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:{n}"
+           "&metadataPrefix=pmc")
+# DataCite DOI'si olan veri kümesi künyeleri: kayıt nufus_izgara alanının arşivinde (pipeline/12_population_grids.py)
+DATACITE_JSON = {"10.5258/SOTON/WP00839": common.RAW / "nufus" / "worldpop" / "datacite_10.5258_SOTON_WP00839.json"}
+DATACITE_SOURCE = {"10.5258/SOTON/WP00839": "nufus_izgara_worldpop_doi"}
+# PMC tam metinlerinden birebir alıntılar: (künye id) -> [(konum etiketi, JATS öğesi (etiket, id) ya da None, cümle)]
+PMC_QUOTES = {
+    "ravaghi2020": [
+        ("Table 4 ('General characteristics of identified models and methods used to determine required numbers of "
+         "hospital beds'), 'Formula method' satırı", ("table-wrap", "Tab4"),
+         "Calculated by dividing the total length of stay (average length of stay × admission rate × projected "
+         "population size) by (period duration × target bed occupancy rate)"),
+        ("Table 4, 'Formula method' satırı", ("table-wrap", "Tab4"),
+         "Based on target occupancy rates (80–85% for large hospitals and 45% for small hospitals)"),
+        ("Table 4, 'Formula method' satırı", ("table-wrap", "Tab4"), "Introduced in 1984"),
+        ("Discussion", ("sec", "Sec14"),
+         "the target bed occupancy rate is usually considered to be 80–85% of the total bed capacity for large "
+         "hospitals, and 45% for small hospitals (due to lack of economies of scale)"),
+        ("Discussion", ("sec", "Sec14"),
+         "The formula method which considers target bed occupancy rates is used as the foundation for many models."),
+    ],
+    "nates2023": [
+        ("TABLE 2 ('Methods to Determine Unit Size'), 'Hill-Burton’s formula' satırı", ("table-wrap", "T2"),
+         "The formula includes the number of patient admissions annually multiplied by the average LOS in days, which "
+         "is then divided by 365 d multiplied by the ideal occupancy rate, the product of this equation equals "
+         "“needs.\""),
+        ("TABLE 2, 'Hill-Burton’s formula' satırı", ("table-wrap", "T2"),
+         "Since the approval of the Hill-Burton Construction Bill known as the Hospital Survey and Construction Act in "
+         "the 1940s (16), the Hill-Burton formula has been very popular and used for its simplicity and practicality "
+         "(22)."),
+    ],
+}
 
 
 def cr_path(eid: str) -> Path:
     return RAW_LIT / f"crossref_{eid}.json"
+
+
+def pmc_path(e: dict) -> Path:
+    return RAW_LIT / "pmc" / f"pmc_oai_{e['pmc']}_{e['id']}.xml"
+
+
+def _flat_xml(fragment: str) -> str:
+    t = html.unescape(re.sub(r"<[^>]+>", " ", fragment))
+    t = re.sub(r"\s+", " ", t)
+    return re.sub(r"\( (\d+(?:[,–-] ?\d+)*) \)", r"(\1)", t).strip()   # '( 16 )' -> '(16)'
+
+
+def jats_element(xml: str, tag: str, eid: str) -> str:
+    """JATS içinde <tag ... id="eid"> öğesi (sec için bir sonraki aynı düzey sec'e kadar)."""
+    m = re.search(rf'<{tag}\b[^>]*\bid="{re.escape(eid)}"[^>]*>', xml)
+    if not m:
+        raise ValueError(f"JATS öğesi yok: {tag}#{eid}")
+    end = xml.find(f"</{tag}>", m.end()) if tag != "sec" else xml.find("<sec id=", m.end())
+    return xml[m.start(): end if end > 0 else len(xml)]
+
+
+def pmc_quotes(e: dict) -> dict:
+    """PMC (OAI JATS) tam metninden kimlik denetimi ve birebir alıntılar."""
+    xml = pmc_path(e).read_text(encoding="utf-8")
+    ids = dict(re.findall(r'<article-id pub-id-type="([^"]+)">([^<]+)</article-id>', xml))
+    if ids.get("pmcid") != e["pmc"] or ids.get("doi", "").lower() != e["doi"].lower():
+        raise ValueError(f"{e['id']}: PMC kaydı DOI/PMCID uyuşmuyor: {ids}")
+    out = []
+    for where, (tag, eid), q in PMC_QUOTES.get(e["id"], []):
+        if q not in _flat_xml(jats_element(xml, tag, eid)):
+            raise ValueError(f"{e['id']}: alıntı {tag}#{eid} içinde yok: {q[:60]}")
+        out.append({"where": where, "quote": q})
+    lic = re.search(r'<license[^>]*license-type="([^"]+)"', xml)
+    return {"ids": ids, "quotes": out, "license": lic.group(1) if lic else None,
+            "manuscript": ids.get("manuscript-id")}
 
 
 # Alanlar arası yinelenen kayıtlar bu alanın kimliklerinde birleştirildi (arazi_osm kayıtları kaldırıldı).
@@ -453,8 +657,10 @@ def merge_duplicate(rec: dict, eid: str, path: Path) -> dict:
 
 def fetch_literature() -> None:
     for e in LIT:
-        if e["doi"] and not e["doi"].startswith(("10.2905/", "10.5281/")):
+        if e["doi"] and not e["doi"].startswith(("10.2905/", "10.5281/", "10.5258/")):
             fetch("https://api.crossref.org/works/" + e["doi"], cr_path(e["id"]))
+        if e.get("pmc"):
+            fetch(PMC_OAI.format(n=e["pmc"][3:]), pmc_path(e))
     # DataCite DOI'leri: handle kaydı (doi.org) + yayıncı üst verisi
     fetch("https://doi.org/api/handles/10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE", RAW_LIT / "doi_handle_ghs_pop_r2023a.json")
     fetch("https://doi.org/api/handles/10.2905/JRC.CXKEDRR", RAW_LIT / "doi_handle_ghs_pop_jrc_cxkedrr.json")
@@ -519,7 +725,8 @@ def build_literature() -> tuple[list[dict], list[str]]:
                                      "govinfo.gov vekil sunucuda engelli, kanun PDF'i okunamadı"),
                        notes=(f"{e['notes']} OLRC notu: \"{un.strip()}\" — dikkat: legisworks dizininde yasa 60 Stat. {page}'da "
                               f"başlıyor ({npages} sayfa, {pdf}); OLRC notları 60 Stat. 1041 yazıyor. Kanun metni okunamadığı "
-                              "için yatak formülünü içerip içermediği DOĞRULANMADI."),
+                              "için yatak formülünü içerip içermediği DOĞRULANMADI. Formülün 'Hill-Burton formula' adıyla "
+                              "yazılı hâli okunmuş bir kaynakta: nates2023 (Table 2)."),
                        source_ids=["alan_literatur_lit_hill_burton1946"])
             entries.append(rec)
             continue
@@ -552,6 +759,32 @@ def build_literature() -> tuple[list[dict], list[str]]:
             issues.append(f"{eid}: JRC kataloğunun önerdiği atıf yılı 2026 ve ek DOI 10.2905/JRC.CXKEDRR (spec: 2023)")
             entries.append(rec)
             continue
+        if doi and doi.startswith("10.5258/"):   # DataCite (WorldPop); kayıt nufus_izgara alanının arşivinde
+            dc = json.loads(DATACITE_JSON[doi].read_text(encoding="utf-8"))["data"]["attributes"]
+            if dc["doi"].lower() != doi.lower():
+                raise ValueError(f"DataCite kaydı başka DOI: {dc['doi']}")
+            year = int(dc["publicationYear"])
+            rights = ", ".join(r.get("rightsIdentifier") or r.get("rights") for r in dc.get("rightsList") or [])
+            hub = DATACITE_JSON[doi].parent / "hub_worldpop_doi_10.5258_SOTON_WP00839.html"
+            hub_note = ""
+            if hub.exists():
+                m = re.search(r"Bondarenko M\., .*?DOI:10\.5258/SOTON/WP00839", html_text(hub))
+                hub_note = f" WorldPop açılış sayfasının önerdiği atıf: \"{m.group(0)}\"." if m else ""
+            rec.update(authors=[c["name"] for c in dc["creators"]], year=year, title=dc["titles"][0]["title"],
+                       journal=None, publisher=f"{dc['publisher']} (WorldPop) [Dataset]", volume=None, issue=None,
+                       pages=None, doi=doi, url=f"https://doi.org/{doi}",
+                       verified_via=(f"DataCite REST API (api.datacite.org/dois/{doi}); tür "
+                                     f"{dc['types']['resourceTypeGeneral']}, yayım yılı {dc['publicationYear']}, DOI kaydı "
+                                     f"{dc['registered'][:10]}, lisans {rights}; açılış sayfası {dc['url']}"),
+                       notes=(f"{e['notes']} {len(dc['creators'])} yazar. DOI, Global 2015–2030 R2025A 'constrained' 100 m "
+                              "nüfus ızgarasını tanımlıyor (kullanılan TUR 2025/2030 dosyaları bu ürünün ülke "
+                              "kesitleri: data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/…/constrained/)."
+                              f"{hub_note} Crossref'te kayıt yok (DataCite DOI)."),
+                       source_ids=[DATACITE_SOURCE[doi]])
+            if year != ex.get("year"):
+                issues.append(f"{eid}: yıl {year} ≠ beklenen {ex.get('year')}")
+            entries.append(rec)
+            continue
         if doi and doi.startswith("10.5281/"):
             z = json.loads((RAW_LIT / "zenodo_7254221_worldcover_v200.json").read_text(encoding="utf-8"))
             md = z["metadata"]
@@ -571,6 +804,9 @@ def build_literature() -> tuple[list[dict], list[str]]:
         year = _year(m)
         pages = m.get("page") or m.get("article-number")
         title = html.unescape((m.get("title") or [""])[0])
+        title_note = ""
+        if title.endswith("*"):   # dergi dipnot işareti (ör. Crit Care Med)
+            title, title_note = title.rstrip("*"), " Crossref başlığının sonundaki '*' dipnot işareti atıldı."
         rec.update(authors=authors, year=year, title=title, journal=journal, publisher=m.get("publisher"),
                    volume=m.get("volume"), issue=m.get("issue"), pages=(pages or "").replace("-", "–") or None,
                    doi=(doi if doi.lower() == m.get("DOI", "").lower() else m.get("DOI")),
@@ -588,14 +824,34 @@ def build_literature() -> tuple[list[dict], list[str]]:
                   (str(got).lower() == str(v).lower()))
             if not ok:
                 issues.append(f"{eid}: {k} = {got!r} (beklenen {v!r})")
+        rec["notes"] += title_note
+        if e.get("pmc"):
+            pq = pmc_quotes(e)
+            hb = "Hill-Burton" in _flat_xml(pmc_path(e).read_text(encoding="utf-8"))
+            rec["verified_via"] += f"; tam metin: PMC OAI-PMH JATS XML ({e['pmc']}, {rel(pmc_path(e))})"
+            rec["pmcid"] = e["pmc"]
+            rec["quotes"] = pq["quotes"]
         if eid == "ravaghi2020":
             ab = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.get("abstract", ""))).strip()
             sent = re.search(r"Common determinants of the required number of hospital beds[^.]*\.", ab).group(0)
-            rec["notes"] = (f"{e['notes']} Crossref özetinden birebir: \"{sent}\" Tam metin (link.springer.com, PMC) vekil "
-                            "sunucuda engelli → makalenin Hill-Burton formülünü adıyla anıp anmadığı DOĞRULANAMADI. "
-                            "Formülün kendisi (yatak = nüfus × yatış oranı × ort. kalış / (365 × hedef doluluk)) bu nedenle "
-                            "okunmuş bir akademik kaynağa bağlanamadı; formül, yatılan gün = yatak × 365 × doluluk tanımının "
-                            "(SİY bülteni tanımı, saglik alanı) cebirsel tersidir.")
+            rec["notes"] = (f"{e['notes']} Crossref özetinden birebir: \"{sent}\" Tam metin PMC'den okundu ({e['pmc']}, "
+                            f"lisans {pq['license']}). Table 4'teki 'Formula method' yatak ihtiyacını (ort. kalış × yatış "
+                            "oranı × öngörülen nüfus) / (dönem süresi × hedef doluluk) olarak veriyor: dönem 365 gün "
+                            "alınınca modeldeki Hill-Burton formülüyle (yatak = nüfus × yatış oranı × ort. kalış / (365 × "
+                            "hedef doluluk)) aynı yapı. Makale 'Hill-Burton' adını "
+                            f"{'ANIYOR' if hb else 'ANMIYOR'} ve yöntemi 1984'e tarihliyor (Table 4: 'Introduced in 1984'). "
+                            "Hedef doluluk büyük hastanelerde %80–85, küçüklerde %45 (Table 4 ve Discussion; makalenin "
+                            "kaynağı [4]). Alıntılar: quotes alanı.")
+        if eid == "nates2023":
+            xml = pmc_path(e).read_text(encoding="utf-8")
+            refs = {r: _flat_xml(re.search(rf'<ref id="R{r}"[^>]*>(.*?)</ref>', xml, re.S).group(1)) for r in (16, 22)}
+            rec["notes"] = (f"{e['notes']} PMC {e['pmc']} (NIH yazar el yazması {pq['manuscript']}; OAI JATS). TABLE 2: "
+                            "Hill-Burton formülü = yıllık yatış sayısı × ort. kalış (gün) / (365 gün × ideal doluluk) → "
+                            "'ihtiyaç' (yatak). Yıllık yatış = nüfus × yatış oranı yazılınca modeldeki biçim çıkar (hesap): "
+                            "yatak = nüfus × yatış oranı × ort. kalış / (365 × hedef doluluk). Makale yoğun bakım kapasite "
+                            "planlaması üzerine bir SCCM görev gücü incelemesi; formülü kaynak göstererek aktarıyor "
+                            f"(kaynakçası: \"{refs[16]}\"; \"{refs[22]}\"), kanun metninin kendisinden değil."
+                            f"{title_note} Alıntılar: quotes alanı.")
         if eid == "daskin2013" and m.get("type") == "edited-book":
             rec["notes"] = (e["notes"] + " Crossref türü 'edited-book' ve kişi 'editor' alanında; kitap tek yazarlıdır "
                             "(Mark S. Daskin) — atıfta yazar olarak verilir.")
@@ -622,7 +878,8 @@ def _dump(obj) -> str:
 
 def write_literature(entries: list[dict], issues: list[str]) -> None:
     header = ("# Kaynakça (spec Bölüm 7 madde 14) — alan: alan-literatur\n"
-              "# Her künye arşivlenmiş üst veriden okunur (Crossref / Zenodo / JRC kataloğu / ABD kanun dizini); elle yazılmadı.\n"
+              "# Her künye arşivlenmiş üst veriden okunur (Crossref / Zenodo / JRC kataloğu / DataCite / ABD kanun dizini); elle yazılmadı.\n"
+              "# quotes: PMC tam metninden (OAI-PMH JATS) birebir alıntılar, betik her çalıştırmada arşivde yeniden arar.\n"
               "# Ham üst veri: data/raw/literatur/ (git dışı). Kaynak kayıtları: data/sources/alan_literatur.yaml\n"
               f"# Doğrulama tarihi: {ACCESSED.isoformat()}\n"
               "# Görev künyesinden farklar:\n" + "".join(f"#   - {i}\n" for i in issues) + "\n")
@@ -644,8 +901,11 @@ def src(sid, title, publisher, url, kind, path: Path, used_for, notes, published
     return d
 
 
-def build_sources(area_rows: list[dict], lit: list[dict], tls: dict) -> list[dict]:
+def build_sources(area_rows: list[dict], lit: list[dict], tls: dict, hgm: dict) -> list[dict]:
     S = []
+    hv = common.fmt_tr(hgm["ankara"]["value"])
+    hgm_note = (f"HGM'nin güncel tablosu (2026) Ankara için {hv} km² veriyor (alan_literatur_hgm_il_ilce_yuzolcumleri); "
+                "25.632 yalnız HGM tablosunun ikincil kopyalarında (büyük olasılıkla eski baskı).")
     byid = {}
     for r in area_rows:
         byid.setdefault(r["source_id"], []).append(r)
@@ -672,8 +932,7 @@ def build_sources(area_rows: list[dict], lit: list[dict], tls: dict) -> list[dic
                  AREA_DOCS["csb_ref5_beypazari_macun_plan_20251117081655.pdf"], "resmi", A / "csb_ref5_beypazari_macun_plan_20251117081655.pdf",
                  uf("alan_literatur_csb_ref5_beypazari"),
                  "Spec kaynağı [5]. 25.632 km²'yi birebir yazan resmî belge: Valilik ÇDR 2018 Çizelge E.85 ile birlikte bu "
-                 "değerin birincil dayanağı; ikincil kopyalara göre HGM ile aynı (HGM tablosu doğrudan okunamadı). "
-                 "URL zaman damgası 17.11.2025. 83 sayfa. Aynı TLS çözümü.",
+                 f"değerin birincil dayanağı. {hgm_note} URL zaman damgası 17.11.2025. 83 sayfa. Aynı TLS çözümü.",
                  published=dt.date(2025, 11, 17)))
     S.append(src("alan_literatur_csb_ref6_cankaya",
                  "Ankara İli, Çankaya İlçesi, Yukarı Bahçelievler Mahallesi 7289 Ada 5 Parsel (Milli Kütüphane) 1/1000 Ölçekli Uygulama İmar Planı Değişikliği Plan Açıklama Raporu",
@@ -700,7 +959,7 @@ def build_sources(area_rows: list[dict], lit: list[dict], tls: dict) -> list[dic
                  uf("alan_literatur_valilik_cdr_2018"),
                  "Valiliğin resmî raporu; il yüzölçümünü tek sayı olarak yazmıyor, arazi kullanım tablosu (Çizelge E.85, kaynak "
                  "Tarım ve Orman İl Müd.) 25.632.000 da'ya toplanıyor (= 25.632 km²; toplama bizim hesabımız): [5] ile birlikte "
-                 "25.632 km²'nin resmî dayanağı; ikincil kopyalara göre HGM ile aynı. ankara.gov.tr ve ankara.bel.tr vekil "
+                 f"25.632 km²'nin resmî dayanağı. {hgm_note} ankara.gov.tr ve ankara.bel.tr vekil "
                  "sunucuda engelli (403). 182 sayfa.",
                  published=dt.date(2019, 9, 3)))
     S.append(src("alan_literatur_valilik_cdr_2017",
@@ -710,26 +969,47 @@ def build_sources(area_rows: list[dict], lit: list[dict], tls: dict) -> list[dic
                  ["Çapraz kontrol: CORINE tablosu (Çizelge E.44, PDF s. 152) ÇDR 2018 Çizelge E.86 ile aynı (1990: 2.547.625,24 ha; 2006/2012: 2.565.474,80 ha)"],
                  "İl yüzölçümü sayısı yok; ormanlık alan 471.975,7 ha = il yüzölçümünün '% 18,3'ü (PDF s. 147) → ≈25.791 km² (yuvarlamalı, kullanılmadı).",
                  published=dt.date(2019, 2, 25)))
+    pg = hgm_page_sentences()
+    a, ds = hgm["ankara"], hgm["ankara_districts"]
+    S.append(src("alan_literatur_hgm_il_ilce_yuzolcumleri",
+                 "İl ve İlçe Yüz Ölçümleri (il_ilce_alanlari.xlsx) — 2026 yılında üretilen 1:1.000.000 ölçekli Türkiye "
+                 "Mülki İdare Bölümleri Haritasından hesaplanmış",
+                 "T.C. Millî Savunma Bakanlığı, Harita Genel Müdürlüğü (HGM) — harita.gov.tr",
+                 HGM_DOCS["hgm/il_ilce_alanlari.xlsx"], "resmi", A / "hgm/il_ilce_alanlari.xlsx",
+                 uf("alan_literatur_hgm_il_ilce_yuzolcumleri")
+                 + [f"Ankara'nın 25 ilçesinin yüzölçümü ({hgm['ws']} satır {ds[0]['row']}–{ds[-1]['row']}; toplam "
+                    f"{common.fmt_tr(sum(d['value'] for d in ds))} km²) → {rel(OUT_DISTRICT_CSV)}",
+                    f"Türkiye: \"{hgm['total_line']}\" (son satır)"],
+                 f"Sayfa {HGM_PAGE_URL} (arşiv: {rel(A / 'hgm/hgm_il_ve_ilce_yuzolcumleri.html')}): \"{pg['link']}\" "
+                 f"\"{pg['turkey']}\" \"{pg['disclaimer']}\" Tablo açıklaması (A2): \"{re.sub(r'\s+', ' ', hgm['note'])}\" "
+                 f"Yani değerler itibari ve her yıl güncelleniyor; Ankara {hv} km², 25.632 km²'yi DOĞRULAMIYOR "
+                 f"(+{common.fmt_tr(a['value'] - 25632)} km²). Dosya özellikleri: oluşturma {hgm['created']:%Y-%m-%d}, "
+                 f"son değişiklik {hgm['modified']:%Y-%m-%d} (docProps). Eski PDF adresi ({HGM_OLD_PDF}) 21.10.2026'da "
+                 "HGM'nin /404 sayfasına yönleniyor. Tabloda göl dahil/hariç bilgisi yok."))
     S.append(src("alan_literatur_hgm_ikincil_snrylmz",
                  "il-ilce-json (GitHub snrylmz) — illerin yüzölçümü; README: kaynak https://www.harita.gov.tr/images/urun/il_ilce_alanlari.pdf",
                  "GitHub kullanıcısı snrylmz (ikincil; HGM tablosundan aktarım)",
                  SECONDARY["ikincil/github_snrylmz_il-ilce.json"], "ikincil", A / "ikincil/github_snrylmz_il-ilce.json",
                  uf("alan_literatur_hgm_ikincil_snrylmz"),
-                 "HGM'nin kendi sayfası (www.harita.gov.tr/il-ve-ilce-yuzolcumleri) ve PDF'i vekil sunucuda engelli (403), web.archive.org da "
-                 "engelli → HGM değeri yalnız ikincil kopyalardan. README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md. "
-                 "Yalnız 'ikincil kopyalara göre HGM ile aynı' notunun dayanağı; 25.632 km²'nin birincil dayanağı resmî belgeler "
-                 "(alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018)."))
+                 f"README arşivi: data/raw/alan/ikincil/github_snrylmz_README.md (kaynak: {HGM_OLD_PDF}; bu adres artık "
+                 f"yayında değil). HGM'nin güncel tablosu (alan_literatur_hgm_il_ilce_yuzolcumleri, 2026) {hv} km² veriyor: "
+                 "bu kopyanın 25.632'si güncel tabloyla DOĞRULANMADI; kopya 81 ilin çoğunda güncel tablodan farklı (bkz. "
+                 "ankara_alan_kaynaklari.csv notu) → büyük olasılıkla tablonun eski baskısı. 25.632 km²'nin birincil "
+                 "dayanağı resmî belgeler (alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018)."))
     S.append(src("alan_literatur_hgm_ikincil_brkunver",
                  "turkiye-provinces-dataset (GitHub brkunver) — data/provinces.csv area_km2 + metadata/sources.json",
                  "GitHub kullanıcısı brkunver (ikincil; kaynak olarak HGM gösteriliyor)",
                  SECONDARY["ikincil/github_brkunver_provinces.csv"], "ikincil", A / "ikincil/github_brkunver_provinces.csv",
                  uf("alan_literatur_hgm_ikincil_brkunver"),
                  "sources.json (data/raw/alan/ikincil/github_brkunver_sources.json) Ankara notu: 'Area 25632 HGM (26897/25437/24521 rejected)'. "
-                 "Yalnız 'ikincil kopyalara göre HGM ile aynı' notunun dayanağı; 25.632 km²'nin birincil dayanağı resmî belgeler "
-                 "(alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018)."))
+                 f"HGM'nin güncel tablosu (alan_literatur_hgm_il_ilce_yuzolcumleri, 2026) {hv} km² veriyor: bu kopyanın "
+                 "25.632'si güncel tabloyla DOĞRULANMADI (büyük olasılıkla eski baskı; bkz. ankara_alan_kaynaklari.csv notu). "
+                 "25.632 km²'nin birincil dayanağı resmî belgeler (alan_literatur_csb_ref5_beypazari, alan_literatur_valilik_cdr_2018)."))
     # kaynakça kayıtları
     for e in lit:
         sid = e["source_ids"][0]
+        if not sid.startswith("alan_literatur_"):
+            continue   # künye başka alanın kaynak kaydına bağlı (WorldPop DataCite kaydı → nufus_izgara)
         if e["id"] == "hill_burton1946":
             S.append(src(sid, e["title"], "United States Statutes at Large, vol. 60 (künye dizini: unitedstates/legisworks-historical-statutes)",
                          None, "ikincil", RAW_LIT / "ikincil/legisworks_statutes_060.yaml",
@@ -743,6 +1023,9 @@ def build_sources(area_rows: list[dict], lit: list[dict], tls: dict) -> list[dic
         elif e["id"] == "zanaga2022":
             path = RAW_LIT / "zenodo_7254221_worldcover_v200.json"
             kind = "veri"
+        elif e.get("pmcid"):
+            path = RAW_LIT / "pmc" / f"pmc_oai_{e['pmcid']}_{e['id']}.xml"
+            kind = "akademik"
         else:
             path = cr_path(e["id"])
             kind = "akademik"
@@ -751,10 +1034,18 @@ def build_sources(area_rows: list[dict], lit: list[dict], tls: dict) -> list[dic
         vol = f" {e['volume']}" if e.get("volume") else ""
         iss = f"({e['issue']})" if e.get("issue") else ""
         pg = f": {e['pages']}" if e.get("pages") else ""
+        if e.get("quotes"):
+            used = [f"Kaynakça künyesi ({e['id']}); tam metinden birebir:"] + [
+                f"\"{q['quote']}\" [{q['where']}]" for q in e["quotes"]]
+            note = (f"Doğrulama: {e['verified_via']}. Arşiv PMC OAI-PMH JATS XML'i (makale sayfası "
+                    f"https://pmc.ncbi.nlm.nih.gov/articles/{e['pmcid']}/ betik isteklerine reCAPTCHA ara sayfası "
+                    f"döndürüyor); künye üst verisi {rel(cr_path(e['id']))}.")
+        else:
+            used = [f"Kaynakça künyesi ({e['id']}) — yalnız üst veri; bu kaynaktan sayı alınmadı"]
+            note = (f"Doğrulama: {e['verified_via']}. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli)."
+                    if kind == "akademik" else f"Doğrulama: {e['verified_via']}.")
         rec = src(sid, e["title"], f"{au} — {venue}{vol}{iss}{pg} ({e['year']})" + (f"; doi:{e['doi']}" if e.get("doi") else ""),
-                  None, kind, path, [f"Kaynakça künyesi ({e['id']}) — yalnız üst veri; bu kaynaktan sayı alınmadı"],
-                  f"Doğrulama: {e['verified_via']}. Tam metin okunmadı (yayıncı siteleri vekil sunucuda engelli)."
-                  if kind == "akademik" else f"Doğrulama: {e['verified_via']}.")
+                  None, kind, path, used, note)
         S.append(merge_duplicate(rec, e["id"], path) if e["id"] in MERGED else rec)
     return S
 
@@ -764,6 +1055,7 @@ def write_sources(S: list[dict]) -> None:
               "# Üreten: pipeline/20_area_literature.py (elle düzenlemeyin); ham belgeler: data/raw/alan/, data/raw/literatur/ (git dışı;\n"
               "# _manifest.jsonl'de url/tarih/sha256). Tablo: data/reference/ankara_alan_kaynaklari.csv ; künyeler: data/reference/literatur.yaml\n"
               "# Not: TÜİK satırları nufus alanının (tuik_bt_adnks20xx_yogunluk), COD-AB satırı sinirlar alanının (sinirlar_hdx_codab_tur) kaydına bağlanır.\n"
+              "# WorldPop künyesi (literatur.yaml: bondarenko2025_worldpop) nufus_izgara alanının nufus_izgara_worldpop_doi kaydına bağlanır.\n"
               "# Birleştirilen kayıtlar (alanlar arası aynı belge): " +
               "; ".join(f"{m['old_id']} → alan_literatur_lit_{k}" for k, m in MERGED.items()) + "\n\n")
     body = _dump(S)
@@ -782,12 +1074,16 @@ def main() -> None:
                 fetch(url, RAW_ALAN / name, bundle=bundle)
     for name, url in SECONDARY.items():
         fetch(url, RAW_ALAN / name)
+    for name, url in HGM_DOCS.items():
+        fetch(url, RAW_ALAN / name)
     fetch_literature()
-    rows = build_area_rows()
+    hgm = hgm_table()
+    rows = build_area_rows(hgm)
     write_csv(rows)
+    write_district_csv(hgm)
     lit, issues = build_literature()
     write_literature(lit, issues)
-    write_sources(build_sources(rows, lit, tls))
+    write_sources(build_sources(rows, lit, tls, hgm))
     print("\nKünye farkları:")
     for i in issues:
         print("  -", i)

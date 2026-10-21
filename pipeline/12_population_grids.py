@@ -70,7 +70,11 @@ WP_YEARS = [2025, 2030]
 WP_DOC_URL = "https://data.worldpop.org/repo/prj/Global_2015_2030/R2025A/doc/Global2_Release_Statement_R2025A_v1.pdf"
 WP_CENSUS_URL = ("https://data.worldpop.org/repo/prj/Global_2015_2030/R2025A/doc/census/"
                  "global2_census_data_sources_R2025A_v1.xlsx")
-WP_DOI = "10.5258/SOTON/WP00839"   # arama motorundan; açılış sayfası (hub.worldpop.org) vekil sunucuda engelli
+WP_DOI = "10.5258/SOTON/WP00839"   # DataCite kaydı ve WorldPop açılış sayfasıyla doğrulanır (worldpop_doi_metadata)
+WP_DATACITE_URL = f"https://api.datacite.org/dois/{WP_DOI}"
+WP_HUB_URL = f"https://hub.worldpop.org/doi/{WP_DOI}"
+WP_DATACITE_JSON = WP_DIR / "datacite_10.5258_SOTON_WP00839.json"
+WP_HUB_HTML = WP_DIR / "hub_worldpop_doi_10.5258_SOTON_WP00839.html"
 
 KONTUR_URL = "https://geodata-eu-central-1-kontur-public.s3.amazonaws.com/kontur_datasets/kontur_population_TR_20231101.gpkg.gz"
 KONTUR_GPKG = KONTUR_DIR / "kontur_population_TR_20231101.gpkg"
@@ -315,6 +319,37 @@ def doi_resolves(doi: str) -> dict:
         return {"doi": doi, "error": str(exc)}
 
 
+def worldpop_doi_metadata() -> dict:
+    """WP_DOI'nin DataCite kaydını ve WorldPop açılış sayfasını arşivler; künyeyi arşivden okur.
+
+    DOI'nin Global 2015–2030 R2025A 'constrained' 100 m veri kümesini tanımladığı başlıktan denetlenir.
+    hub.worldpop.org zaman zaman bağlantıyı sıfırlıyor: sayfa alınamazsa yalnız DataCite kaydıyla devam edilir.
+    """
+    import html as html_mod
+    import re
+
+    ensure(WP_DATACITE_URL, WP_DATACITE_JSON)
+    try:
+        ensure(WP_HUB_URL, WP_HUB_HTML)
+    except Exception as exc:  # noqa: BLE001 — açılış sayfası isteğe bağlı kanıt
+        print(f"  uyarı: WorldPop açılış sayfası alınamadı ({type(exc).__name__}); yalnız DataCite kaydı kullanıldı")
+    a = json.loads(WP_DATACITE_JSON.read_text(encoding="utf-8"))["data"]["attributes"]
+    out = {"doi": a["doi"], "title": a["titles"][0]["title"], "creators": [c["name"] for c in a["creators"]],
+           "publisher": a["publisher"], "year": a["publicationYear"],
+           "resource_type": a["types"]["resourceTypeGeneral"], "landing_url": a["url"],
+           "rights": [r.get("rightsIdentifier") for r in a.get("rightsList") or []],
+           "registered": a.get("registered"), "file": str(WP_DATACITE_JSON.relative_to(common.ROOT))}
+    t = out["title"]
+    assert out["doi"].upper() == WP_DOI.upper(), out["doi"]
+    assert t.startswith("Constrained estimates of 2015-2030") and "R2025A version v1" in t and "3 arc" in t, t
+    if WP_HUB_HTML.exists():
+        txt = html_mod.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", WP_HUB_HTML.read_text(encoding="utf-8"))))
+        m = re.search(r"Bondarenko M\., .*?DOI:10\.5258/SOTON/WP00839", txt)
+        out["hub_citation"] = m.group(0) if m else None
+        out["hub_file"] = str(WP_HUB_HTML.relative_to(common.ROOT))
+    return out
+
+
 # ---------------------------------------------------------------- Kontur
 def load_kontur_points():
     import geopandas as gpd
@@ -452,6 +487,7 @@ def main() -> None:
                      for y, w in wp.items()},
         "worldpop_census_TUR": worldpop_census_tur(),
         "worldpop_doi": doi_resolves(WP_DOI),
+        "worldpop_doi_metadata": worldpop_doi_metadata(),
         "kontur": {"gz": kgz["file"], "gz_sha256": kgz["sha256"], **kchk, "h3_resolutions": kres,
                    **kinfo, "cells_in_bbox": int(len(kpts))},
         "totals": {c: {k: (float(v) if not isinstance(v, np.ndarray) else None) for k, v in t.items()

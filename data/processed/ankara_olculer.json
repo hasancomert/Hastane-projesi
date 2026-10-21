@@ -39,7 +39,7 @@
       },
       {
         "file": "data/reference/ankara_alan_kaynaklari.csv",
-        "sha256": "ccbd3d1d72f33a3650306199b4b61baeb1da3e890034fef77019d74759774343"
+        "sha256": "f8ce768b008623917266ef0f7ed71d2e077c8a04ed874eb0c588cb3cf92bab37"
       },
       {
         "file": "data/reference/parameters.json",
@@ -614,7 +614,19 @@
         "text": "25.631,76 km²"
       },
       {
-        "source": "HGM tablosu — ikincil kopya (snrylmz)",
+        "source": "HGM il ve ilçe yüzölçümleri (2026)",
+        "source_full": "HGM — 'İl ve İlçe Yüz Ölçümleri' tablosu (il_ilce_alanlari.xlsx; 2026 tarihli 1:1.000.000 Türkiye Mülki İdare Bölümleri Haritasından)",
+        "value_km2": 25664.0,
+        "scope": "belirtilmemiş (HGM: 1:1.000.000 ölçekli harita sınırlarından hesaplanmış, 'itibari')",
+        "source_id": "alan_literatur_hgm_il_ilce_yuzolcumleri",
+        "status": "kaynakli",
+        "lakes_excluded": false,
+        "diff_km2": 16.117,
+        "diff_pct": 0.063,
+        "text": "25.664 km²"
+      },
+      {
+        "source": "HGM eski tablosu — ikincil kopya (snrylmz)",
         "source_full": "HGM 'il_ilce_alanlari.pdf' — İKİNCİL kopya: GitHub snrylmz/il-ilce-json (js/il-ilce.json)",
         "value_km2": 25632.0,
         "scope": "belirtilmemiş (HGM tablosu)",
@@ -626,7 +638,7 @@
         "text": "25.632 km²"
       },
       {
-        "source": "HGM tablosu — ikincil kopya (brkunver)",
+        "source": "HGM eski tablosu — ikincil kopya (brkunver)",
         "source_full": "HGM — İKİNCİL kopya: GitHub brkunver/turkiye-provinces-dataset (data/provinces.csv)",
         "value_km2": 25632.0,
         "scope": "belirtilmemiş (HGM)",
