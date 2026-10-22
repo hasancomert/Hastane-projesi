@@ -13,11 +13,16 @@ Kısıtlar (satır sırası):
   üst       B_jk − U_k y_jk ≤ 0                      ∀ j, k     J·K
   kapasite  Σ_{a∈A(j)} q_i x_a − Σ_k B_jk ≤ 0        ∀ j        |J|
   bağlantı  x_a − z_j ≤ 0                            a ∈ A_L    |A_L| (güçlü bağlantı; A_L ⊆ A, bkz. link_arcs)
+  sınıf b.  x_a − Σ_k min(1, U_k/q_i)·y_jk ≤ 0        a ∈ A_P    |A_P| (sınıf başına bağlantı; q_i > en küçük U_k olan
+                                                                       yaylar, bkz. pc_link_arcs)
   sayı      en_az ≤ Σ_j z_j ≤ en_çok                            1     (sınır yoksa [0, ∞))
   bütçe     Σ Sabit_jk y_jk + Değişken_jk B_jk ≤ bütçe          1     (yalnız butce modunda bağlayıcı)
 Amaç (ölçek: milyon TL): toplam/sabit_p → Σ Sabit·y + Değişken·B + Σ erişim_a·x_a;
                          butce → Σ erişim_a·x_a + ε·(açılış) (ε küçük: fazladan yatak almamak için eşitlik bozucu).
 Bağlantı biçimi: x_a ≤ Σ_k y_jk yerine x_a ≤ z_j — aynı LP gevşetmesi, yay başına 5 yerine 2 sıfırdan farklı eleman.
+Sınıf başına bağlantı (Faz 3 T1 ölçümü): j'de k sınıfı açıksa x_a·q_i ≤ B_jk ≤ U_k → x_a ≤ U_k/q_i; geçerli eşitsizlik,
+x_a ≤ z_j'den sıkı (yalnız q_i > min U_k olan ≈1,2–1,7 bin yayda fark eder). 5 km kök LP sınırı 401,11 → 402,18 milyar TL
+(kök boşluğunun ≈%63'ü kapanır), kök LP süresi ≈aynı; MIP sonu gap %0,31 → %0,24.
 Not: B = L·y + E yerine koyması (aynı çokyüzlü, J·K satır daha az) 5 km'de kök LP'yi 7 sn'den 18 sn'ye uzattığı için
 kullanılmadı (dual simpleks, Faz 3 ölçümü).
 """
@@ -64,6 +69,7 @@ class Layout:
     nK: int
     nA: int
     nL: int                 # güçlü bağlantı satırı sayısı (bağlantı yayları alt kümesi)
+    nP: int = 0             # sınıf başına bağlantı satırı sayısı
 
     # sütunlar
     @property
@@ -124,8 +130,12 @@ class Layout:
         return self.r_cap + self.nJ
 
     @property
-    def r_count(self) -> int:
+    def r_pclink(self) -> int:
         return self.r_link + self.nL
+
+    @property
+    def r_count(self) -> int:
+        return self.r_pclink + self.nP
 
     @property
     def r_budget(self) -> int:
@@ -137,7 +147,7 @@ class Layout:
 
     def summary(self) -> dict:
         return {"rows": self.nrow, "cols": self.ncol, "binaries": self.nJ * self.nK, "I": self.nI, "J": self.nJ,
-                "K": self.nK, "arcs": self.nA, "link_rows": self.nL}
+                "K": self.nK, "arcs": self.nA, "link_rows": self.nL, "per_class_rows": self.nP}
 
 
 # ---------------------------------------------------------------- dizi kurulumu
@@ -178,6 +188,7 @@ def _row_bounds(inst: Instance, lay: Layout) -> tuple[np.ndarray, np.ndarray]:
     hi[lay.r_upper:lay.r_upper + lay.nJ * lay.nK] = 0.0
     hi[lay.r_cap:lay.r_cap + lay.nJ] = 0.0
     hi[lay.r_link:lay.r_link + lay.nL] = 0.0
+    hi[lay.r_pclink:lay.r_pclink + lay.nP] = 0.0
     lo[lay.r_count] = float(inst.count_min)
     hi[lay.r_count] = INF if inst.count_max is None else float(inst.count_max)
     if inst.budget is not None:
@@ -185,7 +196,7 @@ def _row_bounds(inst: Instance, lay: Layout) -> tuple[np.ndarray, np.ndarray]:
     return lo, hi
 
 
-def _matrix(inst: Instance, lay: Layout, link: np.ndarray) -> sp.csc_matrix:
+def _matrix(inst: Instance, lay: Layout, link: np.ndarray, pc: np.ndarray | None = None) -> sp.csc_matrix:
     s = inst.s
     nI, nJ, nK, nA = lay.nI, lay.nJ, lay.nK, lay.nA
     jj, kk = np.divmod(np.arange(nJ * nK), nK)
@@ -209,6 +220,12 @@ def _matrix(inst: Instance, lay: Layout, link: np.ndarray) -> sp.csc_matrix:
     if lay.nL:
         add(lay.r_link + np.arange(lay.nL), lay.x(link), 1.0)                    # bağlantı: x − z
         add(lay.r_link + np.arange(lay.nL), lay.z(s.arc_j[link]), -1.0)
+    if lay.nP:
+        coef = pc_link_coefs(inst, pc)                                           # (nP, K)
+        rr = lay.r_pclink + np.arange(lay.nP)
+        add(rr, lay.x(pc), 1.0)                                                  # sınıf b.: x − Σ_k c_k y_k
+        for k in range(nK):
+            add(rr, lay.y(s.arc_j[pc], k), -coef[:, k])
     add(np.full(nJ, lay.r_count), lay.z(np.arange(nJ)), 1.0)                     # sayı
     fo, vo = _open_coefs(inst)
     add(np.full(nJ * nK, lay.r_budget), lay.y(jj, kk), fo / SCALE)              # bütçe
@@ -234,6 +251,22 @@ def link_arcs(inst: Instance, linking) -> np.ndarray:
         rank = np.arange(s.nA) - s.arc_ptr[s.arc_i]
         return np.flatnonzero(rank < int(linking))
     return np.unique(np.asarray(linking, dtype=np.int64))
+
+
+def pc_link_arcs(inst: Instance) -> np.ndarray:
+    """Sınıf başına bağlantı yazılacak yaylar: talebi açık sınıfların en küçük üst sınırını aşan hücrelerin yayları
+    (q_i > min_k U_k); diğerlerinde katsayıların hepsi 1'dir ve satır x_a ≤ z_j ile aynıdır."""
+    s = inst.s
+    if not inst.class_on.any():
+        return np.zeros(0, dtype=np.int64)
+    umin = float(inst.U[inst.class_on].min())
+    return np.flatnonzero(inst.q[s.arc_i] > umin * (1 + 1e-12)).astype(np.int64)
+
+
+def pc_link_coefs(inst: Instance, arcs: np.ndarray) -> np.ndarray:
+    """(len(arcs), K) katsayılar min(1, U_k / q_i) (kapalı sınıflarda da yazılır: y üst sınırı 0, desen sabit kalır)."""
+    q = inst.q[inst.s.arc_i[arcs]]
+    return np.minimum(1.0, inst.U[None, :] / np.maximum(q[:, None], 1e-12))
 
 
 # ---------------------------------------------------------------- sonuç ve iz
@@ -279,17 +312,20 @@ class MilpModel:
     """Bir Instance için kurulmuş HiGHS modeli. Maliyet/sınır güncellemesi yerinde yapılır (update)."""
 
     def __init__(self, inst: Instance, *, linking: "str | int | np.ndarray" = "strong",
-                 threads: int | None = None) -> None:
+                 per_class: bool | None = None, threads: int | None = None) -> None:
+        """per_class: sınıf başına bağlantı satırları (None → yalnız linking='strong' iken)."""
         t0 = time.perf_counter()
         self.inst = inst
         self.link = link_arcs(inst, linking)
         self.linking = linking if isinstance(linking, (str, int)) else "custom"
-        self.lay = Layout(inst.nI, inst.nJ, inst.nK, inst.nA, int(len(self.link)))
+        self.per_class = (isinstance(linking, str) and linking == "strong") if per_class is None else bool(per_class)
+        self.pc = pc_link_arcs(inst) if self.per_class else np.zeros(0, dtype=np.int64)
+        self.lay = Layout(inst.nI, inst.nJ, inst.nK, inst.nA, int(len(self.link)), int(len(self.pc)))
         self.h = highspy.Highs()
         self.h.setOptionValue("output_flag", False)
         if threads:
             self.h.setOptionValue("threads", int(threads))
-        self._A = _matrix(inst, self.lay, self.link)
+        self._A = _matrix(inst, self.lay, self.link, self.pc)
         self._cost = _costs(inst)
         self._lb, self._ub = _col_bounds(inst)
         self._rlo, self._rhi = _row_bounds(inst, self.lay)
@@ -321,6 +357,8 @@ class MilpModel:
         """Aynı yapıdaki yeni örneğin maliyet/sınır/katsayılarını yerinde uygular; ne değiştiğini döndürür."""
         if inst.s.key != self.inst.s.key or inst.nK != self.lay.nK:
             raise ValueError("update yalnız aynı yapı (Structure) için geçerli")
+        if self.per_class and not np.array_equal(pc_link_arcs(inst), self.pc):
+            raise ValueError("sınıf başına bağlantı yay kümesi değişmiş; update kullanılamaz")
         lay = self.lay
         changed = {"costs": 0, "col_bounds": 0, "row_bounds": 0, "coeffs": 0, "rebuilt": False}
         c = _costs(inst)
@@ -338,7 +376,7 @@ class MilpModel:
         if len(idx):
             self.h.changeRowsBounds(len(idx), idx.astype(np.int32), rlo[idx], rhi[idx])
             changed["row_bounds"] = int(len(idx))
-        A = _matrix(inst, lay, self.link)
+        A = _matrix(inst, lay, self.link, self.pc)
         if A.nnz != self._A.nnz or not (np.array_equal(A.indptr, self._A.indptr)
                                         and np.array_equal(A.indices, self._A.indices)):
             raise ValueError("kısıt matrisinin yapısı değişmiş; update kullanılamaz")
@@ -383,6 +421,10 @@ class MilpModel:
         beds = np.clip(beds, self.inst.L[k], self.inst.U[k])
         x = np.clip(np.asarray(v[lay.x0: lay.x0 + lay.nA], dtype=float), 0.0, 1.0)
         x[x < 1e-9] = 0.0
+        # kapalı hücreye giden yaylarda çözücünün olurluluk toleransı kadar kalan pay (≤ 1e-6) temizlenir
+        is_open = np.zeros(lay.nJ, dtype=bool)
+        is_open[j] = True
+        x[~is_open[self.inst.s.arc_j]] = 0.0
         return Solution(open_j=j.astype(np.int64), cls=k.astype(np.int64), beds=beds, x=x, source=source)
 
     def set_start(self, sol: Solution) -> bool:
@@ -528,9 +570,20 @@ class MilpModel:
     def _solve_isolated(self, *, time_limit, gap, abs_gap, start, progress_cb, cancel_event, log_interval,
                         options) -> MilpResult:
         """solve(isolate=True): ayrı süreçte çözüm; iptal/süre aşımında süreç sonlandırılır (bkz. solve)."""
-        import multiprocessing as mp
-        import queue as _queue
+        run = self.start_isolated(time_limit=time_limit, gap=gap, abs_gap=abs_gap, start=start,
+                                  progress_cb=progress_cb, log_interval=log_interval, options=options)
+        stop = cancel_event or threading.Event()
+        while not run.done:
+            run.poll(timeout=0.05)
+            if not run.done and (stop.is_set() or time.perf_counter() > run.deadline):
+                run.terminate("Interrupted by user" if stop.is_set() else "Time limit reached")
+        return run.result()
 
+    def start_isolated(self, *, time_limit=None, gap=None, abs_gap=None, start: Solution | None = None,
+                       progress_cb: Callable[[dict], None] | None = None, log_interval: float = 0.5,
+                       options: dict | None = None) -> "IsolatedRun":
+        """Ayrı süreçte çözümü BAŞLATIR ve hemen döner (çağıran aynı anda başka iş yapabilir, ör. Lagrange
+        yinelemeleri); poll() ile olaylar okunur, incumbent() son çözümü verir, terminate() durdurur, result() sonuç."""
         tl = float(time_limit) if time_limit else math.inf
         opts = {"time_limit": tl if math.isfinite(tl) else INF, "mip_min_logging_interval": float(log_interval)}
         if gap is not None:
@@ -544,85 +597,117 @@ class MilpModel:
                    "start_": A.indptr.astype(np.int32), "index": A.indices.astype(np.int32),
                    "value": A.data.astype(float), "integrality": self._integrality, "options": opts,
                    "start": None if start is None else self.to_vector(start)}
+        return IsolatedRun(self, payload, tl, progress_cb)
+
+
+class IsolatedRun:
+    """Ayrı süreçte çalışan bir HiGHS çözümünün tutamağı (MilpModel.start_isolated)."""
+
+    def __init__(self, model: "MilpModel", payload: dict, tl: float, progress_cb) -> None:
+        import multiprocessing as mp
+        self.model = model
+        self.progress_cb = progress_cb
         ctx = mp.get_context("spawn")
-        q = ctx.Queue()
-        proc = ctx.Process(target=_isolated_worker, args=(payload, q), daemon=True)
-        stop = cancel_event or threading.Event()
-        trace: list[TracePoint] = []
-        st = {"first_inc": None, "first_dual": None, "interrupted": False, "start_ok": None, "vec": None,
-              "primal": None, "dual": None, "gap": None, "nodes": 0, "status": "Not Set", "t_run0": None}
+        self.q = ctx.Queue()
+        self.proc = ctx.Process(target=_isolated_worker, args=(payload, self.q), daemon=True)
+        self.trace: list[TracePoint] = []
+        self.st = {"first_inc": None, "first_dual": None, "interrupted": False, "start_ok": None, "vec": None,
+                   "primal": None, "dual": None, "gap": None, "nodes": 0, "status": "Not Set", "t_run0": None}
+        self.done = False
+        self.n_inc = 0                  # incumbent sayacı (yeni çözüm geldi mi?)
+        self.t0 = time.perf_counter()
+        self.proc.start()
+        self.deadline = self.t0 + tl + 3.0 if math.isfinite(tl) else math.inf
 
-        def emit(tp: TracePoint) -> None:
-            trace.append(tp)
-            if progress_cb is not None:
-                try:
-                    progress_cb(tp.as_dict())
-                except Exception:
-                    pass
-
-        t0 = time.perf_counter()
-        proc.start()
-        deadline = t0 + tl + 3.0 if math.isfinite(tl) else math.inf
-        done = False
-        while not done:
+    def _emit(self, tp: TracePoint) -> None:
+        self.trace.append(tp)
+        if self.progress_cb is not None:
             try:
-                msg = q.get(timeout=0.05)
+                self.progress_cb(tp.as_dict())
+            except Exception:
+                pass
+
+    def poll(self, timeout: float = 0.0) -> None:
+        """Kuyruktaki olayları işler (timeout > 0 ise ilk olayı o kadar bekler)."""
+        import queue as _queue
+        st = self.st
+        first = True
+        while not self.done:
+            try:
+                msg = self.q.get(timeout=timeout) if (first and timeout > 0) else self.q.get_nowait()
             except _queue.Empty:
-                msg = None
-            if msg is not None:
-                kind = msg[0]
-                if kind == "started":
-                    st["start_ok"] = msg[1]
-                    st["t_run0"] = time.perf_counter() - t0
-                elif kind == "inc":
-                    _, rt, obj, dual, g, nodes, vec = msg
-                    if st["first_inc"] is None:
-                        st["first_inc"] = rt
-                    st["vec"], st["primal"], st["nodes"] = vec, _tl(obj), nodes
-                    st["dual"] = _tl(dual) if _tl(dual) is not None else st["dual"]
-                    emit(TracePoint(rt, "incumbent", _tl(obj), _tl(dual), _gap(g), nodes))
-                elif kind == "log":
-                    _, rt, prim, dual, g, nodes = msg
-                    d, pr = _tl(dual), _tl(prim)
-                    if d is not None:
-                        st["dual"] = d
-                        if st["first_dual"] is None and (pr is None or d >= 0.5 * pr):
-                            st["first_dual"] = rt
-                    st["nodes"] = nodes
-                    emit(TracePoint(rt, "log", pr, d, _gap(g), nodes))
-                elif kind == "done":
-                    _, status, obj, dual, g, nodes, vec = msg
-                    st["status"] = status
-                    if vec is not None:
-                        st["vec"], st["primal"] = vec, _tl(obj)
-                    st["dual"] = _tl(dual) if _tl(dual) is not None else st["dual"]
-                    st["gap"], st["nodes"] = _gap(g), nodes
-                    done = True
-                elif kind == "error":
-                    proc.join(5)
-                    raise RuntimeError(f"HiGHS alt süreci hata verdi: {msg[1]}")
-                continue
-            if stop.is_set() or time.perf_counter() > deadline:
-                st["interrupted"] = True
-                st["status"] = "Interrupted by user" if stop.is_set() else "Time limit reached"
-                proc.terminate()
-                done = True
-            elif not proc.is_alive() and q.empty():
-                raise RuntimeError("HiGHS alt süreci beklenmedik biçimde sonlandı")
-        proc.join(5)
-        if proc.is_alive():
-            proc.kill()
-        wall = time.perf_counter() - t0
-        sol = self.from_vector(st["vec"]) if st["vec"] is not None else None
+                if not self.proc.is_alive() and self.q.empty() and not self.done:
+                    self.done = True
+                    if st["status"] == "Not Set":
+                        raise RuntimeError("HiGHS alt süreci beklenmedik biçimde sonlandı")
+                break
+            first = False
+            kind = msg[0]
+            if kind == "started":
+                st["start_ok"] = msg[1]
+                st["t_run0"] = time.perf_counter() - self.t0
+            elif kind == "inc":
+                _, rt, obj, dual, g, nodes, vec = msg
+                if st["first_inc"] is None:
+                    st["first_inc"] = rt
+                st["vec"], st["primal"], st["nodes"] = vec, _tl(obj), nodes
+                st["dual"] = _tl(dual) if _tl(dual) is not None else st["dual"]
+                self.n_inc += 1
+                self._emit(TracePoint(rt, "incumbent", _tl(obj), _tl(dual), _gap(g), nodes))
+            elif kind == "log":
+                _, rt, prim, dual, g, nodes = msg
+                d, pr = _tl(dual), _tl(prim)
+                if d is not None:
+                    st["dual"] = d
+                    if st["first_dual"] is None and (pr is None or d >= 0.5 * pr):
+                        st["first_dual"] = rt
+                st["nodes"] = nodes
+                self._emit(TracePoint(rt, "log", pr, d, _gap(g), nodes))
+            elif kind == "done":
+                _, status, obj, dual, g, nodes, vec = msg
+                st["status"] = status
+                if vec is not None:
+                    st["vec"], st["primal"] = vec, _tl(obj)
+                st["dual"] = _tl(dual) if _tl(dual) is not None else st["dual"]
+                st["gap"], st["nodes"] = _gap(g), nodes
+                self.done = True
+            elif kind == "error":
+                self.proc.join(5)
+                self.done = True
+                raise RuntimeError(f"HiGHS alt süreci hata verdi: {msg[1]}")
+
+    def incumbent(self) -> tuple[Solution | None, float | None]:
+        """Şimdiye dek bulunan en iyi çözüm (modelin Solution'ı) ve amaç değeri (TL)."""
+        v = self.st["vec"]
+        return (self.model.from_vector(v) if v is not None else None), self.st["primal"]
+
+    def terminate(self, status: str = "Interrupted by user") -> None:
+        if self.done:
+            return
+        self.poll()
+        if self.done:
+            return
+        self.st["interrupted"] = True
+        self.st["status"] = status
+        self.proc.terminate()
+        self.done = True
+
+    def result(self) -> MilpResult:
+        self.proc.join(5)
+        if self.proc.is_alive():
+            self.proc.kill()
+        st = self.st
+        wall = time.perf_counter() - self.t0
+        sol = self.model.from_vector(st["vec"]) if st["vec"] is not None else None
         g = st["gap"]
         if g is None and sol is not None and st["primal"] and st["dual"] is not None:
             g = abs(st["primal"] - st["dual"]) / max(abs(st["primal"]), 1e-9)
         return MilpResult(status=st["status"], status_tr=MODEL_STATUS_TR.get(st["status"], st["status"]),
-                         solution=sol, primal_tl=st["primal"] if sol is not None else None, dual_tl=st["dual"],
-                         gap=g if sol is not None else None, nodes=int(st["nodes"] or 0), time_s=wall,
-                         first_incumbent_s=st["first_inc"], first_dual_s=st["first_dual"], trace=trace,
-                         start_accepted=st["start_ok"], interrupted=st["interrupted"], model=self.size(),
-                         spawn_s=st["t_run0"])
+                          solution=sol, primal_tl=st["primal"] if sol is not None else None, dual_tl=st["dual"],
+                          gap=g if sol is not None else None, nodes=int(st["nodes"] or 0), time_s=wall,
+                          first_incumbent_s=st["first_inc"], first_dual_s=st["first_dual"], trace=self.trace,
+                          start_accepted=st["start_ok"], interrupted=st["interrupted"], model=self.model.size(),
+                          spawn_s=st["t_run0"])
 
 
 def _isolated_worker(payload: dict, q) -> None:

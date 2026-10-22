@@ -1,0 +1,4114 @@
+{
+ "generated_by": "pipeline/31_benchmark.py",
+ "generated_at": "2026-10-22T14:42:50",
+ "machine": {
+  "python": "3.13.16",
+  "platform": "Linux-6.18.44-fc-v140-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "cpu_count": 4,
+  "highspy": "1.15.1",
+  "note": "geliştirme konteyneri; sunum dizüstü (Windows, i7, Python 3.14) değil"
+ },
+ "params_hash": "b010dda6dd379461",
+ "targets_s": {
+  "3": 15.0,
+  "2": 60.0
+ },
+ "grids": {
+  "5": {
+   "aggregate": {
+    "cold": {
+     "total_s": {
+      "n": 5,
+      "median": 3.7173835299981874,
+      "min": 3.526288430999557,
+      "max": 3.8906882099981885
+     },
+     "time_to_1pct_s": {
+      "n": 5,
+      "median": 3.4736,
+      "min": 3.2266,
+      "max": 3.5724
+     },
+     "time_to_0.5pct_s": {
+      "n": 5,
+      "median": 3.5724,
+      "min": 3.374,
+      "max": 3.7319
+     },
+     "first_feasible_s": {
+      "n": 5,
+      "median": 1.4903,
+      "min": 1.4592,
+      "max": 1.5399
+     },
+     "final_gap": {
+      "n": 5,
+      "median": 0.002666662660778922,
+      "min": 0.002666662660778922,
+      "max": 0.002666662660778922
+     },
+     "ub_tl": {
+      "n": 5,
+      "median": 403241937143.0798,
+      "min": 403241937143.0798,
+      "max": 403241937143.0798
+     },
+     "lb_tl": {
+      "n": 5,
+      "median": 402166626926.04016,
+      "min": 402166626926.04016,
+      "max": 402166626926.04016
+     },
+     "n_hospitals": {
+      "n": 5,
+      "median": 71,
+      "min": 71,
+      "max": 71
+     },
+     "phase_s": {
+      "instance_s": {
+       "n": 5,
+       "median": 0.04697913500058348,
+       "min": 0.04562279899982968,
+       "max": 0.051424913999653654
+      },
+      "heuristic_s": {
+       "n": 5,
+       "median": 1.4397159470026963,
+       "min": 1.412898374001088,
+       "max": 1.4875537119987712
+      },
+      "lagrange_s": {
+       "n": 5,
+       "median": 2.0413530920013727,
+       "min": 1.8918419539986644,
+       "max": 2.271953094001219
+      },
+      "core_mip_s": null,
+      "polish_s": {
+       "n": 5,
+       "median": 0.14771885499794735,
+       "min": 0.10352096399947186,
+       "max": 0.15962615299940808
+      },
+      "lagrange2_s": null,
+      "mip_s": null
+     },
+     "certified_within_target": 5,
+     "reached_1pct_within_target": 5,
+     "runs": 5,
+     "all_checks_ok": true
+    },
+    "warm": {
+     "total_s": {
+      "n": 5,
+      "median": 3.380278513999656,
+      "min": 3.312356556998566,
+      "max": 3.492742302001716
+     },
+     "time_to_1pct_s": {
+      "n": 5,
+      "median": 2.5007,
+      "min": 2.4321,
+      "max": 2.5932
+     },
+     "time_to_0.5pct_s": {
+      "n": 5,
+      "median": 2.6128,
+      "min": 2.595,
+      "max": 2.6255
+     },
+     "first_feasible_s": {
+      "n": 5,
+      "median": 1.4982,
+      "min": 1.4521,
+      "max": 1.5772
+     },
+     "final_gap": {
+      "n": 5,
+      "median": 0.0039387015950155735,
+      "min": 0.0039387015950155735,
+      "max": 0.0039387015950155735
+     },
+     "ub_tl": {
+      "n": 5,
+      "median": 405463451372.39996,
+      "min": 405463451372.39996,
+      "max": 405463451372.39996
+     },
+     "lb_tl": {
+      "n": 5,
+      "median": 403866451829.759,
+      "min": 403866451829.759,
+      "max": 403866451829.759
+     },
+     "n_hospitals": {
+      "n": 5,
+      "median": 68,
+      "min": 68,
+      "max": 68
+     },
+     "phase_s": {
+      "instance_s": {
+       "n": 5,
+       "median": 0.001191212002595421,
+       "min": 0.0007503039996663574,
+       "max": 0.001373628998408094
+      },
+      "heuristic_s": {
+       "n": 5,
+       "median": 1.4959228890002123,
+       "min": 1.4508190019987524,
+       "max": 1.5751022799995553
+      },
+      "lagrange_s": {
+       "n": 5,
+       "median": 1.1136003089995938,
+       "min": 1.0389889090001816,
+       "max": 1.1422436630018638
+      },
+      "core_mip_s": null,
+      "polish_s": {
+       "n": 5,
+       "median": 0.779768664000585,
+       "min": 0.703650799998286,
+       "max": 0.8745455600001151
+      },
+      "lagrange2_s": null,
+      "mip_s": null
+     },
+     "certified_within_target": 5,
+     "reached_1pct_within_target": 5,
+     "runs": 5,
+     "all_checks_ok": true
+    },
+    "target_s": null,
+    "time_limit_s": 15.0,
+    "target_gap": 0.01
+   },
+   "runs": [
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 403241937143.0798,
+      "lb_tl": 402166626926.04016,
+      "gap": 0.002666662660778922,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp",
+      "n_hospitals": 71,
+      "count_by_class": {
+       "IV-C": 50,
+       "V-B": 13,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18794.98905,
+      "times": {
+       "instance_s": 0.046765615999902366,
+       "heuristic_s": 1.4334428349975497,
+       "lagrange_s": 1.8918419539986644,
+       "polish_s": 0.14771885499794735,
+       "check_s": 0.0008352000004379079,
+       "total_s": 3.526288430999557
+      },
+      "first_feasible_s": 1.481,
+      "time_to_gap_s": {
+       "0.02": 2.4605,
+       "0.01": 3.2266,
+       "0.005": 3.374
+      },
+      "lagrange": {
+       "iters": 345,
+       "sub_ms": 3.6781864565912556,
+       "init_s": 0.2146269980003126,
+       "init_source": "zayif_lp",
+       "lh_calls": 12,
+       "time_s": 1.8915694620009162
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": false,
+      "wall_s": 3.529959465002321,
+      "trace": [
+       {
+        "t_total": 0.047,
+        "kind": "phase",
+        "phase": "ornek",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 1.481,
+        "kind": "heuristic",
+        "phase": null,
+        "primal": 409275402450.88794,
+        "dual": null
+       },
+       {
+        "t_total": 1.4827,
+        "kind": "phase",
+        "phase": "lagrange",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 1.7054,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 409275402450.88794,
+        "dual": 381249806464.1609
+       },
+       {
+        "t_total": 1.9578,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 409275402450.88794,
+        "dual": 397050617216.24255
+       },
+       {
+        "t_total": 2.21,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 409275402450.88794,
+        "dual": 399942948219.29266
+       },
+       {
+        "t_total": 2.4605,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 408609016591.34424,
+        "dual": 401044312837.0018
+       },
+       {
+        "t_total": 2.7114,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 407417962558.4046,
+        "dual": 401600448447.4387
+       },
+       {
+        "t_total": 2.9746,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 407417962558.4046,
+        "dual": 401959291629.11926
+       },
+       {
+        "t_total": 3.2266,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 404775633323.3601,
+        "dual": 402157569340.9262
+       },
+       {
+        "t_total": 3.374,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 403241937143.0798,
+        "dual": 402166626926.04016
+       }
+      ]
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 405463451372.39996,
+      "lb_tl": 403866451829.759,
+      "gap": 0.0039387015950155735,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 68,
+      "count_by_class": {
+       "IV-C": 45,
+       "V-B": 15,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18824.662149999996,
+      "times": {
+       "instance_s": 0.001373628998408094,
+       "heuristic_s": 1.4959228890002123,
+       "lagrange_s": 1.1136003089995938,
+       "polish_s": 0.8745455600001151,
+       "check_s": 0.0007200219988590106,
+       "total_s": 3.492742302001716
+      },
+      "first_feasible_s": 1.4982,
+      "time_to_gap_s": {
+       "0.02": 1.7438,
+       "0.01": 2.5007,
+       "0.005": 2.6128
+      },
+      "lagrange": {
+       "iters": 172,
+       "sub_ms": 4.154557891306467,
+       "init_s": 0.24072048500238452,
+       "init_source": "onbellek",
+       "lh_calls": 4,
+       "time_s": 1.1134368870007165
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": true,
+      "wall_s": 3.49526686900208,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 7.452799659000448
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 403241937143.0798,
+      "lb_tl": 402166626926.04016,
+      "gap": 0.002666662660778922,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp",
+      "n_hospitals": 71,
+      "count_by_class": {
+       "IV-C": 50,
+       "V-B": 13,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18794.98905,
+      "times": {
+       "instance_s": 0.04697913500058348,
+       "heuristic_s": 1.4774497420003172,
+       "lagrange_s": 2.0465150859999994,
+       "polish_s": 0.15962615299940808,
+       "check_s": 0.0013757430024270434,
+       "total_s": 3.7385969679999107
+      },
+      "first_feasible_s": 1.5252,
+      "time_to_gap_s": {
+       "0.02": 2.5117,
+       "0.01": 3.5724,
+       "0.005": 3.5724
+      },
+      "lagrange": {
+       "iters": 345,
+       "sub_ms": 3.9281877138530112,
+       "init_s": 0.22053286300069885,
+       "init_source": "zayif_lp",
+       "lh_calls": 12,
+       "time_s": 2.046369171999686
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": false,
+      "wall_s": 3.7430268460011575
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 405463451372.39996,
+      "lb_tl": 403866451829.759,
+      "gap": 0.0039387015950155735,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 68,
+      "count_by_class": {
+       "IV-C": 45,
+       "V-B": 15,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18824.662149999996,
+      "times": {
+       "instance_s": 0.0012234929999976885,
+       "heuristic_s": 1.5751022799995553,
+       "lagrange_s": 1.047518053001113,
+       "polish_s": 0.8602286609966541,
+       "check_s": 0.0009028999993461184,
+       "total_s": 3.4920445709976775
+      },
+      "first_feasible_s": 1.5772,
+      "time_to_gap_s": {
+       "0.02": 1.8365,
+       "0.01": 2.5932,
+       "0.005": 2.6255
+      },
+      "lagrange": {
+       "iters": 172,
+       "sub_ms": 3.8464390285870262,
+       "init_s": 0.2533700519998092,
+       "init_source": "onbellek",
+       "lh_calls": 4,
+       "time_s": 1.0474403250009345
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": true,
+      "wall_s": 3.496521691999078,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 7.692316185999516
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 403241937143.0798,
+      "lb_tl": 402166626926.04016,
+      "gap": 0.002666662660778922,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp",
+      "n_hospitals": 71,
+      "count_by_class": {
+       "IV-C": 50,
+       "V-B": 13,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18794.98905,
+      "times": {
+       "instance_s": 0.04562279899982968,
+       "heuristic_s": 1.412898374001088,
+       "lagrange_s": 2.271953094001219,
+       "polish_s": 0.15249120499720448,
+       "check_s": 0.0013516750004782807,
+       "total_s": 3.8906882099981885
+      },
+      "first_feasible_s": 1.4592,
+      "time_to_gap_s": {
+       "0.02": 2.7118,
+       "0.01": 3.4736,
+       "0.005": 3.7319
+      },
+      "lagrange": {
+       "iters": 345,
+       "sub_ms": 4.3023412023639676,
+       "init_s": 0.23890155899789534,
+       "init_source": "zayif_lp",
+       "lh_calls": 12,
+       "time_s": 2.271814624997205
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": false,
+      "wall_s": 3.894910876002541
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 405463451372.39996,
+      "lb_tl": 403866451829.759,
+      "gap": 0.0039387015950155735,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 68,
+      "count_by_class": {
+       "IV-C": 45,
+       "V-B": 15,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18824.662149999996,
+      "times": {
+       "instance_s": 0.0010601089998090174,
+       "heuristic_s": 1.5734458370025095,
+       "lagrange_s": 1.0389889090001816,
+       "polish_s": 0.7363348819999374,
+       "check_s": 0.0006539549976878334,
+       "total_s": 3.3564797199978784
+      },
+      "first_feasible_s": 1.5754,
+      "time_to_gap_s": {
+       "0.02": 1.7749,
+       "0.01": 2.5301,
+       "0.005": 2.615
+      },
+      "lagrange": {
+       "iters": 172,
+       "sub_ms": 4.005902931530727,
+       "init_s": 0.19412433300021803,
+       "init_source": "onbellek",
+       "lh_calls": 4,
+       "time_s": 1.038872501001606
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": true,
+      "wall_s": 3.358870943000511,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 7.736795336997602
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 403241937143.0798,
+      "lb_tl": 402166626926.04016,
+      "gap": 0.002666662660778922,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp",
+      "n_hospitals": 71,
+      "count_by_class": {
+       "IV-C": 50,
+       "V-B": 13,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18794.98905,
+      "times": {
+       "instance_s": 0.051424913999653654,
+       "heuristic_s": 1.4875537119987712,
+       "lagrange_s": 2.0413530920013727,
+       "polish_s": 0.13071252399822697,
+       "check_s": 0.0008048749987210613,
+       "total_s": 3.7173835299981874
+      },
+      "first_feasible_s": 1.5399,
+      "time_to_gap_s": {
+       "0.02": 2.5301,
+       "0.01": 3.5375,
+       "0.005": 3.5822
+      },
+      "lagrange": {
+       "iters": 345,
+       "sub_ms": 3.9830488322861726,
+       "init_s": 0.22927918400091585,
+       "init_source": "zayif_lp",
+       "lh_calls": 12,
+       "time_s": 2.0411929119982233
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": false,
+      "wall_s": 3.720657437999762
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 405463451372.39996,
+      "lb_tl": 403866451829.759,
+      "gap": 0.0039387015950155735,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 68,
+      "count_by_class": {
+       "IV-C": 45,
+       "V-B": 15,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18824.662149999996,
+      "times": {
+       "instance_s": 0.001191212002595421,
+       "heuristic_s": 1.4585042590006196,
+       "lagrange_s": 1.1395844540020335,
+       "polish_s": 0.703650799998286,
+       "check_s": 0.0006228050006029662,
+       "total_s": 3.312356556998566
+      },
+      "first_feasible_s": 1.4605,
+      "time_to_gap_s": {
+       "0.02": 1.6729,
+       "0.01": 2.4321,
+       "0.005": 2.6036
+      },
+      "lagrange": {
+       "iters": 172,
+       "sub_ms": 4.45769321718087,
+       "init_s": 0.2035788240027614,
+       "init_source": "onbellek",
+       "lh_calls": 4,
+       "time_s": 1.13950381000177
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": true,
+      "wall_s": 3.3148842660011724,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 7.57175589200051
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 403241937143.0798,
+      "lb_tl": 402166626926.04016,
+      "gap": 0.002666662660778922,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp",
+      "n_hospitals": 71,
+      "count_by_class": {
+       "IV-C": 50,
+       "V-B": 13,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18794.98905,
+      "times": {
+       "instance_s": 0.04980675600018003,
+       "heuristic_s": 1.4397159470026963,
+       "lagrange_s": 1.9736564369995904,
+       "polish_s": 0.10352096399947186,
+       "check_s": 0.0008266030017693993,
+       "total_s": 3.5729191819991684
+      },
+      "first_feasible_s": 1.4903,
+      "time_to_gap_s": {
+       "0.02": 2.5146,
+       "0.01": 3.2839,
+       "0.005": 3.4653
+      },
+      "lagrange": {
+       "iters": 345,
+       "sub_ms": 3.739717210908965,
+       "init_s": 0.26035320200026035,
+       "init_source": "zayif_lp",
+       "lh_calls": 12,
+       "time_s": 1.9735513140003604
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": false,
+      "wall_s": 3.575296941999113
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 405463451372.39996,
+      "lb_tl": 403866451829.759,
+      "gap": 0.0039387015950155735,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 68,
+      "count_by_class": {
+       "IV-C": 45,
+       "V-B": 15,
+       "V-C": 8,
+       "V-D": 0
+      },
+      "total_beds": 18824.662149999996,
+      "times": {
+       "instance_s": 0.0007503039996663574,
+       "heuristic_s": 1.4508190019987524,
+       "lagrange_s": 1.1422436630018638,
+       "polish_s": 0.779768664000585,
+       "check_s": 0.0006766879996575881,
+       "total_s": 3.380278513999656
+      },
+      "first_feasible_s": 1.4521,
+      "time_to_gap_s": {
+       "0.02": 1.6923,
+       "0.01": 2.4465,
+       "0.005": 2.595
+      },
+      "lagrange": {
+       "iters": 172,
+       "sub_ms": 4.061721468585477,
+       "init_s": 0.23578207199898316,
+       "init_source": "onbellek",
+       "lh_calls": 4,
+       "time_s": 1.1421068870004092
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 1073,
+       "J": 454,
+       "arcs": 27639
+      },
+      "structure_from_cache": true,
+      "wall_s": 3.3827267230008147,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 7.494115339002747
+    }
+   ]
+  },
+  "3": {
+   "aggregate": {
+    "cold": {
+     "total_s": {
+      "n": 5,
+      "median": 12.745191702000739,
+      "min": 12.229763297000318,
+      "max": 14.459134360000462
+     },
+     "time_to_1pct_s": {
+      "n": 5,
+      "median": 8.7036,
+      "min": 7.0914,
+      "max": 8.7664
+     },
+     "time_to_0.5pct_s": {
+      "n": 5,
+      "median": 11.1116,
+      "min": 10.1058,
+      "max": 12.3399
+     },
+     "first_feasible_s": {
+      "n": 5,
+      "median": 1.3993,
+      "min": 1.2291,
+      "max": 1.502
+     },
+     "final_gap": {
+      "n": 5,
+      "median": 0.0023211797427791668,
+      "min": 0.002231780896779763,
+      "max": 0.003590896547743415
+     },
+     "ub_tl": {
+      "n": 5,
+      "median": 381635871101.1757,
+      "min": 381623743113.06635,
+      "max": 382117708903.12994
+     },
+     "lb_tl": {
+      "n": 5,
+      "median": 380758878062.3092,
+      "min": 380741735315.9067,
+      "max": 380772042533.429
+     },
+     "n_hospitals": {
+      "n": 5,
+      "median": 91,
+      "min": 91,
+      "max": 91
+     },
+     "phase_s": {
+      "instance_s": {
+       "n": 5,
+       "median": 0.25900047599861864,
+       "min": 0.20505741400120314,
+       "max": 0.2730537449970143
+      },
+      "heuristic_s": {
+       "n": 5,
+       "median": 1.1244170990030398,
+       "min": 1.0228194410010474,
+       "max": 1.2792525250006292
+      },
+      "lagrange_s": {
+       "n": 5,
+       "median": 3.760845906999748,
+       "min": 3.756936484001926,
+       "max": 3.7691722710005706
+      },
+      "core_mip_s": {
+       "n": 5,
+       "median": 6.207097572998464,
+       "min": 5.493654631001846,
+       "max": 7.662544291997619
+      },
+      "polish_s": {
+       "n": 5,
+       "median": 1.5210710530009237,
+       "min": 1.5125035869968997,
+       "max": 1.5583955419970152
+      },
+      "lagrange2_s": null,
+      "mip_s": null
+     },
+     "certified_within_target": 5,
+     "reached_1pct_within_target": 5,
+     "runs": 5,
+     "all_checks_ok": true
+    },
+    "warm": {
+     "total_s": {
+      "n": 5,
+      "median": 6.326712210000551,
+      "min": 5.749474516000191,
+      "max": 10.430718674000673
+     },
+     "time_to_1pct_s": {
+      "n": 5,
+      "median": 4.1843,
+      "min": 4.0282,
+      "max": 4.2461
+     },
+     "time_to_0.5pct_s": {
+      "n": 5,
+      "median": 4.8006,
+      "min": 4.1803,
+      "max": 8.823
+     },
+     "first_feasible_s": {
+      "n": 5,
+      "median": 1.1165,
+      "min": 1.0772,
+      "max": 1.2836
+     },
+     "final_gap": {
+      "n": 5,
+      "median": 0.00293459638993717,
+      "min": 0.002355788429485519,
+      "max": 0.0036874243083703066
+     },
+     "ub_tl": {
+      "n": 5,
+      "median": 384087406490.6362,
+      "min": 383885484722.28076,
+      "max": 384390823972.1426
+     },
+     "lb_tl": {
+      "n": 5,
+      "median": 382966016739.4929,
+      "min": 382960264974.1285,
+      "max": 382981131739.1246
+     },
+     "n_hospitals": {
+      "n": 5,
+      "median": 88,
+      "min": 87,
+      "max": 92
+     },
+     "phase_s": {
+      "instance_s": {
+       "n": 5,
+       "median": 0.001436348000424914,
+       "min": 0.0013458129978971556,
+       "max": 0.0015422260003106203
+      },
+      "heuristic_s": {
+       "n": 5,
+       "median": 1.1136589600027946,
+       "min": 1.0745349300013913,
+       "max": 1.2806921170013084
+      },
+      "lagrange_s": {
+       "n": 5,
+       "median": 3.56454116399982,
+       "min": 3.1012931059995026,
+       "max": 3.7595564530020056
+      },
+      "core_mip_s": {
+       "n": 1,
+       "median": 4.021545530998992,
+       "min": 4.021545530998992,
+       "max": 4.021545530998992
+      },
+      "polish_s": {
+       "n": 5,
+       "median": 1.515350223002315,
+       "min": 1.509871230002318,
+       "max": 1.5551660620003531
+      },
+      "lagrange2_s": null,
+      "mip_s": null
+     },
+     "certified_within_target": 5,
+     "reached_1pct_within_target": 5,
+     "runs": 5,
+     "all_checks_ok": true
+    },
+    "target_s": 15.0,
+    "time_limit_s": 15.0,
+    "target_gap": 0.01
+   },
+   "runs": [
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 382117708903.12994,
+      "lb_tl": 380745563741.3981,
+      "gap": 0.003590896547743415,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp",
+      "n_hospitals": 91,
+      "count_by_class": {
+       "IV-C": 70,
+       "V-B": 21,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.39635,
+      "times": {
+       "instance_s": 0.20505741400120314,
+       "heuristic_s": 1.0228194410010474,
+       "lagrange_s": 3.7691722710005706,
+       "lagrange_b_s": 5.696650632999081,
+       "core_mip_s": 6.207097572998464,
+       "polish_s": 1.5192858460031857,
+       "check_s": 0.0020337500027380884,
+       "total_s": 12.745191702000739
+      },
+      "first_feasible_s": 1.2291,
+      "time_to_gap_s": {
+       "0.02": 4.5935,
+       "0.01": 8.7036,
+       "0.005": 11.1116
+      },
+      "lagrange": {
+       "iters": 213,
+       "sub_ms": 11.87270352791053,
+       "init_s": 0.6103028489997087,
+       "init_source": "zayif_lp",
+       "lh_calls": 6,
+       "time_s": 3.7690632289995847
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 162,
+       "arcs": 16001,
+       "status": "Time limit reached",
+       "time_s": 6.182664889001899,
+       "improved": false,
+       "primal_tl": 386673266515.73145
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": false,
+      "wall_s": 12.750949665998633,
+      "trace": [
+       {
+        "t_total": 0.2053,
+        "kind": "phase",
+        "phase": "ornek",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 1.2291,
+        "kind": "heuristic",
+        "phase": null,
+        "primal": 386673266515.7315,
+        "dual": null
+       },
+       {
+        "t_total": 1.231,
+        "kind": "phase",
+        "phase": "lagrange",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 1.8568,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 358208031578.6562
+       },
+       {
+        "t_total": 2.1132,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 368887657894.5548
+       },
+       {
+        "t_total": 2.3741,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 370687771292.99396
+       },
+       {
+        "t_total": 2.6331,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 373261999146.0286
+       },
+       {
+        "t_total": 2.8891,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 375585969840.49994
+       },
+       {
+        "t_total": 3.141,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 376095189530.2927
+       },
+       {
+        "t_total": 3.3978,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 376309571323.25494
+       },
+       {
+        "t_total": 3.6543,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 377380396629.7988
+       },
+       {
+        "t_total": 3.9114,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 377842306466.7484
+       },
+       {
+        "t_total": 4.2708,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 378246566421.4575
+       },
+       {
+        "t_total": 4.5935,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 379171333605.7398
+       },
+       {
+        "t_total": 4.8478,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 379626729463.01465
+       },
+       {
+        "t_total": 4.9998,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 386673266515.7315,
+        "dual": 379794080517.15546
+       },
+       {
+        "t_total": 5.0102,
+        "kind": "phase",
+        "phase": "cekirdek_mip",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 5.458,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.7315,
+        "dual": 379794080517.15546
+       },
+       {
+        "t_total": 5.1907,
+        "kind": "incumbent",
+        "phase": null,
+        "primal": 386673266515.73145,
+        "dual": null
+       },
+       {
+        "t_total": 5.7131,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 379940875915.42456
+       },
+       {
+        "t_total": 5.3251,
+        "kind": "log",
+        "phase": null,
+        "primal": 386673266515.73145,
+        "dual": null
+       },
+       {
+        "t_total": 5.9643,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380013220999.3182
+       },
+       {
+        "t_total": 6.2211,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380235847733.2
+       },
+       {
+        "t_total": 6.4807,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380392426017.6137
+       },
+       {
+        "t_total": 6.7428,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380476268178.0033
+       },
+       {
+        "t_total": 7.0003,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380491047416.76984
+       },
+       {
+        "t_total": 7.2594,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380552377353.2297
+       },
+       {
+        "t_total": 7.5221,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380645164757.5559
+       },
+       {
+        "t_total": 7.7815,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 386673266515.73145,
+        "dual": 380687477912.30896
+       },
+       {
+        "t_total": 7.9415,
+        "kind": "log",
+        "phase": null,
+        "primal": 386673266515.73145,
+        "dual": null
+       },
+       {
+        "t_total": 8.7036,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 384260167532.25574,
+        "dual": 380701488778.8702
+       },
+       {
+        "t_total": 9.0156,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 383774848478.3562,
+        "dual": 380713899362.23083
+       },
+       {
+        "t_total": 9.2688,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 383774848478.3562,
+        "dual": 380730690302.11176
+       },
+       {
+        "t_total": 8.9074,
+        "kind": "log",
+        "phase": null,
+        "primal": 386673266515.73145,
+        "dual": null
+       },
+       {
+        "t_total": 9.7876,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 383380397220.89716,
+        "dual": 380736468714.78625
+       },
+       {
+        "t_total": 9.5849,
+        "kind": "log",
+        "phase": null,
+        "primal": 386673266515.73145,
+        "dual": null
+       },
+       {
+        "t_total": 10.7596,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 383380397220.89716,
+        "dual": 380736468714.78625
+       },
+       {
+        "t_total": 10.6782,
+        "kind": "log",
+        "phase": null,
+        "primal": 386673266515.73145,
+        "dual": null
+       },
+       {
+        "t_total": 11.1116,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382117708903.12994,
+        "dual": 380745563741.3981
+       },
+       {
+        "t_total": 11.1119,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382117708903.12994,
+        "dual": 380745563741.3981
+       }
+      ]
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 384357848262.3796,
+      "lb_tl": 382960908508.7655,
+      "gap": 0.003634476985261043,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 92,
+      "count_by_class": {
+       "IV-C": 72,
+       "V-B": 20,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.39635,
+      "times": {
+       "instance_s": 0.0013847869995515794,
+       "heuristic_s": 1.2314468399999896,
+       "lagrange_s": 3.56454116399982,
+       "polish_s": 1.515350223002315,
+       "check_s": 0.0015732960018794984,
+       "total_s": 6.326712210000551
+      },
+      "first_feasible_s": 1.2341,
+      "time_to_gap_s": {
+       "0.02": 1.8672,
+       "0.01": 4.1843,
+       "0.005": 4.8006
+      },
+      "lagrange": {
+       "iters": 186,
+       "sub_ms": 13.150000873167455,
+       "init_s": 0.6196900849972735,
+       "init_source": "onbellek",
+       "lh_calls": 5,
+       "time_s": 3.5643872739965445
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": true,
+      "wall_s": 6.3317107889997715,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 19.503015212998434
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 381623743113.06635,
+      "lb_tl": 380771239545.77875,
+      "gap": 0.002233885031191627,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 91,
+      "count_by_class": {
+       "IV-C": 71,
+       "V-B": 20,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.7775,
+      "times": {
+       "instance_s": 0.2730537449970143,
+       "heuristic_s": 1.1244170990030398,
+       "lagrange_s": 3.760845906999748,
+       "lagrange_b_s": 5.35035475100085,
+       "core_mip_s": 5.856978750001872,
+       "polish_s": 1.5333374200017715,
+       "check_s": 0.0015498680004384369,
+       "total_s": 12.579069692001212
+      },
+      "first_feasible_s": 1.3993,
+      "time_to_gap_s": {
+       "0.02": 4.7682,
+       "0.01": 7.1382,
+       "0.005": 10.4015
+      },
+      "lagrange": {
+       "iters": 223,
+       "sub_ms": 12.016434589148568,
+       "init_s": 0.4977733170017018,
+       "init_source": "zayif_lp",
+       "lh_calls": 6,
+       "time_s": 3.7607436560028873
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 163,
+       "arcs": 16222,
+       "status": "Time limit reached",
+       "time_s": 5.832958007998968,
+       "improved": true,
+       "primal_tl": 381973310091.14624
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": false,
+      "wall_s": 12.586461802002304
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 384087406490.6362,
+      "lb_tl": 382966016739.4929,
+      "gap": 0.002919621242959574,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 88,
+      "count_by_class": {
+       "IV-C": 65,
+       "V-B": 23,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.396350000003,
+      "times": {
+       "instance_s": 0.0014979750012571458,
+       "heuristic_s": 1.0962174050000613,
+       "lagrange_s": 3.279574820000562,
+       "polish_s": 1.527948564998951,
+       "check_s": 0.001768875001289416,
+       "total_s": 5.921229579998908
+      },
+      "first_feasible_s": 1.0993,
+      "time_to_gap_s": {
+       "0.02": 1.6672,
+       "0.01": 4.0282,
+       "0.005": 4.3805
+      },
+      "lagrange": {
+       "iters": 189,
+       "sub_ms": 12.567560302007527,
+       "init_s": 0.5553829759992368,
+       "init_source": "onbellek",
+       "lh_calls": 5,
+       "time_s": 3.2794691210001474
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": true,
+      "wall_s": 5.929156043999683,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 19.038524263
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 381635871101.1757,
+      "lb_tl": 380741735315.9067,
+      "gap": 0.0023429028898386706,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 91,
+      "count_by_class": {
+       "IV-C": 71,
+       "V-B": 20,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.39635,
+      "times": {
+       "instance_s": 0.25900047599861864,
+       "heuristic_s": 1.06331873399904,
+       "lagrange_s": 3.7628542550010025,
+       "lagrange_b_s": 6.516082229001768,
+       "core_mip_s": 6.982144368997979,
+       "polish_s": 1.5210710530009237,
+       "check_s": 0.0015401689997815993,
+       "total_s": 13.607340430000477
+      },
+      "first_feasible_s": 1.3236,
+      "time_to_gap_s": {
+       "0.02": 4.5934,
+       "0.01": 8.7273,
+       "0.005": 11.5591
+      },
+      "lagrange": {
+       "iters": 221,
+       "sub_ms": 11.944722774838278,
+       "init_s": 0.5405817899991234,
+       "init_source": "zayif_lp",
+       "lh_calls": 6,
+       "time_s": 3.7626944259973243
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 162,
+       "arcs": 16133,
+       "status": "Time limit reached",
+       "time_s": 6.9621976490016095,
+       "improved": true,
+       "primal_tl": 381986286067.4617
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": false,
+      "wall_s": 13.613045460002468
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 383885484722.28076,
+      "lb_tl": 382981131739.1246,
+      "gap": 0.002355788429485519,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_mip+cila",
+      "n_hospitals": 87,
+      "count_by_class": {
+       "IV-C": 63,
+       "V-B": 24,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.396350000003,
+      "times": {
+       "instance_s": 0.0015422260003106203,
+       "heuristic_s": 1.1136589600027946,
+       "lagrange_s": 3.7595564530020056,
+       "lagrange_b_s": 3.506769102998078,
+       "core_mip_s": 4.021545530998992,
+       "polish_s": 1.5144116090013995,
+       "check_s": 0.0020929720012645703,
+       "total_s": 10.430718674000673
+      },
+      "first_feasible_s": 1.1165,
+      "time_to_gap_s": {
+       "0.02": 1.6763,
+       "0.01": 4.244,
+       "0.005": 8.823
+      },
+      "lagrange": {
+       "iters": 217,
+       "sub_ms": 12.487977763653774,
+       "init_s": 0.5460791810000956,
+       "init_source": "onbellek",
+       "lh_calls": 6,
+       "time_s": 3.759393137999723
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 150,
+       "arcs": 15620,
+       "status": "Time limit reached",
+       "time_s": 4.0114978210003756,
+       "improved": false,
+       "primal_tl": 385437767305.595
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": true,
+      "wall_s": 10.43961414899968,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 24.490603317000932
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 381623743113.06635,
+      "lb_tl": 380772042533.429,
+      "gap": 0.002231780896779763,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 91,
+      "count_by_class": {
+       "IV-C": 71,
+       "V-B": 20,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.7775,
+      "times": {
+       "instance_s": 0.25926542700108257,
+       "heuristic_s": 1.1428908579982817,
+       "lagrange_s": 3.7574390080008016,
+       "lagrange_b_s": 5.009340402997623,
+       "core_mip_s": 5.493654631001846,
+       "polish_s": 1.5583955419970152,
+       "check_s": 0.0026362419994256925,
+       "total_s": 12.229763297000318
+      },
+      "first_feasible_s": 1.4039,
+      "time_to_gap_s": {
+       "0.02": 4.6263,
+       "0.01": 7.0914,
+       "0.005": 10.1058
+      },
+      "lagrange": {
+       "iters": 228,
+       "sub_ms": 11.862366519551664,
+       "init_s": 0.4501620679984626,
+       "init_source": "zayif_lp",
+       "lh_calls": 6,
+       "time_s": 3.7573341600000276
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 163,
+       "arcs": 16222,
+       "status": "Time limit reached",
+       "time_s": 5.476182165999489,
+       "improved": true,
+       "primal_tl": 381973310091.14624
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": false,
+      "wall_s": 12.236920635001297
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 384087406490.6362,
+      "lb_tl": 382960264974.1285,
+      "gap": 0.00293459638993717,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 88,
+      "count_by_class": {
+       "IV-C": 65,
+       "V-B": 23,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.396350000003,
+      "times": {
+       "instance_s": 0.0013458129978971556,
+       "heuristic_s": 1.0745349300013913,
+       "lagrange_s": 3.1012931059995026,
+       "polish_s": 1.5551660620003531,
+       "check_s": 0.0019740869975066744,
+       "total_s": 5.749474516000191
+      },
+      "first_feasible_s": 1.0772,
+      "time_to_gap_s": {
+       "0.02": 1.6736,
+       "0.01": 4.1803,
+       "0.005": 4.1803
+      },
+      "lagrange": {
+       "iters": 169,
+       "sub_ms": 12.956513941664822,
+       "init_s": 0.583705036999163,
+       "init_source": "onbellek",
+       "lh_calls": 4,
+       "time_s": 3.1011954880013946
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": true,
+      "wall_s": 5.7544048270028725,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 18.476780201999645
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 381644744111.27844,
+      "lb_tl": 380758878062.3092,
+      "gap": 0.0023211797427791668,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 91,
+      "count_by_class": {
+       "IV-C": 71,
+       "V-B": 20,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.7775,
+      "times": {
+       "instance_s": 0.22136999099893728,
+       "heuristic_s": 1.2792525250006292,
+       "lagrange_s": 3.756936484001926,
+       "lagrange_b_s": 7.124680005999835,
+       "core_mip_s": 7.662544291997619,
+       "polish_s": 1.5125035869968997,
+       "check_s": 0.0019201520008209627,
+       "total_s": 14.459134360000462
+      },
+      "first_feasible_s": 1.502,
+      "time_to_gap_s": {
+       "0.02": 4.8983,
+       "0.01": 8.7664,
+       "0.005": 12.3399
+      },
+      "lagrange": {
+       "iters": 212,
+       "sub_ms": 11.765505098586793,
+       "init_s": 0.5774062150012469,
+       "init_source": "zayif_lp",
+       "lh_calls": 6,
+       "time_s": 3.7568247679992055
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 162,
+       "arcs": 16001,
+       "status": "Time limit reached",
+       "time_s": 7.636927930998354,
+       "improved": true,
+       "primal_tl": 382009735097.5507
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": false,
+      "wall_s": 14.464570557000116
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 384390823972.1426,
+      "lb_tl": 382973411903.9132,
+      "gap": 0.0036874243083703066,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 90,
+      "count_by_class": {
+       "IV-C": 68,
+       "V-B": 22,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18729.39635,
+      "times": {
+       "instance_s": 0.001436348000424914,
+       "heuristic_s": 1.2806921170013084,
+       "lagrange_s": 3.600468347998685,
+       "polish_s": 1.509871230002318,
+       "check_s": 0.0017465169985371176,
+       "total_s": 6.405678104001709
+      },
+      "first_feasible_s": 1.2836,
+      "time_to_gap_s": {
+       "0.02": 1.8939,
+       "0.01": 4.2461,
+       "0.005": 4.886
+      },
+      "lagrange": {
+       "iters": 215,
+       "sub_ms": 11.952405683295092,
+       "init_s": 0.5929381759997341,
+       "init_source": "onbellek",
+       "lh_calls": 6,
+       "time_s": 3.6003736439997738
+      },
+      "lagrange_phase2": null,
+      "core_mip": null,
+      "check_ok": true,
+      "instance": {
+       "I": 2604,
+       "J": 634,
+       "arcs": 81288
+      },
+      "structure_from_cache": true,
+      "wall_s": 6.410476712000673,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 21.328090416998748
+    }
+   ]
+  },
+  "2": {
+   "aggregate": {
+    "cold": {
+     "total_s": {
+      "n": 5,
+      "median": 52.524788999999146,
+      "min": 34.94018597200193,
+      "max": 60.029152821000025
+     },
+     "time_to_1pct_s": {
+      "n": 5,
+      "median": 26.8184,
+      "min": 22.1305,
+      "max": 49.2916
+     },
+     "time_to_0.5pct_s": {
+      "n": 3,
+      "median": 50.1894,
+      "min": 33.9315,
+      "max": 51.6799
+     },
+     "first_feasible_s": {
+      "n": 5,
+      "median": 6.1731,
+      "min": 5.8793,
+      "max": 6.7629
+     },
+     "final_gap": {
+      "n": 5,
+      "median": 0.004885676563554061,
+      "min": 0.0038530158011330783,
+      "max": 0.008266857419962201
+     },
+     "ub_tl": {
+      "n": 5,
+      "median": 377917125698.79346,
+      "min": 377529879455.44904,
+      "max": 379201104928.8913
+     },
+     "lb_tl": {
+      "n": 5,
+      "median": 376066303460.952,
+      "min": 376047158076.12225,
+      "max": 376075250864.5073
+     },
+     "n_hospitals": {
+      "n": 5,
+      "median": 109,
+      "min": 108,
+      "max": 111
+     },
+     "phase_s": {
+      "instance_s": {
+       "n": 5,
+       "median": 1.427181841001584,
+       "min": 1.3389368890020705,
+       "max": 1.626188911999634
+      },
+      "heuristic_s": {
+       "n": 5,
+       "median": 4.74244690499836,
+       "min": 4.53808263099927,
+       "max": 5.134408018999238
+      },
+      "lagrange_s": {
+       "n": 5,
+       "median": 15.021382446000644,
+       "min": 15.009111707997363,
+       "max": 15.19251640999937
+      },
+      "core_mip_s": {
+       "n": 5,
+       "median": 31.382487000002584,
+       "min": 12.648699889003183,
+       "max": 36.50401220999993
+      },
+      "polish_s": {
+       "n": 5,
+       "median": 0.3322703640005784,
+       "min": 0.22336242500023218,
+       "max": 2.2891281570009596
+      },
+      "lagrange2_s": null,
+      "mip_s": null
+     },
+     "certified_within_target": 4,
+     "reached_1pct_within_target": 5,
+     "runs": 5,
+     "all_checks_ok": true
+    },
+    "warm": {
+     "total_s": {
+      "n": 5,
+      "median": 26.841838829001063,
+      "min": 25.38708318999852,
+      "max": 57.47023195899965
+     },
+     "time_to_1pct_s": {
+      "n": 4,
+      "median": 22.927599999999998,
+      "min": 19.0186,
+      "max": 24.4498
+     },
+     "time_to_0.5pct_s": {
+      "n": 4,
+      "median": 24.45,
+      "min": 23.4136,
+      "max": 40.0564
+     },
+     "first_feasible_s": {
+      "n": 5,
+      "median": 5.3505,
+      "min": 5.1414,
+      "max": 5.5341
+     },
+     "final_gap": {
+      "n": 5,
+      "median": 0.0037925092454260284,
+      "min": 0.0026381902123241733,
+      "max": 0.011528846720398863
+     },
+     "ub_tl": {
+      "n": 5,
+      "median": 380202351739.7479,
+      "min": 379775297850.4557,
+      "max": 383183049944.0251
+     },
+     "lb_tl": {
+      "n": 5,
+      "median": 378765391295.3655,
+      "min": 378757703551.21674,
+      "max": 378773378376.7841
+     },
+     "n_hospitals": {
+      "n": 5,
+      "median": 110,
+      "min": 108,
+      "max": 112
+     },
+     "phase_s": {
+      "instance_s": {
+       "n": 5,
+       "median": 0.0029003700001339894,
+       "min": 0.0020958310014975723,
+       "max": 0.0030837009981041774
+      },
+      "heuristic_s": {
+       "n": 5,
+       "median": 5.344732790003036,
+       "min": 5.137013127998216,
+       "max": 5.527813917997264
+      },
+      "lagrange_s": {
+       "n": 5,
+       "median": 13.785259424999822,
+       "min": 11.528426933000446,
+       "max": 15.022803022999142
+      },
+      "core_mip_s": {
+       "n": 5,
+       "median": 5.722954195996863,
+       "min": 4.768969279000885,
+       "max": 38.1498319530001
+      },
+      "polish_s": {
+       "n": 5,
+       "median": 0.394526127998688,
+       "min": 0.2953035819991783,
+       "max": 2.7430180519986607
+      },
+      "lagrange2_s": null,
+      "mip_s": null
+     },
+     "certified_within_target": 4,
+     "reached_1pct_within_target": 4,
+     "runs": 5,
+     "all_checks_ok": true
+    },
+    "target_s": 60.0,
+    "time_limit_s": 60.0,
+    "target_gap": 0.01
+   },
+   "runs": [
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 379201104928.8913,
+      "lb_tl": 376066303460.952,
+      "gap": 0.008266857419962201,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_mip+cila",
+      "n_hospitals": 111,
+      "count_by_class": {
+       "IV-C": 106,
+       "V-B": 5,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18801.52835,
+      "times": {
+       "instance_s": 1.427181841001584,
+       "heuristic_s": 4.74244690499836,
+       "lagrange_s": 15.023269160999916,
+       "lagrange_b_s": 36.05537711600118,
+       "core_mip_s": 36.50401220999993,
+       "polish_s": 2.2891281570009596,
+       "check_s": 0.0027921910004806705,
+       "total_s": 60.029152821000025
+      },
+      "first_feasible_s": 6.1731,
+      "time_to_gap_s": {
+       "0.02": 19.2105,
+       "0.01": 49.2916,
+       "0.005": null
+      },
+      "lagrange": {
+       "iters": 393,
+       "sub_ms": 29.172877789375523,
+       "init_s": 1.0510331910008972,
+       "init_source": "zayif_lp",
+       "lh_calls": 13,
+       "time_s": 15.023156929000834
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 159,
+       "arcs": 19130,
+       "status": "Time limit reached",
+       "time_s": 36.479805847000534,
+       "improved": false,
+       "primal_tl": 382029700828.7366
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": false,
+      "wall_s": 60.03856726400045,
+      "trace": [
+       {
+        "t_total": 1.4274,
+        "kind": "phase",
+        "phase": "ornek",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 6.1731,
+        "kind": "heuristic",
+        "phase": null,
+        "primal": 390423726061.8295,
+        "dual": null
+       },
+       {
+        "t_total": 6.1769,
+        "kind": "phase",
+        "phase": "lagrange",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 7.2579,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 350345122306.016
+       },
+       {
+        "t_total": 7.5144,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 354449881952.7432
+       },
+       {
+        "t_total": 7.7844,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 355454031613.9026
+       },
+       {
+        "t_total": 8.053,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 358510878519.63
+       },
+       {
+        "t_total": 8.3284,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 359934026572.9158
+       },
+       {
+        "t_total": 8.5898,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 362010280510.81146
+       },
+       {
+        "t_total": 8.8643,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 363493148177.38983
+       },
+       {
+        "t_total": 9.1393,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 366967070585.82776
+       },
+       {
+        "t_total": 9.3894,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 367415824021.7566
+       },
+       {
+        "t_total": 9.6745,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 368430265656.998
+       },
+       {
+        "t_total": 9.9276,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 369463219811.0319
+       },
+       {
+        "t_total": 10.1951,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 370186899741.269
+       },
+       {
+        "t_total": 10.5918,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 370551797775.629
+       },
+       {
+        "t_total": 10.8686,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 370555320506.38715
+       },
+       {
+        "t_total": 11.1325,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 371372936783.6727
+       },
+       {
+        "t_total": 11.4022,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 371918842119.0039
+       },
+       {
+        "t_total": 11.659,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 372301239381.5718
+       },
+       {
+        "t_total": 11.9149,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 372715366525.8806
+       },
+       {
+        "t_total": 12.2426,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 373016671715.1278
+       },
+       {
+        "t_total": 12.5191,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 373188436265.5332
+       },
+       {
+        "t_total": 12.7885,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 373601711519.0022
+       },
+       {
+        "t_total": 13.0642,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 373794432976.1918
+       },
+       {
+        "t_total": 13.3252,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 374129684666.82465
+       },
+       {
+        "t_total": 13.576,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 374209905611.71356
+       },
+       {
+        "t_total": 13.8966,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 374314504428.64813
+       },
+       {
+        "t_total": 14.1552,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 374433587477.7409
+       },
+       {
+        "t_total": 14.4193,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 374585249932.6221
+       },
+       {
+        "t_total": 14.6924,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 390423726061.8295,
+        "dual": 374696820657.59796
+       },
+       {
+        "t_total": 15.0343,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 374776335226.444
+       },
+       {
+        "t_total": 15.2889,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 374907523768.79095
+       },
+       {
+        "t_total": 15.549,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 374933507724.8499
+       },
+       {
+        "t_total": 15.8352,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 374951504991.3276
+       },
+       {
+        "t_total": 16.1094,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 374954730266.1722
+       },
+       {
+        "t_total": 16.3804,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375078805840.64545
+       },
+       {
+        "t_total": 16.7747,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375199880183.14514
+       },
+       {
+        "t_total": 17.0364,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375258194178.06323
+       },
+       {
+        "t_total": 17.3049,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375329694642.6229
+       },
+       {
+        "t_total": 17.571,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375373236337.02313
+       },
+       {
+        "t_total": 17.8238,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375446291779.69275
+       },
+       {
+        "t_total": 18.0995,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375497495446.2583
+       },
+       {
+        "t_total": 18.3664,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375537843021.8068
+       },
+       {
+        "t_total": 18.6252,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375571432591.7745
+       },
+       {
+        "t_total": 18.8761,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 387534785664.31885,
+        "dual": 375618408785.04785
+       },
+       {
+        "t_total": 19.2105,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382696224211.36957,
+        "dual": 375689429743.7508
+       },
+       {
+        "t_total": 19.4848,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382696224211.36957,
+        "dual": 375736666669.48553
+       },
+       {
+        "t_total": 19.7445,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382696224211.36957,
+        "dual": 375779168129.82275
+       },
+       {
+        "t_total": 19.9974,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382029700828.7366,
+        "dual": 375798256330.50604
+       },
+       {
+        "t_total": 20.2688,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382029700828.7366,
+        "dual": 375801656074.89453
+       },
+       {
+        "t_total": 20.5356,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382029700828.7366,
+        "dual": 375830898266.11633
+       },
+       {
+        "t_total": 20.8008,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382029700828.7366,
+        "dual": 375836867575.4999
+       },
+       {
+        "t_total": 21.0712,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382029700828.7366,
+        "dual": 375856223202.0824
+       },
+       {
+        "t_total": 21.1998,
+        "kind": "lagrange",
+        "phase": 1,
+        "primal": 382029700828.7366,
+        "dual": 375862450259.6004
+       },
+       {
+        "t_total": 21.2145,
+        "kind": "phase",
+        "phase": "cekirdek_mip",
+        "primal": null,
+        "dual": null
+       },
+       {
+        "t_total": 21.6895,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375862450259.6004
+       },
+       {
+        "t_total": 21.441,
+        "kind": "incumbent",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 21.962,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375862450259.6004
+       },
+       {
+        "t_total": 21.598,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 22.2315,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375862450259.6004
+       },
+       {
+        "t_total": 22.4958,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375862450259.6004
+       },
+       {
+        "t_total": 22.7661,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375862450259.6004
+       },
+       {
+        "t_total": 23.0167,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375864556998.00397
+       },
+       {
+        "t_total": 23.2733,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375877263455.41187
+       },
+       {
+        "t_total": 22.9353,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 23.5339,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375896014486.8637
+       },
+       {
+        "t_total": 23.81,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375916008732.5948
+       },
+       {
+        "t_total": 23.6264,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 24.0749,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375917206185.1885
+       },
+       {
+        "t_total": 24.3423,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375933907440.7529
+       },
+       {
+        "t_total": 24.5976,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375951001084.89124
+       },
+       {
+        "t_total": 24.8599,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375955452470.84644
+       },
+       {
+        "t_total": 25.123,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375974885247.4813
+       },
+       {
+        "t_total": 24.6485,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 25.3826,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375982753874.777
+       },
+       {
+        "t_total": 25.193,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 25.6433,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375990606931.68744
+       },
+       {
+        "t_total": 25.9138,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375995368402.2505
+       },
+       {
+        "t_total": 26.1823,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 375999367076.8051
+       },
+       {
+        "t_total": 26.4494,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376004648875.06793
+       },
+       {
+        "t_total": 26.7018,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376007441708.0807
+       },
+       {
+        "t_total": 26.9558,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376012086511.18146
+       },
+       {
+        "t_total": 27.2182,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376015809251.9703
+       },
+       {
+        "t_total": 27.4923,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376017979493.17554
+       },
+       {
+        "t_total": 27.7514,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376020502799.8672
+       },
+       {
+        "t_total": 27.4577,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 28.0264,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376021874800.0645
+       },
+       {
+        "t_total": 28.2812,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376024981760.3282
+       },
+       {
+        "t_total": 27.9846,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 28.546,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376025302338.7737
+       },
+       {
+        "t_total": 28.8124,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376026080139.186
+       },
+       {
+        "t_total": 28.6024,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 29.0759,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376027833393.32367
+       },
+       {
+        "t_total": 29.3457,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376030115403.9105
+       },
+       {
+        "t_total": 29.617,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376031531659.0981
+       },
+       {
+        "t_total": 29.3922,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 29.8783,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376032506896.29407
+       },
+       {
+        "t_total": 30.1461,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376034533962.0487
+       },
+       {
+        "t_total": 29.898,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 30.4129,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376036143605.5114
+       },
+       {
+        "t_total": 30.685,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376037529032.51294
+       },
+       {
+        "t_total": 30.9468,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376038429791.55334
+       },
+       {
+        "t_total": 30.6313,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 31.2219,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376038900020.2548
+       },
+       {
+        "t_total": 31.4857,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376039749817.09424
+       },
+       {
+        "t_total": 31.2584,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 31.7591,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376040777008.0834
+       },
+       {
+        "t_total": 32.0129,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376042163860.4829
+       },
+       {
+        "t_total": 32.2746,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376043732519.75635
+       },
+       {
+        "t_total": 32.3073,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 32.9497,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 33.6796,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376044285922.6493
+       },
+       {
+        "t_total": 33.6513,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 34.4036,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376045596615.7404
+       },
+       {
+        "t_total": 34.6559,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376046048031.6368
+       },
+       {
+        "t_total": 34.3716,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 34.9225,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376048129125.9487
+       },
+       {
+        "t_total": 35.1876,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376048166816.83167
+       },
+       {
+        "t_total": 35.4585,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376048846977.492
+       },
+       {
+        "t_total": 35.0496,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 35.7213,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 382029700828.7366,
+        "dual": 376049456127.4474
+       },
+       {
+        "t_total": 36.2076,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376049997394.52905
+       },
+       {
+        "t_total": 35.9289,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 36.46,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376050608157.40576
+       },
+       {
+        "t_total": 36.729,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376050815629.5438
+       },
+       {
+        "t_total": 36.8869,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 37.419,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376051402107.7728
+       },
+       {
+        "t_total": 37.6708,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376052707596.6893
+       },
+       {
+        "t_total": 37.8312,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 38.9915,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376052707596.6893
+       },
+       {
+        "t_total": 38.7117,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 39.4316,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376053157166.7708
+       },
+       {
+        "t_total": 39.6905,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376053197700.57776
+       },
+       {
+        "t_total": 39.4022,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 40.1076,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376054632861.4431
+       },
+       {
+        "t_total": 40.361,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376056228910.875
+       },
+       {
+        "t_total": 40.6162,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376056825911.66327
+       },
+       {
+        "t_total": 40.2816,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 40.9836,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376057216590.1736
+       },
+       {
+        "t_total": 41.2558,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376057237672.69135
+       },
+       {
+        "t_total": 41.5144,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376057906470.34064
+       },
+       {
+        "t_total": 41.7706,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376058142044.4579
+       },
+       {
+        "t_total": 41.3503,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 42.2933,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 42.9876,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376058415631.02576
+       },
+       {
+        "t_total": 43.2458,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376058966534.704
+       },
+       {
+        "t_total": 43.5168,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376059655375.6147
+       },
+       {
+        "t_total": 43.2233,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 43.7669,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376060440017.0525
+       },
+       {
+        "t_total": 44.0406,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376060684562.5281
+       },
+       {
+        "t_total": 44.5076,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376061151126.39685
+       },
+       {
+        "t_total": 44.1451,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 44.7685,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376061544379.8476
+       },
+       {
+        "t_total": 45.121,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 46.2197,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376062027607.4091
+       },
+       {
+        "t_total": 46.4796,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376062206897.72394
+       },
+       {
+        "t_total": 46.2635,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 46.731,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376062228096.0605
+       },
+       {
+        "t_total": 46.9856,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376062348122.36835
+       },
+       {
+        "t_total": 47.1984,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 47.6636,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376062857492.98004
+       },
+       {
+        "t_total": 47.9248,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376063038592.2125
+       },
+       {
+        "t_total": 48.3796,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376063266023.1494
+       },
+       {
+        "t_total": 48.6408,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376063716261.7138
+       },
+       {
+        "t_total": 48.2313,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 48.9118,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 380728565216.2371,
+        "dual": 376063878829.6936
+       },
+       {
+        "t_total": 49.2916,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064050646.8504
+       },
+       {
+        "t_total": 49.5513,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064125541.5532
+       },
+       {
+        "t_total": 49.1312,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 49.8289,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064231943.60944
+       },
+       {
+        "t_total": 50.0921,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064237899.7107
+       },
+       {
+        "t_total": 50.3584,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064525915.9399
+       },
+       {
+        "t_total": 50.6184,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064717511.4136
+       },
+       {
+        "t_total": 50.2667,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 50.9835,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064814583.1405
+       },
+       {
+        "t_total": 51.2478,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376064913110.4602
+       },
+       {
+        "t_total": 51.5029,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065033757.323
+       },
+       {
+        "t_total": 51.7563,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065057605.4011
+       },
+       {
+        "t_total": 51.5004,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 52.0194,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065131440.23145
+       },
+       {
+        "t_total": 52.3797,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065244263.59143
+       },
+       {
+        "t_total": 52.6396,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065395144.70685
+       },
+       {
+        "t_total": 53.0996,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065522448.09247
+       },
+       {
+        "t_total": 52.8047,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 53.3597,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065613744.5495
+       },
+       {
+        "t_total": 53.7796,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065762745.97144
+       },
+       {
+        "t_total": 54.0301,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065854018.30096
+       },
+       {
+        "t_total": 54.3008,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065884624.96204
+       },
+       {
+        "t_total": 53.9664,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 55.1557,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 55.8955,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065895283.4336
+       },
+       {
+        "t_total": 56.1562,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376065945071.0324
+       },
+       {
+        "t_total": 56.4179,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376066058274.5494
+       },
+       {
+        "t_total": 56.3369,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 56.8076,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376066104565.8084
+       },
+       {
+        "t_total": 57.0682,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376066169238.53186
+       },
+       {
+        "t_total": 57.3428,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376066188903.05206
+       },
+       {
+        "t_total": 57.6515,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376066303460.952
+       },
+       {
+        "t_total": 57.6517,
+        "kind": "lagrange",
+        "phase": 2,
+        "primal": 379547089732.4872,
+        "dual": 376066303460.952
+       },
+       {
+        "t_total": 57.2768,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 57.2793,
+        "kind": "log",
+        "phase": null,
+        "primal": 382029700828.7366,
+        "dual": null
+       },
+       {
+        "t_total": 60.0206,
+        "kind": "polish",
+        "phase": null,
+        "primal": 379201104928.8913,
+        "dual": null
+       }
+      ]
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 380202351739.7479,
+      "lb_tl": 378760430805.6422,
+      "gap": 0.0037925092454260284,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 109,
+      "count_by_class": {
+       "IV-C": 104,
+       "V-B": 5,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18791.772699999998,
+      "times": {
+       "instance_s": 0.0022745060014131013,
+       "heuristic_s": 5.137013127998216,
+       "lagrange_s": 13.930855406000774,
+       "lagrange_b_s": 4.426442771000438,
+       "core_mip_s": 5.000464737000584,
+       "polish_s": 2.7430180519986607,
+       "check_s": 0.0027714139978343155,
+       "total_s": 26.841838829001063
+      },
+      "first_feasible_s": 5.1414,
+      "time_to_gap_s": {
+       "0.02": 14.8237,
+       "0.01": 23.4136,
+       "0.005": 23.4136
+      },
+      "lagrange": {
+       "iters": 361,
+       "sub_ms": 29.71216157987198,
+       "init_s": 1.105935520001367,
+       "init_source": "onbellek",
+       "lh_calls": 12,
+       "time_s": 13.93070540500048
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 152,
+       "arcs": 18192,
+       "status": "Target for objective reached",
+       "time_s": 4.983011289998103,
+       "improved": true,
+       "primal_tl": 380469991584.24396
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": true,
+      "wall_s": 26.851718015001097,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 87.33797821000189
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 378712480214.50006,
+      "lb_tl": 376065646320.1652,
+      "gap": 0.006989032663607207,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 109,
+      "count_by_class": {
+       "IV-C": 105,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18824.7661,
+      "times": {
+       "instance_s": 1.626188911999634,
+       "heuristic_s": 5.134408018999238,
+       "lagrange_s": 15.015251175998856,
+       "lagrange_b_s": 35.207201091998286,
+       "core_mip_s": 35.771082008999656,
+       "polish_s": 0.2577204039989738,
+       "check_s": 0.0031951829987519886,
+       "total_s": 57.83773649700015
+      },
+      "first_feasible_s": 6.7629,
+      "time_to_gap_s": {
+       "0.02": 18.9736,
+       "0.01": 34.5066,
+       "0.005": null
+      },
+      "lagrange": {
+       "iters": 412,
+       "sub_ms": 27.779998554361615,
+       "init_s": 1.0826052560005337,
+       "init_source": "zayif_lp",
+       "lh_calls": 14,
+       "time_s": 15.015053978000651
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 157,
+       "arcs": 17913,
+       "status": "Time limit reached",
+       "time_s": 35.743601165002474,
+       "improved": true,
+       "primal_tl": 379287869575.45856
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": false,
+      "wall_s": 57.85132335099843
+     },
+     "warm": {
+      "status": "sure_doldu",
+      "ub_tl": 383183049944.0251,
+      "lb_tl": 378765391295.3655,
+      "gap": 0.011528846720398863,
+      "lb_source": "lagrange",
+      "solution_source": "lagrange_lp+cila",
+      "n_hospitals": 112,
+      "count_by_class": {
+       "IV-C": 108,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18841.38845,
+      "times": {
+       "instance_s": 0.0029003700001339894,
+       "heuristic_s": 5.344732790003036,
+       "lagrange_s": 13.546319419998326,
+       "lagrange_b_s": 6.827415390001988,
+       "core_mip_s": 38.1498319530001,
+       "polish_s": 0.394526127998688,
+       "check_s": 0.003053435000765603,
+       "total_s": 57.47023195899965
+      },
+      "first_feasible_s": 5.3505,
+      "time_to_gap_s": {
+       "0.02": 16.8928,
+       "0.01": null,
+       "0.005": null
+      },
+      "lagrange": {
+       "iters": 359,
+       "sub_ms": 28.21001652758628,
+       "init_s": 1.3482694379999884,
+       "init_source": "onbellek",
+       "lh_calls": 12,
+       "time_s": 13.546130791000905
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 151,
+       "arcs": 17980,
+       "status": "Time limit reached",
+       "time_s": 38.1344018589989,
+       "improved": false,
+       "primal_tl": 383817682453.6526
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": true,
+      "wall_s": 57.48069686999952,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 115.84239268999954
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 377917125698.79346,
+      "lb_tl": 376070744854.80115,
+      "gap": 0.004885676563554061,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip",
+      "n_hospitals": 109,
+      "count_by_class": {
+       "IV-C": 105,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18824.24615,
+      "times": {
+       "instance_s": 1.3419134840005427,
+       "heuristic_s": 4.67673417900005,
+       "lagrange_s": 15.021382446000644,
+       "lagrange_b_s": 29.154021695001575,
+       "core_mip_s": 29.641584152999712,
+       "polish_s": 0.3322703640005784,
+       "check_s": 0.004159593998338096,
+       "total_s": 51.0519299109983
+      },
+      "first_feasible_s": 6.0221,
+      "time_to_gap_s": {
+       "0.02": 18.5193,
+       "0.01": 22.1305,
+       "0.005": 50.1894
+      },
+      "lagrange": {
+       "iters": 406,
+       "sub_ms": 28.095906813155516,
+       "init_s": 1.0984487409987196,
+       "init_source": "zayif_lp",
+       "lh_calls": 14,
+       "time_s": 15.021224948999588
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 155,
+       "arcs": 17632,
+       "status": "Time limit reached",
+       "time_s": 29.613222357998893,
+       "improved": true,
+       "primal_tl": 377917125698.7935
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": false,
+      "wall_s": 51.066312208000454
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 379775297850.4557,
+      "lb_tl": 378773378376.7841,
+      "gap": 0.0026381902123241733,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 108,
+      "count_by_class": {
+       "IV-C": 102,
+       "V-B": 6,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18791.4294,
+      "times": {
+       "instance_s": 0.0030837009981041774,
+       "heuristic_s": 5.527813917997264,
+       "lagrange_s": 11.528426933000446,
+       "lagrange_b_s": 23.029698469999857,
+       "core_mip_s": 23.53106567800205,
+       "polish_s": 0.2953035819991783,
+       "check_s": 0.0030061790021136403,
+       "total_s": 40.91938171500078
+      },
+      "first_feasible_s": 5.5341,
+      "time_to_gap_s": {
+       "0.02": 13.6823,
+       "0.01": 19.0186,
+       "0.005": 40.0564
+      },
+      "lagrange": {
+       "iters": 320,
+       "sub_ms": 27.28862850772512,
+       "init_s": 1.114512434000062,
+       "init_source": "onbellek",
+       "lh_calls": 11,
+       "time_s": 11.528320063000137
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 152,
+       "arcs": 18376,
+       "status": "Target for objective reached",
+       "time_s": 23.519516869000654,
+       "improved": true,
+       "primal_tl": 379841961810.9906
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": true,
+      "wall_s": 40.93574194699977,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 92.46209166900007
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 377799067154.5161,
+      "lb_tl": 376047158076.12225,
+      "gap": 0.004637145061232632,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip",
+      "n_hospitals": 109,
+      "count_by_class": {
+       "IV-C": 105,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18818.0345,
+      "times": {
+       "instance_s": 1.6101296469969384,
+       "heuristic_s": 4.999337042001571,
+       "lagrange_s": 15.19251640999937,
+       "lagrange_b_s": 12.12525121300132,
+       "core_mip_s": 12.648699889003183,
+       "polish_s": 0.4614709250017768,
+       "check_s": 0.004386217002320336,
+       "total_s": 34.94018597200193
+      },
+      "first_feasible_s": 6.6118,
+      "time_to_gap_s": {
+       "0.02": 19.275,
+       "0.01": 22.8795,
+       "0.005": 33.9315
+      },
+      "lagrange": {
+       "iters": 398,
+       "sub_ms": 28.509259874744135,
+       "init_s": 1.2359580980009923,
+       "init_source": "zayif_lp",
+       "lh_calls": 14,
+       "time_s": 15.19237694900221
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 157,
+       "arcs": 17950,
+       "status": "Optimal",
+       "time_s": 12.62891363000017,
+       "improved": true,
+       "primal_tl": 377799067154.5161
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": false,
+      "wall_s": 34.957484114998806
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 380074722846.07574,
+      "lb_tl": 378757703551.21674,
+      "gap": 0.0034651588640173285,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip",
+      "n_hospitals": 110,
+      "count_by_class": {
+       "IV-C": 106,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18791.77269999999,
+      "times": {
+       "instance_s": 0.002974169998196885,
+       "heuristic_s": 5.462763030998758,
+       "lagrange_s": 13.785259424999822,
+       "lagrange_b_s": 5.256097396999394,
+       "core_mip_s": 5.722954195996863,
+       "polish_s": 0.38375867899958394,
+       "check_s": 0.003836555999441771,
+       "total_s": 25.38708318999852
+      },
+      "first_feasible_s": 5.4695,
+      "time_to_gap_s": {
+       "0.02": 14.3613,
+       "0.01": 24.4498,
+       "0.005": 24.4498
+      },
+      "lagrange": {
+       "iters": 376,
+       "sub_ms": 27.28690773354337,
+       "init_s": 1.2442422620006255,
+       "init_source": "onbellek",
+       "lh_calls": 13,
+       "time_s": 13.78515196099761
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 151,
+       "arcs": 18275,
+       "status": "Target for objective reached",
+       "time_s": 5.711771220998344,
+       "improved": true,
+       "primal_tl": 380074722846.07587
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": true,
+      "wall_s": 25.400454930000706,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 60.78294315700259
+    },
+    {
+     "cold": {
+      "status": "optimal",
+      "ub_tl": 377529879455.44904,
+      "lb_tl": 376075250864.5073,
+      "gap": 0.0038530158011330783,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip+cila",
+      "n_hospitals": 108,
+      "count_by_class": {
+       "IV-C": 104,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18799.647849999998,
+      "times": {
+       "instance_s": 1.3389368890020705,
+       "heuristic_s": 4.53808263099927,
+       "lagrange_s": 15.009111707997363,
+       "lagrange_b_s": 30.889542825996614,
+       "core_mip_s": 31.382487000002584,
+       "polish_s": 0.22336242500023218,
+       "check_s": 0.002589020998129854,
+       "total_s": 52.524788999999146
+      },
+      "first_feasible_s": 5.8793,
+      "time_to_gap_s": {
+       "0.02": 17.4737,
+       "0.01": 26.8184,
+       "0.005": 51.6799
+      },
+      "lagrange": {
+       "iters": 423,
+       "sub_ms": 26.9144899364293,
+       "init_s": 1.0540627629998198,
+       "init_source": "zayif_lp",
+       "lh_calls": 15,
+       "time_s": 15.008904395999707
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 157,
+       "arcs": 18609,
+       "status": "Target for objective reached",
+       "time_s": 31.359747512000467,
+       "improved": true,
+       "primal_tl": 377529991436.99713
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": false,
+      "wall_s": 52.53407725099896
+     },
+     "warm": {
+      "status": "optimal",
+      "ub_tl": 380417157479.8535,
+      "lb_tl": 378770681206.58307,
+      "gap": 0.004328081005015244,
+      "lb_source": "lagrange",
+      "solution_source": "cekirdek_mip",
+      "n_hospitals": 110,
+      "count_by_class": {
+       "IV-C": 106,
+       "V-B": 4,
+       "V-C": 0,
+       "V-D": 0
+      },
+      "total_beds": 18791.772699999998,
+      "times": {
+       "instance_s": 0.0020958310014975723,
+       "heuristic_s": 5.2715321579999,
+       "lagrange_s": 15.022803022999142,
+       "lagrange_b_s": 4.200877254999796,
+       "core_mip_s": 4.768969279000885,
+       "polish_s": 0.43476874599946314,
+       "check_s": 0.004036379999888595,
+       "total_s": 25.527204212998186
+      },
+      "first_feasible_s": 5.2758,
+      "time_to_gap_s": {
+       "0.02": 17.5187,
+       "0.01": 22.4416,
+       "0.005": 24.4502
+      },
+      "lagrange": {
+       "iters": 421,
+       "sub_ms": 27.700458646269805,
+       "init_s": 1.0436893750011222,
+       "init_source": "onbellek",
+       "lh_calls": 15,
+       "time_s": 15.02262669600168
+      },
+      "lagrange_phase2": null,
+      "core_mip": {
+       "candidates": 152,
+       "arcs": 18096,
+       "status": "Target for objective reached",
+       "time_s": 4.754270040000847,
+       "improved": true,
+       "primal_tl": 380417157479.8535
+      },
+      "check_ok": true,
+      "instance": {
+       "I": 4842,
+       "J": 891,
+       "arcs": 162497
+      },
+      "structure_from_cache": true,
+      "wall_s": 25.540662130999408,
+      "change": {
+       "cost.fixed_per_hospital": 275000000.0
+      }
+     },
+     "process_wall_s": 78.53863046900005
+    }
+   ]
+  }
+ },
+ "baseline": {
+  "5": {
+   "time_limit_s": 120.0,
+   "final": {
+    "status": "optimal",
+    "ub_tl": 402823199454.7245,
+    "lb_tl": 402400113943.09717,
+    "gap": 0.001050300757751844,
+    "lb_source": "mip",
+    "source": "mip+cila",
+    "total_s": 21.090274950000094
+   },
+   "root_lp": {
+    "mip_first_meaningful_bound_s": 12.042533874511719,
+    "mip_first_meaningful_bound_total_s": 13.605033874511719,
+    "standalone_strong_lp_s": 6.845760027000324,
+    "standalone_strong_lp_tl": 401108749441.26733,
+    "standalone_weak_lp_s": 0.2165379470006883,
+    "standalone_weak_lp_tl": 378375488435.60803
+   },
+   "heuristic": {
+    "time_s": 1.5111029899999266,
+    "objective_tl": 409275402450.88794
+   },
+   "first_feasible_s": 1.5535,
+   "time_to_gap_s": {
+    "0.02": 13.605,
+    "0.01": 19.8603,
+    "0.005": 19.8603
+   }
+  },
+  "3": {
+   "time_limit_s": 300.0,
+   "final": {
+    "status": "optimal",
+    "ub_tl": 381642693438.22003,
+    "lb_tl": 381025712161.7879,
+    "gap": 0.0016166463737946688,
+    "lb_source": "mip",
+    "source": "mip+cila",
+    "total_s": 199.59314421599993
+   },
+   "root_lp": {
+    "mip_first_meaningful_bound_s": 141.41914010047913,
+    "mip_first_meaningful_bound_total_s": 143.78924010047913,
+    "standalone_strong_lp_s": 126.0980090740004,
+    "standalone_strong_lp_tl": 379955991918.22974,
+    "standalone_weak_lp_s": 0.3574354949996632,
+    "standalone_weak_lp_tl": 355793783808.8972
+   },
+   "heuristic": {
+    "time_s": 2.141480443000546,
+    "objective_tl": 385614011983.60876
+   },
+   "first_feasible_s": 2.3486,
+   "time_to_gap_s": {
+    "0.02": 143.7892,
+    "0.01": 192.2475,
+    "0.005": 192.2475
+   }
+  },
+  "2": {
+   "time_limit_s": 60.0,
+   "final": {
+    "status": "sure_doldu",
+    "ub_tl": 390423726061.8295,
+    "lb_tl": 347490537253.9898,
+    "gap": 0.10996562437663074,
+    "lb_source": "zayif_lp",
+    "source": "sezgisel",
+    "total_s": 58.85884463599996
+   },
+   "root_lp": {
+    "mip_first_meaningful_bound_s": null,
+    "mip_first_meaningful_bound_total_s": null,
+    "standalone_strong_lp_s": null,
+    "standalone_strong_lp_tl": null,
+    "standalone_weak_lp_s": 1.0246465329992134,
+    "standalone_weak_lp_tl": 347490537253.9898
+   },
+   "heuristic": {
+    "time_s": 6.846885128000395,
+    "objective_tl": 390423726061.8295
+   },
+   "first_feasible_s": 8.3253,
+   "time_to_gap_s": {
+    "0.02": null,
+    "0.01": null,
+    "0.005": null
+   }
+  }
+ }
+}

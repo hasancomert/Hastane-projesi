@@ -193,10 +193,9 @@ def cost_breakdown(inst: Instance, sol: Solution) -> dict:
 def per_hospital(inst: Instance, sol: Solution) -> list[dict]:
     """Hastane başına: atanan talep, nüfus, ortalama/en uzak yol km, maliyet kırılımı."""
     s = inst.s
-    used = sol.x > 0
-    a = np.flatnonzero(used)
     pos = np.full(inst.nJ, -1, dtype=np.int64)
     pos[sol.open_j] = np.arange(sol.n_open)
+    a = np.flatnonzero((sol.x > 0) & (pos[s.arc_j] >= 0))      # (kapalı hücreye tolerans içi pay sayılmaz)
     hp = pos[s.arc_j[a]]
     xa = sol.x[a]
     pop = np.bincount(hp, s.w[s.arc_i[a]] * xa, minlength=sol.n_open)

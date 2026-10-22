@@ -3271,7 +3271,7 @@
       "izgara_aday_kapsama_hesap"
     ],
     "derivation": null,
-    "rationale": "Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal varsayılan verilmemiş. 250 kişi / hücre (3 km'de 9 km² başına ≈28 kişi/km²) seyrek nüfuslu hücreleri aday kümesinden çıkarıp değişken sayısını azaltan düşük bir eşik olarak seçildi. Kalibre ızgarada R ile birlikte denetlendi: 3 km'de |J| = 634 aday nüfusun %98,5'ini barındırıyor ve R = 30 km (yol, mesafeye bağlı dolambaç) içinde adayı olmayan nüfuslu hücre yok (ayrıntı notlarda). Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı.",
+    "rationale": "Şartname 4.3.6: aday = il içinde, büyük kısmı su olmayan, nüfusu ≥ P_min olan veya yerleşime yakın hücre; sayısal varsayılan verilmemiş. 250 kişi / hücre (3 km'de 9 km² başına ≈28 kişi/km²) seyrek nüfuslu hücreleri aday kümesinden çıkarıp değişken sayısını azaltan düşük bir eşik olarak seçildi. Kalibre ızgarada R ile birlikte denetlendi: 3 km'de |J| = 634 aday nüfusun %98,5'ini barındırıyor ve R = 30 km (yol, mesafeye bağlı dolambaç) içinde adayı olmayan nüfuslu hücre yok (ayrıntı notlarda). Eşik hücre başına olduğundan hücre boyutu değişince yeniden ayarlanmalı. Faz 3 ölçümü (ayar deneyi T2): P_min bir hız ayarı olarak kullanılmamalı — optimum, nüfusu az kırsal hücrelere de hastane açıyor (3 km'de 88 optimum yerin 17'sinde nüfus < 1.000); P_min = 500 / 1.000 / 2.500 3 km'de amacı %2,1 / %3,0 / %3,5 kötüleştiriyor (en az %1,2 / %2,0 / %2,6'sı kanıtlı).",
     "range": [
       0,
       5000
@@ -3311,22 +3311,22 @@
   "grid.k_nearest": {
     "label": "Her talep hücresi için tutulan en yakın aday sayısı (k)",
     "value": 50,
-    "unit": "aday / talep hücresi",
+    "unit": "aday / talep hücresi (0 = R içindeki tümü)",
     "status": "model_secimi",
     "source_ids": [
       "izgara_aday_kapsama_hesap"
     ],
     "derivation": null,
-    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir: seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak amaçlanır; atama değişkeni sayısı ≈ |I|·k olur (k'ıncı mesafeye eşit adayların hepsi tutulduğundan biraz fazla; kalibre ızgarada dağılım notlarda). Çözümde talep sıklıkla k'ıncı komşuya atanıyorsa k artırılmalı (k'nın etkisi Faz 3'te raporlanacak).",
+    "rationale": "Şartname 4.3.7: d_ij ≤ R olan en yakın k aday tutulur (seyrek yapı, k parametrik). k = 50 bir modelleme tercihidir: seyrek kırsal hücrelerde R içindeki adayların büyük kısmını, yoğun kent çekirdeğinde en yakın 50 adayı tutmak amaçlanır; atama değişkeni sayısı ≈ |I|·k olur (k'ıncı mesafeye eşit adayların hepsi tutulduğundan biraz fazla; kalibre ızgarada dağılım notlarda). Faz 3 ölçümü (docs/FAZ3_RAPOR.md, ayar deneyi T2): k = 50 ile optimum, R içindeki tüm adaylarla (k = 0) kurulan modelin optimumundan en çok %0,10 (3 km; kanıtlı üst sınır) ve %0,10 (5 km) uzakta — %1 hedef gap'in çok altında. Daha küçük k hem amacı bozuyor hem hızlandırmıyor: 3 km'de k = 30 → +%1,2, k = 10 → +%4,6 (fazladan hastane açılıyor; optimum çözüm 3 km'de 70'inci sıradaki adaya kadar atama kullanıyor); tam modelin kök LP süresi aday sayısı |J| ile büyüyor, yay sayısıyla değil (5 km'de k = 15–20 ≈99 sn, k = 50 ≈22 sn). Bu yüzden k < 50 hız seçeneği olarak sunulmaz.",
     "range": [
-      5,
+      0,
       300
     ],
     "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
     "alternatives": [
       {
-        "label": "Hızlı (daha az değişken, kısıtlayıcı olabilir)",
-        "value": 20,
+        "label": "R içindeki tüm adaylar (tam model; 3 km'de 124.064 yay)",
+        "value": 0,
         "status": "model_secimi"
       },
       {

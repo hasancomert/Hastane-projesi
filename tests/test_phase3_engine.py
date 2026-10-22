@@ -231,22 +231,30 @@ def test_infeasible_detected_by_milp_on_toy():
 
 # ---------------------------------------------------------------- iptal ve ilerleme
 def test_cancel_and_progress():
+    from backend.model import lagrange
+    lagrange.clear_cache()                       # önceki testlerin çarpan önbelleği çözümü 6 sn'den kısa bitirebilir
     ev = threading.Event()
     events: list[dict] = []
     out: dict = {}
+    seen = threading.Event()
+
+    def cb(e: dict) -> None:
+        events.append(e)
+        if e.get("kind") == "lagrange" and not seen.is_set():     # sezgisel bitti, Lagrange A evresi başladı
+            seen.set()
 
     def run():
-        out["r"] = solve(3, time_limit=120, progress_cb=events.append, cancel_event=ev)
+        out["r"] = solve(3, time_limit=120, progress_cb=cb, cancel_event=ev)
 
     th = threading.Thread(target=run)
-    t0 = time.perf_counter()
     th.start()
-    time.sleep(6.0)                                                 # sezgisel bitti, MIP kök LP'sinde
+    assert seen.wait(timeout=60)
+    time.sleep(1.0)
     t_cancel = time.perf_counter()
     ev.set()
     th.join(timeout=60)
     assert not th.is_alive()
-    assert time.perf_counter() - t_cancel < 5.0                     # izole süreç hemen sonlandırılır
+    assert time.perf_counter() - t_cancel < 5.0                     # iptal her evrede birkaç sn içinde etkili
     r = out["r"]
     assert r["status"] == "durduruldu" and r["ok"] and r["check"]["ok"]
     kinds = {e.get("kind") for e in events}

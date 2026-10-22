@@ -71,7 +71,7 @@ class Structure:
     source: str
     year: int
     R_km: float
-    k_nearest: int
+    k_nearest: int                # 0 = R içindeki tüm adaylar
     demand_cells: np.ndarray      # ızgara indisi, |I|
     w: np.ndarray                 # nüfus (float), |I|
     cand_cells: np.ndarray        # ızgara indisi, |J| (artan)
@@ -125,7 +125,7 @@ def build_structure(cell_km: float, params: Params, locks: Locks) -> Structure:
     pop = g.pop(src, year).astype(float)
     circ = distance.Circuity.from_params(v)
     R = float(v["access.max_distance_km"])
-    k = int(v["grid.k_nearest"])
+    k = int(v["grid.k_nearest"]) or None           # 0 → R içindeki tüm adaylar
     rule = grid_io.RuleParams.from_params(v)
 
     dem = np.flatnonzero(pop > 0)
@@ -152,7 +152,7 @@ def build_structure(cell_km: float, params: Params, locks: Locks) -> Structure:
     with np.errstate(divide="ignore", invalid="ignore"):
         dens = np.where(g.area_km2[J] > 0, pop[J] / g.area_km2[J], 0.0)
     return Structure(key=structure_key(cell_km, params, locks), cell_km=float(g.cell_km), source=src, year=year,
-                     R_km=R, k_nearest=k, demand_cells=dem, w=pop[dem], cand_cells=J, cand_origin=origin_full[J],
+                     R_km=R, k_nearest=k or 0, demand_cells=dem, w=pop[dem], cand_cells=J, cand_origin=origin_full[J],
                      arc_ptr=nl.indptr.astype(np.int64), arc_j=nl.indices.astype(np.int32), arc_d=nl.dist_km,
                      arc_i=arc_i, density=dens, repair=rep.summary(pop), build_s=time.perf_counter() - t0, circ=circ,
                      demand_xy=xy[dem], cand_xy=xy[J], cand_ids=g.id[J], demand_ids=g.id[dem])

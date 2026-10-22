@@ -112,7 +112,7 @@ SPEC: dict[str, tuple] = {
     "access.max_distance_km": ("f", 0, _INF, False),
     "grid.cell_km": ("c", CELL_SIZES),
     "grid.candidate_min_pop": ("f", 0, _INF),
-    "grid.k_nearest": ("i", 1, _INF),
+    "grid.k_nearest": ("i", 0, _INF),           # 0 = R içindeki tüm adaylar (kırpma yok)
     "grid.candidate_min_inside": ("f", 0, 1),
     "grid.candidate_max_water": ("f", 0, 1, False),
     "grid.candidate_near_density": ("f", 0, _INF),

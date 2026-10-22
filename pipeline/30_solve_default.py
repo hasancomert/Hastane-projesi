@@ -8,7 +8,8 @@
                                                                   # 2 km (60 sn) ek ölçüm
                                                                   # → data/processed/solver_baseline.json
 --baseline ayrıca her ızgarada güçlü LP gevşetmesini ayrı olarak çözer (kök LP süresi ölçümü) ve sınır kartlarını
-(LSCP, gerçek p_min) hesaplar.
+(LSCP, gerçek p_min) hesaplar. --baseline Lagrange'sız çalışır (Faz 3 ilk sürümünün ölçümü; canlı akışın kıyaslaması
+pipeline/31_benchmark.py'dedir).
 """
 from __future__ import annotations
 
@@ -117,7 +118,8 @@ def baseline(args) -> None:
     runs = []
     for km, tl, full in ((5, 120.0, True), (3, 300.0, True), (2, 60.0, False)):
         print(f"\n=== {km} km, süre sınırı {tl:g} sn ===", flush=True)
-        r = solve_mod.solve(km, time_limit=tl, gap=args.gap)
+        # temel ölçüm Faz 3 çekirdeğinin ilk sürümünü yeniden üretir: Lagrange yok, yalnız sezgisel + tam güçlü MILP
+        r = solve_mod.solve(km, time_limit=tl, gap=args.gap, use_lagrange=False)
         print_result(r)
         inst = instance.build_instance(km)
         extra = {}
