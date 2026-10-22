@@ -108,7 +108,7 @@ def test_registry_validation_passes(registry):
 
 def test_all_canonical_keys_present(registry, params):
     canonical = list(registry.schema.canonical)
-    assert len(canonical) == 61  # 54 + population.grid_source + 3 dolambaç profili anahtarı (Faz 1) + 3 aday kuralı anahtarı (Faz 2)
+    assert len(canonical) == 69  # 54 + population.grid_source + 3 dolambaç profili anahtarı (Faz 1) + 3 aday kuralı anahtarı (Faz 2) + 8 model seçimi anahtarı (Faz 3)
     missing = [k for k in canonical if k not in params]
     assert missing == registry.missing_canonical
     assert not missing, f"eksik kanonik anahtarlar: {missing}"

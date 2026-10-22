@@ -196,6 +196,28 @@
       }
     ]
   },
+  "population.scenario_year": {
+    "label": "Nüfus senaryosu (yıl)",
+    "value": 2025,
+    "unit": "yıl (seçenek: 2025 | 2030)",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 A: nüfus senaryosu 2025 (TÜİK kalibre) varsayılan, 2030 isteğe bağlı. 2025 hücre nüfusları ilçe bazında TÜİK 2025'e birebir kalibredir (il toplamı 5.910.320); 2030 senaryosu TÜİK il projeksiyonunu (population.province_2030) seçilen kaynağın 2030 dağılımıyla hücrelere böler (pipeline/22_grids.py).",
+    "range": null,
+    "range_note": null,
+    "alternatives": [
+      {
+        "label": "2030 senaryosu (TÜİK il projeksiyonu, kaynak ızgarasının 2030 dağılımı)",
+        "value": 2030,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "Nüfus",
+    "domain": "model",
+    "sources": []
+  },
   "demand.beds_per_1000": {
     "label": "1000 kişiye düşen hastane yatağı (oran yöntemi)",
     "value": 3.15,
@@ -640,6 +662,28 @@
       }
     ]
   },
+  "demand.mode": {
+    "label": "Yatak talebi yöntemi",
+    "value": "oran",
+    "unit": "seçenek (oran | hill_burton)",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 A iki yöntem tanımlar: (1) oran — yatak = nüfus × demand.beds_per_1000 / 1000; (2) Hill-Burton — yatak = nüfus × yatış oranı × ortalama kalış / (365 × hedef doluluk). Varsayılan oran yöntemidir (şartnamenin ilk modu; gözlenen Türkiye yatak/nüfus oranı). Kapasite emniyet payı (demand.safety_margin) her iki yöntemde de talebi (1 + pay) ile çarpar; varsayılan pay 0 olduğundan varsayılan sonucu etkilemez.",
+    "range": null,
+    "range_note": null,
+    "alternatives": [
+      {
+        "label": "Hill-Burton (varsayılan girdilerle ≈2,04 yatak / 1000 kişi)",
+        "value": "hill_burton",
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "A. Talep",
+    "domain": "model",
+    "sources": []
+  },
   "size.general_min_beds": {
     "label": "Genel hastane en az yatak (B_min)",
     "value": 50,
@@ -890,6 +934,66 @@
         "kind": "resmi"
       }
     ]
+  },
+  "size.city_enabled": {
+    "label": "Şehir hastanesi sınıfı (V-D) açık mı?",
+    "value": true,
+    "unit": "evet/hayır",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 B: şehir hastanesi sınıfı aç/kapa. Varsayılan açık: model şehir hastanesini seçip seçmeyeceğine maliyetlere göre kendisi karar verir (V-D birim maliyeti ve yatak başı alanı en yüksek sınıftır; şartname 4.2). Kapatılırsa en büyük hastane size.general_max_beds olur ve kapasite alt sınırı yükselir.",
+    "range": null,
+    "range_note": null,
+    "alternatives": [
+      {
+        "label": "Kapalı (yalnız genel hastaneler)",
+        "value": false,
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "model",
+    "sources": []
+  },
+  "size.min_hospitals": {
+    "label": "En az hastane sayısı (0 = sınır yok)",
+    "value": 0,
+    "unit": "hastane",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 B: isteğe bağlı en az / en çok hastane sayısı. Varsayılan sınır yok (0): sayıyı maliyet ve nüfus belirler. Değer verilirse Σ_j Σ_k y_jk ≥ değer kısıtı eklenir.",
+    "range": [
+      0,
+      300
+    ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
+    "alternatives": [],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "model",
+    "sources": []
+  },
+  "size.max_hospitals": {
+    "label": "En çok hastane sayısı (0 = sınır yok)",
+    "value": 0,
+    "unit": "hastane",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 B: isteğe bağlı üst sınır. Varsayılan sınır yok (0). Değer verilirse Σ_j Σ_k y_jk ≤ değer; kapasite alt sınırının (⌈toplam yatak talebi / en büyük sınıfın üst sınırı⌉) altında bir değer modeli olurlu olmaktan çıkarır.",
+    "range": [
+      0,
+      300
+    ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
+    "alternatives": [],
+    "notes": null,
+    "group": "B. Boyut",
+    "domain": "model",
+    "sources": []
   },
   "cost.unit.IV-C": {
     "label": "Birim maliyet — IV-C: hastane (<200 yatak)",
@@ -3407,5 +3511,70 @@
         "kind": "hesap"
       }
     ]
+  },
+  "solver.objective_mode": {
+    "label": "Amaç modu",
+    "value": "toplam",
+    "unit": "seçenek (toplam | butce | sabit_p)",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Şartname 4.4 I: (1) toplam — açılış + erişim maliyetinin toplamını en aza indir (varsayılan); (2) butce — açılış maliyeti solver.budget_tl'yi aşmadan erişim maliyetini en aza indir; (3) sabit_p — hastane sayısı solver.p_fixed'e eşitken toplam maliyeti en aza indir (U eğrisi taraması da bu modu kullanır).",
+    "range": null,
+    "range_note": null,
+    "alternatives": [
+      {
+        "label": "Bütçe sınırı altında erişim maliyetini en aza indir",
+        "value": "butce",
+        "status": "model_secimi"
+      },
+      {
+        "label": "Hastane sayısı p sabitken en iyi konum ve boyutlar",
+        "value": "sabit_p",
+        "status": "model_secimi"
+      }
+    ],
+    "notes": null,
+    "group": "I. Amaç modu",
+    "domain": "model",
+    "sources": []
+  },
+  "solver.budget_tl": {
+    "label": "Açılış bütçesi (yalnız bütçe modunda)",
+    "value": 350000000000,
+    "unit": "TL (2026 fiyatları; açılış = inşaat + sabit + arsa [+ işletme], KDV ayarına göre)",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Bütçe modunun (amaç: erişim maliyeti) varsayılanı, varsayılan senaryonun (3 km ızgara, toplam modu, Faz 3 temel çözümü data/processed/solver_baseline.json) açılış maliyetinin (345,25 milyar TL; gap %0,16) yukarı yuvarlanmışıdır: mod açıldığında model aynı büyüklükte bir bütçeyle erişimin ne kadar iyileşebileceğini gösterir. Bütçe, toplam yatak talebini karşılamanın en düşük açılış maliyetinin altına inerse model olurlu değildir (ön denetim Türkçe mesaj verir). Kaynaklı bir bütçe değeri değildir.",
+    "range": [
+      0,
+      1000000000000
+    ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
+    "alternatives": [],
+    "notes": "Varsayılanlarla en düşük açılış maliyeti için kaba alt sınır: 18.617,5 yatak × en ucuz yatak (15,54 milyon TL) + gereken en az hastane × en ucuz sabit maliyet (478,7 milyon TL) ≈ 291,7 milyar TL. Temel çözümün açılış maliyeti (345,25 milyar TL) bundan büyüktür, çünkü erişim için çok sayıda küçük hastane açılır.",
+    "group": "I. Amaç modu",
+    "domain": "model",
+    "sources": []
+  },
+  "solver.p_fixed": {
+    "label": "Sabit hastane sayısı p (yalnız sabit_p modunda)",
+    "value": 89,
+    "unit": "hastane",
+    "status": "model_secimi",
+    "source_ids": [],
+    "derivation": null,
+    "rationale": "Sabit-p modunun varsayılanı, varsayılan senaryonun (3 km ızgara, toplam modu) Faz 3 temel çözümündeki hastane sayısıdır (89; data/processed/solver_baseline.json, gap %0,16): mod açıldığında başlangıç noktası serbest p'li çözümle karşılaştırılabilir; U eğrisi taraması p'yi bunun çevresinde değiştirir. Kaynaklı bir değer değildir.",
+    "range": [
+      1,
+      300
+    ],
+    "range_note": "Kaydırıcı aralığı (range) arayüz tercihidir (varsayım); parametrenin notunda (notes) aksi yazmadıkça kaynaklı değildir. Parametre durumu (kaynaklı/hesap) yalnız varsayılan değer için geçerlidir.",
+    "alternatives": [],
+    "notes": null,
+    "group": "I. Amaç modu",
+    "domain": "model",
+    "sources": []
   }
 }

@@ -3,7 +3,7 @@
 > Bu dosya `pipeline/build_registry.py` tarafından `data/sources/*.yaml` ve `data/reference/params/*.yaml` parçalarından üretilir — **elle düzenlemeyin**; parçaları düzenleyip betiği yeniden çalıştırın. Makinece okunan sürüm: `data/reference/parameters.json`.
 
 - Kaynak sayısı: **148** (resmî 71, akademik 24, veri 26, haber 12, ikincil 7, hesap 8)
-- Parametre sayısı: **61** / kanonik 61 (kaynaklı 13, hesap 14, varsayım 10, model seçimi 24)
+- Parametre sayısı: **69** / kanonik 69 (kaynaklı 13, hesap 14, varsayım 10, model seçimi 32)
 - Son erişim tarihi: 2026-10-21
 - Eksik kanonik anahtar: yok; kanonik olmayan anahtar: yok
 - Doğrulama: 0 hata, 4 uyarı (ayrıntı en sonda)
@@ -250,6 +250,7 @@ Değerler Türkçe sayı biçimindedir (`1.234.567,8`); oranlar 0–1 kesridir. 
 | `population.province_2025`<br>Ankara nüfusu, 31.12.2025 (TÜİK ADNKS) = 2026 başı | 5.910.320 | kişi | kaynaklı | Kaynak: `tuik_st_il_ilce_2025`, `tuik_bt_adnks2025_yogunluk`, `tuik_adnks2025_bulten`<br>4 alternatif |
 | `population.province_2030`<br>Ankara nüfusu, 31.12.2030 (TÜİK projeksiyonu, ana senaryo) | 6.062.005 | kişi | kaynaklı | Kaynak: `tuik_st_projeksiyon_il_2023_2030`, `tuik_projeksiyon_2023_2100_bulten`<br>2 alternatif |
 | `population.grid_source`<br>Hücre nüfusunun dağılım kaynağı (ilçe bazında TÜİK 2025'e kalibre) | worldpop_r2025a | seçenek | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `nufus_izgara_worldpop_2025`, `nufus_izgara_worldpop_release_statement`, `nufus_izgara_ghs_pop_e2025_100m`, `nufus_izgara_ilce_toplamlari_hesap`<br>1 alternatif |
+| `population.scenario_year`<br>Nüfus senaryosu (yıl) | 2.025 | yıl (seçenek: 2025 \| 2030) | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>1 alternatif |
 
 ### A. Talep
 
@@ -261,6 +262,7 @@ Değerler Türkçe sayı biçimindedir (`1.234.567,8`); oranlar 0–1 kesridir. 
 | `demand.hb.alos_days`<br>Ortalama kalış süresi | 4,0 | gün | kaynaklı | Kaynak: `saglik_sbsgm_bulten2025`<br>Aralık: 3,0 – 7,0<br>8 alternatif |
 | `demand.hb.target_occupancy`<br>Hedef yatak doluluk oranı (planlama) | 0,85 | oran (0–1) | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `saglik_bagust1999`, `alan_literatur_lit_ravaghi2020`, `saglik_aydemir2019`, `saglik_cirakli2019`<br>Aralık: 0,5 – 0,95<br>3 alternatif |
 | `demand.hb.current_occupancy`<br>Mevcut yatak doluluk oranı (bilgi amaçlı) | 0,545 | oran (0–1) | kaynaklı | Kaynak: `saglik_sbsgm_bulten2025`<br>Aralık: 0,4 – 0,9<br>5 alternatif |
+| `demand.mode`<br>Yatak talebi yöntemi | oran | seçenek (oran \| hill_burton) | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>1 alternatif |
 
 ### B. Boyut
 
@@ -272,6 +274,9 @@ Değerler Türkçe sayı biçimindedir (`1.234.567,8`); oranlar 0–1 kesridir. 
 | `size.city_max_beds`<br>Şehir hastanesi en çok yatak | 4.000 | yatak | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `maliyet_tbmm_2025_ankara`, `yatirim_kyp2026`<br>Aralık: 2.000 – 5.000<br>1 alternatif |
 | `size.class_threshold_1`<br>Tebliğ sınıf eşiği 1 (IV-C → V-B) | 200 | yatak | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `maliyet_rg_2026_birim_maliyet_teblig`<br>Aralık: 100 – 300 |
 | `size.class_threshold_2`<br>Tebliğ sınıf eşiği 2 (V-B → V-C) | 400 | yatak | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `maliyet_rg_2026_birim_maliyet_teblig`<br>Aralık: 300 – 600 |
+| `size.city_enabled`<br>Şehir hastanesi sınıfı (V-D) açık mı? | evet | evet/hayır | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>1 alternatif |
+| `size.min_hospitals`<br>En az hastane sayısı (0 = sınır yok) | 0 | hastane | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Aralık: 0 – 300 |
+| `size.max_hospitals`<br>En çok hastane sayısı (0 = sınır yok) | 0 | hastane | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Aralık: 0 – 300 |
 
 ### C. İnşaat
 
@@ -349,6 +354,14 @@ Değerler Türkçe sayı biçimindedir (`1.234.567,8`); oranlar 0–1 kesridir. 
 | `grid.candidate_max_water`<br>Aday hücre için azami su + sulak alan payı | 0,5 | oran (0–1) | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `izgara_aday_kapsama_hesap`, `alan_literatur_lit_zanaga2022`<br>Aralık: 0,05 – 1,0 |
 | `grid.candidate_near_density`<br>Yerleşime yakınlık eşiği (8 komşudan en kalabalığının nüfus yoğunluğu) | 1.500 | kişi/km² | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Dayanak: `nufus_izgara_ghsl_data_package_2023`, `izgara_aday_kapsama_hesap`<br>Aralık: 0 – 10.000 |
 
+### I. Amaç modu
+
+| Anahtar | Değer | Birim | Durum | Kaynak / gerekçe |
+|---|---|---|---|---|
+| `solver.objective_mode`<br>Amaç modu | toplam | seçenek (toplam \| butce \| sabit_p) | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>2 alternatif |
+| `solver.budget_tl`<br>Açılış bütçesi (yalnız bütçe modunda) | 350.000.000.000 | TL (2026 fiyatları; açılış = inşaat + sabit + arsa [+ işletme], KDV ayarına göre) | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Aralık: 0 – 1.000.000.000.000 |
+| `solver.p_fixed`<br>Sabit hastane sayısı p (yalnız sabit_p modunda) | 89 | hastane | model seçimi | Gerekçe: bkz. [Varsayımlar](#3-varsayımlar)<br>Aralık: 1 – 300 |
+
 ### Varsayılanlarla türetilen kontrol değerleri (hesap)
 
 | Büyüklük | Formül | Sonuç |
@@ -392,7 +405,7 @@ Kaynağı olmayan (**varsayım**) ya da modelleme tercihi olan (**model seçimi*
 - **`demand.safety_margin` = 0,0** oran (0–1; 0,10 = %10 ek yatak) — Kapasite emniyet payı  
   Kaynaklı bir emniyet payı bulunamadı. Varsayılan 0: Hill-Burton modunda hedef doluluk (%85) zaten yatakların %15'ini boş tutarak dalgalanma payı bırakıyor; oran modunda ise gözlenen yatak/nüfus oranı Türkiye'nin mevcut düşük doluluğunu (%54,5) içerdiği için ayrıca pay eklemek talebi iki kez şişirir. Kaydırıcı duyarlılık analizi için.
 
-### Model seçimi (24)
+### Model seçimi (32)
 
 - **`access.circuity_mode` = mesafeye_bagli** seçenek — Dolambaç katsayısı modu  
   Öğrenci kararı (2026-10-21, docs/KARARLAR.md #7). Ankara OSM ölçümünde katsayı mesafe kısaldıkça artıyor (0–5 km bandında 1,38, 40 km üstünde ≈1,19); tek katsayı (1,22) kısa şehir içi yolculukları ≈%11 eksik ölçer. 'sabit' modunda access.circuity kullanılır.
@@ -454,6 +467,22 @@ Kaynağı olmayan (**varsayım**) ya da modelleme tercihi olan (**model seçimi*
 - **`cost.include_vat` = evet**  — Maliyetlere KDV dahil mi?  
   Varsayılan 'dahil': model kamu bütçesinin ödeyeceği tutarı hesaplar ve devlet yüklenici faturasındaki KDV'yi öder. Ayrıca kamu yatırım tutarları KDV dahil hazırlanır (SBB rehberi md. 19; EK 3 not 2 'Proje Toplam Maliyetine KDV dahildir') ve yatirim alanının F_sabit değeri KDV dahildir — tutarlılık için tebliğin KDV hariç fiyatlarına KDV eklenir. Alternatif 'hariç': toplumsal maliyet bakışında KDV hazineye dönen bir transferdir; o zaman F_sabit de KDV'siz yorumlanmalıdır.
   Dayanak belgeler: `yatirim_rehber_2026_2028`, `maliyet_rg_2026_birim_maliyet_teblig`
+- **`population.scenario_year` = 2.025** yıl (seçenek: 2025 \| 2030) — Nüfus senaryosu (yıl)  
+  Şartname 4.4 A: nüfus senaryosu 2025 (TÜİK kalibre) varsayılan, 2030 isteğe bağlı. 2025 hücre nüfusları ilçe bazında TÜİK 2025'e birebir kalibredir (il toplamı 5.910.320); 2030 senaryosu TÜİK il projeksiyonunu (population.province_2030) seçilen kaynağın 2030 dağılımıyla hücrelere böler (pipeline/22_grids.py).
+- **`demand.mode` = oran** seçenek (oran \| hill_burton) — Yatak talebi yöntemi  
+  Şartname 4.4 A iki yöntem tanımlar: (1) oran — yatak = nüfus × demand.beds_per_1000 / 1000; (2) Hill-Burton — yatak = nüfus × yatış oranı × ortalama kalış / (365 × hedef doluluk). Varsayılan oran yöntemidir (şartnamenin ilk modu; gözlenen Türkiye yatak/nüfus oranı). Kapasite emniyet payı (demand.safety_margin) her iki yöntemde de talebi (1 + pay) ile çarpar; varsayılan pay 0 olduğundan varsayılan sonucu etkilemez.
+- **`size.city_enabled` = evet**  — Şehir hastanesi sınıfı (V-D) açık mı?  
+  Şartname 4.4 B: şehir hastanesi sınıfı aç/kapa. Varsayılan açık: model şehir hastanesini seçip seçmeyeceğine maliyetlere göre kendisi karar verir (V-D birim maliyeti ve yatak başı alanı en yüksek sınıftır; şartname 4.2). Kapatılırsa en büyük hastane size.general_max_beds olur ve kapasite alt sınırı yükselir.
+- **`size.min_hospitals` = 0** hastane — En az hastane sayısı (0 = sınır yok)  
+  Şartname 4.4 B: isteğe bağlı en az / en çok hastane sayısı. Varsayılan sınır yok (0): sayıyı maliyet ve nüfus belirler. Değer verilirse Σ_j Σ_k y_jk ≥ değer kısıtı eklenir.
+- **`size.max_hospitals` = 0** hastane — En çok hastane sayısı (0 = sınır yok)  
+  Şartname 4.4 B: isteğe bağlı üst sınır. Varsayılan sınır yok (0). Değer verilirse Σ_j Σ_k y_jk ≤ değer; kapasite alt sınırının (⌈toplam yatak talebi / en büyük sınıfın üst sınırı⌉) altında bir değer modeli olurlu olmaktan çıkarır.
+- **`solver.objective_mode` = toplam** seçenek (toplam \| butce \| sabit_p) — Amaç modu  
+  Şartname 4.4 I: (1) toplam — açılış + erişim maliyetinin toplamını en aza indir (varsayılan); (2) butce — açılış maliyeti solver.budget_tl'yi aşmadan erişim maliyetini en aza indir; (3) sabit_p — hastane sayısı solver.p_fixed'e eşitken toplam maliyeti en aza indir (U eğrisi taraması da bu modu kullanır).
+- **`solver.budget_tl` = 350.000.000.000** TL (2026 fiyatları; açılış = inşaat + sabit + arsa [+ işletme], KDV ayarına göre) — Açılış bütçesi (yalnız bütçe modunda)  
+  Bütçe modunun (amaç: erişim maliyeti) varsayılanı, varsayılan senaryonun (3 km ızgara, toplam modu, Faz 3 temel çözümü data/processed/solver_baseline.json) açılış maliyetinin (345,25 milyar TL; gap %0,16) yukarı yuvarlanmışıdır: mod açıldığında model aynı büyüklükte bir bütçeyle erişimin ne kadar iyileşebileceğini gösterir. Bütçe, toplam yatak talebini karşılamanın en düşük açılış maliyetinin altına inerse model olurlu değildir (ön denetim Türkçe mesaj verir). Kaynaklı bir bütçe değeri değildir.
+- **`solver.p_fixed` = 89** hastane — Sabit hastane sayısı p (yalnız sabit_p modunda)  
+  Sabit-p modunun varsayılanı, varsayılan senaryonun (3 km ızgara, toplam modu) Faz 3 temel çözümündeki hastane sayısıdır (89; data/processed/solver_baseline.json, gap %0,16): mod açıldığında başlangıç noktası serbest p'li çözümle karşılaştırılabilir; U eğrisi taraması p'yi bunun çevresinde değiştirir. Kaynaklı bir değer değildir.
 - **`population.grid_source` = worldpop_r2025a** seçenek — Hücre nüfusunun dağılım kaynağı (ilçe bazında TÜİK 2025'e kalibre)  
   Öğrenci kararı (2026-10-21). İki ızgara da her ilçede TÜİK ADNKS 2025 toplamına ölçeklenir; fark yalnız ilçe içi dağılımdadır. WorldPop R2025A, TÜİK 2022 ilçe verisinden üretilmiştir ve kalibrasyon öncesi 25 ilçenin hepsi TÜİK'in %81–104'ü aralığındadır (data/processed/ilce_kontrol_tablosu.csv). GHS-POP R2023A, TÜİK 2010 ilçe verisinden türetilmiş bir projeksiyondur ve 9 ilçede sapma %30'u aşar (Çubuk 0,43, Evren 0,30, Akyurt 1,86). Not: WorldPop R2025A yayıncısınca "alfa" sürüm olarak tanımlanır ve yerleşim dışına nüfus koymaz (constrained).
   Dayanak belgeler: `nufus_izgara_worldpop_2025`, `nufus_izgara_worldpop_release_statement`, `nufus_izgara_ghs_pop_e2025_100m`, `nufus_izgara_ilce_toplamlari_hesap`
