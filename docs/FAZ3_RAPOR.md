@@ -399,8 +399,8 @@ milyar TL). Sağ kolda her ek hastane sabit kısım ve en az 50 yatak getirir; e
   değerleriyle aynı); kıyaslama dosyası (başarı oranı, sert süre sınırı, önceki sürümün özetleri).
 - Her çözümde otomatik denetim (`checks.py`, 13–14 kontrol): tam atama, R (koordinatlardan yeniden), hücre başına bir
   hastane, sınıf sınırları, kapasite, kilitler, sayı, bütçe, amacın sıfırdan yeniden hesabı.
-- Tam test takımı (`.venv/bin/python -m pytest -q tests/`): **201 test geçti** (6 dk 6 sn; Faz 1–2 veri/ızgara
-  testleri dahil). Zaman ölçen testler payla yazıldı.
+- Tam test takımı (`.venv/bin/python -m pytest -q tests/`; Faz 1–2 veri/ızgara testleri dahil). Test çalıştırması
+  notu (bu sürüm, dosyada saklanmıyor): 203 test geçti. Zaman ölçen testler payla yazıldı.
 
 ## 10. Doğrulama bulguları ve düzeltmeler
 
