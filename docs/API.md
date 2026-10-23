@@ -452,6 +452,9 @@ başına senkron hesaplanamaz, arka plan işi olmalı.
 **Çevrimdışı mod (Faz 5/8 notu):** sunucu kapalıyken `/api/precomputed/*` de kapalıdır. Varsayılan çözüm
 (`precomputed/default_3km.json`), ızgara (`data/processed/grid/grid_3km_cells.geojson`) ve sınırlar
 (`data/processed/web/*.geojson`) arayüz derlemesine gömülmeli (ya da bir service worker önbelleğe almalı).
+Faz 5'te ikisi birden yapıldı: derleme bunları ve `/api/meta`, `/api/sources` kopyasını `backend/static/offline/`'a
+yazar, `backend/static/sw.js` sayfa kabuğuyla birlikte önbelleğe alır (`frontend/build/offline.ts`;
+`docs/FRONTEND.md` "Çevrimdışı").
 
 ## 9. Statik dosyalar
 

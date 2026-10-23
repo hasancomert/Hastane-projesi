@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Ankara için optimum hastane yerleşimi: kaç hastane, nerede, hangi boyutta — canlı optimizasyon ve açıklamalar." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>html,body,#root{height:100%;margin:0}body{background:#fff}@media (prefers-color-scheme:dark){html:not([data-theme=light]) body{background:#242424}}html[data-theme=dark] body{background:#242424}</style>
+    <script>
+      // kayıtlı tema (hastane.theme) ilk boyamadan önce: koyu tema seçmiş kullanıcı açık işletim sisteminde beyaz parlama görmesin
+      try {
+        var t = JSON.parse(localStorage.getItem('hastane.theme') || 'null');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+    <title>Ankara Hastane Yerleşimi — Optimizasyon</title>
+    <script type="module" crossorigin src="/assets/index-CpiZpVXS.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-hePW80VL.js">
+    <link rel="modulepreload" crossorigin href="/assets/mantine-BpkuxVfJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-Cy19Odwv.js">
+    <link rel="modulepreload" crossorigin href="/assets/maplibre-CXMTXXoK.js">
+    <link rel="modulepreload" crossorigin href="/assets/deck-CUN8SZ7O.js">
+    <link rel="stylesheet" crossorigin href="/assets/mantine-DxJkCdt5.css">
+    <link rel="stylesheet" crossorigin href="/assets/maplibre-B8-mEBLf.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-qa3o0qTW.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Bu sayfa JavaScript gerektirir.</noscript>
+  </body>
+</html>
