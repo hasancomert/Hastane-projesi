@@ -1,0 +1,34 @@
+# Sunum çalışma zamanının TAM bağımlılık listesi (requirements.txt + geçişli bağımlılıklar), sürümler sabit.
+# Kurulum (Windows, Python 3.14, 64-bit):
+#   internetle:   python -m pip install -r requirements-lock.txt
+#   çevrimdışı:   python -m pip download -r requirements-lock.txt --only-binary=:all: -d tekerlekler   (WINDOWS'TA)
+#                 python -m pip install --no-index --find-links tekerlekler -r requirements-lock.txt
+# Not (Faz 4 incelemesi bulgu 12): tekerlek klasörü Linux'ta "pip download --platform win_amd64" ile hazırlanırsa ortam
+# işaretleri Linux'a göre değerlendirilir ve click'in Windows'ta istediği colorama dışarıda kalır; bu yüzden colorama
+# aşağıda açıkça yazılı. pip derlenmiş bayt kodu (.pyc) üretir; uv kullanılacaksa "uv pip install --compile-bytecode"
+# (Faz 4 incelemesi: bayt kodsuz uv kurulumunda 3.14 ile çözücü 3,7 sn'de hazırdı, 3.13 kurulumunda 1,2–1,5 sn).
+# Liste: geliştirme kabındaki Python 3.14 ortamının bağımlılık ağacından (işaretler Windows için değerlendirildi),
+# 2026-10-23. cp314-win_amd64 tekerlekleri doğrulandı: highspy, numpy, scipy, orjson, pydantic-core, pyyaml; diğerleri
+# saf Python (py3-none-any).
+highspy==1.15.1
+numpy==2.5.4
+scipy==1.18.1
+fastapi==0.156.8
+starlette==1.9.0
+uvicorn==0.54.0
+sse-starlette==3.5.0
+pydantic==2.14.1
+orjson==3.13.0
+pyyaml==6.0.3
+# geçişli
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anyio==4.15.1
+click==8.5.0
+colorama==0.4.6 ; sys_platform == "win32"
+h11==0.16.0
+idna==3.20
+opentelemetry-api==1.45.1
+pydantic-core==2.50.1
+typing-extensions==4.16.0
+typing-inspection==0.4.4

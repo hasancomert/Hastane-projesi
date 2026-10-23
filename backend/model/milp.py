@@ -618,23 +618,155 @@ class MilpModel:
 #  * çözüm sırasında yalnız küçük ilerleme mesajları; çözüm vektörü bir kez, 'done' ile; ardından kuyruk boşaltılır ve
 #    os._exit (yorumlayıcı kapanışında kuyruk iş parçacığı beklenmez);
 #  * ebeveyn: terminate() önce kibar durdurma (STOP_GRACE_S), sonra terminate/kill; close() her durumda süreci biçer.
+# Faz 4 incelemesi (bulgu 3): model (birkaç MB) artık süreç argümanı olarak değil, süreç başladıktan sonra ayrı bir boru
+# üzerinden ARKA PLAN iş parçacığıyla gönderilir. Eskiden Process.start() alt süreç modeli okuyana dek çözüm iş
+# parçacığını bloke ediyordu (başlangıçta takılan alt süreçle 10 sn'lik çözüm 76 sn sürdü) ve başlangıçta ölen alt süreç
+# BrokenPipeError ile bütün çözümü düşürüyordu. Şimdi başlatma hemen döner; alt süreç ölür ya da takılırsa poll() /
+# süre sınırı bunu her zamanki yoldan görür.
+# Yedek süreç (set_prespawn(True); sunucunun çözücü işçisi açar): highspy'ı önceden yüklemiş, model bekleyen bir alt
+# süreç hazır tutulur; çekirdek MIP başlarken süreç açılış gecikmesi (Linux ≈0,4 sn, Windows ≈1 sn) ödenmez, kullanılan
+# yedeğin yerine arka planda yenisi açılır. Varsayılan kapalı (betikler ve testler artık süreç bırakmasın).
 STOP_GRACE_S = 0.4          # ebeveyn: durdurma isteğinden sonra 'done' için bekleme (sn); sonra süreç öldürülür
 CHILD_STOP_GRACE_S = 0.2    # alt süreç: HiGHS kesmeye bu sürede yanıt vermezse bekçi son incumbent'la biter
 CHILD_HARD_EXTRA_S = 2.0    # alt süreç: duvar saati süre sınırını bu kadar aşarsa kendini durdurur
 WATCHDOG_PERIOD_S = 0.05
 
 
+@dataclass
+class _Proc:
+    """Başlatılmış (model bekleyen) bir HiGHS alt süreci ve iletişim uçları."""
+
+    proc: object
+    conn: object                    # ebeveynin yazma ucu: model buradan bir kez gönderilir
+    q: object                       # alt süreç → ebeveyn olayları
+    stop_ev: object
+    t_spawn: float
+
+
+def _spawn_proc(name: str = "highs") -> _Proc:
+    import multiprocessing as mp
+    ctx = mp.get_context("spawn")           # Windows ile aynı başlatma yöntemi (fork'a özgü hile yok)
+    r, w = ctx.Pipe(duplex=False)
+    q = ctx.Queue()
+    stop_ev = ctx.Event()
+    p = ctx.Process(target=_isolated_worker, args=(r, q, stop_ev), daemon=True, name=name)
+    try:
+        p.start()                           # argümanlar küçük (tutamaklar): alt süreç beklenmez
+    except BaseException:
+        for c in (r, w):
+            try:
+                c.close()
+            except Exception:
+                pass
+        try:
+            q.close()
+            q.cancel_join_thread()
+        except Exception:
+            pass
+        raise
+    r.close()                               # okuma ucu alt süreçte (spawn tutamağı çoğalttı)
+    return _Proc(p, w, q, stop_ev, time.perf_counter())
+
+
+def _discard(pr: _Proc) -> None:
+    try:
+        pr.conn.close()                     # model bekleyen alt süreç EOF görür ve çıkar
+    except Exception:
+        pass
+    try:
+        pr.proc.join(0.3)
+        if pr.proc.is_alive():
+            pr.proc.kill()
+            pr.proc.join(1.0)
+    except Exception:
+        pass
+    try:
+        pr.q.close()
+        pr.q.cancel_join_thread()
+    except Exception:
+        pass
+
+
+_SPARE_LOCK = threading.Lock()
+_SPARE: dict = {"on": False, "proc": None, "spawning": False, "thread": None, "used": 0, "spawned": 0, "failed": 0}
+
+
+def set_prespawn(on: bool = True, wait_s: float = 10.0) -> None:
+    """Yedek HiGHS alt sürecini aç/kapat (açıkken hemen bir yedek başlatılır; kapatınca yedek kapatılır). Kapatırken o
+    an açılmakta olan yedek de beklenir ve kapatılır (süreç çıkışında yarım kalıp semafor sızdırmasın)."""
+    with _SPARE_LOCK:
+        _SPARE["on"] = bool(on)
+        old = None if on else _SPARE["proc"]
+        th = None if on else _SPARE["thread"]
+        if not on:
+            _SPARE["proc"] = None
+    if old is not None:
+        _discard(old)
+    if th is not None and th is not threading.current_thread():
+        th.join(wait_s)                     # açılmakta olan yedek: iş parçacığı onu 'on' kapalı görüp kendisi kapatır
+    if on:
+        _replenish_async()
+
+
+def prespawn_info() -> dict:
+    with _SPARE_LOCK:
+        pr = _SPARE["proc"]
+        return {"on": _SPARE["on"], "ready": pr is not None and pr.proc.is_alive(),
+                "pid": pr.proc.pid if pr is not None else None,
+                **{k: _SPARE[k] for k in ("used", "spawned", "failed")}}
+
+
+def _replenish_async() -> None:
+    with _SPARE_LOCK:
+        if not _SPARE["on"] or _SPARE["proc"] is not None or _SPARE["spawning"]:
+            return
+        _SPARE["spawning"] = True
+
+    def work() -> None:
+        pr = None
+        try:
+            pr = _spawn_proc("highs-yedek")
+        except Exception:
+            pr = None
+        with _SPARE_LOCK:
+            _SPARE["spawning"] = False
+            if pr is None:
+                _SPARE["failed"] += 1
+            elif _SPARE["on"] and _SPARE["proc"] is None:
+                _SPARE["proc"], pr = pr, None
+                _SPARE["spawned"] += 1
+        if pr is not None:
+            _discard(pr)
+
+    th = threading.Thread(target=work, name="highs-yedek-ac", daemon=True)
+    with _SPARE_LOCK:
+        _SPARE["thread"] = th
+    th.start()
+
+
+def _take_spare() -> _Proc | None:
+    """Hazır yedek süreç (yoksa None); kullanılan yedeğin yerine arka planda yenisi açılır."""
+    with _SPARE_LOCK:
+        pr, _SPARE["proc"] = _SPARE["proc"], None
+        on = _SPARE["on"]
+    if pr is not None and not pr.proc.is_alive():
+        _discard(pr)
+        pr = None
+    if pr is not None:
+        with _SPARE_LOCK:
+            _SPARE["used"] += 1
+    if on:
+        _replenish_async()
+    return pr
+
+
 class IsolatedRun:
-    """Ayrı süreçte çalışan bir HiGHS çözümünün tutamağı (MilpModel.start_isolated)."""
+    """Ayrı süreçte çalışan bir HiGHS çözümünün tutamağı (MilpModel.start_isolated). Başlatma beklemez: model arka plan
+    iş parçacığıyla gönderilir (bkz. yukarıdaki not)."""
 
     def __init__(self, model: "MilpModel", payload: dict, tl: float, progress_cb) -> None:
-        import multiprocessing as mp
         self.model = model
         self.progress_cb = progress_cb
-        ctx = mp.get_context("spawn")           # Windows ile aynı başlatma yöntemi (fork'a özgü hile yok)
-        self.q = ctx.Queue()
-        self.stop_ev = ctx.Event()
-        self.proc = ctx.Process(target=_isolated_worker, args=(payload, self.q, self.stop_ev), daemon=True)
         self.trace: list[TracePoint] = []
         self.st = {"first_inc": None, "first_dual": None, "interrupted": False, "start_ok": None, "vec": None,
                    "primal": None, "dual": None, "gap": None, "nodes": 0, "status": "Not Set", "t_run0": None}
@@ -642,8 +774,24 @@ class IsolatedRun:
         self.n_inc = 0                  # incumbent sayacı (yeni çözüm geldi mi?)
         self._closed = False
         self.t0 = time.perf_counter()
-        self.proc.start()
         self.deadline = self.t0 + tl + 1.5 if math.isfinite(tl) else math.inf
+        pr = _take_spare()
+        self.from_spare = pr is not None
+        if pr is None:
+            pr = _spawn_proc()
+        self._p = pr
+        self.proc, self.q, self.stop_ev, self.conn = pr.proc, pr.q, pr.stop_ev, pr.conn
+        self.send_error: BaseException | None = None
+        self._sender = threading.Thread(target=self._send, args=(payload,), name="highs-model-gonder", daemon=True)
+        self._sender.start()
+
+    def _send(self, payload: dict) -> None:
+        try:
+            import pickle
+            data = pickle.dumps(payload, protocol=pickle.HIGHEST_PROTOCOL)
+            self.conn.send_bytes(data)      # alt süreç takılırsa yalnız bu iş parçacığı bekler
+        except BaseException as ex:  # noqa: BLE001 — alt süreç öldüyse poll() bunu görür
+            self.send_error = ex
 
     @property
     def pid(self) -> int | None:
@@ -669,7 +817,8 @@ class IsolatedRun:
                 if not self.proc.is_alive() and self.q.empty() and not self.done:
                     self.done = True
                     if st["status"] == "Not Set":
-                        raise RuntimeError("HiGHS alt süreci beklenmedik biçimde sonlandı")
+                        why = f" (model gönderilemedi: {type(self.send_error).__name__})" if self.send_error else ""
+                        raise RuntimeError(f"HiGHS alt süreci beklenmedik biçimde sonlandı{why}")
                 break
             except (EOFError, OSError):
                 self.done = True
@@ -770,6 +919,13 @@ class IsolatedRun:
             if self.st["status"] == "Not Set":
                 self.st["status"] = "Interrupted by user"
         self._reap(timeout=0.3)
+        # gönderici iş parçacığı süreç ölünce (boru kırılır) biter; bitmediyse daemon olarak kalır, uç açık bırakılır
+        self._sender.join(0.5)
+        if not self._sender.is_alive():
+            try:
+                self.conn.close()
+            except Exception:
+                pass
         try:
             self.q.close()
             self.q.cancel_join_thread()
@@ -808,15 +964,16 @@ class IsolatedRun:
                           spawn_s=st["t_run0"])
 
 
-def _isolated_worker(payload: dict, q, stop_ev=None) -> None:
-    """Ayrı süreçte HiGHS MIP çözümü; küçük olay mesajları kuyruğa, çözüm vektörü yalnız sonda ('done').
-    Yalnız numpy + highspy + standart kütüphane; spawn ile çalışır (giriş noktası modül düzeyinde)."""
+def _isolated_worker(conn, q, stop_ev=None) -> None:
+    """Ayrı süreçte HiGHS MIP çözümü: modeli conn'dan bir kez alır (yedek süreç olarak beklerken highspy zaten yüklü);
+    küçük olay mesajları kuyruğa, çözüm vektörü yalnız sonda ('done'). Yalnız numpy + highspy + standart kütüphane;
+    spawn ile çalışır (giriş noktası modül düzeyinde)."""
     import os
     import threading
     import multiprocessing as mp
     parent = mp.parent_process()
     st = {"vec": None, "obj": None, "dual": None, "gap": None, "nodes": 0, "stop": False, "sent": False,
-          "run_done": False}
+          "run_done": False, "hard": math.inf}
     lock = threading.Lock()
 
     def finish(status, obj, dual, gap, nodes, vec, code: int = 0) -> None:
@@ -838,7 +995,7 @@ def _isolated_worker(payload: dict, q, stop_ev=None) -> None:
         except Exception:
             return False
 
-    def watchdog(hard: float) -> None:
+    def watchdog() -> None:
         t_stop = None
         while True:
             if not parent_alive():
@@ -847,11 +1004,12 @@ def _isolated_worker(payload: dict, q, stop_ev=None) -> None:
                 finally:
                     os._exit(3)         # sahipsiz kalma: hemen çık
             now = time.monotonic()
-            if t_stop is None and ((stop_ev is not None and stop_ev.is_set()) or now > hard):
+            if t_stop is None and ((stop_ev is not None and stop_ev.is_set()) or now > st["hard"]):
                 st["stop"] = True
                 t_stop = now
             if t_stop is not None and now - t_stop > CHILD_STOP_GRACE_S and not st["run_done"] and not st["sent"]:
-                # HiGHS kesmeye yanıt vermiyor (ör. uzun bir LP çözümü): eldeki son incumbent'la bitir
+                # HiGHS kesmeye yanıt vermiyor (ör. uzun bir LP çözümü) ya da model hiç gelmedi: eldeki son
+                # incumbent'la bitir
                 finish("Interrupted by user", st["obj"], st["dual"], st["gap"], st["nodes"], st["vec"])
             if parent is not None:
                 parent.join(WATCHDOG_PERIOD_S)        # ebeveyn ölürse hemen döner
@@ -859,15 +1017,25 @@ def _isolated_worker(payload: dict, q, stop_ev=None) -> None:
                 time.sleep(WATCHDOG_PERIOD_S)
 
     try:
+        threading.Thread(target=watchdog, name="highs-bekci", daemon=True).start()
         import highspy as hs
+        try:
+            import pickle
+            payload = pickle.loads(conn.recv_bytes())       # yedek süreç burada bekler
+        except (EOFError, OSError):
+            os._exit(0)                 # ebeveyn modeli göndermeden ucu kapattı (kullanılmayan yedek)
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
         opts = dict(payload["options"])
         wd = payload.get("wall_deadline")
         if wd is not None:
             # süre sınırı ebeveynin başlattığı andan sayılır (alt süreç başlama gecikmesi düşülür)
             opts["time_limit"] = max(0.05, min(float(opts.get("time_limit", INF)), wd - time.time()))
         tl = float(opts.get("time_limit", INF))
-        hard = time.monotonic() + tl + CHILD_HARD_EXTRA_S if tl < 1e30 else math.inf
-        threading.Thread(target=watchdog, args=(hard,), name="highs-bekci", daemon=True).start()
+        st["hard"] = time.monotonic() + tl + CHILD_HARD_EXTRA_S if tl < 1e30 else math.inf
         h = hs.Highs()
         h.setOptionValue("output_flag", True)
         h.setOptionValue("log_to_console", False)

@@ -1,0 +1,109 @@
+# Hazır senaryolar (şartname 6.3): Varsayılan · Düşük bütçe · Erişim öncelikli · Sadece genel hastane ·
+# Şehir hastanesi serbest · 2030 nüfusu. Arayüz bunları GET /api/meta → "scenarios" alanından okur.
+#
+# Her senaryo, data/reference/parameters.json'daki varsayılanlara uygulanan bir değişiklik kümesidir (overrides; anahtarlar
+# kayıttaki anahtarlar). Izgara (2/3/5 km) senaryodan bağımsızdır, arayüzde ayrıca seçilir.
+# Kural: senaryodaki her değer ya kayıttaki bir alternatiften (kaynaklı/hesap) ya da aşağıda yazılı bir hesaptan gelir;
+# hangi parametrenin değiştirileceği bir modelleme tercihidir → status: model_secimi. Uydurma sayı yok.
+# Sunucu açılışta her senaryoyu istek doğrulamasından geçirir (backend/app/meta.py); geçersiz olan listeye alınmaz.
+
+- id: varsayilan
+  title: Varsayılan
+  status: model_secimi
+  overrides: {}
+  description_tr: >-
+    Kayıttaki tüm varsayılan değerler (toplam maliyet en küçüklenir; 2025 nüfusu, TÜİK'e kalibre). Her parametrenin
+    kaynağı ya da "varsayım" etiketi parametre panelinde.
+  rationale: Karşılaştırma tabanı.
+
+- id: dusuk_butce
+  title: Düşük bütçe
+  status: model_secimi
+  overrides:
+    solver.objective_mode: butce
+    solver.budget_tl: 346000000000
+  description_tr: >-
+    Bütçe modu: açılış maliyeti en çok 346 milyar TL iken erişim maliyeti en küçüklenir (varsayılan bütçe 350 milyar
+    TL). Bu, olurluluk eşiğine çok yakın bir bütçedir: R = 30 km kapsamayla tüm yatak talebini karşılamanın bulunan en
+    düşük açılış maliyeti ≈343 milyar TL. Model daha az ya da daha ucuz hastane açar, erişim maliyeti artar. Canlı bütçe
+    sezgiseli 2 km ızgarada bu bütçede 60 sn içinde olurlu çözüm bulamadığı için senaryo üç ızgarada da önceden uzun
+    süreyle çözüldü (precomputed/scenario_dusuk_butce_<km>km.json; en düşük açılış maliyetli çözüm başlangıç oldu); 2 km
+    sonucunun optimallik farkı diğerlerinden büyüktür (%5,1: bütçe modunun alt sınırı bu ızgarada zayıf). Bütçe değeri
+    bir model seçimidir (kaynaklı değil).
+  rationale: >-
+    "Düşük" bütçe veriden tanımlandı: olurluluk eşiğinin hemen üstünde, canlı çözücünün 3 ve 5 km ızgarada varsayılan
+    süre sınırında (15 sn) olurlu çözüm bulabildiği en düşük tam milyar TL değeri.
+  derivation: >-
+    (1) En düşük açılış maliyeti, erişim ağırlığı sıfırken (access.hospital_visits_per_capita = 0 → λ = 0) toplam
+    modunda çözüldü (backend.model.solve.solve, 2026-10-23, geliştirme kabı): 5 km 343,17 milyar TL (alt sınır 342,56;
+    60 sn; 107 IV-C hastane), 3 km 341,25 (alt sınır 340,91; 90 sn; 105 IV-C), 2 km 343,80 (alt sınır 342,02; 180 sn;
+    108 IV-C). Bu değerlerin altında olurlu çözüm yoktur (alt sınırlar), üstünde vardır (bulunan çözümler).
+    (2) Canlı bütçe modu (soğuk, varsayılan süre sınırları): 345 milyar TL'de 5 km olurlu (15 sn; 6 sn'de bulunamadı),
+    3 km olurlu çözüm bulunamadı (15 sn); 346 milyar TL'de 5 km (erişim 66,11 milyar TL, fark %2,95) ve 3 km (erişim
+    39,55 milyar TL, fark %14,19) olurlu; 2 km'de 346, 347 ve 348 milyar TL'de 60 sn içinde olurlu çözüm bulunamadı,
+    350 milyar TL'de bulundu (erişim 28,86 milyar TL, fark %4,30).
+    (3) Önceden çözüm (pipeline/34_scenarios.py solve, 2026-10-23, geliştirme kabı, üç ızgara aynı anda; 5 ve 3 km
+    300 sn, 2 km 600 sn; başlangıç: erişim ağırlığı sıfırken bulunan en düşük açılış maliyetli çözüm — 5 km 343,65,
+    3 km 341,25, 2 km 344,47 milyar TL): 5 km erişim 65,87 milyar TL (alt sınır 65,13; fark %1,13; 75 hastane), 3 km
+    35,42 (34,82; %1,70; 89 hastane), 2 km 37,95 (29,99; %20,96; 104 hastane); 2 km tek başına 1.200 sn yeniden
+    çözüldü (başlangıç: önceki çözüm ve en düşük açılış maliyetli çözüm): 31,69 (30,07; %5,11; 107 hastane, dosyadaki
+    sonuç). Sunucu bunları açılışta önbelleğe
+    ekler: aynı senaryo isteği anında döner; işçi aynı yapıdaki canlı çözümlerde bunları başlangıç adayı yapar.
+    (4) Canlı denetim (pipeline/34_scenarios.py live, 2026-10-23, önbelleksiz, işçi önceden çözülmüş sonuçlarla
+    tohumlu): 5 km 15 sn'de erişim 65,87 milyar TL, fark %2,46; 3 km 15 sn'de 35,42, fark %3,50; 2 km 60 sn'de 31,67,
+    fark %5,47 (olurlu; canlı denetim eşiği fark ≤ %5 olduğundan GET /api/meta live_grids bu senaryoda 5 ve 3 km).
+
+- id: erisim_oncelikli
+  title: Erişim öncelikli
+  status: model_secimi
+  overrides:
+    access.value_of_time_tl_per_h: 260.3
+  description_tr: >-
+    Hastaların yolda geçen zamanı ortalama ücretle değerlendirilir (73,4 yerine 260,3 TL/saat). Kilometre başına
+    genelleştirilmiş yolculuk maliyeti ≈8,86'dan ≈15,41 TL/km'ye çıkar (λ ≈1,74 kat); model hastaneleri nüfusa daha yakın
+    ve daha çok sayıda açar. Erişimin ağırlığını artırmanın birçok yolu vardır (α, R, zaman değeri); burada maliyetin
+    birimi TL kalsın diye kaynaklı bir alternatif değer seçildi.
+  rationale: >-
+    Kayıttaki access.value_of_time_tl_per_h alternatifi "2026 ortalama saatlik brüt ücret tahmini" (hesap: saatlik brüt
+    asgari ücret 146,80 × TÜİK ortalama/asgari ücret oranı 1,7734). α > 1 seçilseydi amaç terimi artık TL olmazdı
+    (kayıttaki access.alpha gerekçesi).
+  source_keys: [access.value_of_time_tl_per_h]
+
+- id: sadece_genel
+  title: Sadece genel hastane
+  status: model_secimi
+  overrides:
+    size.city_enabled: false
+  description_tr: >-
+    Şehir hastanesi sınıfı (V-D) kapalı: en büyük hastane 999 yatak (V-C). Kapasite alt sınırı 5'ten 19 hastaneye
+    çıkar. Varsayılan çözümlerde V-D zaten seçilmediği için optimum genellikle değişmez; fark sınır kartlarında görülür.
+  rationale: Kayıttaki size.city_enabled alternatifi "Kapalı (yalnız genel hastaneler)" (şartname 4.4 B aç/kapa).
+  source_keys: [size.city_enabled]
+
+- id: sehir_serbest
+  title: Şehir hastanesi serbest
+  status: model_secimi
+  overrides:
+    size.city_enabled: true
+    size.city_min_beds: 455
+    size.city_max_beds: 4050
+  description_tr: >-
+    Şehir hastanesi sınıfı açık ve boyut aralığı gerçek örneklerin tamamını kapsayacak kadar geniş: 455–4.050 yatak
+    (varsayılan 1.000–4.000). Model şehir hastanesini istediği boyutta seçebilir; seçip seçmemesi yalnız maliyetlere
+    bağlıdır (V-D'nin yatak başı maliyeti en yüksek sınıftır).
+  rationale: >-
+    Alt sınır kayıttaki size.city_min_beds alternatifi (en küçük KÖİ şehir hastanesi: Yozgat, 455 yatak), üst sınır
+    size.city_max_beds alternatifi (Bilkent, Etlik, Sancaktepe: 4.050 yatak). Bu aralıkta V-D sınıfı genel sınıflarla
+    örtüşür; model aynı boyutta daha ucuz sınıfı seçer.
+  source_keys: [size.city_min_beds, size.city_max_beds]
+
+- id: nufus_2030
+  title: 2030 nüfusu
+  status: model_secimi
+  overrides:
+    population.scenario_year: 2030
+  description_tr: >-
+    2030 nüfus senaryosu: il toplamı TÜİK il projeksiyonu (6.062.005 kişi), hücrelere seçilen nüfus kaynağının 2030
+    dağılımıyla bölünür. Talep ve erişim maliyeti 2030 nüfusuyla hesaplanır.
+  rationale: Kayıttaki population.scenario_year alternatifi (şartname 4.4 A, karar günlüğü #11).
+  source_keys: [population.scenario_year, population.province_2030]

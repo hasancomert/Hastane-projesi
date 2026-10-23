@@ -377,6 +377,7 @@ def test_heuristic_feasible_and_close(inst5, res5):
 
 # ---------------------------------------------------------------- bağımlılıklar
 ALLOWED_STDLIB = {"__future__", "collections", "dataclasses", "hashlib", "itertools", "json", "math", "multiprocessing",
+                  "pickle",
                   "os", "pathlib", "queue", "threading", "time", "typing"}
 ALLOWED_THIRD = {"numpy", "scipy", "highspy"}
 

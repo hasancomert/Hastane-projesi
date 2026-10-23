@@ -54,9 +54,37 @@ def _pass(h: highspy.Highs, c, lb, ub, A: sp.csc_matrix, rlo, rhi, integ=None) -
                 A.indices.astype(np.int32), A.data.astype(float), integ)
 
 
+def run_highs(h: highspy.Highs, cancel_event=None) -> bool:
+    """h.run(); cancel_event verilirse HiGHS kesme geri çağrılarıyla (simpleks / IPM / MIP) iptal edilebilir.
+    Döner: iptal istendi mi. Not (Faz 3 ölçümü): MIP'in kök LP'si sırasında kesme geri çağrıları çağrılmaz; iptal o
+    zaman kök LP bitince etkili olur (değerlendirme MIP'lerinde ≤ birkaç sn)."""
+    if cancel_event is None:
+        h.run()
+        return False
+
+    def cb(e) -> None:
+        if cancel_event.is_set():
+            e.interrupt()
+
+    subs = (h.cbSimplexInterrupt, h.cbIpmInterrupt, h.cbMipInterrupt)
+    for c in subs:
+        c.subscribe(cb)
+    try:
+        if not cancel_event.is_set():
+            h.run()
+    finally:
+        for c in subs:
+            c.unsubscribe(cb)
+    return cancel_event.is_set()
+
+
+CANCELLED_TR = "İptal edildi: değerlendirme durduruldu."
+
+
 def evaluate(inst: Instance, open_j, cls=None, beds=None, *, duals: bool = False, time_limit: float = 30.0,
-             gap: float = 1e-6) -> EvalResult:
-    """Açık küme için en iyi atama/boyutlandırma. Olurlu değilse ok=False ve Türkçe mesaj."""
+             gap: float = 1e-6, cancel_event=None) -> EvalResult:
+    """Açık küme için en iyi atama/boyutlandırma. Olurlu değilse ok=False ve Türkçe mesaj. cancel_event (isteğe
+    bağlı, threading.Event): ayarlanırsa çözüm kesilir, ok=False ve status 'durduruldu' döner."""
     t0 = time.perf_counter()
     s = inst.s
     S = np.asarray(open_j, dtype=np.int64)
@@ -142,7 +170,8 @@ def evaluate(inst: Instance, open_j, cls=None, beds=None, *, duals: bool = False
     h.setOptionValue("time_limit", float(time_limit))
     if cls is None:
         h.setOptionValue("mip_rel_gap", float(gap))
-    h.run()
+    if run_highs(h, cancel_event):
+        return EvalResult(False, "durduruldu", CANCELLED_TR, time_s=time.perf_counter() - t0)
     status = h.modelStatusToString(h.getModelStatus())
     info = h.getInfo()
     if info.primal_solution_status != 2:

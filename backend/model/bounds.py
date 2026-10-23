@@ -52,7 +52,7 @@ def _dominated(B: np.ndarray, drop: str) -> np.ndarray:
                                                        & (r[None, :] < r[:, None])))).any(1)
 
 
-def lscp(inst: Instance, *, time_limit: float = 20.0, reduce: bool = True) -> dict:
+def lscp(inst: Instance, *, time_limit: float = 20.0, reduce: bool = True, cancel_event=None) -> dict:
     """Küme kapsama (LSCP; Toregas vd. 1971): min Σ_j y_j  s.t.  Σ_{j∈N_i} y_j ≥ 1 ∀ i, N_i = örneğin yay listesi
     (k = 0 yapısında R içindeki TÜM adaylar; modelin yapısında k en yakın). Kilitler uygulanır: yasak adaylar yok,
     zorunlu adaylar sayılır ve kapsadıkları satırlar düşer. reduce: satır ve sütun baskınlığıyla küçültme (birim
@@ -76,6 +76,8 @@ def lscp(inst: Instance, *, time_limit: float = 20.0, reduce: bool = True) -> di
                 "time_s": time.perf_counter() - t0, "reduction": info}
     if reduce and len(rows):
         for _ in range(20):
+            if cancel_event is not None and cancel_event.is_set():
+                break                                   # iptal: küçültme yarıda kalır (sonuç yine geçerli)
             n0 = B.shape
             keep_r = _dominated(B, "ust")
             B, rows = B[keep_r], rows[keep_r]
@@ -98,7 +100,8 @@ def lscp(inst: Instance, *, time_limit: float = 20.0, reduce: bool = True) -> di
     h.passModel(nc, nr, int(M.nnz), 1, 1, 0.0, np.ones(nc), np.zeros(nc), np.ones(nc), np.ones(nr),
                 np.full(nr, INF), M.indptr.astype(np.int32), M.indices.astype(np.int32), M.data.astype(float),
                 np.ones(nc, dtype=np.int32))
-    h.run()
+    from .evaluate import run_highs
+    run_highs(h, cancel_event)                 # iptalde HiGHS'in o ana dek bulduğu değer/alt sınır raporlanır
     hinfo = h.getInfo()
     status = h.modelStatusToString(h.getModelStatus())
     ok = hinfo.primal_solution_status == 2
@@ -117,7 +120,8 @@ def _ceil_lb(x) -> int | None:
     return int(math.ceil(x - 1e-6))
 
 
-def pmin_start(inst: Instance, cover_open: list[int], *, max_adds: int = 200) -> tuple[np.ndarray, object]:
+def pmin_start(inst: Instance, cover_open: list[int], *, max_adds: int = 200,
+               cancel_event=None) -> tuple[np.ndarray, object]:
     """p_min için olurlu başlangıç: LSCP kümesinden başla; en yakın atamada sınıf üst sınırını aşan hastanelerin
     yükünü en çok azaltan adayı ekle; kesin değerlendirme (evaluate) olurlu olunca dur."""
     from .evaluate import evaluate
@@ -130,10 +134,12 @@ def pmin_start(inst: Instance, cover_open: list[int], *, max_adds: int = 200) ->
     s = inst.s
     ev = None
     for _ in range(max_adds):
+        if cancel_event is not None and cancel_event.is_set():
+            break
         st = M.state(open_mask)
         over = np.maximum(st.b - np.where(np.isfinite(M.Umax), M.Umax, 0.0), 0.0)
         if st.unassigned == 0 and not (over[open_mask] > 1e-9).any():
-            ev = evaluate(inst, np.flatnonzero(open_mask), gap=1e-2, time_limit=10.0)
+            ev = evaluate(inst, np.flatnonzero(open_mask), gap=1e-2, time_limit=10.0, cancel_event=cancel_event)
             if ev.ok:
                 return open_mask, ev
         # rahatlama: yeni aday c açılırsa aşırı yüklü hastanelerden (ya da atanmamış talepten) ona geçecek talep
@@ -151,7 +157,8 @@ def pmin_start(inst: Instance, cover_open: list[int], *, max_adds: int = 200) ->
     return open_mask, ev
 
 
-def p_min(inst: Instance, *, time_limit: float = 30.0, linking="weak", cover_open: list[int] | None = None) -> dict:
+def p_min(inst: Instance, *, time_limit: float = 30.0, linking="weak", cover_open: list[int] | None = None,
+          cancel_event=None) -> dict:
     """Tüm model kısıtları altında en az hastane sayısı (amaç Σ z_j): kapasite, sınıf aralıkları, R, kilitler; mod butce
     ise bütçe de. Kullanıcının hastane sayısı sınırları uygulanmaz. LSCP çözümünden kurulan olurlu çözüm MIP
     başlangıcı olarak verilir."""
@@ -171,13 +178,13 @@ def p_min(inst: Instance, *, time_limit: float = 30.0, linking="weak", cover_ope
     start = None
     start_n = None
     if cover_open is None:
-        cover_open = lscp(inst, time_limit=min(20.0, time_limit))["open_pos"]
+        cover_open = lscp(inst, time_limit=min(20.0, time_limit), cancel_event=cancel_event)["open_pos"]
     if cover_open:
-        _, ev = pmin_start(inst, cover_open)
+        _, ev = pmin_start(inst, cover_open, cancel_event=cancel_event)
         if ev is not None and ev.ok:
             start, start_n = ev.solution, ev.solution.n_open
     remaining = max(1.0, time_limit - (time.perf_counter() - t0))
-    res = m.solve(time_limit=remaining, gap=0.0, abs_gap=0.999, start=start)
+    res = m.solve(time_limit=remaining, gap=0.0, abs_gap=0.999, start=start, cancel_event=cancel_event)
     val = res.solution.n_open if res.solution is not None else start_n
     lbv = _ceil_lb(res.dual_tl / 1e6) if res.dual_tl is not None else None
     return {"status": res.status, "status_tr": res.status_tr, "value": val, "lower_bound": lbv,
@@ -196,24 +203,31 @@ def all_candidates_instance(inst: Instance) -> Instance | None:
 
 
 def bound_cards(inst: Instance, *, lscp_time: float = 20.0, pmin_time: float = 30.0, with_pmin: bool = True,
-                lscp_all_time: float | None = None, inst_all: Instance | None = None) -> dict:
+                lscp_all_time: float | None = None, inst_all: Instance | None = None, cancel_event=None) -> dict:
     """Sayfadaki 'En fazla kaç? / En az kaç?' kartlarının değerleri.
 
     coverage_lscp: R içindeki tüm adaylarla (k = 0; kartın anlamı). coverage_lscp_k_list: modelin k listeleriyle
-    (p_min'in alt sınırı bu ikincisidir; k = 0 modelinde ikisi aynıdır)."""
+    (p_min'in alt sınırı bu ikincisidir; k = 0 modelinde ikisi aynıdır). cancel_event: HiGHS çözümleri kesilir
+    (kanıtlanmamış değerler 'proven': false ile raporlanır)."""
     cap = capacity_bound(inst)
     k = int(inst.s.k_nearest)
-    ls_k = lscp(inst, time_limit=lscp_time)
+    ls_k = lscp(inst, time_limit=lscp_time, cancel_event=cancel_event)
     ls_k.update(k_nearest=k, arcs=int(inst.nA))
-    if inst_all is None:
-        inst_all = all_candidates_instance(inst)
-    if inst_all is inst:
+    cancelled = cancel_event is not None and cancel_event.is_set()
+    if inst_all is None and not cancelled:
+        inst_all = all_candidates_instance(inst)      # k = 0 yapısı (kesilemez; 2 km'de birkaç sn)
+    if cancelled and inst_all is None:
+        ls_all = None
+    elif inst_all is inst:
         ls_all = dict(ls_k)
     elif inst_all is not None:
-        ls_all = lscp(inst_all, time_limit=lscp_all_time if lscp_all_time is not None else lscp_time)
+        ls_all = lscp(inst_all, time_limit=lscp_all_time if lscp_all_time is not None else lscp_time,
+                      cancel_event=cancel_event)
         ls_all.update(k_nearest=0, arcs=int(inst_all.nA))
     else:
         ls_all = None
+    if with_pmin and cancel_event is not None and cancel_event.is_set():
+        with_pmin = False
     out = {
         "max_hospitals_grid": int((~inst.lock_closed).sum()),
         "candidates_total": inst.nJ,
@@ -222,7 +236,7 @@ def bound_cards(inst: Instance, *, lscp_time: float = 20.0, pmin_time: float = 3
         "coverage_lscp_k_list": ls_k,
     }
     if with_pmin:
-        pm = p_min(inst, time_limit=pmin_time, cover_open=ls_k["open_pos"])
+        pm = p_min(inst, time_limit=pmin_time, cover_open=ls_k["open_pos"], cancel_event=cancel_event)
         lbs = [v for v in (pm["lower_bound"], ls_k["lower_bound"], cap["applies"], int(inst.lock_open.sum()),
                            inst.count_min) if v is not None]
         pm["lower_bound"] = max(lbs) if lbs else None

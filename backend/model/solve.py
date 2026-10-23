@@ -42,6 +42,7 @@ import numpy as np
 from . import budget as budget_mod
 from . import checks as checks_mod
 from . import lagrange as lagrange_mod
+from . import layers as layers_mod
 from . import lns
 from .evaluate import assignment_duals, cost_breakdown, evaluate, per_hospital
 from .heuristics import heuristic
@@ -163,6 +164,16 @@ def remember_solution(inst: Instance, sol: Solution) -> None:
     _SOL_CACHE.move_to_end(key)
     while len(_SOL_CACHE) > SOL_CACHE_KEYS:
         _SOL_CACHE.popitem(last=False)
+
+
+def remembered_count(inst: Instance) -> int:
+    """Bu yapı için saklanan önceki çözüm sayısı."""
+    return len(_SOL_CACHE.get(_sol_key(inst), ()))
+
+
+def remembered_modes(inst: Instance) -> list[str]:
+    """Bu yapı için saklanan önceki çözümlerin amaç modları (listedeki sırayla)."""
+    return [str(e["mode"]) for e in _SOL_CACHE.get(_sol_key(inst), ())]
 
 
 def cached_open_sets(inst: Instance) -> list[dict]:
@@ -507,7 +518,30 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
             cur = {"sel": None, "core": None, "start_obj": math.inf, "t0": 0.0, "last_imp": 0.0, "best_seen": math.inf,
                    "n": 0}
 
+            core_errors: list[str] = []
+
+            def core_warn(what: str, ex: BaseException) -> None:
+                """Alt süreç hatası çözümü düşürmez (Faz 4 incelemesi, bulgu 3): uyarı yazılır, en iyi çözümle sürülür."""
+                msg = (f"Uyarı: çekirdek MIP alt süreci {what} ({type(ex).__name__}); çözüm onsuz sürüyor, en iyi "
+                       f"bulunan çözüm korunuyor.")
+                core_errors.append(f"{what}: {type(ex).__name__}: {ex}")
+                inst.warnings.append(msg)
+                emit({"kind": "uyari", "message_tr": msg})
+
             def start_core(n_keep: int, m: int, mu_src) -> None:
+                nonlocal handle
+                try:
+                    _start_core(n_keep, m, mu_src)
+                except Exception as ex:  # noqa: BLE001
+                    if handle is not None:
+                        try:
+                            handle.close()
+                        except Exception:
+                            pass
+                    handle = None
+                    core_warn("başlatılamadı", ex)
+
+            def _start_core(n_keep: int, m: int, mu_src) -> None:
                 """Güncel en iyi çözümden çekirdek kurar ve alt süreçte MIP'i başlatır."""
                 nonlocal handle
                 t = time.perf_counter()
@@ -545,6 +579,12 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                     if not h.done:
                         h.terminate("Interrupted by user" if stop.is_set() else "Time limit reached")
                     cres = h.result()
+                except Exception as ex:  # noqa: BLE001
+                    core_warn("sonucu alınamadı", ex)
+                    attempts.append({"attempt": cur["n"], "status": "hata", "stop_reason": reason, "error": repr(ex),
+                                     "is_full_model": False, "improved": False})
+                    core_info = dict(attempts[-1])
+                    return
                 finally:
                     h.close()
                 improved = False
@@ -566,6 +606,7 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                      "n_keep": cur["n_keep"], "m": cur["m"], "status": cres.status, "primal_tl": cres.primal_tl,
                      "core_dual_tl": cres.dual_tl, "time_s": cres.time_s, "spawn_s": cres.spawn_s,
                      "first_incumbent_s": cres.first_incumbent_s, "first_dual_s": cres.first_dual_s,
+                     "from_spare": bool(getattr(h, "from_spare", False)),
                      "build_s": cur["build_s"], "improved": improved, "improved_start": cur["best_seen"] < cur[
                          "start_obj"] * (1 - 1e-9), "stop_reason": reason, "is_full_model": is_full,
                      "model": cur["model"].size()}
@@ -686,6 +727,7 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                             cur["best_seen"]) else cur["start_obj"]) * (1 - 1e-9):
                         finish_core("durdu")
                     if (handle is None and attempts and len(attempts) <= len(CORE_RETRY) and best is not None
+                            and len(core_errors) < 2
                             and stage_left() > CORE_MIN_TIME + 1.0 and not certified(tgap_core)
                             and (attempts[-1]["stop_reason"] == "durdu"
                                  or (attempts[-1]["status"] != "Infeasible" and not attempts[-1]["is_full_model"]
@@ -799,18 +841,27 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                         ev["primal"] = None
                         ev["dual"] = ev["dual"] - eps_B if ev.get("dual") is not None else None
                     emit(ev)
-                mres = model.solve(time_limit=budget_mip, gap=tgap, start=best, progress_cb=relay,
-                                   cancel_event=stop, options=opts, isolate=isolate,
-                                   deadline=T_END - reserve if isolate else None)
-                if mres.spawn_s is not None:
-                    times["mip_spawn_s"] = mres.spawn_s
-                times["mip_s"] = mres.time_s
-                if mres.solution is not None:
+                try:
+                    mres = model.solve(time_limit=budget_mip, gap=tgap, start=best, progress_cb=relay,
+                                       cancel_event=stop, options=opts, isolate=isolate,
+                                       deadline=T_END - reserve if isolate else None)
+                except (OSError, EOFError, RuntimeError, ValueError) as ex:
+                    # alt süreç başlatılamadı / öldü (Faz 4 incelemesi, bulgu 3): çözüm düşmez, en iyi çözümle sürer
+                    msg = (f"Uyarı: tam MILP alt süreci çalıştırılamadı ({type(ex).__name__}); en iyi bulunan çözüm "
+                           f"korunuyor.")
+                    inst.warnings.append(msg)
+                    emit({"kind": "uyari", "message_tr": msg})
+                    mres = None
+                if mres is not None:
+                    if mres.spawn_s is not None:
+                        times["mip_spawn_s"] = mres.spawn_s
+                    times["mip_s"] = mres.time_s
+                if mres is not None and mres.solution is not None:
                     obj_m = model.objective_of(mres.solution)
                     obj_b = model.objective_of(best) if best is not None else math.inf
                     if obj_m < obj_b - 1e-9 * abs(obj_b):      # MIP başlangıcı geri döndüyse kaynak değişmez
                         adopt(mres.solution, "mip", mres.primal_tl)
-                if mres.dual_tl is not None and mres.first_dual_s is not None:
+                if mres is not None and mres.dual_tl is not None and mres.first_dual_s is not None:
                     add_lb("mip", mres.dual_tl - eps_B)
         finally:
             if lock is not None:
@@ -915,7 +966,11 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
     hpos[best.open_j] = np.arange(best.n_open)
     a = np.flatnonzero((best.x > 0) & (hpos[s.arc_j] >= 0))
     assignment = {"demand_cell": [str(c) for c in s.demand_ids[s.arc_i[a]]],
-                  "hospital": hpos[s.arc_j[a]].tolist(), "share": best.x[a].tolist(), "km": s.arc_d[a].tolist()}
+                  "hospital": hpos[s.arc_j[a]].tolist(), "share": best.x[a].tolist(), "km": s.arc_d[a].tolist(),
+                  "population": layers_mod.flow_population(inst, best, a)}
+    for h, sz in zip(hosp, layers_mod.size_info(inst, best)):
+        h["size"] = sz
+    k["cost_per_capita_tl"] = costs["toplam"] / k["population"] if k["population"] > 0 else None
     early = (T_END - reserve) - t_main_end > max(EARLY_STOP_MARGIN[0], EARLY_STOP_MARGIN[1] * tl)
     if stop.is_set():
         status, status_tr = "durduruldu", "Kullanıcı durdurdu; en iyi bulunan çözüm gösteriliyor."
@@ -971,6 +1026,7 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
         "costs": costs,
         "kpis": k,
         "check": chk,
+        "layers": layers_mod.map_layers(inst, best),
         "trace": trace,
         "warnings": list(inst.warnings),
     })
