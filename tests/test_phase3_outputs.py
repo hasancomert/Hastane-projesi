@@ -16,6 +16,7 @@ import json
 
 import pytest
 
+from backend.model.params import Params
 from pipeline import common
 
 PRE = common.ROOT / "precomputed"
@@ -178,3 +179,17 @@ def test_benchmark_file_complete():
         assert agg["target_s"] == SPEC_TARGET_S.get(int(km))
     assert "trace" in b["grids"]["3"]["runs"][0]["cold"]
     assert set(b["previous"]["grids"]) == {"5", "3", "2"}           # önceki kıyaslamanın özetleri korunur
+    # bütçe modu çalıştırmaları (doğrulama: rapordaki bütçe gap aralıkları saklı veriden gelmeli)
+    bb = b["butce"]
+    assert bb["budget_tl"] == Params.load()["solver.budget_tl"] and bb["params_hash"] == b["params_hash"]
+    for km in ("5", "3"):
+        g = bb["grids"][km]
+        agg = g["aggregate"]
+        assert agg["runs"] == len(g["runs"]) >= 3 and agg["all_checks_ok"]
+        assert agg["within_hard_limit"] == agg["runs"]
+        for run in g["runs"]:
+            assert run["lb_source"] == "lagrange_butce" and 0 < run["lb_tl"] <= run["access_tl"]
+            assert run["gap"] == pytest.approx((run["access_tl"] - run["lb_tl"]) / run["access_tl"])
+            assert run["opening_tl"] <= bb["budget_tl"] * (1 + 1e-7) and run["nu"] > 0
+        assert agg["gap"]["min"] == min(r["gap"] for r in g["runs"])
+        assert agg["gap"]["max"] == max(r["gap"] for r in g["runs"])

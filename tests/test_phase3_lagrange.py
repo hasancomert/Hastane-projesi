@@ -2,6 +2,8 @@
 
   * alt problem (aday başına kesirli sırt çantası) bağımsız LP kurulumuyla (scipy linprog) aynı G_jk'yı verir;
   * L(μ) ≤ z* (kaba kuvvet optimumu) — rastgele ve yakınsamış μ, tüm modlar ve kilitler;
+  * bütçe modu: ν gevşetmesi her ν'de geçerli; ν araması ilk adımı yanlış taraftayken de yoğun ν ızgarasının en iyisine
+    ulaşır;
   * sınıf başına bağlantı satırları geçerli (MILP = kaba kuvvet) ve LP sınırını yükseltir;
   * çekirdek örnek: incumbent çekirdekte olurlu, çekirdek çözümü tam modelde olurlu;
   * 5 km: Lagrange sınırı ≤ bilinen en iyi çözüm, %1 sertifika; 3 km canlı çözüm 15 sn hedefinde;
@@ -11,6 +13,7 @@
 """
 from __future__ import annotations
 
+import math
 import threading
 import time
 
@@ -138,6 +141,39 @@ def test_budget_lagrange_bound_valid_on_toys(monkeypatch, seed, factor):
     assert b["objective_tl"] == pytest.approx(z_acc, rel=1e-4)
     assert b["lb_tl"] <= z_acc * (1 + 1e-9) + 1.0 and b["lb_tl"] <= b["objective_tl"]
     assert not b["lb_rejected"] and r["status"] == "optimal"
+
+
+@pytest.mark.parametrize("seed,factor", [(6, 1.02), (12, 0.97)])
+def test_budget_nu_search_recovers_from_wrong_first_step(monkeypatch, seed, factor):
+    """Faz 3 doğrulaması (bütçe modu ν araması): ilk ν adımı yanlış taraftayken (alt problemin açılış ipucu yanıltıcı;
+    3 km'de eski arama bu yüzden yalnız yukarı gidip ν = 1'de kalmıştı) arama öbür yönü de dener. Sonuç sınırı geçerlidir
+    (kaba kuvvet, ε = 0) ve yoğun bir ν ızgarasının (NU_MIN–NU_MAX, 61 nokta, her biri ayrı Lagrange çözümü) en iyisinden
+    en çok küçük bir pay kötüdür. (6, 1,02): en iyi ν < 1, ipucu "yukarı"; (12, 0,97): en iyi ν > 1, ipucu "aşağı"."""
+    from backend.model import budget
+    inst = _budget_toy(seed, factor)
+    with monkeypatch.context() as mp:
+        mp.setattr(milp, "BUDGET_EPS", 0.0)                       # kaba kuvvet: yalnız erişim
+        z_acc, _ = brute_force(inst)
+    assert np.isfinite(z_acc)
+    nus = np.geomspace(budget.NU_MIN, budget.NU_MAX, 61)
+    grid = np.array([lagrange.run(budget.scaled_instance(inst, nu), time_limit=0.3, use_cache=False,
+                                  target_gap=1e-9).bound_tl - nu * inst.budget for nu in nus])
+    nu_grid = float(nus[np.argmax(grid)])
+    assert grid.max() <= z_acc * (1 + 1e-9) + 1.0
+    assert abs(math.log(nu_grid)) > math.log(1.2)                # en iyi ν belirgin biçimde 1'in bir yanında
+    # yanıltıcı ipucu: alt problemin açılışı her zaman en iyi ν'nin öbür yanını gösterir; Lagrange sezgiseli kapalı
+    # (birincil çözümün açılışı ipucu olarak kullanılmasın)
+    wrong = 10.0 if nu_grid < 1 else 0.0
+    monkeypatch.setattr(budget, "_sub_opening", lambda inst_, sub: wrong * inst_.budget)
+    monkeypatch.setattr(budget, "LH_LIGHT", dict(budget.LH_LIGHT, heuristics_on=False))
+    budget.clear_cache()
+    br = budget.run(inst, time_limit=3.0)
+    assert br.ok and br.points[0].nu == pytest.approx(1.0)
+    assert (br.points[1].nu > 1.0) == (nu_grid < 1.0)           # ilk deneme yanlış tarafta
+    assert (br.nu > 1.0) == (nu_grid > 1.0)                      # sonuç doğru tarafta
+    assert br.lb_tl <= z_acc * (1 + 1e-9) + 1.0                  # geçerli alt sınır
+    assert br.lb_tl >= grid.max() - 2e-3 * abs(z_acc)            # yoğun ızgaranın en iyisine yakın
+    budget.clear_cache()
 
 
 def test_status_label_closed_lock_and_unreachable_gap():

@@ -5353,5 +5353,753 @@
     ]
    }
   }
+ },
+ "butce": {
+  "generated_by": "pipeline/31_benchmark.py --butce",
+  "generated_at": "2026-10-23T03:11:36",
+  "machine": {
+   "python": "3.13.16",
+   "platform": "Linux-6.18.44-fc-v140-x86_64-with-glibc2.39",
+   "cpu_count": 4,
+   "note": "geliştirme konteyneri; sunum dizüstü (Windows, i7, Python 3.14) değil"
+  },
+  "params_hash": "b010dda6dd379461",
+  "budget_tl": 350000000000.0,
+  "time_limit_s": 15.0,
+  "target_gap": 0.01,
+  "note": "varsayılan parametreler, mode='butce', soğuk (her çalıştırma ayrı süreçte); access_tl = bütçe modunun amacı (erişim maliyeti), lb_tl onun alt sınırı",
+  "grids": {
+   "5": {
+    "aggregate": {
+     "runs": 3,
+     "access_tl": {
+      "n": 3,
+      "median": 55236293473.64079,
+      "min": 55154940028.41345,
+      "max": 55476988552.15726
+     },
+     "lb_tl": {
+      "n": 3,
+      "median": 53832265903.86487,
+      "min": 53807917007.28198,
+      "max": 53892014599.697266
+     },
+     "gap": {
+      "n": 3,
+      "median": 0.025859382962407557,
+      "min": 0.022897775395378576,
+      "max": 0.02964693454378992
+     },
+     "total_s": {
+      "n": 3,
+      "median": 14.700477045000298,
+      "min": 14.688598407999962,
+      "max": 14.719829795998521
+     },
+     "nu": {
+      "n": 3,
+      "median": 2.0,
+      "min": 2.0,
+      "max": 2.0
+     },
+     "opening_tl": {
+      "n": 3,
+      "median": 349999999999.9995,
+      "min": 349999999999.9909,
+      "max": 349999999999.9996
+     },
+     "status_counts": {
+      "sure_doldu": 3
+     },
+     "solution_source_counts": {
+      "pencere+cila": 3
+     },
+     "within_hard_limit": 3,
+     "all_checks_ok": true,
+     "time_limit_s": 15.0,
+     "budget_tl": 350000000000.0
+    },
+    "runs": [
+     {
+      "status": "sure_doldu",
+      "access_tl": 55476988552.15726,
+      "lb_tl": 53832265903.86487,
+      "gap": 0.02964693454378992,
+      "lb_source": "lagrange_butce",
+      "opening_tl": 349999999999.9996,
+      "n_hospitals": 73,
+      "solution_source": "pencere+cila",
+      "nu": 2.0,
+      "nu_core": 1.0,
+      "nu_points_a": [
+       {
+        "nu": 1.0,
+        "lb_tl": 52164055696.37396,
+        "adim": "ilk",
+        "time_s": 1.8494954239977233
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 52985327631.875,
+        "adim": "deneme",
+        "time_s": 0.6314404559998366
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 48483472570.20395,
+        "adim": "deneme",
+        "time_s": 0.6320434049994219
+       },
+       {
+        "nu": 6.138984384003548,
+        "lb_tl": 17237503439.228516,
+        "adim": "deneme",
+        "time_s": 0.5624349210011133
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53823064162.68945,
+        "adim": "cila",
+        "time_s": 1.5773082730011083
+       }
+      ],
+      "nu_points_b": [
+       {
+        "nu": 2.0,
+        "lb_tl": 53829395816.70508,
+        "adim": "ilk",
+        "time_s": 0.8077710720026516
+       },
+       {
+        "nu": 3.0695368466022983,
+        "lb_tl": 47836182942.80322,
+        "adim": "deneme",
+        "time_s": 0.5120158830031869
+       },
+       {
+        "nu": 1.5347822657946888,
+        "lb_tl": 52899363190.26581,
+        "adim": "deneme",
+        "time_s": 0.49047569100002875
+       },
+       {
+        "nu": 2.355548447352752,
+        "lb_tl": 52903351761.39978,
+        "adim": "deneme",
+        "time_s": 0.4857889869999781
+       },
+       {
+        "nu": 2.355548447352752,
+        "lb_tl": 53279199670.43518,
+        "adim": "deneme",
+        "time_s": 0.4401167370015173
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53832265903.86487,
+        "adim": "cila",
+        "time_s": 1.1670219389998238
+       }
+      ],
+      "core_attempts": [
+       {
+        "attempt": 1,
+        "status": "Time limit reached",
+        "improved": false,
+        "stop_reason": "evre_sonu"
+       }
+      ],
+      "times": {
+       "instance_s": 0.03536966499814298,
+       "seed_s": 4.842997441301122e-06,
+       "heuristic_s": 1.6631184280013258,
+       "lagrange_s": 5.253873802997987,
+       "lp_round_s": 1.1462152910025907,
+       "lagrange_b_s": 4.044558969999343,
+       "core_mip_s": 5.5317560250005045,
+       "polish_s": 1.5059264180017635,
+       "check_s": 0.0006237109992071055,
+       "total_s": 14.688598407999962
+      },
+      "check_ok": true,
+      "budget_check_ok": true,
+      "wall_s": 14.691108130002249,
+      "process_wall_s": 15.039737642000546
+     },
+     {
+      "status": "sure_doldu",
+      "access_tl": 55236293473.64079,
+      "lb_tl": 53807917007.28198,
+      "gap": 0.025859382962407557,
+      "lb_source": "lagrange_butce",
+      "opening_tl": 349999999999.9995,
+      "n_hospitals": 71,
+      "solution_source": "pencere+cila",
+      "nu": 2.0,
+      "nu_core": 1.0,
+      "nu_points_a": [
+       {
+        "nu": 1.0,
+        "lb_tl": 52163235614.66504,
+        "adim": "ilk",
+        "time_s": 1.8381737320014508
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 52004976059.05286,
+        "adim": "deneme",
+        "time_s": 0.6416484770015813
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 48472120926.50696,
+        "adim": "deneme",
+        "time_s": 0.6332425239997974
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53702504703.392456,
+        "adim": "deneme",
+        "time_s": 0.5615120379989094
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53800397773.75598,
+        "adim": "cila",
+        "time_s": 1.5744394890025433
+       }
+      ],
+      "nu_points_b": [
+       {
+        "nu": 2.0,
+        "lb_tl": 53807073541.790405,
+        "adim": "ilk",
+        "time_s": 0.8248983189987484
+       },
+       {
+        "nu": 4.0,
+        "lb_tl": 37001365470.03174,
+        "adim": "deneme",
+        "time_s": 0.49341872000150033
+       },
+       {
+        "nu": 1.0,
+        "lb_tl": 51385310058.28589,
+        "adim": "deneme",
+        "time_s": 0.5014706580004713
+       },
+       {
+        "nu": 1.0,
+        "lb_tl": 51775739225.63574,
+        "adim": "deneme",
+        "time_s": 0.5081150439982594
+       },
+       {
+        "nu": 2.6062328769018293,
+        "lb_tl": 51923265611.21057,
+        "adim": "deneme",
+        "time_s": 0.483932322000328
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53807917007.28198,
+        "adim": "cila",
+        "time_s": 0.7086273820023052
+       }
+      ],
+      "core_attempts": [
+       {
+        "attempt": 1,
+        "status": "Time limit reached",
+        "improved": false,
+        "stop_reason": "evre_sonu"
+       }
+      ],
+      "times": {
+       "instance_s": 0.038443284000095446,
+       "seed_s": 6.83599864714779e-06,
+       "heuristic_s": 1.6971735850020195,
+       "lagrange_s": 5.2505040600008215,
+       "lp_round_s": 1.0184534979998716,
+       "lagrange_b_s": 3.6730990070027474,
+       "core_mip_s": 5.5183086060023925,
+       "polish_s": 1.5049160990020027,
+       "check_s": 0.0005344720011635218,
+       "total_s": 14.719829795998521
+      },
+      "check_ok": true,
+      "budget_check_ok": true,
+      "wall_s": 14.722003595998103,
+      "process_wall_s": 15.075322504002543
+     },
+     {
+      "status": "sure_doldu",
+      "access_tl": 55154940028.41345,
+      "lb_tl": 53892014599.697266,
+      "gap": 0.022897775395378576,
+      "lb_source": "lagrange_butce",
+      "opening_tl": 349999999999.9909,
+      "n_hospitals": 72,
+      "solution_source": "pencere+cila",
+      "nu": 2.0,
+      "nu_core": 1.0,
+      "nu_points_a": [
+       {
+        "nu": 1.0,
+        "lb_tl": 52163601486.17438,
+        "adim": "ilk",
+        "time_s": 1.8395859339980234
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 52926026234.08594,
+        "adim": "deneme",
+        "time_s": 0.6335586530003638
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 48572925391.9288,
+        "adim": "deneme",
+        "time_s": 0.6303637490018446
+       },
+       {
+        "nu": 6.138984384003548,
+        "lb_tl": 21266521254.194336,
+        "adim": "deneme",
+        "time_s": 0.5877120469995134
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53879383155.381836,
+        "adim": "cila",
+        "time_s": 1.5595111779985018
+       }
+      ],
+      "nu_points_b": [
+       {
+        "nu": 2.0,
+        "lb_tl": 53884802798.3374,
+        "adim": "ilk",
+        "time_s": 0.7282551840035012
+       },
+       {
+        "nu": 3.0695368466022983,
+        "lb_tl": 48836882181.15869,
+        "adim": "deneme",
+        "time_s": 0.43771478200142155
+       },
+       {
+        "nu": 1.5347822657946888,
+        "lb_tl": 52811016869.029724,
+        "adim": "deneme",
+        "time_s": 0.44210187700082315
+       },
+       {
+        "nu": 2.355548447352752,
+        "lb_tl": 52820619192.81433,
+        "adim": "deneme",
+        "time_s": 0.4416214439988835
+       },
+       {
+        "nu": 1.8076332189659603,
+        "lb_tl": 53652398003.46045,
+        "adim": "deneme",
+        "time_s": 0.4211591880011838
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 53892014599.697266,
+        "adim": "cila",
+        "time_s": 1.036101868001424
+       }
+      ],
+      "core_attempts": [
+       {
+        "attempt": 1,
+        "status": "Time limit reached",
+        "improved": false,
+        "stop_reason": "evre_sonu"
+       }
+      ],
+      "times": {
+       "instance_s": 0.03778403600153979,
+       "seed_s": 6.3730003603268415e-06,
+       "heuristic_s": 1.7955967580019205,
+       "lagrange_s": 5.251847070001531,
+       "lp_round_s": 1.1453839170026185,
+       "lagrange_b_s": 3.6126492689982115,
+       "core_mip_s": 5.152396731002227,
+       "polish_s": 1.5076621650005109,
+       "check_s": 0.0005160769978829194,
+       "total_s": 14.700477045000298
+      },
+      "check_ok": true,
+      "budget_check_ok": true,
+      "wall_s": 14.702924512002937,
+      "process_wall_s": 15.05220076399928
+     }
+    ]
+   },
+   "3": {
+    "aggregate": {
+     "runs": 3,
+     "access_tl": {
+      "n": 3,
+      "median": 34118172886.870354,
+      "min": 34118172886.870354,
+      "max": 34409202131.20476
+     },
+     "lb_tl": {
+      "n": 3,
+      "median": 32007000483.000366,
+      "min": 31984421118.47647,
+      "max": 32015188057.50235
+     },
+     "gap": {
+      "n": 3,
+      "median": 0.06254003622846437,
+      "min": 0.061638260534675124,
+      "max": 0.06981276808002186
+     },
+     "total_s": {
+      "n": 3,
+      "median": 14.763739884001552,
+      "min": 14.703000593002798,
+      "max": 14.770155455997156
+     },
+     "nu": {
+      "n": 3,
+      "median": 0.5,
+      "min": 0.5,
+      "max": 0.5
+     },
+     "opening_tl": {
+      "n": 3,
+      "median": 349999999999.99976,
+      "min": 349999999999.9994,
+      "max": 349999999999.99976
+     },
+     "status_counts": {
+      "sure_doldu": 3
+     },
+     "solution_source_counts": {
+      "cekirdek_mip": 2,
+      "lp_yuvarlama+cila": 1
+     },
+     "within_hard_limit": 3,
+     "all_checks_ok": true,
+     "time_limit_s": 15.0,
+     "budget_tl": 350000000000.0
+    },
+    "runs": [
+     {
+      "status": "sure_doldu",
+      "access_tl": 34118172886.870354,
+      "lb_tl": 32015188057.50235,
+      "gap": 0.061638260534675124,
+      "lb_source": "lagrange_butce",
+      "opening_tl": 349999999999.99976,
+      "n_hospitals": 94,
+      "solution_source": "cekirdek_mip",
+      "nu": 0.5,
+      "nu_core": 1.0,
+      "nu_points_a": [
+       {
+        "nu": 1.0,
+        "lb_tl": 27785209750.187195,
+        "adim": "ilk",
+        "time_s": 1.8636918690026505
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 30125805792.480194,
+        "adim": "deneme",
+        "time_s": 0.6415662010003871
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 15823952025.445312,
+        "adim": "deneme",
+        "time_s": 0.6376146229995356
+       },
+       {
+        "nu": 0.16289339367041172,
+        "lb_tl": 26173848605.51686,
+        "adim": "deneme",
+        "time_s": 0.530522529999871
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 31731189897.870667,
+        "adim": "cila",
+        "time_s": 1.5773896380014776
+       }
+      ],
+      "nu_points_b": [
+       {
+        "nu": 0.5,
+        "lb_tl": 31791702840.340973,
+        "adim": "ilk",
+        "time_s": 0.8065561780022108
+       },
+       {
+        "nu": 0.32578204790306076,
+        "lb_tl": 29843259268.618744,
+        "adim": "deneme",
+        "time_s": 0.47745490800298285
+       },
+       {
+        "nu": 0.6515582192254574,
+        "lb_tl": 30797946787.157898,
+        "adim": "deneme",
+        "time_s": 0.47051907800050685
+       },
+       {
+        "nu": 0.4245295829613843,
+        "lb_tl": 31530212073.994934,
+        "adim": "deneme",
+        "time_s": 0.46061868600008893
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 32015188057.50235,
+        "adim": "cila",
+        "time_s": 1.4890876900026342
+       }
+      ],
+      "core_attempts": [
+       {
+        "attempt": 1,
+        "status": "Time limit reached",
+        "improved": true,
+        "stop_reason": "evre_sonu"
+       }
+      ],
+      "times": {
+       "instance_s": 0.17721354499735753,
+       "seed_s": 7.86199962021783e-06,
+       "heuristic_s": 2.0913724670026568,
+       "lagrange_s": 5.254170325999439,
+       "lp_round_s": 1.4181786549997923,
+       "lagrange_b_s": 3.8298846530015,
+       "core_mip_s": 5.659051827999065,
+       "polish_s": 1.512539391998871,
+       "check_s": 0.001670507997914683,
+       "total_s": 14.703000593002798
+      },
+      "check_ok": true,
+      "budget_check_ok": true,
+      "wall_s": 14.707683764001558,
+      "process_wall_s": 15.06462806700074
+     },
+     {
+      "status": "sure_doldu",
+      "access_tl": 34409202131.20476,
+      "lb_tl": 32007000483.000366,
+      "gap": 0.06981276808002186,
+      "lb_source": "lagrange_butce",
+      "opening_tl": 349999999999.9994,
+      "n_hospitals": 91,
+      "solution_source": "lp_yuvarlama+cila",
+      "nu": 0.5,
+      "nu_core": 1.0,
+      "nu_points_a": [
+       {
+        "nu": 1.0,
+        "lb_tl": 28125723921.15747,
+        "adim": "ilk",
+        "time_s": 1.8399603849975392
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 14560425011.940796,
+        "adim": "deneme",
+        "time_s": 0.6309907440008828
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 30495242156.29471,
+        "adim": "deneme",
+        "time_s": 0.630872248999367
+       },
+       {
+        "nu": 0.16289339367041172,
+        "lb_tl": 26534853182.86975,
+        "adim": "deneme",
+        "time_s": 0.5916540849975718
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 31881414358.901306,
+        "adim": "cila",
+        "time_s": 1.5596282869992137
+       }
+      ],
+      "nu_points_b": [
+       {
+        "nu": 0.5,
+        "lb_tl": 31961770098.40628,
+        "adim": "ilk",
+        "time_s": 0.7265560510022624
+       },
+       {
+        "nu": 0.32578204790306076,
+        "lb_tl": 30295416253.38159,
+        "adim": "deneme",
+        "time_s": 0.4357009929990454
+       },
+       {
+        "nu": 0.6515582192254574,
+        "lb_tl": 31166936078.56549,
+        "adim": "deneme",
+        "time_s": 0.43915741199816694
+       },
+       {
+        "nu": 0.6515582192254574,
+        "lb_tl": 31471040581.654205,
+        "adim": "deneme",
+        "time_s": 0.43656485400060774
+       },
+       {
+        "nu": 0.4245295829613843,
+        "lb_tl": 31625445172.00171,
+        "adim": "deneme",
+        "time_s": 0.41176600500330096
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 32007000483.000366,
+        "adim": "cila",
+        "time_s": 0.9914506669992988
+       }
+      ],
+      "core_attempts": [
+       {
+        "attempt": 1,
+        "status": "Time limit reached",
+        "improved": false,
+        "stop_reason": "evre_sonu"
+       }
+      ],
+      "times": {
+       "instance_s": 0.18080570899837767,
+       "seed_s": 7.4309973570052534e-06,
+       "heuristic_s": 2.05616443100007,
+       "lagrange_s": 5.255405547002738,
+       "lp_round_s": 1.7422735340005602,
+       "lagrange_b_s": 3.536140993001027,
+       "core_mip_s": 5.873213593000401,
+       "polish_s": 1.3931153090015869,
+       "check_s": 0.0017796089996409137,
+       "total_s": 14.770155455997156
+      },
+      "check_ok": true,
+      "budget_check_ok": true,
+      "wall_s": 14.776151372003369,
+      "process_wall_s": 15.164654994998273
+     },
+     {
+      "status": "sure_doldu",
+      "access_tl": 34118172886.870354,
+      "lb_tl": 31984421118.47647,
+      "gap": 0.06254003622846437,
+      "lb_source": "lagrange_butce",
+      "opening_tl": 349999999999.99976,
+      "n_hospitals": 94,
+      "solution_source": "cekirdek_mip",
+      "nu": 0.5,
+      "nu_core": 1.0,
+      "nu_points_a": [
+       {
+        "nu": 1.0,
+        "lb_tl": 27785209750.187195,
+        "adim": "ilk",
+        "time_s": 1.8524729259988817
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 30125805792.480194,
+        "adim": "deneme",
+        "time_s": 0.6380573220012593
+       },
+       {
+        "nu": 2.0,
+        "lb_tl": 15823952025.445312,
+        "adim": "deneme",
+        "time_s": 0.6358592439974018
+       },
+       {
+        "nu": 0.16289339367041172,
+        "lb_tl": 26173848605.51686,
+        "adim": "deneme",
+        "time_s": 0.5500600689993007
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 31765881463.00476,
+        "adim": "cila",
+        "time_s": 1.6269467790007184
+       }
+      ],
+      "nu_points_b": [
+       {
+        "nu": 0.5,
+        "lb_tl": 31790995463.942047,
+        "adim": "ilk",
+        "time_s": 0.7008746430001338
+       },
+       {
+        "nu": 0.32578204790306076,
+        "lb_tl": 29905885446.497284,
+        "adim": "deneme",
+        "time_s": 0.42375256800005445
+       },
+       {
+        "nu": 0.6515582192254574,
+        "lb_tl": 30481755822.730774,
+        "adim": "deneme",
+        "time_s": 0.42049405600118916
+       },
+       {
+        "nu": 0.4245295829613843,
+        "lb_tl": 31572270478.822388,
+        "adim": "deneme",
+        "time_s": 0.4211298080008419
+       },
+       {
+        "nu": 0.5,
+        "lb_tl": 31984421118.47647,
+        "adim": "cila",
+        "time_s": 1.4218142319987237
+       }
+      ],
+      "core_attempts": [
+       {
+        "attempt": 1,
+        "status": "Time limit reached",
+        "improved": true,
+        "stop_reason": "evre_sonu"
+       }
+      ],
+      "times": {
+       "instance_s": 0.19437519100029022,
+       "seed_s": 6.251000741031021e-06,
+       "heuristic_s": 2.1049187390017323,
+       "lagrange_s": 5.306381995000265,
+       "lp_round_s": 1.6886290370021015,
+       "lagrange_b_s": 3.5177979599975515,
+       "core_mip_s": 5.626967154999875,
+       "polish_s": 1.5220762690005358,
+       "check_s": 0.0016781180020188913,
+       "total_s": 14.763739884001552
+      },
+      "check_ok": true,
+      "budget_check_ok": true,
+      "wall_s": 14.768526945001213,
+      "process_wall_s": 15.160483530999045
+     }
+    ]
+   }
+  }
  }
 }

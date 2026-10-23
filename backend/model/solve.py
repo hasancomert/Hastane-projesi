@@ -8,8 +8,9 @@ sınır; sınır durulunca biter; bütçe modunda bütçe satırının ν ile ge
   * çekirdek MIP AYRI SÜREÇTE; ilerlemesi ölçülür, durursa (kök LP'den sonra CORE_STALL_S boyunca iyileşme yok) ana
     süreçteki daha iyi çözümden farklı aday/yay kümesiyle yeniden başlatılır (2. deneme);
   * Lagrange B evresi arka plan iş parçacığında (sınır durulana dek; çekirdeğin ve pencerelerin çözümleri üst sınır
-    olarak beslenir), aynı anda ana iş parçacığında pencere araması (lns.WindowSearch: yarıçap pencerelerinde kesin
-    küçük MILP'ler); progress_cb iki iş parçacığından çağrılabilir (olaylar kilitle sıralanır);
+    olarak beslenir; bütçe modunda ν aramasının A evresinin bıraktığı yerden sürdürülmesi, budget.py), aynı anda ana
+    iş parçacığında pencere araması (lns.WindowSearch: yarıçap pencerelerinde kesin küçük MILP'ler); progress_cb iki
+    iş parçacığından çağrılabilir (olaylar kilitle sıralanır);
 → cila (en iyi açık kümede sınıf/atama MIP'i) → [uzun süre sınırında tam MILP] → gerekirse Lagrange 2. evre →
 bağımsız denetim (checks) → KPI'lar ve maliyet kırılımı.
 
@@ -64,7 +65,8 @@ CORE_STALL_S = 4.0                   # çekirdek MIP kök LP'sinden sonra en az 
                                      # (data/processed/solver_benchmark.json, 10'ar soğuk çalıştırma): LP yuvarlamasından
                                      # sonra çekirdek MIP 3 km'de 10, 2 km'de 30 denemenin hiçbirinde incumbent'ı
                                      # iyileştiremedi; iyileşmeyi pencere araması ve cila verdi. Bütçe modunda (3 km) ise
-                                     # çekirdek MIP pencerelerden belirgin iyi çözüm buldu (erişim 35,86 → 33,45 milyar TL).
+                                     # son çözüm 3 soğuk çalıştırmanın 2'sinde çekirdek MIP'ten, 1'inde LP yuvarlamasından
+                                     # geldi (aynı dosyanın 'butce' anahtarı, solution_source / core_attempts).
 PHASE1_SHARE = 0.2                   # Lagrange A evresinin en çok süre payı (sınır durulursa daha erken biter; sınır
                                      # B evresinde arka planda yükselmeye devam eder)
 PHASE1_STALL_TOL = 1e-4              # A / B evresi: L son max(2 sn, geçen sürenin %30'u) içinde bundan az (göreli) arttıysa dur
@@ -73,7 +75,8 @@ PHASE1_LH_CORE: dict = {"class_mip_share": 0.0, "local_search": False}
 # 3'er çalıştırma): tam sezgiselle A evresi yalnız ≈155 yineleme yapıyor, son gap %0,33–0,90; hafif sezgiselle ≈210
 # yineleme, gap %0,22–0,36. Sayı sınırı ya da sabit p varken tam sezgisel kalır (kapsama onarımı sayıyı bozar).
 LAGRANGE_MAX_BEFORE_FULL_MIP = 30.0  # tam MILP planlanmışsa Lagrange 1. evre en çok bu kadar (sn)
-BUDGET_LAG_SHARE = 0.35              # bütçe modu: ν araması (A evresi) en çok bu pay
+BUDGET_LAG_SHARE = 0.35              # bütçe modu: ν aramasının A evresi en çok bu pay; arama iyileştirme evresinde
+                                     # arka planda sürer (B evresi, budget.py)
 FIN_RESERVE_S = 0.25                 # denetim + KPI + sonuç sözlüğü için ayrılan süre (sn)
 EARLY_STOP_MARGIN = (0.5, 0.05)      # bu kadar (sn, süre payı) önce biten çözüm "süre doldu" değil, "erken durdu" sayılır
 LB_TOL = 1e-9                        # alt sınır > üst sınır farkı bu kadar (göreli) ise sayısal tolerans (kayıtla eşitlenir)
@@ -446,7 +449,7 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                     if ev.ok:
                         adopt(ev.solution, "lagrange_butce", ev.solver_objective_tl)
             budget_info = {"lb_tl": lag.lb_tl, "nu": lag.nu, "time_s": lag.time_s, "message": lag.message,
-                           "points": [p.as_dict() for p in lag.points]}
+                           "nu_core": lag.nu_core, "points": [p.as_dict() for p in lag.points]}
         else:
             lag = lagrange_mod.run(inst, start=best, time_limit=max(cap, 0.5),
                                    target_gap=tgap_core if use_core else tgap, stop=stop,
@@ -598,15 +601,40 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
             try:
                 if stage_left() >= CORE_MIN_TIME and not certified(tgap_core):
                     start_core(CORE_N, CORE_M, G_src)
-                # (2) Lagrange B (serbest/sabit_p) ARKA PLAN iş parçacığında: sınır durulana dek yükselir; aynı anda ana
-                # iş parçacığı pencere aramasını ve çekirdeği yürütür (numpy ve HiGHS GIL'i bırakır). Çekirdeğin ve
-                # pencerelerin çözümleri üst sınır olarak beslenir.
-                if not is_budget and not stop.is_set() and stage_left() > 1.0:
-                    class _BStop:
-                        @staticmethod
-                        def is_set() -> bool:
-                            return stop.is_set() or b_stop.is_set()
+                # (2) Lagrange B ARKA PLAN iş parçacığında: sınır durulana dek yükselir; aynı anda ana iş parçacığı pencere
+                # aramasını ve çekirdeği yürütür (numpy ve HiGHS GIL'i bırakır). Çekirdeğin ve pencerelerin çözümleri üst
+                # sınır olarak beslenir. Bütçe modunda B evresi ν aramasının sürdürülmesidir (budget.run, A evresinin
+                # bıraktığı ν, μ ve köşeli ayraçtan) ve en iyi ν'ye uzun süre verir. Ölçüm (solver_benchmark.json
+                # 'butce', nu_points_a / nu_points_b): 3 km'de A evresi sonundaki 31,73–31,88 milyar TL'lik sınırı B
+                # evresi 31,98–32,02'ye çıkardı; 5 km'de A evresi zaten yakınsamış (artış ≤ 0,013).
+                class _BStop:
+                    @staticmethod
+                    def is_set() -> bool:
+                        return stop.is_set() or b_stop.is_set()
 
+                if is_budget and not stop.is_set() and stage_left() > 1.0:
+                    t_lb0 = time.perf_counter() - T0
+
+                    def relay_bb(ev: dict) -> None:
+                        if ev.get("lb") is not None:
+                            b_res["lb"] = max(b_res.get("lb", -math.inf), ev["lb"])
+                        emit({**ev, "t_total": round(t_lb0 + ev["t"], 4), "dual": ev.get("lb"), "phase": 2,
+                              "primal": rep(best) if best is not None else None})
+
+                    def run_bb() -> None:
+                        try:
+                            b_res["r"] = budget_mod.run(
+                                inst, time_limit=max(stage_left() - STOP_GRACE_S, 0.2), stop=_BStop(),
+                                solutions=[best], target_gap=tgap_core,
+                                ub_access_tl=lambda: rep(best) if best is not None else None, progress_cb=relay_bb)
+                        except BaseException as ex:  # noqa: BLE001
+                            b_res["err"] = ex
+                        finally:
+                            b_res["t"] = time.perf_counter() - T0 - t_lb0
+
+                    th_b = threading.Thread(target=run_bb, name="butce-lagrange-b", daemon=True)
+                    th_b.start()
+                if not is_budget and not stop.is_set() and stage_left() > 1.0:
                     def feed() -> float | None:
                         us = [v for v in (cur.get("u"), rep(best) if best is not None else None) if v is not None]
                         return min(us) if us else None
@@ -645,7 +673,7 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                     if stage_left() <= STOP_GRACE_S + 0.05:
                         break
                     if "lb" in b_res:
-                        add_lb("lagrange", b_res["lb"])
+                        add_lb("lagrange_butce" if is_budget else "lagrange", b_res["lb"])
                     u = core_poll()                      # çekirdeğin amacı (butce'de ε·açılış dahil ≥ erişim)
                     cur["u"] = u
                     if certified(tgap_core, u):
@@ -663,7 +691,8 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                                  or (attempts[-1]["status"] != "Infeasible" and not attempts[-1]["is_full_model"]
                                      and stage_left() > 3 * CORE_MIN_TIME))):
                         n_keep, m = CORE_RETRY[len(attempts) - 1]
-                        mu_src = b_res.get("r") if b_res.get("r") is not None and b_res["r"].ok else G_src
+                        mu_src = (b_res["r"] if not is_budget and b_res.get("r") is not None and b_res["r"].ok
+                                  else G_src)        # bütçe: çekirdek G'si A evresinden (ν ≈ 1; budget.py)
                         start_core(n_keep, m, mu_src)
                     if ws is not None and not ws.exhausted and best is not None:
                         cand, winfo = ws.step(best, time_limit=max(0.05, min(lns.WINDOW_TIME,
@@ -693,7 +722,16 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
             lagB = b_res.get("r")
             if "err" in b_res:
                 raise b_res["err"]
-            if lagB is not None:
+            if lagB is not None and is_budget:
+                times["lagrange_b_s"] = b_res.get("t")
+                if lagB.ok:
+                    add_lb("lagrange_butce", lagB.lb_tl)
+                    if budget_info is not None:
+                        budget_info["phase_b"] = {"lb_tl": lagB.lb_tl, "nu": lagB.nu, "time_s": lagB.time_s,
+                                                  "points": [p.as_dict() for p in lagB.points]}
+                        if budget_info["lb_tl"] is None or lagB.lb_tl > budget_info["lb_tl"]:
+                            budget_info["lb_tl"], budget_info["nu"] = lagB.lb_tl, lagB.nu
+            elif lagB is not None:
                 times["lagrange_b_s"] = b_res.get("t")
                 if lagB.ok:
                     if lagB.solution is not None and lagB.solution is not best:
@@ -790,6 +828,8 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                 add_lb("lagrange_butce", lag2b.lb_tl)
                 if budget_info is not None:
                     budget_info["phase2"] = {"lb_tl": lag2b.lb_tl, "nu": lag2b.nu, "time_s": lag2b.time_s}
+                    if budget_info["lb_tl"] is None or lag2b.lb_tl > budget_info["lb_tl"]:
+                        budget_info["lb_tl"], budget_info["nu"] = lag2b.lb_tl, lag2b.nu
         else:
             lag2 = lagrange_mod.run(inst, start=best, time_limit=work_left(), target_gap=tgap, stop=stop,
                                     progress_cb=lag_relay(t_l0, 2), mu0_tl=lag.mu, theta0=0.1,

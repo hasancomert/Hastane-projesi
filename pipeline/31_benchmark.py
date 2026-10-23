@@ -12,13 +12,18 @@ durum, alt sınırın kaynağı; hastane sayısı ve sınıflar; denetim sonucu.
 
 Süre sınırları: solver.time_limit_s (15 sn) 5 ve 3 km'de; 2 km'de şartname hedefi 60 sn. Hedef gap solver.mip_gap (%1).
 Başarı: izden gap ≤ %1'e hedef süre içinde ulaşılması (success_rate); süre sınırı serttir (toplam ≤ sınır + 0,5 sn).
-Yeni bir kıyaslama yazılırken dosyadaki eski özetler 'previous' anahtarı altında saklanır.
+Yeni bir kıyaslama yazılırken dosyadaki eski özetler 'previous' anahtarı altında saklanır ('butce' anahtarı korunur).
+
+Bütçe modu (--butce): varsayılan bütçeyle (solver.budget_tl) ve solver.time_limit_s ile soğuk çalıştırmalar (her biri
+ayrı süreçte); çalıştırma başına erişim maliyeti (bütçe modunun amacı), alt sınır, gap, süre, en iyi ν, çözümün kaynağı.
+Sonuç aynı dosyanın 'butce' anahtarına yazılır; diğer anahtarlara dokunulmaz.
 
 Çalıştırma (repo kökünden):
   .venv/bin/python pipeline/31_benchmark.py                 # 3 çalıştırma × 3 ızgara → data/processed/solver_benchmark.json
   .venv/bin/python pipeline/31_benchmark.py --runs 5 --grids 3
   .venv/bin/python pipeline/31_benchmark.py --runs-by-grid 5=5,3=10,2=10 --no-warm   # yalnız soğuk çalıştırmalar
   .venv/bin/python pipeline/31_benchmark.py --reaggregate   # yalnız özetleri yeniden hesapla
+  .venv/bin/python pipeline/31_benchmark.py --butce --runs 3 --butce-grids 5,3   # bütçe modu → 'butce' anahtarı
 """
 from __future__ import annotations
 
@@ -116,6 +121,91 @@ def worker(km: int, tl: float | None, gap: float, keep_trace: bool, warm_run: bo
     print("@@" + json.dumps(out, ensure_ascii=False))
 
 
+def summarize_budget(r: dict) -> dict:
+    """Bütçe modu çalıştırmasının özeti: amaç ve sınırlar yalnız erişim maliyetidir (TL)."""
+    if not r.get("ok"):
+        return {"status": r.get("status"), "message": r.get("message_tr"), "times": r.get("times")}
+    b, bi = r["bounds"], r.get("budget") or {}
+    core = r.get("core_mip") or {}
+
+    def pts(lst: list) -> list:
+        return [{"nu": q["nu"], "lb_tl": q["lb_tl"], "adim": q.get("phase"), "time_s": q["time_s"]} for q in lst or []]
+    return {
+        "status": r["status"], "access_tl": b["objective_tl"], "lb_tl": b["lb_tl"], "gap": b["gap"],
+        "lb_source": b["lb_source"], "opening_tl": r["costs"]["acilis"], "n_hospitals": r["kpis"]["n_hospitals"],
+        "solution_source": r["solution_source"],
+        "nu": bi.get("nu"), "nu_core": bi.get("nu_core"),
+        "nu_points_a": pts(bi.get("points")), "nu_points_b": pts((bi.get("phase_b") or {}).get("points")),
+        "core_attempts": [{key: a.get(key) for key in ("attempt", "status", "improved", "stop_reason")}
+                          for a in (core.get("attempts") or [])],
+        "times": r["times"], "check_ok": r["check"]["ok"], "budget_check_ok": r["check"]["checks"].get("butce"),
+    }
+
+
+def worker_budget(km: int, tl: float, gap: float) -> None:
+    from backend.model.solve import solve
+    t0 = time.perf_counter()
+    r = solve(km, {}, mode="butce", time_limit=tl, gap=gap)
+    out = summarize_budget(r)
+    out["wall_s"] = time.perf_counter() - t0
+    print("@@" + json.dumps(out, ensure_ascii=False))
+
+
+def aggregate_budget(runs: list[dict], tl: float, budget_tl: float) -> dict:
+    ok = [r for r in runs if r.get("access_tl") is not None]
+    srcs = [r.get("solution_source") for r in ok]
+    return {
+        "runs": len(runs), "access_tl": _stats([r["access_tl"] for r in ok]), "lb_tl": _stats([r["lb_tl"] for r in ok]),
+        "gap": _stats([r["gap"] for r in ok]), "total_s": _stats([r["times"].get("total_s") for r in ok]),
+        "nu": _stats([r.get("nu") for r in ok]), "opening_tl": _stats([r.get("opening_tl") for r in ok]),
+        "status_counts": {st: sum(1 for r in runs if r.get("status") == st)
+                          for st in sorted({r.get("status") for r in runs})},
+        "solution_source_counts": {s_: srcs.count(s_) for s_ in sorted(set(srcs))},
+        "within_hard_limit": sum(1 for r in ok if r["times"].get("total_s", 1e9) <= tl + HARD_LIMIT_SLACK_S),
+        "all_checks_ok": bool(ok) and len(ok) == len(runs) and all(r["check_ok"] and r["budget_check_ok"] for r in ok),
+        "time_limit_s": tl, "budget_tl": budget_tl,
+    }
+
+
+def run_budget_benchmark(args) -> None:
+    """Bütçe modu kıyaslaması → dosyanın 'butce' anahtarı (diğer anahtarlar korunur)."""
+    from backend.model.params import Params
+    p = Params.load()
+    gap, tl, B = float(p["solver.mip_gap"]), float(p["solver.time_limit_s"]), float(p["solver.budget_tl"])
+    res = json.loads(args.out.read_text(encoding="utf-8")) if args.out.exists() else {}
+    out = {"generated_by": "pipeline/31_benchmark.py --butce",
+           "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+           "machine": {"python": sys.version.split()[0], "platform": platform.platform(),
+                       "cpu_count": os.cpu_count(),
+                       "note": "geliştirme konteyneri; sunum dizüstü (Windows, i7, Python 3.14) değil"},
+           "params_hash": p.hash(), "budget_tl": B, "time_limit_s": tl, "target_gap": gap,
+           "note": "varsayılan parametreler, mode='butce', soğuk (her çalıştırma ayrı süreçte); access_tl = bütçe "
+                   "modunun amacı (erişim maliyeti), lb_tl onun alt sınırı",
+           "grids": {}}
+    for km in [int(g) for g in args.butce_grids.split(",")]:
+        runs = []
+        for i in range(args.runs):
+            cmd = [sys.executable, str(Path(__file__).resolve()), "--worker-butce", str(km), str(tl), str(gap)]
+            t0 = time.perf_counter()
+            pr = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+            line = next((ln for ln in pr.stdout.splitlines() if ln.startswith("@@")), None)
+            if line is None:
+                raise RuntimeError(f"bütçe {km} km çalıştırma {i + 1} başarısız:\n{pr.stdout[-2000:]}\n{pr.stderr[-4000:]}")
+            rec = json.loads(line[2:])
+            rec["process_wall_s"] = time.perf_counter() - t0
+            runs.append(rec)
+            if rec.get("access_tl") is not None:
+                print(f"bütçe {km} km #{i + 1}: {rec['status']} erişim {rec['access_tl'] / 1e9:.3f} alt sınır "
+                      f"{rec['lb_tl'] / 1e9:.3f} milyar TL, gap {100 * rec['gap']:.2f}%, ν {rec['nu']:.3g}, "
+                      f"toplam {rec['times']['total_s']:.1f} sn", flush=True)
+            else:
+                print(f"bütçe {km} km #{i + 1}: {rec.get('status')} {rec.get('message')}", flush=True)
+        out["grids"][str(km)] = {"aggregate": aggregate_budget(runs, tl, B), "runs": runs}
+    res["butce"] = out
+    args.out.write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"Yazıldı ('butce'): {args.out.relative_to(ROOT) if args.out.is_relative_to(ROOT) else args.out}")
+
+
 def _stats(xs: list) -> dict | None:
     xs = [x for x in xs if x is not None]
     if not xs:
@@ -184,14 +274,27 @@ def main() -> None:
     ap.add_argument("--runs-by-grid", default=None, help="ör. 5=5,3=10,2=10 (--runs'ı ızgara başına geçersiz kılar)")
     ap.add_argument("--no-warm", action="store_true", help="yalnız soğuk çalıştırmalar")
     ap.add_argument("--reaggregate", action="store_true", help="saklanan çalıştırmalardan özetleri yeniden hesapla")
+    ap.add_argument("--butce", action="store_true", help="bütçe modu kıyaslaması ('butce' anahtarı)")
+    ap.add_argument("--butce-grids", default="5,3", help="bütçe modu ızgaraları (varsayılan 5,3)")
+    ap.add_argument("--worker-butce", nargs=3, metavar=("KM", "TL", "GAP"), help=argparse.SUPPRESS)
     args = ap.parse_args()
     if args.reaggregate:
         res = json.loads(args.out.read_text(encoding="utf-8"))
         for km, g in res["grids"].items():
             a = g["aggregate"]
             g["aggregate"] = aggregate(int(km), g["runs"], a["time_limit_s"], a["target_gap"])
+        for km, g in (res.get("butce") or {}).get("grids", {}).items():
+            a = g["aggregate"]
+            g["aggregate"] = aggregate_budget(g["runs"], a["time_limit_s"], a["budget_tl"])
         args.out.write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"Özetler yeniden hesaplandı: {args.out}")
+        return
+    if args.worker_butce:
+        km, tl, gap = args.worker_butce
+        worker_budget(int(km), float(tl), float(gap))
+        return
+    if args.butce:
+        run_budget_benchmark(args)
         return
     if args.worker:
         km, tl, gap, tr = args.worker[:4]
@@ -222,6 +325,8 @@ def main() -> None:
                                          for kind in ("cold", "warm") if kind in r} for r in g.get("runs", [])]}
                           for km, g in old.get("grids", {}).items()}}
         result["previous"] = prev
+        if "butce" in old:
+            result["butce"] = old["butce"]          # bütçe modu kıyaslaması ayrı üretilir (--butce); korunur
     for km in grids:
         tl = TIME_LIMIT.get(km) or float(p["solver.time_limit_s"])
         runs = []

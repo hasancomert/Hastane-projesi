@@ -1,6 +1,6 @@
 # Faz 3 raporu — optimizasyon çekirdeği
 
-Tarih: 2026-10-22 (doğrulama düzeltmeleriyle güncellendi) · Kapsam: şartname 4.1, 4.2, 4.4, 4.5, 4.6; 7.2, 7.3, 7.7,
+Tarih: 2026-10-23 (doğrulama düzeltmeleriyle güncellendi) · Kapsam: şartname 4.1, 4.2, 4.4, 4.5, 4.6; 7.2, 7.3, 7.7,
 7.10'un sayısal temeli; 10 (kabul ölçütleri). Bütün süreler 4 çekirdekli geliştirme konteynerinde (Linux, Python 3.13,
 highspy 1.15.1) ölçüldü; sunum dizüstünün (Windows, i7, Python 3.14) hızı ölçülmedi. Para birimi TL (2026 fiyatları);
 erişim maliyeti 25 yıllık, %5 iskontolu bugünkü değer. Sayı biçimi Türkçe (1.234,5). Bu rapordaki her sayı depodaki
@@ -25,8 +25,9 @@ bir dosyadan gelir; kaynak dosya her bölümün başlığında ya da tabloda yaz
   başlatıldı; 2 km'de 60 dakikalık çözüm onu da 136,9 milyon TL iyileştirdi (§4).
 - **Kabul ölçütü "p taramasının en iyisi = serbest p'li çözüm" sağlanıyor** (güçlendirilmiş biçimde, §8): dip (n* ± 3,
   3 km'de ayrıca p = 83) simetrik başlangıçlarla uzun çözüldü; taramanın en iyi çözümü iki ızgarada da tam serbest
-  optimumun hastane sayısında (5 km p = 69, 3 km p = 89). 5 km'de p = 69 kanıtlı olarak tek en iyi (taramadaki diğer
-  29 p'nin alt sınırı serbest optimumun üstünde; en yakını p = 68, en az +4,8 milyon TL); 3 km'de dip düz: 88 ve 90
+  optimumun hastane sayısında (5 km p = 69, 3 km p = 89). 5 km'de p = 69 taranan p değerleri arasında kanıtlı olarak
+  tek en iyi (taramadaki diğer 29 p'nin alt sınırı serbest optimumun üstünde; en yakını p = 68, en az +4,8 milyon TL;
+  taranmayan p'ler, ör. 77 ve 79, için ayrı kanıt yok); 3 km'de dip düz: 88 ve 90
   sırasıyla 3,9 ve 25,9 milyon TL pahalı, ama 82–96 arasındaki hiçbir p'nin 89'dan kötü olduğu bu gap'lerle
   kanıtlanamıyor.
 - **Sınır kartları** (§7): "her talep hücresine R = 30 km içinde bir hastane" için en az **25 / 23 / 24** hastane
@@ -76,7 +77,7 @@ Canlı çözüm akışı (süre sınırı T, hedef gap g; varsayılan T = 15 sn,
    - *Çekirdek MIP* (aynı çekirdek, HiGHS, **ayrı süreçte**): kök LP'den sonra ilerlemesi izlenir; iyileştiremezse ana
      süreçteki daha iyi çözümden daha geniş aday kümesiyle (200 / 250 aday, 6 yay) yeniden başlatılır.
    - *Lagrange B evresi* arka plan iş parçacığında: sınır durulana dek yükselir; çekirdeğin ve pencerelerin çözümleri
-     üst sınır olarak beslenir.
+     üst sınır olarak beslenir (bütçe modunda ν aramasının A evresinin bıraktığı yerden sürdürülmesi).
 5. **Cila**: en iyi açık kümede sınıf seçimli atama/boyut MIP'i (tüm yaylarla).
 6. Süre sınırı ≥ 300 sn ise (önceden çözülen senaryolar) **tam MILP** (HiGHS, ayrı süreçte; Lagrange sınırına göre hedef
    gap'e ulaşınca durur); hâlâ fark > g ve süre varsa **Lagrange 2. evre**.
@@ -85,8 +86,8 @@ Canlı çözüm akışı (süre sınırı T, hedef gap g; varsayılan T = 15 sn,
 Ölçülen iş bölümü (§5'teki kıyaslama, 10'ar soğuk çalıştırma): 3 km'de 10, 2 km'de 30 çekirdek MIP denemesinin hiçbiri
 eldeki çözümü iyileştirmedi; son çözümün kaynağı 3 km'de 9/10 çalıştırmada pencere araması (+ cila), 1/10'da LP
 yuvarlaması (+ cila), 2 km'de 10/10 pencere araması (`solution_source`, `core_attempts`). Çekirdek MIP yine de tutuldu:
-bütçe modunda pencerelerden belirgin iyi çözüm buluyor (`solve.py` başındaki ölçüm notu: 3 km erişim 35,86 → 33,45
-milyar TL), küçük örneklerde tam modelin kendisi olduğundan kesin ispat veriyor; bedeli ikinci bir işlemci çekirdeği.
+bütçe modunda 3 km'de son çözüm 3 soğuk çalıştırmanın 2'sinde çekirdek MIP'ten geliyor (aynı dosyanın `butce` anahtarı),
+küçük örneklerde tam modelin kendisi olduğundan kesin ispat veriyor; bedeli ikinci bir işlemci çekirdeği.
 
 **Durum kodları**: `optimal` (fark ≤ g) · `sure_doldu` (süre doldu) · `gap_ulasilamadi` (süre dolmadan durdu: alt ve
 üst sınır yöntemleri yakınsadı, hedef gap bu yöntemlerle sayısal olarak erişilemiyor) · `durduruldu` · `sezgisel` ·
@@ -108,10 +109,29 @@ denetler.
 
 **Bütçe modu** (`budget.py`): bütçe satırı ν ≥ 0 ile gevşetilir; açılış maliyetleri ν ile ölçeklenmiş serbest
 problemin Lagrange sınırı L_ν ile LB(ν) = L_ν − ν·B erişim maliyeti için geçerli alt sınırdır, ν üzerinde en büyüklenir.
-Raporlanan amaç ve sınırlar yalnız erişim maliyetidir (ε·açılış eşitlik bozucusu çıkarılır). Varsayılan 350 milyar TL
-bütçeyle ölçüm (`budget.py` başındaki not, ikişer soğuk çalıştırma): 5 km / 15 sn gap %2,2–2,3; 3 km / 15 sn %6,8–9,1;
-2 km / 60 sn %9,9–15,4. Erişim maliyeti toplamın ≈%10'u olduğundan alt sınırın küçük mutlak hatası bütçe modunda
-göreli olarak ≈10 kat büyük görünür.
+Raporlanan amaç ve sınırlar yalnız erişim maliyetidir (ε·açılış eşitlik bozucusu LB(ν)'ye girmez; MIP kaynaklı
+sınırlardan ε·B düşülür). ν araması log ν üzerinde ve yönü yalnız sınır değerlerinden seçer (alt problemin açılış
+maliyeti yakınsamamış çarpanlarda yanlış yönü gösterebiliyor; doğrulama bulgusu, §10): ilk ν (1 = serbest problem) →
+iki yönde birer deneme → iyi yönde adımı büyüterek köşeli ayraç → altın oran araması (kısa süreli deneme yakınsamış en
+iyi noktaya karşı "kararsız" kaybederse bir dilim daha alır, yine kararsızsa arama durur) → kalan süre en iyi ν'de
+çarpanların yakınsatılmasına (az sayıda ν, her birine uzun süre). A evresi T'nin en çok %35'i; arama iyileştirme
+evresinde arka plan iş parçacığında kaldığı yerden sürer. Çekirdek MIP ve LP yuvarlamasının adayları 1'e en yakın
+değerlendirilmiş ν'nin indirgenmiş maliyetleriyle seçilir (geliştirme denemesi, depoda saklanmadı: 3 km'de en iyi ν'nin
+indirgenmiş maliyetleriyle LP yuvarlaması ve çekirdek MIP pencere aramasının çözümünü iyileştirmedi). Oyuncak test:
+ilk adım yanlış taraftayken arama yoğun bir ν ızgarasının en iyisine ulaşıyor
+(`test_budget_nu_search_recovers_from_wrong_first_step`; eski arama orada ν = 1'de kalıyordu).
+
+Ölçüm: varsayılan 350 milyar TL bütçe, 15 sn, 3'er soğuk çalıştırma (`data/processed/solver_benchmark.json`, `butce`
+anahtarı; `pipeline/31_benchmark.py --butce`). Para milyar TL; aralıklar en az–en çok.
+
+| Izgara | bulunan erişim maliyeti U | alt sınır L | gap | en iyi ν | son çözümün kaynağı | toplam süre |
+|---|---|---|---|---|---|---|
+| 5 km | 55,15–55,48 | 53,81–53,89 | %2,29–2,96 | 2 (3/3) | pencere araması + cila (3/3) | 14,7 sn |
+| 3 km | 34,12–34,41 | 31,98–32,02 | %6,16–6,98 | 0,5 (3/3) | çekirdek MIP (2/3), LP yuvarlaması + cila (1/3) | 14,7–14,8 sn |
+
+Her çalıştırmada açılış maliyeti bütçeye eşit (bütçe satırı bağlayıcı), durum `sure_doldu`; hepsi bağımsız denetimden
+geçti ve süre sınırını 0,5 sn'den fazla aşmadı. 2 km bütçe modu ölçülmedi. Erişim maliyeti toplamın ≈%10'u olduğundan
+(§4: 3 km'de 36,04 / 381,31) alt sınırın küçük mutlak hatası bütçe modunda göreli olarak ≈10 kat büyük görünür.
 
 **Yeni parametre yok.** Strateji sabitleri (A evresi payı, çekirdek boyutları, pencere boyu, durma ölçütleri, hacim
 algoritması ayarları) model parametresi değil, ölçümle seçilmiş modül sabitleri (`solve.py`, `lagrange.py`, `lns.py`
@@ -136,7 +156,7 @@ değerleri (şartname 7.6 için).
 | hastane (IV-C / V-B / V-C / V-D) | 69 (48 / 13 / 8 / 0) | 89 (67 / 22 / 0 / 0) | 110 (106 / 4 / 0 / 0) |
 | toplam yatak (talep 18.617,5) | 18.795 | 18.729 | 18.792 |
 | açılış / erişim / toplam (milyar TL) | 355,83 / 46,78 / 402,61 | 345,28 / 36,04 / 381,31 | 346,72 / 30,30 / 377,02 |
-| nüfus ağırlıklı ortalama yol | 4,16 km | 3,21 km | 2,69 km |
+| nüfus ağırlıklı ortalama yol | 4,16 km | 3,20 km | 2,69 km |
 | 10 / 20 km içindeki nüfus | %95,8 / %98,7 | %95,0 / %98,6 | %95,5 / %98,6 |
 | en uzak atama | 27,0 km | 29,7 km | 29,7 km |
 | 50 / 199 / 399 yataklı hastane (sınıf sınırında) | 17 / 21 / 13 | 15 / 40 / 20 | 17 / 73 / 2 |
@@ -327,7 +347,7 @@ ayırt edilemeyen p yok. 5 km'de p = 70'in eski değeri %0,009 kötüydü (402,6
 | "fark gap içinde" (n*'dan ayırt edilemeyen) p'ler | 82–88, 90–96 | yok (yalnız n* = 69) |
 | bunlardan alt sınırı serbest çözümün %0,02'den fazla altında kalan ("çözülmemiş") | 83–88, 90–95 (12 nokta) | yok (serbest çözüm kanıtlı optimum) |
 | uç noktalar | p = 40: +%11,9; p = 150: +%5,6 | p = 35: +%19,3; p = 120: +%5,2 |
-| gap: ortanca (en kötü) | %0,165 (%2,3, p = 40) | %0,129 (%3,6, p = 40); dip (64–73) ≤ %0,02 |
+| gap, p ≠ n* noktaları üzerinden: ortanca (en kötü) | %0,165 (%2,3, p = 40) | %0,129 (%3,6, p = 40); dip (64–73) ≤ %0,02 |
 
 **Kabul ölçütü** (güçlendirilmiş; `acceptance` alanı ve
  `tests/test_phase3_outputs.py::test_p_sweep_best_equals_free_optimum`):
@@ -342,8 +362,9 @@ arasındaki hiçbir p'nin n*'dan kötü olduğu alt sınırlarla kanıtlanamıyo
 değerinin altında; serbest çözümün kendi belirsizliği 236 milyon TL, %0,062). "Neden tam 89?" sorusunun dürüst yanıtı:
 "88–90 ekonomik olarak eşdeğer (fark 3,9–25,9 milyon TL, toplamın on binde birinden az); 89 bulunan en iyisi, ama bu
 gap'lerle tek optimum olduğu kanıtlanamıyor". 5 km'de ise sonuç kesin: serbest optimum kanıtlı (alt sınır = üst sınır)
-ve taramadaki diğer 29 p'nin her birinin alt sınırı ondan büyük — **p = 69 tek en iyi hastane sayısı**; en yakın rakip p
-= 68 kanıtlı olarak en az 4,8 milyon TL (bulunan çözümüyle 8,3 milyon TL) pahalı.
+ve taramadaki diğer 29 p'nin her birinin alt sınırı ondan büyük — **p = 69, taranan p değerleri arasında tek en iyi
+hastane sayısı** (taranmayan p'ler, ör. 77 ve 79, için ayrı kanıt yok); en yakın rakip p = 68 kanıtlı olarak en az
+4,8 milyon TL (bulunan çözümüyle 8,3 milyon TL) pahalı.
 Açıklama katmanı (şartname 7.3, "N−1 ve N+1 ile kıyas") bu dosyadaki `fark_tl` ve `fark_gap_icinde` alanlarını
 kullanmalı; canlı çözümlerin (%1 gap) farkları bunun için yeterince kesin değil.
 
@@ -360,7 +381,8 @@ milyar TL). Sağ kolda her ek hastane sabit kısım ve en az 50 yatak getirir; e
   bütçe modu + solve() boru hattı (ayrı süreçte ve aynı süreçte).
 - **Lagrange** (`tests/test_phase3_lagrange.py`): alt problem bağımsız LP kurulumuyla aynı G_jk'yı veriyor; L(μ) ≤
   kaba kuvvet optimumu (rastgele ve yakınsamış μ; toplam, sabit p, en az, en çok, kilit, α = 1,5 + arsa); bütçe
-  satırının ν gevşetmesi her ν için geçerli ve solve() bütçe modunda kaba kuvvet optimumunu buluyor; durum etiketleri
+  satırının ν gevşetmesi her ν için geçerli ve solve() bütçe modunda kaba kuvvet optimumunu buluyor; ν araması ilk
+  adımı yanlış taraftayken de yoğun ν ızgarasının en iyisine ulaşıyor (en iyi ν < 1 ve > 1); durum etiketleri
   (yasak kilit, erişilemeyen gap → `gap_ulasilamadi`); sınıf başına satırlar MILP'i değiştirmiyor ve LP sınırını
   yükseltiyor; 5 km sertifika; 3 km canlı hedef (≤ 15 + 0,5 sn); sert süre sınırı (5 / 3 / 2 km ve sabit p); k = 0
   yapısı; çekirdek MIP sırasında iptal.
@@ -393,7 +415,7 @@ yanlış çıkmadı (hiçbir ızgarada iddia edilen alt sınırın altında çö
 | Bütçe modu varsayılan 350 milyar TL bütçeyle 5 km'de çözüm bulamıyordu, 3 km'de serbest çözümden kötü çözüm veriyordu; alt sınırı yoktu | yüksek | serbest çözümle tohumlama; sezgisel önce kapsar sonra kalan bütçeyi harcar; bütçe satırının ν ile Lagrange gevşetmesi; raporlanan sınırlardan ε eşitlik bozucusu çıkarıldı (§3) | 5 / 3 km testte olurlu, alt sınırlı ve serbest çözümden kötü değil (`test_budget_mode_default_budget`; oyuncaklarda kaba kuvvete eşit: `test_budget_lagrange_bound_valid_on_toys`) |
 | Kapsama kartı (LSCP) "R içinde bir hastane" diyor ama k = 50 listeleriyle hesaplanıyordu (26 / 27 / 34); 2 km değeri kanıtsız | orta | kart R içindeki tüm adaylarla (k = 0) yeniden; k = 50 değeri ayrı ve etiketli ikinci satır; satır/sütun baskınlığıyla küçültme → 2 km de kanıtlı | R içindeki tüm adaylarla 25 / 23 / 24, k = 50 listeleriyle 26 / 27 / 34 — hepsi kanıtlı (`data/processed/sinir_kartlari.json`, §7) |
 | Önceden çözülmüş 3 / 2 km çözümlerinden daha ucuzları vardı (gap içinde) | düşük | doğrulamanın çözümleri MIP başlangıcı; 3 km 30 dk, 2 km 60 dk, 5 km kanıtlı optimuma uzun çözüm | 5 km kanıtlı optimum (402,6109; alt sınır = üst sınır); 3 km 381,3307 → 381,3143 (fark %0,14 → %0,062); 2 km 377,2767 → 377,0216 (fark %0,30 → %0,21) (§4) |
-| U eğrisinin dibindeki değerler kötüydü (3 km'de 88 ile 89 farkı ≈100 kat abartılı); kabul testi zayıftı (yalnız p = n* serbest çözümle tohumlanıyordu); p = 83 eksikti | orta | n* ± 3 (+ 83) simetrik başlangıçlarla (serbest çözümden ve komşu p'lerden türetilen) uzun yeniden çözüm; her noktada alt ve üst sınır; "fark gap içinde" işareti; güçlendirilmiş kabul testi | 3 km'de 88 − 89 farkı 428,7 → 3,9 milyon TL; düzlük (82–88, 90–96) "fark gap içinde" işaretli; 5 km'de p = 69 kanıtlı tek en iyi (§8) |
+| U eğrisinin dibindeki değerler kötüydü (3 km'de 88 ile 89 farkı ≈100 kat abartılı); kabul testi zayıftı (yalnız p = n* serbest çözümle tohumlanıyordu); p = 83 eksikti | orta | n* ± 3 (+ 83) simetrik başlangıçlarla (serbest çözümden ve komşu p'lerden türetilen) uzun yeniden çözüm; her noktada alt ve üst sınır; "fark gap içinde" işareti; güçlendirilmiş kabul testi | 3 km'de 88 − 89 farkı 428,7 → 3,9 milyon TL; düzlük (82–88, 90–96) "fark gap içinde" işaretli; 5 km'de p = 69 taranan p'ler arasında kanıtlı tek en iyi (§8) |
 | 2 km 60 sn'de %1 başarısı abartılıydı; çekirdek MIP kök düğümde takılınca kurtaran yol yoktu | orta–yüksek | LP yuvarlaması + pencere araması + duran çekirdeğin yeniden başlatılması + Lagrange B'nin arka planda sürmesi (§3) | 2 km 10/10, 3 km 10/10 soğuk çalıştırmada %1 (§5, `solver_benchmark.json`) |
 | "Dizüstü ≈%40 yavaşsa bile 15 sn içinde" iddiası desteksizdi | orta | iddia kaldırıldı; dizüstü ölçümü Faz 8'e | §5, §11 |
 | Çekirdek MIP alt süreci ana süreç ölünce yaşamaya devam ediyordu | orta | gözcü iş parçacığı, kibar durdurma, sonda tek ileti, `os._exit`, `finally` temizliği (§3) | `tests/test_phase3_process.py` |
@@ -401,6 +423,7 @@ yanlış çıkmadı (hiçbir ızgarada iddia edilen alt sınırın altında çö
 | `lb = min(lb, ub)` kırpması geçersiz bir alt sınırı gizleyebilirdi | düşük | kırpma kaldırıldı; aşan kaynak reddedilip kaydedilir (§3) | `bounds.lb_rejected` |
 | Süre sınırı (özellikle yüklü makinede) birkaç saniye aşılabiliyordu | düşük | sert süre bütçesi (§3) | 25/25 soğuk çalıştırma ≤ T + 0,5 sn; `test_hard_time_limit` |
 | `bounds.mip_kind` gerçekte çalışmayan tam MILP'i "full" yazıyordu | düşük | gerçekten çalışanlar yazılıyor (none / core / core+full / full) | varsayılan dosyalarda 5 / 3 km "core+full", 2 km "core+full" |
+| Bütçe modu ν araması yönü alt problemin açılış maliyetinden alıyordu; yakınsamamış çarpanlarda bu yanlış yönü gösterince (3 km) arama yalnız ters yöne gidip ν = 1'de kalıyor, alt sınır zayıf kalıyordu (geçerli ama gap geniş); rapordaki bütçe gap aralıkları saklı veriye dayanmıyordu | düşük–orta | iki yönlü deneme + köşeli ayraç + altın oran + en iyi ν'de uzun yakınsatma; arama iyileştirme evresinde arka planda sürer; çekirdek adayları ν ≈ 1'in indirgenmiş maliyetleriyle; bütçe çalıştırmaları kıyaslama dosyasına yazıldı | `test_budget_nu_search_recovers_from_wrong_first_step`; `solver_benchmark.json` `butce` (§3) |
 | Rapor: q_i katsayısı 3,12 yazılmıştı (kayıt 3,15) | düşük | düzeltildi | §2 |
 | Rapor: "k = 30 → +%1,2" 60 sn'lik bir çözümün üst sınırıydı (alt sınır zayıf LP) | düşük | uzun çözümle yeniden ölçüldü, aralık olarak verildi | k = 30: en az +%0,065 (kanıtlı), bulunan +%0,21; k = 10: en az +%4,7, bulunan +%6,2 (§6) |
 | Rapor: ayar deneylerinin verisi depoda yoktu | düşük | sonuç dosyaları `data/processed/solver_tuning/`e kopyalandı (README tablo → dosya eşlemesi) | §6 |
@@ -426,8 +449,9 @@ yanlış çıkmadı (hiçbir ızgarada iddia edilen alt sınırın altında çö
    işaretli p taraması kullanılmalı; canlı senaryo kıyasları (şehir sınıfı aç/kapa, kilit maliyeti, duyarlılık) %1'den
    küçük farklarda "fark gap içinde" diye etiketlenmeli ya da sıcak başlangıç ve sıkı gap ile çözülmeli.
 5. **Bütçe modunun gap'i geniş.** Alt sınır artık var (bütçe satırının Lagrange gevşetmesi) ama erişim maliyeti
-   toplamın ≈%10'u olduğundan göreli gap büyük: varsayılan bütçeyle 5 km %2,2–2,3, 3 km %6,8–9,1, 2 km %9,9–15,4
-   (`budget.py` ölçüm notu). Bütçe modunda sertifika beklenmemeli; arayüz farkı göstermeli.
+   toplamın ≈%10'u olduğundan göreli gap büyük: varsayılan bütçeyle ve 15 sn'de 5 km %2,29–2,96, 3 km %6,16–6,98
+   (3'er soğuk çalıştırma, `solver_benchmark.json` `butce` anahtarı, §3; 2 km ölçülmedi). Bütçe modunda sertifika
+   beklenmemeli; arayüz farkı göstermeli.
 6. **k = 50** korundu; "R içindeki tüm adaylar" (k = 0) seçeneği var (3 km'de 124.064 yay). Varsayılanı değiştirmek
    öğrencinin kararı; fark 3 km'de en çok %0,071 (§6).
 7. **p_min kanıtı.** 3 km'de p_min 28 (alt sınır 27; 300 sn), 2 km'de 35 (alt sınır 34; 600 sn) kanıtlanamadı; 5 km'de
@@ -451,7 +475,7 @@ yanlış çıkmadı (hiçbir ızgarada iddia edilen alt sınırın altında çö
   `backend/model/params.py` + `instance.py` (k = 0).
 - Kayıt: `data/reference/params/izgara.yaml` (`grid.k_nearest` ölçüm gerekçesi, 0 seçeneği; `grid.candidate_min_pop`
   ölçüm notu) → `pipeline/build_registry.py`.
-- Betikler: `pipeline/31_benchmark.py`, `pipeline/32_precompute.py` (defaults / bounds / sweep / refine / kcheck),
+- Betikler: `pipeline/31_benchmark.py` (`--butce`: bütçe modu), `pipeline/32_precompute.py` (defaults / bounds / sweep / refine / kcheck),
   `pipeline/33_faz3_figures.py`; `pipeline/30_solve_default.py --baseline` (yalnız HiGHS temel ölçümü).
 - Çıktılar: `data/processed/solver_benchmark.json`, `data/processed/solver_baseline.json`,
   `data/processed/sinir_kartlari.json`, `data/processed/solver_tuning/` (ayar deneylerinin ham sonuçları + README),
