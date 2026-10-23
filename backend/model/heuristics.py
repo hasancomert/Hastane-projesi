@@ -302,10 +302,87 @@ def greedy_local(inst: Instance, *, time_budget: float = 5.0, start_open: np.nda
     return st.open, moves
 
 
+def budget_heuristic(inst: Instance, *, time_budget: float = 5.0, start_open: np.ndarray | None = None,
+                     eval_gap: float = 1e-2, eval_time: float = 5.0, stop=None,
+                     nu_seq=(1.0, 1.6, 2.5, 4.0)) -> HeuristicResult:
+    """Bütçe modu sezgiseli — önce kapsama, sonra kalan bütçe (Faz 3 doğrulaması #9: eski açgözlü ekleme bütçeyi önce
+    yoğun bölgelerde erişimi azaltan büyük hastanelere harcıyor, 5 km'de 9 hücre kapsanmadan kalıyordu):
+      (1) talebin tamamını R içinde kapsayan maliyet-etkin bir açık küme: açılış maliyeti ν ile ölçeklenmiş SERBEST
+          problemin açgözlü + yerel araması (ν = 1 serbest modun kendisidir); kesin değerlendirmede (bütçe satırlı
+          atama/boyut) bütçeye sığmıyorsa ν büyütülür (daha az / daha ucuz hastane);
+      (2) bu kümeden başlayıp kalan bütçeyi erişimi azaltan eklemelere / takaslara harcayan bütçe kısıtlı yerel arama;
+      (3) kesin değerlendirme; (2) olurlu değilse ya da kötüyse (1)'in çözümü döner.
+    Kesin değerlendirme önce yaklaşık modelin sınıflarıyla LP (≈0,05–0,2 sn), olmazsa sınıf seçimli MIP (bütçe satırı
+    hastaneleri birbirine bağladığından 3 km'de ≈1 sn). start_open verilirse (1)'in ilk denemesi o kümedir.
+    Faz 3 ölçümü (varsayılan 350 milyar TL bütçe, 2,25 sn): 3 km'de ν = 1 kümesi sığıyor (erişim 36,62 milyar TL, 2,1 sn);
+    2 km'de de (39,21; 2,1 sn); 5 km'de (bütçe en düşük açılışın yalnız ≈%2 üstünde) ν = 1…4 kümelerinin hiçbiri sığmadı:
+    orada ilk olurlu çözüm bütçe Lagrange aramasının ν-çözümlerinden gelir (solve, budget.py)."""
+    from .budget import scaled_instance
+    t0 = time.perf_counter()
+    moves: dict = {"nu_tries": []}
+    M = ApproxModel(inst)
+
+    def left() -> float:
+        return time_budget - (time.perf_counter() - t0)
+
+    def busy() -> bool:
+        return not (stop is not None and stop.is_set())
+
+    def exact(om: np.ndarray, mip: bool) -> EvalResult:
+        oj = np.flatnonzero(om)
+        ev = evaluate(inst, oj, cls=M.state(om).hk[oj])
+        if ev.ok or not mip:
+            return ev
+        return evaluate(inst, oj, gap=eval_gap, time_limit=max(0.2, min(eval_time, left())))
+
+    base, base_ev = None, None
+    tries = [("start", start_open)] if start_open is not None else []
+    tries += [(nu, None) for nu in nu_seq]
+    for nu, om0 in tries:
+        if not busy() or (left() <= 0 and moves["nu_tries"]):
+            break
+        if om0 is None:
+            om, mv = greedy_local(scaled_instance(inst, float(nu)), time_budget=max(0.2, 0.35 * max(left(), 0.0)),
+                                  stop=stop)
+            if mv.get("unassigned", 0) > 0:
+                moves["nu_tries"].append({"nu": nu, "ok": False, "neden": "kapsanmayan talep"})
+                continue
+        else:
+            om = (om0 | inst.lock_open) & ~inst.lock_closed
+        ev = exact(om, mip=True)
+        moves["nu_tries"].append({"nu": nu, "ok": bool(ev.ok), "n": int(om.sum())})
+        if ev.ok:
+            base, base_ev = om, ev
+            moves["nu"] = nu
+            break
+    t1 = time.perf_counter()
+    if base is None:
+        return HeuristicResult(False, None, None, None, t1 - t0, construct_s=t1 - t0, moves=moves,
+                               message="Bütçeye sığan ve tüm talebi R içinde karşılayan açık küme bulunamadı.")
+    best_ev = base_ev
+    if busy() and left() > 0.2:
+        om2, mv2 = greedy_local(inst, time_budget=max(0.2, 0.6 * left()), start_open=base, stop=stop)
+        moves.update({k: v for k, v in mv2.items() if k in ("add", "drop", "swap", "construct_add", "unassigned")})
+        if mv2.get("unassigned", 0) == 0 and not np.array_equal(om2, base):
+            ev2 = exact(om2, mip=left() > 0.5)
+            if ev2.ok and ev2.solver_objective_tl < best_ev.solver_objective_tl * (1 - 1e-12):
+                best_ev = ev2
+        moves["approx_objective_tl"] = mv2.get("approx_objective_tl")
+    t2 = time.perf_counter()
+    sol = best_ev.solution
+    sol.source = "heuristic"
+    return HeuristicResult(True, sol, best_ev.objective_tl, moves.get("approx_objective_tl"), t2 - t0,
+                           construct_s=t1 - t0, local_s=t2 - t1, moves=moves, eval=best_ev)
+
+
 def heuristic(inst: Instance, *, time_budget: float = 5.0, start_open: np.ndarray | None = None,
               swap: bool = True, repair_steps: int = 5, eval_gap: float = 1e-3,
               eval_time: float = 5.0, stop=None) -> HeuristicResult:
-    """Açgözlü + yerel arama, ardından kesin değerlendirme (evaluate). Olurlu çözüm bulamazsa ok=False."""
+    """Açgözlü + yerel arama, ardından kesin değerlendirme (evaluate). Olurlu çözüm bulamazsa ok=False.
+    Bütçe modunda budget_heuristic (önce kapsama, sonra kalan bütçe)."""
+    if inst.mode == "butce" and inst.budget is not None:
+        return budget_heuristic(inst, time_budget=time_budget, start_open=start_open, eval_gap=eval_gap,
+                                eval_time=eval_time, stop=stop)
     t0 = time.perf_counter()
     open_mask, moves = greedy_local(inst, time_budget=time_budget, start_open=start_open, swap=swap, stop=stop)
     t1 = time.perf_counter()

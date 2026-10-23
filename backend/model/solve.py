@@ -1,24 +1,36 @@
 """Tek giriş noktası: solve(...) → JSON'a çevrilebilir sonuç sözlüğü (şartname 4.6).
 
-Akış: parametreler (+ kullanıcı değişiklikleri) → örnek (yapı önbellekli) → ön olurluluk denetimi → sezgisel (açgözlü +
-yerel arama + kesin değerlendirme) → Lagrange gevşetmesi A evresi (hızlı geçerli alt sınır + hafif Lagrange sezgiseli;
-hedef gap'in yarısına ulaşılırsa biter) → çekirdek MIP (Lagrange'ın seçtiği adaylar ve yakın yaylarla küçük MILP, AYRI
-SÜREÇTE) ve aynı anda ana süreçte Lagrange B evresi (alt sınır yükselir; çekirdeğin çözümleri üst sınır olarak beslenir)
-→ en iyi çözüm açık kümesinde sınıf/atama cilası (evaluate) → gerekirse Lagrange 2. evre → [uzun süre sınırında ya da
-bütçe modunda tam MILP] → bağımsız denetim (checks) → KPI'lar ve maliyet kırılımı.
+Akış: parametreler (+ kullanıcı değişiklikleri) → örnek (yapı önbellekli) → ön olurluluk denetimi → başlangıçlar (verilen
+start; aynı yapıdaki önceki çözümlerin açık kümeleri bu parametrelerle yeniden değerlendirilir) → sezgisel (açgözlü +
+yerel arama + kesin değerlendirme; bütçe modunda önce kapsama, sonra kalan bütçe) → Lagrange A evresi (hızlı geçerli alt
+sınır; sınır durulunca biter; bütçe modunda bütçe satırının ν ile gevşetilmesi, budget.py) → İYİLEŞTİRME evresi:
+  * çekirdek problem (Lagrange'ın seçtiği adaylar + yakın yaylar) ve LP gevşetmesinin yuvarlanması (lns.lp_round);
+  * çekirdek MIP AYRI SÜREÇTE; ilerlemesi ölçülür, durursa (kök LP'den sonra CORE_STALL_S boyunca iyileşme yok) ana
+    süreçteki daha iyi çözümden farklı aday/yay kümesiyle yeniden başlatılır (2. deneme);
+  * Lagrange B evresi arka plan iş parçacığında (sınır durulana dek; çekirdeğin ve pencerelerin çözümleri üst sınır
+    olarak beslenir), aynı anda ana iş parçacığında pencere araması (lns.WindowSearch: yarıçap pencerelerinde kesin
+    küçük MILP'ler); progress_cb iki iş parçacığından çağrılabilir (olaylar kilitle sıralanır);
+→ cila (en iyi açık kümede sınıf/atama MIP'i) → [uzun süre sınırında tam MILP] → gerekirse Lagrange 2. evre →
+bağımsız denetim (checks) → KPI'lar ve maliyet kırılımı.
+
+Süre: toplam duvar süresi time_limit'i en çok ≈0,5 sn aşar (sert sınır): her evre T0 + time_limit − (cila + sonuç payı)
+anına göre sınırlanır, alt süreç kibarca durdurulur (son çözümü alınır) ve gerekirse öldürülür.
 
 Faz 3 ölçümü (4 çekirdekli geliştirme konteyneri, varsayılan parametreler): güçlü bağlantılı tam modelin kök LP'si 5 km'de
 ≈7–13 sn, 3 km'de ≈126–160 sn sürüyor, 2 km'de 60 sn'de bitmiyor; Lagrange sınırı 3 km'de aynı değere ≈3–5 sn'de ulaşıyor.
-Bu yüzden canlı çözümde alt sınırın (optimallik sertifikasının) ana kaynağı Lagrange gevşetmesidir (lagrange.py).
-Bütçe modunda (butce) Lagrange sınırı yok: eski yol (sezgisel → tam MILP → gerekirse zayıf LP sınırı).
+Bu yüzden canlı çözümde alt sınırın (optimallik sertifikasının) ana kaynağı Lagrange gevşetmesidir (lagrange.py, budget.py).
 
-Durum kodları (status): optimal (hedef gap'e ulaşıldı) | sure_doldu (süre doldu, en iyi çözüm) | durduruldu
-(kullanıcı iptal etti) | sezgisel (MIP çalışmadı/çözüm üretmedi; sezgisel çözüm) | olurlu_degil | cozum_yok | hata.
+Durum kodları (status): optimal (hedef gap'e ulaşıldı) | sure_doldu (süre doldu, en iyi çözüm) | gap_ulasilamadi (süre
+dolmadan durdu: alt/üst sınır yöntemleri yakınsadı, hedef gap bu yöntemlerle sayısal olarak erişilemiyor) | durduruldu
+(kullanıcı iptal etti) | sezgisel (MIP/Lagrange çalışmadı; sezgisel çözüm) | olurlu_degil | cozum_yok | hata.
+Bütçe modunda raporlanan amaç, üst ve alt sınır yalnız ERİŞİM maliyetidir (ε·açılış eşitlik bozucusu çıkarılır: MIP
+kaynaklı sınırlardan ε·bütçe düşülür, böylece alt sınır ≤ objective_tl her zaman geçerlidir).
 Para birimleri TL, mesafeler yol km.
 """
 from __future__ import annotations
 
 import math
+import os
 import threading
 import time
 from collections import OrderedDict
@@ -26,12 +38,14 @@ from typing import Any, Callable, Mapping
 
 import numpy as np
 
+from . import budget as budget_mod
 from . import checks as checks_mod
 from . import lagrange as lagrange_mod
+from . import lns
 from .evaluate import assignment_duals, cost_breakdown, evaluate, per_hospital
 from .heuristics import heuristic
 from .instance import InfeasibleError, Instance, Locks, Solution, build_instance
-from .milp import BUDGET_EPS, SCALE, MilpModel
+from .milp import BUDGET_EPS, SCALE, STOP_GRACE_S, MilpModel
 from .params import ParamError, Params
 
 KPI_RADII_KM = (10, 20, 30)          # "nüfusun %Y'si Z km içinde" (raporlama eşikleri; model parametresi değil)
@@ -40,22 +54,35 @@ FULL_MIP_MIN_TIME = 300.0            # sn; süre sınırı bu kadarsa (önceden 
                                      # kök LP'si 5 km ≈7–13 sn, 3 km ≈126–160 sn, 2 km > 60 sn (canlı çözümde kullanılamaz)
 CORE_N = 150                         # çekirdek MIP: G_j en küçük aday sayısı (+ incumbent'in açık hücreleri)
 CORE_M = 8                           # çekirdek MIP: talep hücresi başına tutulan en yakın çekirdek adayı
-CORE_GAP = 1e-3                      # çekirdek MIP'in kendi gap'i
+CORE_RETRY = ((CORE_N + 50, 6), (CORE_N + 100, 6))   # 2./3. deneme: daha geniş aday kümesi, daha az yay (kök LP hızlı)
+CORE_GAP = 1e-3                      # çekirdek MIP'in kendi gap'i — en çok; hedef gap'in yarısından büyük olamaz
 CORE_MIN_TIME = 2.0                  # çekirdek MIP için gereken en az süre (sn)
-PHASE1_SHARE = 0.25                  # canlı çözümde Lagrange 1. (A) evrenin süre payı; kalan süre çekirdek MIP + B evresi
-PHASE1_STALL_TOL = 1e-4              # 1. evre: L son pencerede bundan az (göreli) arttıysa dur
-CORE_FALLBACK_SHARE = 0.3            # çekirdek MIP pencerenin bu payında iyileştiremezse B evresinde Lagrange sezgiseli açılır
-                                     # (ölçüm: 3 km'de 5 çalıştırmanın 1'inde, 2 km ılık çözümde 5'in 2'sinde çekirdek hiç
-                                     # iyileştiremedi ve gap %1,3–2,4'te kaldı)
+CORE_STALL_S = 4.0                   # çekirdek MIP kök LP'sinden sonra en az bu kadar (ve penceresinin %25'i) iyileştiremezse
+                                     # ve ana süreçte daha iyi çözüm varsa yeniden başlatılır (Faz 3 doğrulaması D1/D2:
+                                     # başarısız 2 km / yüklü 3 km çalıştırmalarında çekirdek başlangıcını hiç iyileştiremedi;
+                                     # ölçüm: kök düğümde kesme turlarında kalıyor, 37 sn'de 0 düğüm). Bu sürümün kıyaslaması
+                                     # (data/processed/solver_benchmark.json, 10'ar soğuk çalıştırma): LP yuvarlamasından
+                                     # sonra çekirdek MIP 3 km'de 10, 2 km'de 30 denemenin hiçbirinde incumbent'ı
+                                     # iyileştiremedi; iyileşmeyi pencere araması ve cila verdi. Bütçe modunda (3 km) ise
+                                     # çekirdek MIP pencerelerden belirgin iyi çözüm buldu (erişim 35,86 → 33,45 milyar TL).
+PHASE1_SHARE = 0.2                   # Lagrange A evresinin en çok süre payı (sınır durulursa daha erken biter; sınır
+                                     # B evresinde arka planda yükselmeye devam eder)
+PHASE1_STALL_TOL = 1e-4              # A / B evresi: L son max(2 sn, geçen sürenin %30'u) içinde bundan az (göreli) arttıysa dur
+PHASE1_LH_CORE: dict = {"class_mip_share": 0.0, "local_search": False}
 # çekirdek MIP planlıyken A evresinde Lagrange sezgiseli hafif (yalnız sabit sınıflı LP + onarım): ölçüm (3 km, 15 sn,
 # 3'er çalıştırma): tam sezgiselle A evresi yalnız ≈155 yineleme yapıyor, son gap %0,33–0,90; hafif sezgiselle ≈210
-# yineleme, gap %0,22–0,36 (üst sınırı zaten çekirdek MIP veriyor)
-# (sayı sınırı ya da sabit p varken tam sezgisel kalır: kapsama onarımı sayıyı bozduğundan hafif sezgisel p'yi
-# sağlayan çözüm üretemiyor ve çekirdek MIP kötü bir başlangıçla kalıyor — 3 km p taramasında p = 70'te gap %1,27)
-PHASE1_LH_CORE: dict = {"class_mip_share": 0.0, "local_search": False}
-LAGRANGE_MAX_BEFORE_FULL_MIP = 30.0  # tam MILP planlanmışsa Lagrange 1. evre en çok bu kadar (sn; sınır ≈10–20 sn'de durulur)
+# yineleme, gap %0,22–0,36. Sayı sınırı ya da sabit p varken tam sezgisel kalır (kapsama onarımı sayıyı bozar).
+LAGRANGE_MAX_BEFORE_FULL_MIP = 30.0  # tam MILP planlanmışsa Lagrange 1. evre en çok bu kadar (sn)
+BUDGET_LAG_SHARE = 0.35              # bütçe modu: ν araması (A evresi) en çok bu pay
+FIN_RESERVE_S = 0.25                 # denetim + KPI + sonuç sözlüğü için ayrılan süre (sn)
+EARLY_STOP_MARGIN = (0.5, 0.05)      # bu kadar (sn, süre payı) önce biten çözüm "süre doldu" değil, "erken durdu" sayılır
+LB_TOL = 1e-9                        # alt sınır > üst sınır farkı bu kadar (göreli) ise sayısal tolerans (kayıtla eşitlenir)
+SOL_CACHE_KEYS = 8                   # önceki çözüm önbelleği: yapı sayısı
+SOL_CACHE_PER_KEY = 4                # yapı başına saklanan açık küme
+SEED_MAX = 2                         # yeniden değerlendirilen en çok önceki çözüm
 _MODEL_CACHE: "OrderedDict[tuple, tuple[MilpModel, threading.Lock]]" = OrderedDict()
 MODEL_CACHE_SIZE = 4
+_SOL_CACHE: "OrderedDict[tuple, list[dict]]" = OrderedDict()
 
 
 def _fmt(x: float, nd: int = 1) -> str:
@@ -107,8 +134,49 @@ def _get_model(inst: Instance, linking) -> tuple[MilpModel, threading.Lock | Non
     return m, lock, "kuruldu"
 
 
-def clear_cache() -> None:
+def clear_cache(all_caches: bool = True) -> None:
+    """Model ve önceki çözüm önbelleklerini boşaltır; all_caches: Lagrange çarpanı ve bütçe ν önbellekleri de."""
     _MODEL_CACHE.clear()
+    _SOL_CACHE.clear()
+    if all_caches:
+        lagrange_mod.clear_cache()
+        budget_mod.clear_cache()
+
+
+# ---------------------------------------------------------------- önceki çözümler (şartname 4.6: önceki çözüm başlangıç)
+def _sol_key(inst: Instance) -> tuple:
+    return (inst.s.key, inst.nK, inst.nJ)
+
+
+def remember_solution(inst: Instance, sol: Solution) -> None:
+    """Açık küme + sınıflar yapı anahtarıyla saklanır (aynı yapıdaki sonraki çözümlerde başlangıç adayı)."""
+    key = _sol_key(inst)
+    lst = _SOL_CACHE.setdefault(key, [])
+    sig = (sol.open_j.tobytes(), sol.cls.tobytes())
+    lst[:] = [e for e in lst if (e["open_j"].tobytes(), e["cls"].tobytes()) != sig]
+    lst.insert(0, {"open_j": sol.open_j.copy(), "cls": sol.cls.copy(), "mode": inst.mode,
+                   "params_hash": inst.params.hash()})
+    del lst[SOL_CACHE_PER_KEY:]
+    _SOL_CACHE.move_to_end(key)
+    while len(_SOL_CACHE) > SOL_CACHE_KEYS:
+        _SOL_CACHE.popitem(last=False)
+
+
+def cached_open_sets(inst: Instance) -> list[dict]:
+    """Bu örnekte kullanılabilecek önceki açık kümeler (kilitler ve sayı sınırlarıyla uyumlu olanlar)."""
+    out = []
+    for e in _SOL_CACHE.get(_sol_key(inst), []):
+        oj = e["open_j"]
+        if len(oj) == 0 or oj.max() >= inst.nJ or inst.lock_closed[oj].any():
+            continue
+        if not np.isin(np.flatnonzero(inst.lock_open), oj).all():
+            continue
+        if not (len(oj) >= inst.count_min and (inst.count_max is None or len(oj) <= inst.count_max)):
+            continue
+        if not inst.y_ub[oj, e["cls"]].all():
+            e = dict(e, cls=None)
+        out.append(e)
+    return out
 
 
 # ---------------------------------------------------------------- KPI'lar
@@ -156,32 +224,38 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
           polish: bool = True, compute_duals: bool = False, use_heuristic: bool = True, use_mip: bool = True,
           fallback_bound: bool = True, start: Solution | None = None, mip_options: dict | None = None,
           instance: Instance | None = None, isolate: bool = True, use_lagrange: bool = True, mip: str = "auto",
-          lagrange_mu0: np.ndarray | None = None, polish_time: float | None = None) -> dict:
+          lagrange_mu0: np.ndarray | None = None, polish_time: float | None = None, use_cache: bool = True,
+          use_windows: bool = True) -> dict:
     """Optimizasyonu çalıştırır; sonuç sözlüğü (JSON'a çevrilebilir). Hata/olursuzluk durumunda da sözlük döner.
 
     instance verilirse (testler, oyuncak örnekler) parametre/örnek kurulumu atlanır; overrides/mode/grid_km yok sayılır.
-    isolate=True (varsayılan): MIP ayrı bir süreçte çözülür; iptal (cancel_event) ve süre sınırı her an etkilidir
-    (aynı süreçte HiGHS kök LP sırasında kesilemiyor; bkz. MilpModel.solve). Ek yük ≈0,4 sn (Linux), Windows'ta ≈1 sn.
-    use_lagrange: Lagrange alt sınırı ve sezgiseli (butce modunda kendiliğinden kapalı).
-    mip: 'auto' → canlı çözümde 'core' (Lagrange A → çekirdek MIP ∥ Lagrange B → cila → gerekirse Lagrange 2. evre),
-    süre sınırı ≥ FULL_MIP_MIN_TIME ya da bütçe modunda 'full' (Lagrange → çekirdek MIP → tam MILP); 'none' MILP'siz
-    (yalnız sezgisel + Lagrange). use_mip=False ≡ 'none'.
-    lagrange_mu0: Lagrange başlangıç çarpanları (TL / talep hücresi; ör. önceki sonucun çarpanları).
+    isolate=True (varsayılan): tam MILP ayrı bir süreçte çözülür (çekirdek MIP her zaman ayrı süreçte); iptal
+    (cancel_event) ve süre sınırı her an etkilidir. Ek yük ≈0,4 sn (Linux), Windows'ta ≈1 sn.
+    use_lagrange: Lagrange alt sınırı ve sezgiseli (bütçe modunda bütçe satırının ν gevşetmesi).
+    mip: 'auto' → canlı çözümde 'core' (Lagrange A → LP yuvarlaması + çekirdek MIP ∥ Lagrange B + pencere araması →
+    cila), süre sınırı ≥ FULL_MIP_MIN_TIME ise 'full' (Lagrange → çekirdek evresi → tam MILP); 'none' MILP'siz.
+    use_mip=False ≡ 'none'. lagrange_mu0: Lagrange başlangıç çarpanları (TL / talep hücresi).
+    use_cache: aynı yapıdaki önceki çözümlerin açık kümeleri başlangıç adayıdır (şartname 4.6); çözüm sonunda saklanır.
+    use_windows: iyileştirme evresinde pencere araması.
     """
     T0 = time.perf_counter()
     times: dict[str, float] = {}
     trace: list[dict] = []
     stop = cancel_event or threading.Event()
 
+    emit_lock = threading.Lock()
+
     def emit(ev: dict) -> None:
+        """İz olayı (iş parçacığı güvenli: Lagrange B evresi arka planda da olay üretir)."""
         ev = dict(ev)
         ev.setdefault("t_total", round(time.perf_counter() - T0, 4))
-        trace.append(ev)
-        if progress_cb is not None:
-            try:
-                progress_cb(ev)
-            except Exception:
-                pass
+        with emit_lock:
+            trace.append(ev)
+            if progress_cb is not None:
+                try:
+                    progress_cb(ev)
+                except Exception:
+                    pass
 
     def fail(status: str, msg: str, **extra) -> dict:
         times["total_s"] = time.perf_counter() - T0
@@ -221,31 +295,33 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
     except InfeasibleError as e:
         return fail("olurlu_degil", str(e), **base)
 
-    def mobj(sol: Solution) -> float:
-        """Modelin amaç değeri (TL; butce'de ε·açılış dahil)."""
-        return sol.objective_tl(inst) + (BUDGET_EPS * sol.opening_tl(inst) if inst.mode == "butce" else 0.0)
+    # ---- süre bütçesi (sert sınır: T_END + ≈0,5 sn)
+    T_END = T0 + tl
+    fin_reserve = FIN_RESERVE_S + (min(max(0.05 * tl, 0.3), 3.0) if compute_duals else 0.0)
+    polish_reserve = min(0.08 * tl, 2.5) if polish else 0.0
+    reserve = polish_reserve + fin_reserve
 
-    # ---- dışarıdan başlangıç (ör. önceki çözüm) ve sezgisel
-    heur = None
+    def remaining() -> float:
+        return T_END - time.perf_counter()
+
+    def work_left() -> float:
+        """Ana evreler için kalan süre (cila ve sonuç payı düşülmüş)."""
+        return remaining() - reserve
+
+    is_budget = inst.mode == "butce" and inst.budget is not None
+    eps_B = BUDGET_EPS * float(inst.budget) if is_budget else 0.0
+
+    def mobj(sol: Solution) -> float:
+        """Modelin amaç değeri (TL; butce'de ε·açılış dahil) — çözüm karşılaştırmaları için."""
+        return sol.objective_tl(inst) + (BUDGET_EPS * sol.opening_tl(inst) if is_budget else 0.0)
+
+    def rep(sol: Solution) -> float:
+        """Raporlanan amaç (TL): toplam/sabit_p → açılış + erişim; butce → yalnız erişim."""
+        return sol.objective_tl(inst)
+
     best: Solution | None = None
     best_src = None
     best_solver_obj = None
-    if start is not None and checks_mod.check(inst, start)["ok"]:
-        best, best_src = start, "baslangic"
-    if use_heuristic and not stop.is_set():
-        hb = heuristic_time if heuristic_time is not None else min(max(0.15 * tl, 1.0), 10.0)
-        t = time.perf_counter()
-        # kesin değerlendirmede gap 1e-2: sezgisel yalnız ilk üst sınırdır (2 km'de 5 → 2,7 sn); en iyi çözüm sonda cilalanır
-        heur = heuristic(inst, time_budget=hb, stop=stop, eval_gap=1e-2, eval_time=min(5.0, max(1.0, 0.05 * tl)))
-        times["heuristic_s"] = time.perf_counter() - t
-        emit({"kind": "heuristic", "t": times["heuristic_s"], "primal": heur.objective_tl, "ok": heur.ok})
-        if heur.ok and checks_mod.check(inst, heur.solution)["ok"] and (best is None or mobj(heur.solution)
-                                                                         < mobj(best)):
-            best, best_src = heur.solution, "sezgisel"
-            best_solver_obj = heur.eval.solver_objective_tl if heur.eval else None
-
-    def remaining() -> float:
-        return tl - (time.perf_counter() - T0)
 
     def adopt(sol: Solution | None, src: str, solver_obj: float | None = None) -> bool:
         """Denetimden geçen ve daha iyi olan çözümü en iyi çözüm yapar."""
@@ -255,31 +331,79 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
         if best is not None and not mobj(sol) < mobj(best) * (1 - 1e-12):
             return False
         best, best_src, best_solver_obj = sol, src, solver_obj
+        emit({"kind": "cozum", "source": src, "primal": rep(sol)})
         return True
 
-    def gap_now(lbv: float | None) -> float | None:
-        if lbv is None or best is None:
+    # alt sınırlar (raporlanan birimde: butce'de yalnız erişim) — kaynak → değer
+    lbs: dict[str, float] = {}
+
+    def add_lb(src: str, v: float | None) -> None:
+        if v is not None and math.isfinite(v) and (src not in lbs or v > lbs[src]):
+            lbs[src] = float(v)
+
+    def best_lb() -> float | None:
+        return max(lbs.values()) if lbs else None
+
+    def gap_of(u: float | None, lbv: float | None) -> float | None:
+        if u is None or lbv is None:
             return None
-        u = mobj(best)
         return (u - lbv) / max(abs(u), 1e-9)
 
-    reserve = min(0.12 * tl, 3.0) if polish else 0.0
+    def certified(g: float, extra_ub: float | None = None) -> bool:
+        us = [v for v in ((rep(best) if best is not None else None), extra_ub) if v is not None]
+        v = gap_of(min(us), best_lb()) if us else None
+        return v is not None and v <= g + 1e-12
+
+    # ---- dışarıdan başlangıç ve önceki çözümler (aynı yapı; bu parametrelerle yeniden değerlendirilir)
+    if start is not None:
+        adopt(start, "baslangic")
+    seeds_info = []
+    if use_cache and not stop.is_set():
+        t = time.perf_counter()
+        for e in cached_open_sets(inst)[:SEED_MAX]:
+            if work_left() < 0.5:
+                break
+            ev = evaluate(inst, e["open_j"], cls=e["cls"]) if e["cls"] is not None else None
+            if ev is None or not ev.ok:
+                ev = evaluate(inst, e["open_j"], gap=1e-2, time_limit=max(0.2, min(2.0, 0.1 * work_left())))
+            ok = bool(ev.ok) and adopt(ev.solution, "onceki_cozum", ev.solver_objective_tl)
+            seeds_info.append({"mode": e["mode"], "n": int(len(e["open_j"])), "ok": bool(ev.ok), "adopted": ok,
+                               "objective_tl": ev.objective_tl if ev.ok else None})
+        times["seed_s"] = time.perf_counter() - t
+
+    # ---- sezgisel
+    heur = None
+    if use_heuristic and not stop.is_set():
+        hb = heuristic_time if heuristic_time is not None else min(max(0.15 * tl, 1.0), 10.0)
+        hb = max(0.3, min(hb, 0.4 * max(work_left(), 0.0)))
+        t = time.perf_counter()
+        # kesin değerlendirmede gap 1e-2: sezgisel yalnız ilk üst sınırdır (2 km'de 5 → 2,7 sn); en iyi çözüm sonda cilalanır
+        heur = heuristic(inst, time_budget=hb, stop=stop, eval_gap=1e-2,
+                         eval_time=max(0.3, min(5.0, max(1.0, 0.05 * tl), 0.3 * max(work_left(), 0.0))),
+                         start_open=None)
+        times["heuristic_s"] = time.perf_counter() - t
+        emit({"kind": "heuristic", "t": times["heuristic_s"], "primal": heur.objective_tl, "ok": heur.ok})
+        if heur.ok and heur.solution is not None:
+            adopt(heur.solution, "sezgisel", heur.eval.solver_objective_tl if heur.eval else None)
+
     mip_kind = "none" if not use_mip else mip
     if mip_kind not in ("auto", "full", "core", "none"):
         return fail("hata", f"Geçersiz MIP stratejisi: {mip!r}", **base)
-    lag_on = use_lagrange and inst.mode != "butce"
+    lag_on = use_lagrange
     if mip_kind == "auto":
         mip_kind = "full" if (not lag_on or tl >= FULL_MIP_MIN_TIME) else "core"
     if mip_kind == "core" and not lag_on:
         mip_kind = "full"
     use_core = lag_on and (mip_kind == "core" or (mip_kind == "full" and tl >= FULL_MIP_MIN_TIME))
-    tgap_core = 0.5 * tgap               # çekirdek MIP'in hedefi: hedef gap'in yarısı (daha iyi çözüm, aynı süre bütçesi)
+    tgap_core = 0.5 * tgap               # iyileştirme evresinin hedefi: hedef gap'in yarısı
+    core_gap = min(CORE_GAP, tgap_core)  # çekirdek MIP'in kendi gap'i (doğrulama #11: hedef gap < 1e-3 iken de tutarlı)
     constrained = inst.count_min > 0 or inst.count_max is not None    # sayı sınırı ya da sabit p
+    ran: list[str] = []                  # gerçekten çalışan MIP türleri (bounds.mip_kind)
 
     # ---- Lagrange gevşetmesi (A evresi)
-    lag = None
-    lag_lb = None
+    lag = None                           # serbest/sabit_p: lagrange.LagrangeResult; butce: budget.BudgetLagResult
     lag_info: dict = {}
+    budget_info: dict | None = None
 
     def lag_relay(t_off: float, phase: int):
         def relay(ev: dict) -> None:
@@ -290,37 +414,300 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
             emit(e)
         return relay
 
-    if lag_on and not stop.is_set():
-        cap = remaining() - reserve
+    if lag_on and not stop.is_set() and work_left() > 0.2:
+        cap = work_left()
         stall = 0.0
         if mip_kind == "core":
-            cap, stall = min(cap, PHASE1_SHARE * tl), PHASE1_STALL_TOL
+            cap, stall = min(cap, (BUDGET_LAG_SHARE if is_budget else PHASE1_SHARE) * tl), PHASE1_STALL_TOL
         elif mip_kind == "full":
             cap = min(cap, max(0.4 * cap, 3.0), LAGRANGE_MAX_BEFORE_FULL_MIP)
             stall = PHASE1_STALL_TOL if use_core else 0.0
         t_l0 = time.perf_counter() - T0
         emit({"kind": "phase", "phase": "lagrange", "t": t_l0})
-        lag = lagrange_mod.run(inst, start=best, time_limit=max(cap, 0.5),
-                               target_gap=tgap_core if use_core else tgap, stop=stop,
-                               progress_cb=lag_relay(t_l0, 1), mu0_tl=lagrange_mu0, stall_tol=stall,
-                               **(PHASE1_LH_CORE if use_core and not constrained else {}))
-        times["lagrange_s"] = time.perf_counter() - T0 - t_l0
-        if lag.ok:
-            lag_lb = lag.bound_tl
-            if lag.solution is not None and lag.solution is not best:
-                adopt(lag.solution, lag.source or "lagrange")
-            lag_info = {"bound_tl": lag.bound_tl, "ub_tl": lag.ub_tl, "gap": lag.gap, "iters": lag.iters,
-                        "time_s": lag.time_s, "init_s": lag.init_s, "init_source": lag.init_source,
-                        "lh_calls": lag.lh_calls, "lh_time_s": lag.lh_time_s, "sub_ms": lag.sub_ms,
-                        "source": lag.source}
+        if is_budget:
+            def relay_b(ev: dict) -> None:
+                emit({**ev, "t_total": round(t_l0 + ev["t"], 4), "dual": ev.get("lb"),
+                      "primal": rep(best) if best is not None else None})
+            lag = budget_mod.run(inst, time_limit=max(cap, 0.5), stop=stop,
+                                 solutions=[best] if best is not None else [], target_gap=tgap_core,
+                                 ub_access_tl=lambda: rep(best) if best is not None else None, progress_cb=relay_b)
+            times["lagrange_s"] = time.perf_counter() - T0 - t_l0
+            if lag.ok:
+                add_lb("lagrange_butce", lag.lb_tl)
+                # ν-problemlerinin çözümleri (serbest problemde olurlu): bütçeye sığanlar bütçe modunda değerlendirilir
+                for sol in sorted(lag.solutions, key=lambda x: x.access_tl(inst)):
+                    if work_left() < 0.5 or stop.is_set():
+                        break
+                    if sol.opening_tl(inst) > 1.03 * inst.budget:
+                        continue
+                    ev = evaluate(inst, sol.open_j, cls=sol.cls)       # sınıflar sabit LP (bütçe satırlı; hızlı)
+                    if not ev.ok:
+                        ev = evaluate(inst, sol.open_j, gap=1e-2, time_limit=max(0.2, min(1.0, 0.1 * work_left())))
+                    if ev.ok:
+                        adopt(ev.solution, "lagrange_butce", ev.solver_objective_tl)
+            budget_info = {"lb_tl": lag.lb_tl, "nu": lag.nu, "time_s": lag.time_s, "message": lag.message,
+                           "points": [p.as_dict() for p in lag.points]}
+        else:
+            lag = lagrange_mod.run(inst, start=best, time_limit=max(cap, 0.5),
+                                   target_gap=tgap_core if use_core else tgap, stop=stop,
+                                   progress_cb=lag_relay(t_l0, 1), mu0_tl=lagrange_mu0, stall_tol=stall,
+                                   **(PHASE1_LH_CORE if use_core and not constrained else {}))
+            times["lagrange_s"] = time.perf_counter() - T0 - t_l0
+            if lag.ok:
+                add_lb("lagrange", lag.bound_tl)
+                if lag.solution is not None and lag.solution is not best:
+                    adopt(lag.solution, lag.source or "lagrange")
+                lag_info = {"bound_tl": lag.bound_tl, "ub_tl": lag.ub_tl, "gap": lag.gap, "iters": lag.iters,
+                            "time_s": lag.time_s, "init_s": lag.init_s, "init_source": lag.init_source,
+                            "lh_calls": lag.lh_calls, "lh_time_s": lag.lh_time_s, "sub_ms": lag.sub_ms,
+                            "source": lag.source}
+    lag_ok = lag is not None and lag.ok
+    G_src = lag if lag_ok else None      # çekirdek aday seçimi (G_min_tl)
 
-    def certified(g: float) -> bool:
-        lbs = [v for v in (lag_lb, core_lb) if v is not None]
-        v = gap_now(max(lbs)) if lbs else None
-        return v is not None and v <= g + 1e-9
+    # ---- İYİLEŞTİRME evresi: LP yuvarlaması + çekirdek MIP (ayrı süreç; durursa yeniden) ∥ Lagrange B + pencereler
+    core_info: dict | None = None
+    core_lb = None
+    core_infeasible = False
+    improve_info: dict = {}
+    attempts: list[dict] = []
+    if use_core and lag_ok and not stop.is_set() and not certified(tgap_core):
+        stage_end = time.perf_counter() + work_left()
+        if mip_kind == "full":
+            stage_end = min(stage_end, time.perf_counter() + max(0.2 * tl, 30.0))
+
+        def stage_left() -> float:
+            return stage_end - time.perf_counter()
+
+        if stage_left() >= CORE_MIN_TIME:
+            ran.append("core")
+            emit({"kind": "phase", "phase": "cekirdek_mip", "t": time.perf_counter() - T0})
+            t_stage = time.perf_counter()
+            # (1) çekirdek + LP gevşetmesinin yuvarlanması
+            core, sel = lagrange_mod.core_instance(inst, G_src, best, n_keep=CORE_N, m=CORE_M)
+            rounded, rinfo = lns.lp_round(inst, core, sel, linking=linking,
+                                          time_limit=max(0.2, min(10.0, 0.3 * stage_left())),
+                                          G_tl=G_src.G_min_tl, stop=stop,
+                                          eval_time=max(0.2, min(2.0, 0.1 * stage_left())))
+            improve_info["lp_round"] = rinfo
+            for sol in rounded:
+                adopt(sol, "lp_yuvarlama")
+            # yuvarlanan kümenin sınıfları sabit sınıflı LP + onarımdan gelir: süre bolsa hemen sınıf seçimli cila
+            # (2 km ölçümü: ≈0,2–0,3 sn, ≈0,05% iyileşme); son cila yine yapılır
+            if (best is not None and best_src == "lp_yuvarlama" and not stop.is_set() and not certified(tgap_core)
+                    and stage_left() > 8.0):
+                ev = evaluate(inst, best.open_j, gap=1e-3, time_limit=min(3.0, 0.1 * stage_left()))
+                if ev.ok:
+                    adopt(ev.solution, "lp_yuvarlama+cila", ev.solver_objective_tl)
+            times["lp_round_s"] = time.perf_counter() - t_stage
+
+            handle = None
+            cur = {"sel": None, "core": None, "start_obj": math.inf, "t0": 0.0, "last_imp": 0.0, "best_seen": math.inf,
+                   "n": 0}
+
+            def start_core(n_keep: int, m: int, mu_src) -> None:
+                """Güncel en iyi çözümden çekirdek kurar ve alt süreçte MIP'i başlatır."""
+                nonlocal handle
+                t = time.perf_counter()
+                core_, sel_ = lagrange_mod.core_instance(inst, mu_src, best, n_keep=n_keep, m=m)
+                cm = MilpModel(core_, linking=linking)
+                opts = {}
+                if not is_budget and best_lb() is not None:
+                    opts["objective_target"] = best_lb() / (1.0 - tgap_core) / SCALE
+                win = max(stage_left() - STOP_GRACE_S, 0.3)
+
+                def relay_core(ev: dict, t_c0=time.perf_counter() - T0, k=cur["n"] + 1) -> None:
+                    ev = dict(ev)
+                    ev["t_total"] = round(t_c0 + ev["t"], 4)
+                    ev["core_dual"], ev["dual"] = ev.get("dual"), None       # çekirdeğin alt sınırı küresel değil
+                    ev["core"] = True
+                    ev["attempt"] = k
+                    if is_budget and ev.get("primal") is not None:
+                        ev["primal"] = None              # model amacı (ε dahil); rapor birimi değil
+                    emit(ev)
+                st_core = lagrange_mod.solution_to_core(best, sel_) if best is not None else None
+                handle = cm.start_isolated(time_limit=win, gap=core_gap, start=st_core, progress_cb=relay_core,
+                                           options=opts)
+                now = time.perf_counter()
+                cur.update(sel=sel_, core=core_, model=cm,
+                           start_obj=cm.objective_of(st_core) if st_core is not None else math.inf, t0=now,
+                           last_imp=now, best_seen=math.inf, n=cur["n"] + 1, build_s=now - t, n_keep=n_keep, m=m)
+
+            def finish_core(reason: str) -> None:
+                """Alt süreci kibarca durdurur, sonucunu alır, en iyi çözüme uygular; süreci her durumda kapatır."""
+                nonlocal handle, core_lb, core_infeasible, core_info
+                if handle is None:
+                    return
+                h, handle = handle, None
+                try:
+                    if not h.done:
+                        h.terminate("Interrupted by user" if stop.is_set() else "Time limit reached")
+                    cres = h.result()
+                finally:
+                    h.close()
+                improved = False
+                if cres.solution is not None:
+                    full_sol = lagrange_mod.solution_from_core(cres.solution, cur["sel"], inst.nA)
+                    improved = adopt(full_sol, "cekirdek_mip", None)
+                core_ = cur["core"]
+                # çekirdek tam modelin kendisiyse (küçük örnekler) alt sınırı da küreseldir. Yasak kilitli hücrelere
+                # giden yaylar iki modelde de 0 olmak zorunda olduğundan karşılaştırmada sayılmaz (doğrulama #11).
+                need = np.flatnonzero(~inst.lock_closed[inst.s.arc_j])
+                is_full = bool(np.array_equal(core_.lock_closed, inst.lock_closed)
+                               and np.isin(need, cur["sel"]).all())
+                if is_full and cres.dual_tl is not None:
+                    add_lb("mip", cres.dual_tl - eps_B)
+                    core_lb = cres.dual_tl - eps_B
+                if is_full and cres.status == "Infeasible":
+                    core_infeasible = True
+                a = {"attempt": cur["n"], "candidates": int((~core_.lock_closed).sum()), "arcs": int(len(cur["sel"])),
+                     "n_keep": cur["n_keep"], "m": cur["m"], "status": cres.status, "primal_tl": cres.primal_tl,
+                     "core_dual_tl": cres.dual_tl, "time_s": cres.time_s, "spawn_s": cres.spawn_s,
+                     "first_incumbent_s": cres.first_incumbent_s, "first_dual_s": cres.first_dual_s,
+                     "build_s": cur["build_s"], "improved": improved, "improved_start": cur["best_seen"] < cur[
+                         "start_obj"] * (1 - 1e-9), "stop_reason": reason, "is_full_model": is_full,
+                     "model": cur["model"].size()}
+                attempts.append(a)
+                core_info = dict(a)
+
+            def core_poll() -> float | None:
+                """Alt süreç olaylarını işler; çekirdeğin güncel amaç değeri (model birimi) ya da None."""
+                if handle is None:
+                    return None
+                try:
+                    handle.poll()
+                except RuntimeError:
+                    pass
+                u = handle.st["primal"]
+                if u is not None and u < cur["best_seen"]:
+                    if u < cur["start_obj"] * (1 - 1e-9) and u < cur["best_seen"] * (1 - 1e-9):
+                        cur["last_imp"] = time.perf_counter()
+                    cur["best_seen"] = u
+                return u
+
+            def core_stalled() -> bool:
+                if handle is None or handle.done:
+                    return False
+                root_done = handle.st["first_dual"] is not None
+                since = time.perf_counter() - cur["last_imp"]
+                win_total = stage_end - cur["t0"]
+                return root_done and since > max(CORE_STALL_S, 0.25 * win_total)
+
+            th_b = None
+            b_stop = threading.Event()
+            b_res: dict = {}
+            try:
+                if stage_left() >= CORE_MIN_TIME and not certified(tgap_core):
+                    start_core(CORE_N, CORE_M, G_src)
+                # (2) Lagrange B (serbest/sabit_p) ARKA PLAN iş parçacığında: sınır durulana dek yükselir; aynı anda ana
+                # iş parçacığı pencere aramasını ve çekirdeği yürütür (numpy ve HiGHS GIL'i bırakır). Çekirdeğin ve
+                # pencerelerin çözümleri üst sınır olarak beslenir.
+                if not is_budget and not stop.is_set() and stage_left() > 1.0:
+                    class _BStop:
+                        @staticmethod
+                        def is_set() -> bool:
+                            return stop.is_set() or b_stop.is_set()
+
+                    def feed() -> float | None:
+                        us = [v for v in (cur.get("u"), rep(best) if best is not None else None) if v is not None]
+                        return min(us) if us else None
+
+                    def extra_stop(L_tl: float, U_tl: float) -> bool:
+                        # çekirdek bittiyse hedef gap'te dur (yarı hedef yalnız iyileştirme sürerken aranır)
+                        return (handle is None or handle.done) and (U_tl - L_tl) / U_tl <= tgap
+
+                    t_lb0 = time.perf_counter() - T0
+                    relay_b = lag_relay(t_lb0, 2)
+
+                    def relay_b2(ev: dict) -> None:
+                        if ev.get("lb") is not None:
+                            b_res["lb"] = max(b_res.get("lb", -math.inf), ev["lb"])
+                        relay_b(ev)
+
+                    def run_b() -> None:
+                        try:
+                            b_res["r"] = lagrange_mod.run(
+                                inst, start=best, time_limit=max(stage_left() - STOP_GRACE_S, 0.2),
+                                target_gap=tgap_core, stop=_BStop(), progress_cb=relay_b2, mu0_tl=lag.mu, theta0=0.1,
+                                heuristics_on=constrained, ub_feed=feed, extra_stop=extra_stop,
+                                stall_tol=PHASE1_STALL_TOL, stall_min_s=1.0)
+                        except BaseException as ex:  # noqa: BLE001
+                            b_res["err"] = ex
+                        finally:
+                            b_res["t"] = time.perf_counter() - T0 - t_lb0
+
+                    th_b = threading.Thread(target=run_b, name="lagrange-b", daemon=True)
+                    th_b.start()
+                # (3) pencere araması; çekirdek izlenir, durursa yeniden başlatılır
+                ws = (lns.WindowSearch(inst, linking=linking)
+                      if use_windows and inst.s.cand_xy is not None and inst.s.demand_xy is not None else None)
+                t_w0 = time.perf_counter()
+                while not stop.is_set():
+                    if stage_left() <= STOP_GRACE_S + 0.05:
+                        break
+                    if "lb" in b_res:
+                        add_lb("lagrange", b_res["lb"])
+                    u = core_poll()                      # çekirdeğin amacı (butce'de ε·açılış dahil ≥ erişim)
+                    cur["u"] = u
+                    if certified(tgap_core, u):
+                        break
+                    if handle is not None and handle.done:
+                        finish_core("bitti")
+                        if certified(tgap_core):
+                            break
+                    elif core_stalled() and best is not None and mobj(best) < (cur["best_seen"] if math.isfinite(
+                            cur["best_seen"]) else cur["start_obj"]) * (1 - 1e-9):
+                        finish_core("durdu")
+                    if (handle is None and attempts and len(attempts) <= len(CORE_RETRY) and best is not None
+                            and stage_left() > CORE_MIN_TIME + 1.0 and not certified(tgap_core)
+                            and (attempts[-1]["stop_reason"] == "durdu"
+                                 or (attempts[-1]["status"] != "Infeasible" and not attempts[-1]["is_full_model"]
+                                     and stage_left() > 3 * CORE_MIN_TIME))):
+                        n_keep, m = CORE_RETRY[len(attempts) - 1]
+                        mu_src = b_res.get("r") if b_res.get("r") is not None and b_res["r"].ok else G_src
+                        start_core(n_keep, m, mu_src)
+                    if ws is not None and not ws.exhausted and best is not None:
+                        cand, winfo = ws.step(best, time_limit=max(0.05, min(lns.WINDOW_TIME,
+                                                                                stage_left() - STOP_GRACE_S - 0.05)),
+                                              stop=stop)
+                        if cand is not None:
+                            g0 = mobj(best)
+                            if adopt(cand, "pencere"):
+                                ws.accepted(g0 - mobj(best))
+                    elif handle is not None:
+                        try:
+                            handle.poll(timeout=0.05)
+                        except RuntimeError:
+                            pass
+                    elif th_b is not None and th_b.is_alive():
+                        th_b.join(timeout=0.05)
+                    else:
+                        break
+                if ws is not None:
+                    improve_info["windows"] = dict(ws.stats, exhausted=ws.exhausted,
+                                                   time_s=time.perf_counter() - t_w0)
+            finally:
+                b_stop.set()
+                if th_b is not None:
+                    th_b.join()
+                finish_core("evre_sonu")
+            lagB = b_res.get("r")
+            if "err" in b_res:
+                raise b_res["err"]
+            if lagB is not None:
+                times["lagrange_b_s"] = b_res.get("t")
+                if lagB.ok:
+                    if lagB.solution is not None and lagB.solution is not best:
+                        adopt(lagB.solution, lagB.source or "lagrange")
+                    add_lb("lagrange", lagB.bound_tl)
+                    lag_info["bound_tl"] = max(lag_info.get("bound_tl") or -math.inf, lagB.bound_tl)
+                    lag_info["phase_b"] = {"bound_tl": lagB.bound_tl, "iters": lagB.iters, "time_s": lagB.time_s}
+                    if lagB.bound_tl >= lag.bound_tl:
+                        lag = lagB
+            times["core_mip_s"] = time.perf_counter() - t_stage
+            if core_info is not None:
+                core_info["attempts"] = attempts
 
     # ---- cila: aynı açık kümede en iyi sınıf/atama (sınıf seçimli küçük MIP; evaluate)
-    # (her açık küme bir kez; çekirdek MIP'in çözümü burada tam yay kümesinde yeniden atanır)
     polished: set = set()
 
     def do_polish() -> None:
@@ -329,138 +716,54 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
         key = hash(best.open_j.tobytes())
         if key in polished:
             return
+        avail = remaining() - fin_reserve
+        if avail < 0.15:
+            return
         polished.add(key)
-        pt = polish_time if polish_time is not None else max(1.0, min(0.1 * tl, 10.0, remaining()))
+        pt = polish_time if polish_time is not None else max(1.0, min(0.1 * tl, 10.0))
+        pt = min(pt, avail)
         t = time.perf_counter()
         ev = evaluate(inst, best.open_j, gap=1e-3 if tl < FULL_MIP_MIN_TIME else 1e-4, time_limit=pt)
         times["polish_s"] = times.get("polish_s", 0.0) + time.perf_counter() - t
-        if ev.ok and ev.objective_tl < best.objective_tl(inst) * (1 - 1e-9):
+        if ev.ok and mobj(ev.solution) < mobj(best) * (1 - 1e-9):
             src0 = best_src
             ev.solution.source = f"{src0}+cila"
             if adopt(ev.solution, f"{src0}+cila", ev.solver_objective_tl):
-                emit({"kind": "polish", "primal": mobj(best)})
+                emit({"kind": "polish", "primal": rep(best)})
 
-    # ---- çekirdek MIP (Lagrange yönlendirmeli küçük MILP; üst sınırı iyileştirir, alt sınırı küresel değildir).
-    # Ayrı süreçte çalışırken ana süreçte Lagrange yinelemeleri (B evresi) sürer: alt sınır yükselir, çekirdeğin
-    # bulduğu çözümler Lagrange'ın adım boyuna ve durma ölçütüne üst sınır olarak beslenir (iki çekirdek kullanılır).
-    core_info: dict | None = None
-    core_lb = None
-    core_infeasible = False
-    if use_core and lag is not None and lag.ok and not stop.is_set() and not certified(tgap_core):
-        window = remaining() - reserve
-        if mip_kind == "full":
-            window = min(window, max(0.2 * tl, 30.0))
-        if window >= CORE_MIN_TIME:
-            t = time.perf_counter()
-            core, sel = lagrange_mod.core_instance(inst, lag, best, n_keep=CORE_N, m=CORE_M)
-            cm = MilpModel(core, linking=linking)
-            build_s = time.perf_counter() - t
-            emit({"kind": "phase", "phase": "cekirdek_mip", "t": time.perf_counter() - T0})
-            t_c0 = time.perf_counter() - T0
-
-            def relay_core(ev: dict) -> None:
-                ev = dict(ev)
-                ev["t_total"] = round(t_c0 + ev["t"], 4)
-                ev["core_dual"], ev["dual"] = ev.get("dual"), None       # çekirdeğin alt sınırı küresel değil
-                ev["core"] = True
-                emit(ev)
-            handle = None
-            try:
-                handle = cm.start_isolated(time_limit=max(window - build_s, 0.5), gap=CORE_GAP,
-                                           start=lagrange_mod.solution_to_core(best, sel) if best is not None else None,
-                                           progress_cb=relay_core,
-                                           options={"objective_target": lag_lb / (1.0 - tgap_core) / SCALE})
-
-                def feed() -> float | None:
-                    handle.poll()
-                    return handle.st["primal"]
-
-                start_obj = mobj(best) if best is not None else math.inf
-                t_core0 = time.perf_counter()
-
-                def lh_needed() -> bool:
-                    # Lagrange sezgiseli: sayı sınırı/sabit p varken her zaman; yoksa çekirdek MIP pencerenin
-                    # CORE_FALLBACK_SHARE'i içinde başlangıç çözümünü iyileştiremediyse (çekirdek bazen hiç çözüm bulamıyor)
-                    if constrained:
-                        return True
-                    u = handle.st["primal"]
-                    improved_ = u is not None and u < start_obj * (1 - 1e-9)
-                    return not improved_ and time.perf_counter() - t_core0 > CORE_FALLBACK_SHARE * window
-
-                def extra_stop(L_tl: float, U_tl: float) -> bool:
-                    # çekirdek bittiyse hedef gap'te dur (yarı hedef yalnız çekirdek sürerken aranır)
-                    return handle.done and (U_tl - L_tl) / U_tl <= tgap
-                # B evresi: sıcak çarpanlar; sezgisel kapalı (üst sınır çekirdekten) — sayı sınırı/sabit p varken ya da
-                # çekirdek iyileştiremiyorsa açık (lh_needed)
-                t_l0 = time.perf_counter() - T0
-                lagB = lagrange_mod.run(inst, start=best, time_limit=max(window - build_s, 0.5),
-                                        target_gap=tgap_core, stop=stop, progress_cb=lag_relay(t_l0, 2),
-                                        mu0_tl=lag.mu, theta0=0.1, heuristics_on=lh_needed, ub_feed=feed,
-                                        extra_stop=extra_stop)
-                times["lagrange_b_s"] = time.perf_counter() - T0 - t_l0
-                if lagB.ok and lagB.solution is not None and lagB.solution is not best:
-                    adopt(lagB.solution, lagB.source or "lagrange")          # yedek sezgiselin çözümü
-                if lagB.ok and lagB.bound_tl > lag_lb:
-                    lag_lb = lagB.bound_tl
-                    lag_info["bound_tl"] = lag_lb
-                lag_info["phase_b"] = {"bound_tl": lagB.bound_tl, "iters": lagB.iters, "time_s": lagB.time_s}
-                # çekirdek hâlâ çalışıyorsa: sertifika varsa ya da süre bittiyse durdur, yoksa süre sonuna dek bekle
-                while not handle.done:
-                    handle.poll(timeout=0.05)
-                    u = handle.st["primal"]
-                    ub_now = min(mobj(best) if best is not None else math.inf, u if u is not None else math.inf)
-                    if (stop.is_set() or time.perf_counter() > handle.deadline - 3.0 or remaining() < reserve
-                            or (math.isfinite(ub_now) and (ub_now - lag_lb) / ub_now <= tgap_core)):
-                        handle.terminate("Interrupted by user" if stop.is_set() else "Time limit reached")
-                cres = handle.result()
-            finally:
-                if handle is not None and not handle.done:
-                    handle.terminate()
-                    handle.result()
-            times["core_mip_s"] = time.perf_counter() - t
-            improved = False
-            if cres.solution is not None:
-                full_sol = lagrange_mod.solution_from_core(cres.solution, sel, inst.nA)
-                improved = adopt(full_sol, "cekirdek_mip", None)
-            # çekirdek tam modelin kendisiyse (küçük örnekler: tüm adaylar ve yaylar) alt sınırı da küreseldir
-            core_is_full = len(sel) == inst.nA and np.array_equal(core.lock_closed, inst.lock_closed)
-            if core_is_full and cres.dual_tl is not None:
-                core_lb = cres.dual_tl
-            if core_is_full and cres.status == "Infeasible":
-                core_infeasible = True
-            core_info = {"candidates": int((~core.lock_closed).sum()), "arcs": int(len(sel)), "status": cres.status,
-                         "primal_tl": cres.primal_tl, "core_dual_tl": cres.dual_tl, "time_s": cres.time_s,
-                         "first_incumbent_s": cres.first_incumbent_s, "build_s": build_s, "improved": improved,
-                         "is_full_model": bool(core_is_full), "model": cm.size()}
-            do_polish()
-
-    # ---- tam MILP (bütçe modu, Lagrange kapalı, uzun süre sınırı ya da hiç olurlu çözüm bulunamadıysa: tam model
-    # olursuzluğu da kanıtlayabilir)
+    # ---- tam MILP (Lagrange kapalı, uzun süre sınırı ya da hiç olurlu çözüm bulunamadıysa: tam model olursuzluğu da
+    # kanıtlayabilir)
     mres = None
     model_size = None
     if mip_kind == "core" and best is None and not core_infeasible:
         mip_kind = "full"
     if mip_kind == "full" and not stop.is_set() and not certified(tgap) and not core_infeasible:
+        do_polish()                          # tam MILP'e iyi başlangıç
         t = time.perf_counter()
         model, lock, how = _get_model(inst, linking)
         times["model_build_s"] = time.perf_counter() - t
         model_size = model.size()
         model_size["model"] = how
-        budget_mip = remaining() - reserve
+        budget_mip = work_left()
         opts = dict(mip_options or {})
-        if lag_lb is not None and "objective_target" not in opts:
-            opts["objective_target"] = lag_lb / (1.0 - tgap) / SCALE   # Lagrange sınırına göre hedef gap'te dur
+        if not is_budget and best_lb() is not None and "objective_target" not in opts:
+            opts["objective_target"] = best_lb() / (1.0 - tgap) / SCALE   # Lagrange sınırına göre hedef gap'te dur
         try:
             if budget_mip > 0.2:
+                ran.append("full")
                 emit({"kind": "phase", "phase": "mip", "t": time.perf_counter() - T0})
                 t_mip0 = time.perf_counter() - T0
 
                 def relay(ev: dict) -> None:
                     ev = dict(ev)
                     ev["t_total"] = round(t_mip0 + ev["t"], 4)
+                    if is_budget:
+                        ev["primal"] = None
+                        ev["dual"] = ev["dual"] - eps_B if ev.get("dual") is not None else None
                     emit(ev)
                 mres = model.solve(time_limit=budget_mip, gap=tgap, start=best, progress_cb=relay,
-                                   cancel_event=stop, options=opts, isolate=isolate)
+                                   cancel_event=stop, options=opts, isolate=isolate,
+                                   deadline=T_END - reserve if isolate else None)
                 if mres.spawn_s is not None:
                     times["mip_spawn_s"] = mres.spawn_s
                 times["mip_s"] = mres.time_s
@@ -469,26 +772,37 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                     obj_b = model.objective_of(best) if best is not None else math.inf
                     if obj_m < obj_b - 1e-9 * abs(obj_b):      # MIP başlangıcı geri döndüyse kaynak değişmez
                         adopt(mres.solution, "mip", mres.primal_tl)
+                if mres.dual_tl is not None and mres.first_dual_s is not None:
+                    add_lb("mip", mres.dual_tl - eps_B)
         finally:
             if lock is not None:
                 lock.release()
 
-    # ---- Lagrange 2. evre (çekirdek MIP'ten sonra hâlâ hedef gap'te değilse; sıcak çarpanlar, güncel üst sınır)
-    if (lag is not None and lag.ok and mip_kind == "core" and not stop.is_set() and not certified(tgap)
-            and remaining() - reserve > 0.5):
+    # ---- Lagrange 2. evre (iyileştirme evresi erken bittiyse ve hâlâ hedef gap'te değilse: sınır tarafı)
+    if (lag_ok and mip_kind == "core" and not stop.is_set() and not certified(tgap) and work_left() > 0.5
+            and best is not None):
         t_l0 = time.perf_counter() - T0
         emit({"kind": "phase", "phase": "lagrange_2", "t": t_l0})
-        lag2 = lagrange_mod.run(inst, start=best, time_limit=remaining() - reserve, target_gap=tgap, stop=stop,
-                                progress_cb=lag_relay(t_l0, 2), mu0_tl=lag.mu, theta0=0.1)
+        if is_budget:
+            lag2b = budget_mod.run(inst, time_limit=work_left(), stop=stop, solutions=[best], target_gap=tgap,
+                                   ub_access_tl=lambda: rep(best))
+            if lag2b.ok:
+                add_lb("lagrange_butce", lag2b.lb_tl)
+                if budget_info is not None:
+                    budget_info["phase2"] = {"lb_tl": lag2b.lb_tl, "nu": lag2b.nu, "time_s": lag2b.time_s}
+        else:
+            lag2 = lagrange_mod.run(inst, start=best, time_limit=work_left(), target_gap=tgap, stop=stop,
+                                    progress_cb=lag_relay(t_l0, 2), mu0_tl=lag.mu, theta0=0.1,
+                                    stall_tol=PHASE1_STALL_TOL, stall_min_s=1.0)
+            if lag2.ok:
+                if lag2.solution is not None and lag2.solution is not best:
+                    adopt(lag2.solution, lag2.source or "lagrange")
+                add_lb("lagrange", lag2.bound_tl)
+                lag_info["phase2"] = {"bound_tl": lag2.bound_tl, "iters": lag2.iters, "time_s": lag2.time_s,
+                                      "lh_calls": lag2.lh_calls, "source": lag2.source}
+                lag_info["bound_tl"] = max(lag_info.get("bound_tl") or -math.inf, lag2.bound_tl)
         times["lagrange2_s"] = time.perf_counter() - T0 - t_l0
-        if lag2.ok:
-            if lag2.solution is not None and lag2.solution is not best:
-                adopt(lag2.solution, lag2.source or "lagrange")
-            if lag2.bound_tl > lag_lb:
-                lag_lb = lag2.bound_tl
-            lag_info["phase2"] = {"bound_tl": lag2.bound_tl, "iters": lag2.iters, "time_s": lag2.time_s,
-                                  "lh_calls": lag2.lh_calls, "source": lag2.source}
-            lag_info["bound_tl"] = lag_lb
+    t_main_end = time.perf_counter()
 
     if best is None:
         if core_infeasible or (mres is not None and mres.status == "Infeasible"):
@@ -502,29 +816,38 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
 
     do_polish()
 
-    # ---- alt sınır: Lagrange, tam MILP'in dual sınırı (çekirdek MIP'inki küresel değil), gerekirse zayıf LP
-    lb, lb_src = None, None
-    if lag_lb is not None:
-        lb, lb_src = lag_lb, "lagrange"
-    if core_lb is not None and (lb is None or core_lb > lb):
-        lb, lb_src = core_lb, "mip"
-    meaningful = mres is not None and mres.first_dual_s is not None
-    if mres is not None and mres.dual_tl is not None and (lb is None or mres.dual_tl > lb):
-        lb, lb_src = mres.dual_tl, "mip"
-    if lag_lb is None and not meaningful and fallback_bound and not stop.is_set():
-        # MIP kök LP'yi bitiremediyse dual sınırı önemsizdir (önsüzgeç sınırı): zayıf LP gevşetmesi (kapasite bağlantılı,
-        # x ≤ z satırları olmadan) hızlıdır ve geçerli bir alt sınırdır; ikisinin büyüğü raporlanır.
+    # ---- alt sınır: Lagrange, tam modele eşit çekirdeğin / tam MILP'in dual sınırı, gerekirse zayıf LP
+    if not lbs and fallback_bound and not stop.is_set() and remaining() - fin_reserve > 0.3:
+        # Lagrange yoksa ve MIP kök LP'yi bitiremediyse: zayıf LP gevşetmesi (kapasite bağlantılı, x ≤ z satırları
+        # olmadan) hızlıdır ve geçerli bir alt sınırdır
         t = time.perf_counter()
         weak = MilpModel(inst, linking="weak")
-        r = weak.solve(time_limit=max(5.0, 0.2 * tl), relax=True)
+        r = weak.solve(time_limit=max(0.2, min(max(5.0, 0.2 * tl), remaining() - fin_reserve)), relax=True)
         times["fallback_bound_s"] = time.perf_counter() - t
-        if r.status == "Optimal" and r.primal_tl is not None and (lb is None or r.primal_tl > lb):
-            lb, lb_src = r.primal_tl, "zayif_lp"
-    # model amacı (butce'de ε dahil) ile gap
-    ub_model = mobj(best)
-    if lb is not None:
-        lb = min(lb, ub_model)
-    gap_val = (ub_model - lb) / max(abs(ub_model), 1e-9) if lb is not None else None
+        if r.status == "Optimal" and r.primal_tl is not None:
+            add_lb("zayif_lp", r.primal_tl - eps_B)
+    ub_rep = rep(best)
+    # alt sınır > üst sınır: asla sessizce kırpılmaz (doğrulama #13). Sayısal tolerans içindeyse kayıtla eşitlenir;
+    # daha büyükse o kaynak geçersiz sayılır, uyarı yazılır (HASTANE_STRICT_BOUNDS=1 iken AssertionError).
+    lb_rejected, lb_adjusted = [], None
+    tol_abs = LB_TOL * max(abs(ub_rep), 1.0)
+    for src_, v in list(lbs.items()):
+        if v > ub_rep + tol_abs:
+            lb_rejected.append({"source": src_, "lb_tl": v, "ub_tl": ub_rep})
+            del lbs[src_]
+            msg = (f"Uyarı: alt sınır ({src_}: {_fmt(v / 1e9, 4)} milyar TL) bulunan çözümden "
+                   f"({_fmt(ub_rep / 1e9, 4)} milyar TL) büyük çıktı; geçersiz sayıldı ve raporlanmadı.")
+            inst.warnings.append(msg)
+            emit({"kind": "uyari", "message_tr": msg})
+            if os.environ.get("HASTANE_STRICT_BOUNDS") == "1":
+                raise AssertionError(msg)
+    lb_src = max(lbs, key=lbs.get) if lbs else None
+    lb = lbs[lb_src] if lb_src is not None else None
+    if lb is not None and lb > ub_rep:
+        lb_adjusted = {"raw_lb_tl": lb, "ub_tl": ub_rep, "reason": "sayisal_tolerans"}
+        emit({"kind": "uyari", "message_tr": "Alt sınır üst sınırı sayısal tolerans içinde aştı; eşitlendi."})
+        lb = ub_rep
+    gap_val = gap_of(ub_rep, lb)
 
     # ---- denetim
     t = time.perf_counter()
@@ -553,33 +876,46 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
     a = np.flatnonzero((best.x > 0) & (hpos[s.arc_j] >= 0))
     assignment = {"demand_cell": [str(c) for c in s.demand_ids[s.arc_i[a]]],
                   "hospital": hpos[s.arc_j[a]].tolist(), "share": best.x[a].tolist(), "km": s.arc_d[a].tolist()}
+    early = (T_END - reserve) - t_main_end > max(EARLY_STOP_MARGIN[0], EARLY_STOP_MARGIN[1] * tl)
     if stop.is_set():
         status, status_tr = "durduruldu", "Kullanıcı durdurdu; en iyi bulunan çözüm gösteriliyor."
     elif gap_val is not None and gap_val <= tgap + 1e-9:
         status, status_tr = "optimal", f"Optimal: alt sınırla fark hedef gap'in (%{_fmt(100 * tgap, 2)}) içinde."
     elif mres is None and lag is None:
-        status, status_tr = "sezgisel", "Yalnız sezgisel çözüm (MILP çalıştırılmadı)."
+        status, status_tr = "sezgisel", "Yalnız sezgisel çözüm (MILP ve Lagrange çalıştırılmadı)."
+    elif early:
+        status, status_tr = ("gap_ulasilamadi",
+                             f"Hedef gap'e (%{_fmt(100 * tgap, 2)}) ulaşılamadı: alt ve üst sınır yöntemleri süre "
+                             f"dolmadan yakınsadı (hedef bu yöntemlerle sayısal olarak erişilemiyor); en iyi çözüm ve "
+                             f"alt sınır gösteriliyor.")
     else:
         status, status_tr = "sure_doldu", "Süre doldu; en iyi bulunan çözüm ve alt sınır gösteriliyor."
-    times["total_s"] = time.perf_counter() - T0
     result = dict(base)
     result.update({
         "status": status, "ok": True, "status_tr": status_tr,
         "message_tr": _summary_tr(k, costs, s.R_km, status == "optimal"),
         "solver_status": mres.status if mres is not None else None,
         "solution_source": best_src,
-        "certificate_tr": _certificate_tr(ub_model, lb, gap_val, lb_src, inst),
-        "bounds": {"ub_tl": ub_model, "lb_tl": lb, "gap": gap_val, "lb_source": lb_src,
+        "certificate_tr": _certificate_tr(ub_rep, lb, gap_val, lb_src, inst),
+        "bounds": {"ub_tl": ub_rep, "lb_tl": lb, "gap": gap_val, "lb_source": lb_src,
                    "lb_scope": "k_listesi" if s.k_nearest > 0 else "tam",
                    "objective_tl": float(best.objective_tl(inst)),
-                   "lagrange_tl": lag_lb,
-                   "mip_kind": mip_kind,
+                   "model_objective_tl": mobj(best),
+                   "budget_eps_tl": eps_B if is_budget else None,
+                   "lb_by_source": dict(lbs),
+                   "lb_rejected": lb_rejected, "lb_adjusted": lb_adjusted,
+                   "lagrange_tl": lbs.get("lagrange_butce" if is_budget else "lagrange"),
+                   "mip_kind": "+".join(ran) if ran else "none",
+                   "mip_kind_planned": mip_kind,
                    "mip_primal_tl": mres.primal_tl if mres is not None else None,
                    "mip_dual_tl": mres.dual_tl if mres is not None else None,
                    "mip_gap": mres.gap if mres is not None else None,
                    "mip_nodes": mres.nodes if mres is not None else None},
         "lagrange": lag_info or None,
+        "budget": budget_info,
         "core_mip": core_info,
+        "improve": improve_info or None,
+        "seeds": seeds_info or None,
         "times": times,
         "first_incumbent_s": (mres.first_incumbent_s if mres is not None else None),
         "first_dual_s": (mres.first_dual_s if mres is not None else None),
@@ -606,18 +942,24 @@ def solve(grid_km: float | None = None, overrides: Mapping[str, Any] | None = No
                            "marginal_cost_tl": d.get("marginal_cost_tl"),
                            "marginal_cost_per_person_tl": d.get("marginal_cost_per_person_tl"),
                            "bed_value_tl": d.get("bed_value_tl"), "note_tr": d.get("degenerate_note")}
+    if use_cache and chk["ok"]:
+        remember_solution(inst, best)
+    times["total_s"] = time.perf_counter() - T0
     return _jsonable(result)
 
 
-_LB_SOURCE_TR = {"lagrange": "Lagrange gevşetmesi", "mip": "dal-sınır (HiGHS)", "zayif_lp": "zayıf LP gevşetmesi"}
+_LB_SOURCE_TR = {"lagrange": "Lagrange gevşetmesi", "lagrange_butce": "bütçe satırının Lagrange gevşetmesi",
+                 "mip": "dal-sınır (HiGHS)", "zayif_lp": "zayıf LP gevşetmesi"}
 
 
 def _certificate_tr(ub: float, lb: float | None, gap: float | None, src: str | None, inst: Instance) -> str:
-    """Şartname 7.2 optimallik sertifikası cümlesi."""
+    """Şartname 7.2 optimallik sertifikası cümlesi (bütçe modunda erişim maliyeti üzerinden)."""
+    what = "bulunan çözümün erişim maliyeti" if inst.mode == "butce" else "bulunan çözüm"
     if lb is None or gap is None:
-        return f"Bulunan çözüm {_fmt(ub / 1e9, 2)} milyar TL; alt sınır hesaplanamadı (optimallik kanıtlanmadı)."
+        return (f"{what[0].upper() + what[1:]} {_fmt(ub / 1e9, 2)} milyar TL; alt sınır hesaplanamadı "
+                f"(optimallik kanıtlanmadı).")
     scope = (f" (k = {inst.s.k_nearest} en yakın aday listesiyle kurulan model için)" if inst.s.k_nearest > 0 else "")
-    return (f"Alt sınır L = {_fmt(lb / 1e9, 2)} milyar TL ({_LB_SOURCE_TR.get(src, src)}), bulunan çözüm "
+    return (f"Alt sınır L = {_fmt(lb / 1e9, 2)} milyar TL ({_LB_SOURCE_TR.get(src, src)}), {what} "
             f"U = {_fmt(ub / 1e9, 2)} milyar TL → fark %{_fmt(100 * gap, 2)}. Bu modelde{scope} daha iyi bir çözüm "
             f"varsa bile bu çözümden en fazla %{_fmt(100 * gap, 2)} daha ucuzdur.")
 

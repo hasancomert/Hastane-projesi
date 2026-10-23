@@ -3,10 +3,13 @@
   * Izgaraya sığan en fazla hastane: |J| (açılabilir aday hücre sayısı; yasaklılar hariç).
   * Kapasite alt sınırı: ⌈Σ q_i / U_max⌉ — şehir hastanesi sınıfıyla (U_max = şehir en çok yatak) ve onsuz
     (U_max = genel hastane en çok yatak).
-  * Kapsama alt sınırı (küme kapsama, LSCP; Toregas vd. 1971): min Σ_j y_j  s.t.  Σ_{j∈N_i} y_j ≥ 1 ∀ i
-    (N_i modelin yay listesi: R içinde, k-en-yakınla kırpılmış; kilitler uygulanır). HiGHS ile.
-  * Gerçek p_min: tüm kısıtlar altında (kapasite, sınıflar, R, kilitler, bütçe) min Σ_j z_j. HiGHS ile, süre sınırlı;
-    kanıtlanamazsa alt/üst sınır raporlanır.
+  * Kapsama alt sınırı (küme kapsama, LSCP; Toregas vd. 1971): min Σ_j y_j  s.t.  Σ_{j∈N_i} y_j ≥ 1 ∀ i. Kartın
+    anlamı "her talep hücresine R içinde (yol mesafesi) bir hastane": N_i = R içindeki TÜM adaylar (k = 0 yapısı).
+    İkinci satır modelin kendi listeleriyle (N_i = R içindeki en yakın k aday; varsayılan k = 50): modelin olurlu
+    çözümleri için geçerli alt sınır, k kırpması yüzünden geometrik minimumdan büyük olabilir (doğrulama C2/C3).
+    Kilitler uygulanır. Satır/sütun baskınlığıyla küçültülür, HiGHS ile kesin çözülür.
+  * Gerçek p_min: modelin tüm kısıtları altında (k listeleri, kapasite, sınıflar, R, kilitler, bütçe) min Σ_j z_j.
+    HiGHS ile, süre sınırlı; kanıtlanamazsa alt/üst sınır raporlanır.
 """
 from __future__ import annotations
 
@@ -34,33 +37,78 @@ def capacity_bound(inst: Instance) -> dict:
             "applies": with_city if inst.class_on[-1] else without, "U_max_general": gen_max, "U_max_city": city_max}
 
 
-def lscp(inst: Instance, *, time_limit: float = 20.0) -> dict:
-    """Küme kapsama alt sınırı (her talep hücresinin R içinde en az bir açık adayı)."""
+def _dominated(B: np.ndarray, drop: str) -> np.ndarray:
+    """0/1 matrisin satırları arasında küme kapsama baskınlığı; tutulan satırların maskesi.
+    drop='ust': N_i ⊆ N_i' ise i' atılır (kapsama satırı: i'yi kapsayan her küme i'yi de kapsar).
+    drop='alt': C_j ⊆ C_j' ise j atılır (birim maliyetli aday: j yerine j' seçilebilir). Eşitlerden biri kalır."""
+    size = B.sum(1)
+    sub = (B @ B.T) >= size[:, None] - 0.5             # sub[a, b]: satır a ⊆ satır b
+    np.fill_diagonal(sub, False)
+    r = np.arange(len(size))
+    if drop == "ust":                                   # b atılır: kendinden küçük (eşitse önce gelen) bir alt kümesi var
+        return ~(sub & ((size[:, None] < size[None, :]) | ((size[:, None] == size[None, :])
+                                                          & (r[:, None] < r[None, :])))).any(0)
+    return ~(sub & ((size[:, None] < size[None, :]) | ((size[:, None] == size[None, :])
+                                                       & (r[None, :] < r[:, None])))).any(1)
+
+
+def lscp(inst: Instance, *, time_limit: float = 20.0, reduce: bool = True) -> dict:
+    """Küme kapsama (LSCP; Toregas vd. 1971): min Σ_j y_j  s.t.  Σ_{j∈N_i} y_j ≥ 1 ∀ i, N_i = örneğin yay listesi
+    (k = 0 yapısında R içindeki TÜM adaylar; modelin yapısında k en yakın). Kilitler uygulanır: yasak adaylar yok,
+    zorunlu adaylar sayılır ve kapsadıkları satırlar düşer. reduce: satır ve sütun baskınlığıyla küçültme (birim
+    maliyetli kapsamada optimum değeri değiştirmez: kapsadığı satırlar başka bir adayınkilerin alt kümesi olan aday
+    atılabilir) — 2 km k = 50 ispatını HiGHS için belirgin kolaylaştırır."""
     t0 = time.perf_counter()
     s = inst.s
     nJ, nI = inst.nJ, inst.nI
-    A = sp.csc_matrix((np.ones(s.nA), (s.arc_i, s.arc_j)), shape=(nI, nJ))
-    A.data[:] = 1.0
+    A = sp.csr_matrix((np.ones(s.nA, dtype=np.float32), (s.arc_i, s.arc_j)), shape=(nI, nJ))
     A.sum_duplicates()
     A.data[:] = 1.0
-    A.sort_indices()
-    lb = inst.lock_open.astype(float)
-    ub = (~inst.lock_closed).astype(float)
+    allowed = ~inst.lock_closed
+    forced = inst.lock_open & allowed
+    covered = np.asarray(A[:, np.flatnonzero(forced)].sum(1)).ravel() > 0 if forced.any() else np.zeros(nI, bool)
+    rows = np.flatnonzero(~covered)
+    cols = np.flatnonzero(allowed & ~forced)
+    B = A[rows][:, cols].toarray()
+    info = {"rows": int(nI), "cols": int(allowed.sum()), "forced": int(forced.sum())}
+    if len(rows) and (B.sum(1) == 0).any():
+        return {"status": "Infeasible", "value": None, "lower_bound": None, "proven": True, "open_pos": [],
+                "time_s": time.perf_counter() - t0, "reduction": info}
+    if reduce and len(rows):
+        for _ in range(20):
+            n0 = B.shape
+            keep_r = _dominated(B, "ust")
+            B, rows = B[keep_r], rows[keep_r]
+            keep_c = _dominated(np.ascontiguousarray(B.T), "alt")
+            B, cols = B[:, keep_c], cols[keep_c]
+            if B.shape == n0:
+                break
+    info.update(rows_reduced=int(B.shape[0]), cols_reduced=int(B.shape[1]), reduce_s=time.perf_counter() - t0)
+    nf = int(forced.sum())
+    if not len(rows):
+        sel = np.flatnonzero(forced)
+        return {"status": "Optimal", "value": nf, "lower_bound": nf, "proven": True, "open_pos": sel.tolist(),
+                "time_s": time.perf_counter() - t0, "reduction": info}
+    M = sp.csc_matrix(B)
+    nr, nc = M.shape
     h = highspy.Highs()
     h.setOptionValue("output_flag", False)
-    h.setOptionValue("time_limit", float(time_limit))
+    h.setOptionValue("time_limit", float(max(time_limit - (time.perf_counter() - t0), 1.0)))
     h.setOptionValue("mip_rel_gap", 0.0)
-    h.passModel(nJ, nI, int(A.nnz), 1, 1, 0.0, np.ones(nJ), lb, ub, np.ones(nI), np.full(nI, INF),
-                A.indptr.astype(np.int32), A.indices.astype(np.int32), A.data.astype(float),
-                np.ones(nJ, dtype=np.int32))
+    h.passModel(nc, nr, int(M.nnz), 1, 1, 0.0, np.ones(nc), np.zeros(nc), np.ones(nc), np.ones(nr),
+                np.full(nr, INF), M.indptr.astype(np.int32), M.indices.astype(np.int32), M.data.astype(float),
+                np.ones(nc, dtype=np.int32))
     h.run()
-    info = h.getInfo()
+    hinfo = h.getInfo()
     status = h.modelStatusToString(h.getModelStatus())
-    ok = info.primal_solution_status == 2
-    sel = np.flatnonzero(np.asarray(h.getSolution().col_value) > 0.5) if ok else np.zeros(0, dtype=int)
-    return {"status": status, "value": int(round(info.objective_function_value)) if ok else None,
-            "lower_bound": _ceil_lb(info.mip_dual_bound), "proven": status == "Optimal",
-            "open_pos": sel.tolist(), "time_s": time.perf_counter() - t0}
+    ok = hinfo.primal_solution_status == 2
+    sel = cols[np.flatnonzero(np.asarray(h.getSolution().col_value) > 0.5)] if ok else np.zeros(0, dtype=int)
+    sel = np.union1d(sel, np.flatnonzero(forced))
+    lbv = _ceil_lb(hinfo.mip_dual_bound)
+    return {"status": status, "value": (int(round(hinfo.objective_function_value)) + nf) if ok else None,
+            "lower_bound": (lbv + nf) if lbv is not None else None, "proven": status == "Optimal",
+            "nodes": int(hinfo.mip_node_count), "open_pos": sel.astype(int).tolist(),
+            "time_s": time.perf_counter() - t0, "reduction": info}
 
 
 def _ceil_lb(x) -> int | None:
@@ -136,28 +184,62 @@ def p_min(inst: Instance, *, time_limit: float = 30.0, linking="weak", cover_ope
             "proven": res.status == "Optimal", "start_value": start_n, "time_s": time.perf_counter() - t0}
 
 
-def bound_cards(inst: Instance, *, lscp_time: float = 20.0, pmin_time: float = 30.0, with_pmin: bool = True) -> dict:
-    """Sayfadaki 'En fazla kaç? / En az kaç?' kartlarının değerleri."""
+def all_candidates_instance(inst: Instance) -> Instance | None:
+    """Aynı parametre ve kilitlerle, R içindeki tüm adayların yay listesiyle (k = 0) kurulan örnek; model zaten k = 0
+    ise kendisi. Oyuncak örneklerde None (yapı ızgaradan kurulamaz)."""
+    if inst.s.k_nearest == 0:
+        return inst
+    if inst.s.source == "toy":
+        return None
+    from .instance import build_instance
+    return build_instance(int(inst.s.cell_km), inst.params.with_overrides({"grid.k_nearest": 0}), inst.locks)
+
+
+def bound_cards(inst: Instance, *, lscp_time: float = 20.0, pmin_time: float = 30.0, with_pmin: bool = True,
+                lscp_all_time: float | None = None, inst_all: Instance | None = None) -> dict:
+    """Sayfadaki 'En fazla kaç? / En az kaç?' kartlarının değerleri.
+
+    coverage_lscp: R içindeki tüm adaylarla (k = 0; kartın anlamı). coverage_lscp_k_list: modelin k listeleriyle
+    (p_min'in alt sınırı bu ikincisidir; k = 0 modelinde ikisi aynıdır)."""
     cap = capacity_bound(inst)
-    ls = lscp(inst, time_limit=lscp_time)
+    k = int(inst.s.k_nearest)
+    ls_k = lscp(inst, time_limit=lscp_time)
+    ls_k.update(k_nearest=k, arcs=int(inst.nA))
+    if inst_all is None:
+        inst_all = all_candidates_instance(inst)
+    if inst_all is inst:
+        ls_all = dict(ls_k)
+    elif inst_all is not None:
+        ls_all = lscp(inst_all, time_limit=lscp_all_time if lscp_all_time is not None else lscp_time)
+        ls_all.update(k_nearest=0, arcs=int(inst_all.nA))
+    else:
+        ls_all = None
     out = {
         "max_hospitals_grid": int((~inst.lock_closed).sum()),
         "candidates_total": inst.nJ,
         "capacity": cap,
-        "coverage_lscp": ls,
+        "coverage_lscp": ls_all,
+        "coverage_lscp_k_list": ls_k,
     }
     if with_pmin:
-        pm = p_min(inst, time_limit=pmin_time, cover_open=ls["open_pos"])
-        lbs = [v for v in (pm["lower_bound"], ls["lower_bound"], cap["applies"], int(inst.lock_open.sum()),
+        pm = p_min(inst, time_limit=pmin_time, cover_open=ls_k["open_pos"])
+        lbs = [v for v in (pm["lower_bound"], ls_k["lower_bound"], cap["applies"], int(inst.lock_open.sum()),
                            inst.count_min) if v is not None]
         pm["lower_bound"] = max(lbs) if lbs else None
         if pm["value"] is not None and pm["lower_bound"] is not None and pm["lower_bound"] >= pm["value"]:
             pm["proven"] = True
+        pm["k_nearest"] = k
         out["p_min"] = pm
+    R = f"{inst.s.R_km:g}"
     out["labels_tr"] = {
         "max_hospitals_grid": "Izgaraya sığan en fazla hastane (aday hücre sayısı |J|)",
         "capacity": "Kapasite alt sınırı ⌈toplam yatak talebi / en büyük hastane⌉",
-        "coverage_lscp": f"Kapsama alt sınırı: her hücre R = {inst.s.R_km:g} km içinde bir hastaneye (küme kapsama)",
-        "p_min": "Gerçek en az hastane sayısı (tüm kısıtlar)",
+        "coverage_lscp": f"Kapsama alt sınırı: her talep hücresine R = {R} km yol mesafesi içinde bir hastane "
+                         f"(küme kapsama; R içindeki tüm adaylar)",
+        "coverage_lscp_k_list": f"Kapsama alt sınırı, model listeleriyle (k = {k}): her talep hücresine en yakın {k} "
+                                f"adayından biri R = {R} km içinde açık" if k > 0 else
+                                f"Kapsama alt sınırı, model listeleriyle (k = 0: R içindeki tüm adaylar)",
+        "p_min": f"Gerçek en az hastane sayısı: modelin tüm kısıtlarıyla (kapasite, sınıflar, R; model listeleri "
+                 f"k = {k})",
     }
     return out

@@ -111,7 +111,7 @@ def test_checker_on_3km_live_solution():
     assert r["ok"] and r["check"]["ok"], r["check"]
     assert r["bounds"]["lb_tl"] is not None and r["bounds"]["lb_tl"] <= r["bounds"]["ub_tl"]
     assert r["instance"]["J"] == 634 and r["instance"]["arcs"] == 81288
-    assert r["times"]["total_s"] < 20 + 6
+    assert r["times"]["total_s"] <= 20 + 0.5                       # sert süre sınırı (doğrulama #16)
 
 
 # ---------------------------------------------------------------- modlar
@@ -145,9 +145,35 @@ def test_budget_mode(res5):
     r = solve(5, {"solver.budget_tl": budget}, mode="butce", time_limit=30)
     assert r["ok"] and r["check"]["ok"] and r["check"]["checks"]["butce"]
     assert r["costs"]["acilis"] <= budget * (1 + 1e-7)
-    # varsayılan çözüm bu bütçeye sığar → erişim maliyeti (gap payı içinde) ondan kötü olamaz
-    assert r["costs"]["erisim"] <= res5["costs"]["erisim"] * 1.02
+    # varsayılan çözüm bu bütçeye sığar ve önceki çözüm olarak başlangıçtır → erişim maliyeti ondan kötü olamaz
+    assert r["costs"]["erisim"] <= res5["costs"]["erisim"] * (1 + 1e-6)
     assert r["bounds"]["objective_tl"] == pytest.approx(r["costs"]["erisim"])
+    assert r["bounds"]["lb_tl"] <= r["bounds"]["objective_tl"]
+
+
+@pytest.mark.parametrize("km", [5, 3])
+def test_budget_mode_default_budget(km):
+    """Doğrulama #9/#12: varsayılan bütçeyle (350 milyar TL) bütçe modu olurlu çözüm verir (eskiden 5 km'de cozum_yok);
+    serbest çözüm bütçeye sığıyorsa (3 km) erişim maliyeti ondan kötü değildir; alt sınır (bütçe satırının Lagrange
+    gevşetmesi; ε eşitlik bozucusu sınırlardan çıkarılmış) ≤ raporlanan erişim maliyeti; süre sınırı sert."""
+    from backend.model import solve as solve_mod
+    solve_mod.clear_cache()
+    free = solve(km, time_limit=15)
+    assert free["ok"] and free["check"]["ok"]
+    B = Params.load()["solver.budget_tl"]
+    r = solve(km, mode="butce", time_limit=15)
+    assert r["ok"] and r["check"]["ok"] and r["check"]["checks"]["butce"], r.get("message_tr")
+    assert r["status"] in ("optimal", "sure_doldu", "gap_ulasilamadi")
+    assert r["costs"]["acilis"] <= B * (1 + 1e-7)
+    b = r["bounds"]
+    assert b["objective_tl"] == pytest.approx(r["costs"]["erisim"]) and b["ub_tl"] == pytest.approx(b["objective_tl"])
+    assert b["lb_source"] == "lagrange_butce" and b["lb_tl"] is not None
+    assert 0 < b["lb_tl"] <= b["objective_tl"] and not b["lb_rejected"] and b["lb_adjusted"] is None
+    assert b["gap"] == pytest.approx((b["ub_tl"] - b["lb_tl"]) / b["ub_tl"])
+    assert r["budget"]["nu"] > 0 and r["budget"]["points"]
+    if free["costs"]["acilis"] <= B:
+        assert r["costs"]["erisim"] <= free["costs"]["erisim"] * (1 + 1e-6)
+    assert r["times"]["total_s"] <= 15 + 0.5
 
 
 # ---------------------------------------------------------------- yerinde güncelleme
@@ -231,8 +257,8 @@ def test_infeasible_detected_by_milp_on_toy():
 
 # ---------------------------------------------------------------- iptal ve ilerleme
 def test_cancel_and_progress():
-    from backend.model import lagrange
-    lagrange.clear_cache()                       # önceki testlerin çarpan önbelleği çözümü 6 sn'den kısa bitirebilir
+    from backend.model import solve as solve_mod
+    solve_mod.clear_cache()                      # önceki testlerin çarpan / çözüm önbelleği çözümü erken bitirebilir
     ev = threading.Event()
     events: list[dict] = []
     out: dict = {}
@@ -266,11 +292,61 @@ def test_bound_cards_5km(inst5, res5):
     bc = bounds.bound_cards(inst5, lscp_time=30, pmin_time=60)
     assert bc["max_hospitals_grid"] == 454
     assert bc["capacity"]["with_city"] == 5 and bc["capacity"]["without_city"] == 19
-    ls = bc["coverage_lscp"]
-    assert ls["proven"] and 1 <= ls["value"] <= 454
+    ls, lk = bc["coverage_lscp"], bc["coverage_lscp_k_list"]
+    # kartın anlamı "her talep hücresine R içinde bir hastane": R içindeki tüm adaylarla (k = 0); k listesiyle olan
+    # ikinci satır daha kısıtlı model → değeri en az o kadar (doğrulama C3: 5 km'de 25 / 26)
+    assert ls["k_nearest"] == 0 and lk["k_nearest"] == 50 and ls["arcs"] > lk["arcs"]
+    assert ls["proven"] and lk["proven"] and 1 <= ls["value"] <= lk["value"] <= 454
+    assert ls["reduction"]["rows_reduced"] < inst5.nI                   # baskınlık küçültmesi çalıştı
     pm = bc["p_min"]
-    assert pm["value"] is not None and pm["value"] >= max(ls["value"], 5)
+    assert pm["value"] is not None and pm["value"] >= max(lk["value"], 5)
+    assert pm["lower_bound"] >= lk["lower_bound"]
     assert pm["lower_bound"] <= pm["value"] <= res5["kpis"]["n_hospitals"]
+    assert "k = 50" in bc["labels_tr"]["coverage_lscp_k_list"] and "yol mesafesi" in bc["labels_tr"]["coverage_lscp"]
+
+
+def test_lscp_dominance_reduction_exact():
+    """Satır/sütun baskınlığıyla küçültülmüş küme kapsama = küçültmesiz çözüm = kaba kuvvet (rastgele kapsama
+    matrisleri; zorunlu / yasak aday kilitleriyle)."""
+    from types import SimpleNamespace
+    rng = np.random.default_rng(7)
+    for t in range(12):
+        nI, nJ = 40, 14
+        M = rng.random((nI, nJ)) < 0.18
+        M[np.arange(nI), rng.integers(0, nJ, nI)] = True              # her satır kapsanabilir
+        lock_open = np.zeros(nJ, dtype=bool)
+        lock_closed = np.zeros(nJ, dtype=bool)
+        if t % 3 == 1:
+            lock_open[rng.integers(0, nJ)] = True
+        if t % 3 == 2:
+            j = rng.integers(0, nJ)
+            lock_closed[j] = True
+            lone = M.sum(1) == M[:, j]                                  # yalnız j'nin kapsadığı satır kalmasın
+            M[np.flatnonzero(lone), (j + 1) % nJ] = True
+        ai, aj = np.nonzero(M)
+        inst = SimpleNamespace(s=SimpleNamespace(arc_i=ai, arc_j=aj, nA=len(ai)), nI=nI, nJ=nJ,
+                               lock_open=lock_open, lock_closed=lock_closed)
+        a = bounds.lscp(inst, time_limit=20, reduce=True)
+        b = bounds.lscp(inst, time_limit=20, reduce=False)
+        assert a["proven"] and b["proven"] and a["value"] == b["value"]
+        # kaba kuvvet (bit maskeleri)
+        col = [int(sum(1 << i for i in np.flatnonzero(M[:, j]))) for j in range(nJ)]
+        full = (1 << nI) - 1
+        best = None
+        for mask in range(1 << nJ):
+            js = [j for j in range(nJ) if mask >> j & 1]
+            if any(lock_closed[j] for j in js) or not all(mask >> j & 1 for j in np.flatnonzero(lock_open)):
+                continue
+            cov = 0
+            for j in js:
+                cov |= col[j]
+            if cov == full and (best is None or len(js) < best):
+                best = len(js)
+        assert a["value"] == best
+        sel = a["open_pos"]
+        assert len(sel) == best and M[:, sel].any(1).all()
+        assert not lock_closed[sel].any() and set(np.flatnonzero(lock_open)) <= set(sel)
+    assert a["reduction"]["rows_reduced"] < nI
 
 
 def test_duals_5km(res5, inst5):
@@ -301,7 +377,7 @@ def test_heuristic_feasible_and_close(inst5, res5):
 
 # ---------------------------------------------------------------- bağımlılıklar
 ALLOWED_STDLIB = {"__future__", "collections", "dataclasses", "hashlib", "itertools", "json", "math", "multiprocessing",
-                  "pathlib", "queue", "threading", "time", "typing"}
+                  "os", "pathlib", "queue", "threading", "time", "typing"}
 ALLOWED_THIRD = {"numpy", "scipy", "highspy"}
 
 

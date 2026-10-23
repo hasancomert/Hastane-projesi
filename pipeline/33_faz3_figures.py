@@ -195,6 +195,18 @@ def fig_default_solution(ctx) -> Path:
 
 
 # ---------------------------------------------------------------- 2) U eğrisi
+def p_ranges(ps) -> str:
+    """[83, 86, 87, 88] → '83, 86–88'."""
+    out, ps, i = [], sorted(ps), 0
+    while i < len(ps):
+        j = i
+        while j + 1 < len(ps) and ps[j + 1] == ps[j] + 1:
+            j += 1
+        out.append(f"{ps[i]}–{ps[j]}" if j > i else f"{ps[i]}")
+        i = j + 1
+    return ", ".join(out) if out else "—"
+
+
 def style_axes(ax) -> None:
     for sp in ("top", "right"):
         ax.spines[sp].set_visible(False)
@@ -216,68 +228,82 @@ def fig_u_curve() -> Path:
     pts = [p for p in sw["points"] if p.get("ok")]
     P = np.array([p["p"] for p in pts])
     tot = np.array([p["ub_tl"] for p in pts]) / 1e9
-    lb = np.array([p["lb_tl"] for p in pts]) / 1e9
     op = np.array([p["opening_tl"] for p in pts]) / 1e9
     ac = np.array([p["access_tl"] for p in pts]) / 1e9
     acc, free = sw["acceptance"], sw["free"]
-    fig = plt.figure(figsize=(sm.FIG_W, 8.8))
-    axA = fig.add_axes([0.06, 0.11, 0.40, 0.64])
-    axB = fig.add_axes([0.555, 0.11, 0.43, 0.64])
+    n_star, ub_free = free["n_hospitals"], free["ub_tl"]
+    fig = plt.figure(figsize=(sm.FIG_W, 9.2))
+    axA = fig.add_axes([0.06, 0.10, 0.40, 0.60])
+    axB = fig.add_axes([0.565, 0.10, 0.42, 0.60])
     for ax in (axA, axB):
         style_axes(ax)
-        tr_axis(ax, 0 if ax is axA else 1)
         ax.set_xlabel("hastane sayısı p (sabit)", fontsize=13, color=INK2)
+    tr_axis(axA, 0)
+    # A: bileşenler, tüm tarama
     axA.plot(P, tot, color=COL_TOTAL, lw=2.4, marker="o", ms=4.5, label="toplam")
     axA.plot(P, op, color=COL_OPEN, lw=2.0, marker="o", ms=4, label="açılış (inşaat + sabit + arsa)")
     axA.plot(P, ac, color=COL_ACC, lw=2.0, marker="o", ms=4, label="erişim (25 yıl yolculuk)")
     axA.set_ylim(0, max(tot.max(), op.max()) * 1.08)
     axA.set_ylabel("milyar TL (bugünkü değer)", fontsize=13, color=INK2)
-    for y, lab, col in ((tot[-1], "toplam", COL_TOTAL), (op[-1], "açılış", COL_OPEN), (ac[-1], "erişim", COL_ACC)):
+    for y, lab in ((tot[-1], "toplam"), (op[-1], "açılış"), (ac[-1], "erişim")):
         axA.annotate(lab, (P[-1], y), xytext=(6, 0), textcoords="offset points", va="center", fontsize=12.5,
                      color=INK, fontweight="bold")
     axA.axvline(acc["best_p"], color=MUTED, lw=1.2, ls=(0, (4, 3)), zorder=0)
-    axA.set_title("Bileşenler: açılış ve erişim maliyeti", loc="left", fontsize=14, color=INK, pad=10)
+    axA.set_title(f"Bileşenler: açılış ve erişim maliyeti (p = {P.min()}–{P.max()})", loc="left", fontsize=14,
+                  color=INK, pad=10)
     axA.set_xlim(P.min() - 3, P.max() + 14)
-    # B: toplam (yakın plan) + alt sınır bandı
-    cert = np.array([p["status"] == "optimal" for p in pts])
-    axB.fill_between(P, lb, tot, color="#cde2fb", lw=0, label="alt sınır – bulunan çözüm aralığı", zorder=1)
-    axB.plot(P, tot, color=COL_TOTAL, lw=2.0, zorder=3)
-    axB.plot(P[cert], tot[cert], ls="", marker="o", ms=6, color=COL_TOTAL, zorder=4,
-             label=f"bulunan çözüm (hedef gap %{tr(100 * sw['settings']['target_gap'], 1)} içinde)")
-    axB.plot(P[~cert], tot[~cert], ls="", marker="o", ms=6, mfc=SURFACE, mec=COL_TOTAL, mew=1.6, zorder=4,
-             label="bulunan çözüm (süre doldu, gap daha büyük)")
-    axB.plot(P, lb, color="#2a78d6", lw=1.4, ls=(0, (4, 2)), label="alt sınır (Lagrange)", zorder=2)
-    axB.axvline(acc["best_p"], color=MUTED, lw=1.2, ls=(0, (4, 3)), zorder=0)
-    axB.scatter([free["n_hospitals"]], [free["ub_tl"] / 1e9], s=180, marker="*", c="#eb6834", edgecolors=SURFACE,
-                linewidths=1.4, zorder=5, label=f"serbest p'li optimum ({free['n_hospitals']} hastane)")
-    bp = acc["best_p"]
-    win = (P >= bp - 25) & (P <= bp + 27)
-    axB.set_xlim(bp - 25, bp + 27)
-    axB.set_ylim(lb[win].min() - 0.4, min(tot[win].max(), tot.min() * 1.013) + 0.2)
-    axB.set_ylabel("toplam maliyet, milyar TL", fontsize=13, color=INK2)
-    axB.annotate(f"en iyi p = {acc['best_p']}: {tr(acc['best_ub_tl'] / 1e9, 2)} milyar TL\n"
-                 f"= serbest p'li optimum",
-                 (acc["best_p"], acc["best_ub_tl"] / 1e9), xytext=(bp + 5, lb[win].min() - 0.1), textcoords="data",
-                 fontsize=12.5, color=INK, path_effects=HALO, va="bottom",
-                 arrowprops=dict(arrowstyle="-", color=INK2, lw=1))
-    axB.set_title("Toplam maliyet: geniş ve düz bir dip", loc="left", fontsize=14, color=INK, pad=10)
-    leg = axB.legend(loc="upper center", frameon=False, fontsize=11, ncol=1, bbox_to_anchor=(0.5, 1.0))
-    for t in leg.get_texts():
-        t.set_color(INK2)
     lg = axA.legend(loc="center left", frameon=False, fontsize=11.5, bbox_to_anchor=(0.02, 0.42))
     for t in lg.get_texts():
         t.set_color(INK2)
-    s = sw["settings"]
-    sm.header(fig, "U eğrisi, 3 km: hastane sayısı p sabitken en iyi çözüm",
-              f"Her p için sabit_p modunda çözüm (süre {tr(s['time_limit_s'])} sn, hedef gap "
-              f"%{tr(100 * s['target_gap'], 1)}); taramanın en iyisi p = {acc['best_p']}, serbest p'li optimum "
-              f"{free['n_hospitals']} hastane (fark %{tr(100 * acc['rel_diff_best_vs_free'], 3)}; tolerans "
-              f"%{tr(100 * acc['tolerance'], 2)}).\nDip düz: p = {min(acc['plateau_p'])}–{max(acc['plateau_p'])} "
-              f"aralığı alt sınırlarla dışlanamıyor.\nAz hastanede hem erişim hem açılış pahalı (hastaneler büyük "
-              f"sınıfa çıkar, yatak başı maliyet artar); çok hastanede her ek hastane sabit maliyet ve en az 50 yatak "
-              f"getirir.")
-    sm.footer(fig, "Üreten: pipeline/32_precompute.py sweep, pipeline/33_faz3_figures.py · maliyetler 2026 fiyatları, "
-                   "erişim 25 yıl %5 iskontolu")
+    # B: dip yakın planı — serbest optimuma göre fark (milyon TL); dikey çubuk = alt sınır … bulunan çözüm aralığı
+    ref = set(acc.get("refined_p") or [])
+    lo_p, hi_p = min(min(ref, default=n_star), n_star - 6), max(max(ref, default=n_star), n_star + 6)
+    win = [p for p in pts if lo_p <= p["p"] <= hi_p]
+    x = np.array([p["p"] for p in win])
+    d_ub = (np.array([p["ub_tl"] for p in win]) - ub_free) / 1e6
+    d_lb = (np.array([p["lb_tl"] for p in win]) - ub_free) / 1e6
+    is_ref = np.array([p["p"] in ref for p in win])
+    axB.axhline(0, color=INK, lw=1.0, ls=(0, (1, 2)), zorder=0)
+    axB.vlines(x[is_ref], d_lb[is_ref], d_ub[is_ref], color="#2a78d6", lw=6, alpha=0.35, zorder=2,
+               label="alt sınır – bulunan çözüm aralığı (yeniden çözülen dip)")
+    axB.vlines(x[~is_ref], d_lb[~is_ref], d_ub[~is_ref], color=MUTED, lw=4, alpha=0.35, zorder=2,
+               label="aynı aralık (ilk tarama, 60 sn)")
+    axB.plot(x[is_ref], d_ub[is_ref], ls="", marker="o", ms=7, color=COL_TOTAL, zorder=4,
+             label="bulunan çözüm (dip; uzun çözüm)")
+    axB.plot(x[~is_ref], d_ub[~is_ref], ls="", marker="o", ms=6, mfc=SURFACE, mec=COL_TOTAL, mew=1.6, zorder=4,
+             label="bulunan çözüm (ilk tarama)")
+    axB.scatter([n_star], [0.0], s=260, marker="*", c="#eb6834", edgecolors=SURFACE, linewidths=1.4, zorder=5,
+                label=f"serbest p'li optimum ({n_star} hastane, {tr(ub_free / 1e9, 3)} milyar TL)")
+    for xi, di, rf in zip(x, d_ub, is_ref):
+        if rf and xi != n_star:
+            axB.annotate(f"+{tr(di, 0)}" if di >= 0 else tr(di, 0), (xi, di), xytext=(0, 8),
+                         textcoords="offset points", ha="center", va="bottom", fontsize=10.5, color=INK,
+                         path_effects=HALO, zorder=6)
+    axB.set_xlim(lo_p - 1, hi_p + 1)
+    ymin = float(d_lb.min())
+    axB.set_ylim(ymin * 1.12, max(float(d_ub.max()) * 1.42, -0.25 * ymin))   # üstte açıklama için yer
+    axB.set_xticks(range(lo_p, hi_p + 1, 1 if hi_p - lo_p <= 14 else 2))
+    tr_axis(axB, 0)
+    axB.set_ylabel("serbest optimumdan fark, milyon TL", fontsize=13, color=INK2)
+    axB.set_title("Dip: N ± k farkları alt sınır aralığının içinde", loc="left", fontsize=14, color=INK, pad=10)
+    leg = axB.legend(loc="upper center", frameon=True, framealpha=0.92, edgecolor=SURFACE, facecolor=SURFACE,
+                     fontsize=10.5, ncol=1, bbox_to_anchor=(0.5, 1.0))
+    for t in leg.get_texts():
+        t.set_color(INK2)
+    others = [q for q in acc["plateau_p"] if q != n_star]
+    in_win = [q for q in others if lo_p <= q <= hi_p]
+    sub = (f"Her p için sabit_p modunda çözüm. Dip (p = {p_ranges(sorted(ref))}) uzun çözümlerle yeniden çözüldü "
+           f"(büyük çekirdek MIP + Lagrange + pencere araması, p başına ≈10 dk);\n"
+           f"diğer noktalar ilk tarama ({tr(sw['settings']['time_limit_s'])} sn). Taramanın en iyi çözümü "
+           f"p = {acc['best_p']} = serbest p'li optimum.\n"
+           f"Sağ panel: çubuk = alt sınır … bulunan çözüm; sıfır çizgisini kesen p'ler n*'dan ayırt edilemez "
+           f"('fark gap içinde'" + (f": {p_ranges(in_win)}" if in_win else "") + ").\n"
+           f"Az hastanede hem erişim hem açılış pahalı (hastaneler büyük sınıfa çıkar); çok hastanede her ek hastane "
+           f"sabit maliyet ve en az 50 yatak getirir.")
+    sm.header(fig, "U eğrisi, 3 km: hastane sayısı p sabitken en iyi çözüm", sub)
+    sm.footer(fig, "Üreten: pipeline/32_precompute.py sweep + refine, pipeline/33_faz3_figures.py · maliyetler 2026 "
+                   "fiyatları, erişim 25 yıl %5 iskontolu · sağ panelde alt sınır: kendi alt sınırı ya da serbest "
+                   "problemin alt sınırı (büyüğü)")
     return sm.save(fig, "faz3_u_egrisi_3km.png")
 
 
@@ -303,7 +329,7 @@ def curves(trace: list[dict]):
     return np.array(tp), np.array(up), np.array(td), np.array(dn), phases
 
 
-PHASE_TR = {"ornek": "örnek", "lagrange": "Lagrange", "cekirdek_mip": "çekirdek MIP", "lagrange_2": "Lagrange 2",
+PHASE_TR = {"ornek": "örnek", "lagrange": "Lagrange", "cekirdek_mip": "iyileştirme evresi", "lagrange_2": "Lagrange 2",
             "mip": "tam MILP (HiGHS)"}
 
 
@@ -355,7 +381,7 @@ def fig_branch_bound() -> Path:
     axB = fig.add_axes([0.56, 0.11, 0.42, 0.62])
     ylim = (354.0, 388.0)
     draw_conv(axA, live["trace"], live["times"]["total_s"],
-              f"Bu fazın canlı çözümü: Lagrange + çekirdek MIP ({tr(live['times']['total_s'], 1)} sn)", ylim=ylim)
+              f"Canlı çözüm: Lagrange + yuvarlama + pencereler ({tr(live['times']['total_s'], 1)} sn)", ylim=ylim)
     draw_conv(axB, b3["trace"], b3["times"]["total_s"],
               f"Yalnız HiGHS dal-sınır, tam güçlü model ({tr(b3['times']['total_s'])} sn)", logx=True, ylim=ylim,
               legend_loc="lower left")
@@ -364,12 +390,15 @@ def fig_branch_bound() -> Path:
     axA.annotate(f"bilinen en iyi çözüm {tr(best, 2)}", (0.02, best), xycoords=("axes fraction", "data"),
                  xytext=(0, 5), textcoords="offset points", fontsize=11, color=INK2)
     t1 = live["time_to_gap_s"]["0.01"]
+    s3 = next(r for r in base["runs"] if r["grid_km"] == 3)["summary"]
+    root_s = s3["root_lp"]["mip_first_meaningful_bound_total_s"]
     sm.header(fig, "Dal-sınır yakınsaması, 3 km: üst sınır (bulunan çözüm) ve alt sınır zamanla",
               "Sol: alt sınır Lagrange gevşetmesinden (atama kısıtları gevşetilir; aday başına sırt çantası); üst sınır "
-              "sezgisel, Lagrange sezgiseli,\nçekirdek MIP ve cila. "
+              "sezgisel, çekirdek LP'sinin yuvarlanması,\npencere araması (küçük kesin MILP'ler), çekirdek MIP ve cila. "
               f"%1 farka {tr(t1, 1) if t1 else '—'} sn'de ulaşıldı. "
-              "Sağ: Faz 3'ün ilk sürümü — HiGHS tam modeli çözerken alt sınır kök LP bitene dek\n(≈146 sn) yalnız "
-              "önsüzgeç sınırıdır (eksende görünmez); bu yüzden canlı çözüm Lagrange sınırıyla sertifikalanıyor.")
+              f"Sağ: Faz 3'ün ilk sürümü — HiGHS tam modeli çözerken alt sınır kök LP bitene dek\n"
+              f"(≈{tr(root_s)} sn) yalnız önsüzgeç sınırıdır (eksende görünmez); bu yüzden canlı çözüm Lagrange "
+              f"sınırıyla sertifikalanıyor.")
     sm.footer(fig, "Üreten: pipeline/31_benchmark.py (canlı, 1. çalıştırma), pipeline/30_solve_default.py --baseline, "
                    "pipeline/33_faz3_figures.py · 4 çekirdekli geliştirme konteyneri; noktalı çizgi: önceden çözülen "
                    "varsayılan çözüm")

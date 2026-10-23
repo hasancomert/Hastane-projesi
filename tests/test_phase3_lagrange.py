@@ -101,6 +101,62 @@ def test_budget_mode_not_supported():
     assert not res.ok and res.bound_tl is None
 
 
+def _budget_toy(seed: int, factor: float):
+    base = toy(seed, 6, 3, 15.0)
+    free_open = milp.MilpModel(base).solve(gap=0.0, abs_gap=1e-9).solution.opening_tl(base)
+    return toy(seed, 6, 3, 15.0, {"solver.objective_mode": "butce", "solver.budget_tl": factor * free_open})
+
+
+@pytest.mark.parametrize("seed,factor", [(21, 1.10), (2, 1.0), (5, 1.25), (7, 1.05)])
+def test_budget_lagrange_bound_valid_on_toys(monkeypatch, seed, factor):
+    """Bütçe satırının Lagrange gevşetmesi: her ν ≥ 0 ve her μ için L_ν − ν·B ≤ en küçük erişim maliyeti (kaba kuvvet,
+    ε = 0); ν araması ve solve() alt sınırı da geçerli; solve() kaba kuvvet optimumunu bulur (gap 1e-4)."""
+    from backend.model import budget
+    inst = _budget_toy(seed, factor)
+    with monkeypatch.context() as mp:
+        mp.setattr(milp, "BUDGET_EPS", 0.0)                       # kaba kuvvet: yalnız erişim
+        z_acc, _ = brute_force(inst)
+    assert np.isfinite(z_acc)
+    bf_model, _ = brute_force(inst)                               # erişim + ε·açılış (modelin amacı)
+    rng = np.random.default_rng(seed)
+    sub = lagrange.Subproblem(inst)
+    F0, V0 = sub.F.copy(), sub.V.copy()
+    B = inst.budget / 1e6
+    for nu in (0.05, 0.3, 0.8, 1.0, 1.7, 4.0, 20.0):
+        sub.F, sub.V = F0 * nu, V0 * nu
+        for _ in range(5):
+            mu = rng.uniform(0, 2, inst.nI) * inst.acc.max() / 1e6
+            assert (sub.solve(mu).L - nu * B) * 1e6 <= z_acc * (1 + 1e-9) + 1.0
+        res = lagrange.run(budget.scaled_instance(inst, nu), time_limit=0.5, use_cache=False, target_gap=1e-9)
+        assert res.bound_tl - nu * inst.budget <= z_acc * (1 + 1e-9) + 1.0
+    br = budget.run(inst, time_limit=2.0)
+    assert br.ok and br.lb_tl <= z_acc * (1 + 1e-9) + 1.0
+    r = solve(instance=inst, time_limit=30, gap=1e-4)
+    assert r["ok"] and r["check"]["ok"] and r["check"]["checks"]["butce"]
+    b = r["bounds"]
+    assert b["model_objective_tl"] == pytest.approx(bf_model, rel=1e-6)
+    assert b["objective_tl"] == pytest.approx(z_acc, rel=1e-4)
+    assert b["lb_tl"] <= z_acc * (1 + 1e-9) + 1.0 and b["lb_tl"] <= b["objective_tl"]
+    assert not b["lb_rejected"] and r["status"] == "optimal"
+
+
+def test_status_label_closed_lock_and_unreachable_gap():
+    """Doğrulama #11: 'yasak' kilitli hücrelerin yayları çekirdeği tam modelden ayırmaz (gap 0 → optimal); hedef gap
+    sayısal olarak erişilemezse (yalnız Lagrange, ikilik boşluğu) süre dolmadan biten çözüm 'süre doldu' değil
+    'gap_ulasilamadi' olarak etiketlenir."""
+    inst = toy(11, 6, 3, 15.0, {}, locks={"open": ["c2"], "closed": ["c3"]})
+    bf, _ = brute_force(inst)
+    r = solve(instance=inst, time_limit=30, gap=0.0)
+    assert r["ok"] and r["status"] == "optimal", (r["status"], r["bounds"])
+    assert r["bounds"]["objective_tl"] == pytest.approx(bf, rel=1e-6)
+    assert r["core_mip"] is None or r["core_mip"]["is_full_model"]
+    inst = toy(2, 6, 3, 15.0)
+    r = solve(instance=inst, time_limit=30, gap=0.0, mip="none")
+    assert r["ok"] and r["bounds"]["mip_kind"] == "none"
+    if r["bounds"]["gap"] > 0:
+        assert r["status"] == "gap_ulasilamadi" and r["times"]["total_s"] < 30
+
+
 def test_per_class_rows_valid_and_tighter():
     for seed in (1, 2, 4):
         inst = toy(seed, 6, 3, 15.0)
@@ -148,15 +204,30 @@ def test_solve_5km_lagrange_certified():
     assert r["bounds"]["lb_source"] == "lagrange" and r["bounds"]["gap"] <= 0.01
     assert r["bounds"]["lb_tl"] <= BEST_KNOWN_5KM_TL
     assert "Alt sınır L" in r["certificate_tr"]
+    # bounds.mip_kind gerçekte çalışanı yazar (doğrulama E4): çekirdek evresi ya hiç başlamadı ya da çalıştı
+    assert r["bounds"]["mip_kind"] in ("none", "core") and r["bounds"]["mip_kind_planned"] == "core"
+    assert (r["bounds"]["mip_kind"] == "core") == (r["core_mip"] is not None or r["improve"] is not None)
 
 
 def test_solve_3km_live_target():
-    """Şartname 4.6: 3 km'de canlı çözüm ≲ 15 sn (bu makinede; sınır payı test yükü için)."""
+    """Şartname 4.6: 3 km'de canlı çözüm ≲ 15 sn; süre sınırı sert (≤ 15 + 0,5 sn)."""
     r = solve(3, time_limit=15)
     assert r["ok"] and r["check"]["ok"], r.get("check")
     assert r["status"] == "optimal" and r["bounds"]["gap"] <= 0.01
-    assert r["times"]["total_s"] <= 15 * 1.25
+    assert r["times"]["total_s"] <= 15 + 0.5
     assert r["bounds"]["lb_tl"] <= r["bounds"]["ub_tl"]
+
+
+@pytest.mark.parametrize("km,tl,ov", [(5, 4.0, {}), (3, 6.0, {}), (2, 12.0, {}),
+                                      (3, 8.0, {"solver.objective_mode": "sabit_p", "solver.p_fixed": 70})])
+def test_hard_time_limit(km, tl, ov):
+    """Doğrulama #16: hedef gap erişilemezken (1e-5) toplam süre time_limit + 0,5 sn'yi aşmaz (alt süreç dahil)."""
+    t = time.perf_counter()
+    r = solve(km, ov, time_limit=tl, gap=1e-5)
+    wall = time.perf_counter() - t
+    assert r["ok"] and r["check"]["ok"]
+    assert r["times"]["total_s"] <= tl + 0.5 and wall <= tl + 0.6, (r["times"], wall)
+    assert r["status"] in ("sure_doldu", "gap_ulasilamadi", "optimal")
 
 
 def test_k_zero_means_all_candidates_within_R():

@@ -22,7 +22,8 @@ olmayan kümelerde sınıf seçimli MIP (evaluate, gap 1e-2, ≤ 1 sn, toplam se
 yaklaşık modelde yerel arama (heuristics.greedy_local) → sınıf seçimli MIP. Sayı sınırlarını sağlamayan çözümler atılır.
 Çekirdek problem (core_instance): en iyi μ'deki G_j ile seçilen adaylar ve yakın yaylardan küçük bir MILP; solve() bunu
 HiGHS ile çözüp üst sınırı iyileştirir (çekirdeğin alt sınırı küresel değildir).
-Bütçe modu (butce) desteklenmez: ok=False döner (çağıran mevcut yola düşer).
+Bütçe modu (butce) burada doğrudan desteklenmez (ok=False); bütçe satırı ayrıca gevşetilir: budget.py (açılış maliyeti
+ν ile ölçeklenmiş serbest problemler bu modülle çözülür).
 
 Sayısal not: aday içi ρ sıralaması tek anahtarlı (aday + ölçekli ρ) kararlı sıralamadır; ρ'ları ≈1e-13·max ρ'dan az
 farklı yaylar eşit sayılır. Bunun L'ye etkisi en çok (ρ farkı × toplam yatak) ≈ birkaç bin TL'dir (≈1e-8 göreli);
@@ -62,6 +63,7 @@ class SubResult:
     open_: np.ndarray        # (J,) bool
     x: np.ndarray            # (A,)
     g: np.ndarray            # (I,) alt gradyan 1 − Σ x
+    bed: np.ndarray | None = None   # (J, K) alt problemde ödenen yatak max(L_k, b) (bütçe modu alt gradyanı için)
 
 
 class Subproblem:
@@ -115,6 +117,7 @@ class Subproblem:
         Wpos = cw0[self.seg_end] - base
         wsafe = np.where(w > 0, w, 1.0)
         G = np.full((self.nJ, self.nK), np.inf)
+        bed = np.zeros((self.nJ, self.nK))
         frs: list = [None] * self.nK
         for k in range(self.nK):
             ok = self.allowed[:, k]
@@ -126,6 +129,7 @@ class Subproblem:
             fr = np.where(pos, np.clip((b[j] - cw_prev) / wsafe, 0.0, 1.0), 0.0)
             P = np.bincount(j, p * fr, minlength=self.nJ)
             G[:, k] = np.where(ok, self.F[:, k] + Vk * np.maximum(self.L[k], b) - P, np.inf)
+            bed[:, k] = np.maximum(self.L[k], b)
             frs[k] = fr
         kbest = np.argmin(G, axis=1)
         Gmin = G[np.arange(self.nJ), kbest]
@@ -139,7 +143,7 @@ class Subproblem:
         g = 1.0 - np.bincount(self.ai, x, minlength=self.nI)
         self.calls += 1
         self.time_s += time.perf_counter() - t0
-        return SubResult(Lval, G, Gmin, kbest, open_, x, g)
+        return SubResult(Lval, G, Gmin, kbest, open_, x, g, bed)
 
     def _select(self, Gmin: np.ndarray) -> np.ndarray:
         fin = np.isfinite(Gmin)
@@ -233,7 +237,7 @@ def _count_ok(inst: Instance, n: int) -> bool:
 
 
 def fast_eval(inst: Instance, open_idx: np.ndarray, cls: np.ndarray, *, mip_fallback: bool = True,
-              repair_rounds: int = 3, approx=None):
+              repair_rounds: int = 3, approx=None, mip_time: float = 5.0):
     """Sınıflar sabit atama/boyut LP'si (evaluate, ≈0,05 sn); olurlu değilse isteğe bağlı sınıf seçimli MIP (gap 1e-2).
 
     Sınıf onarımı: LP çözümündeki yükle (atanan yatak) her hastanenin sınıfı yaklaşık maliyetle (heuristics.ApproxModel
@@ -245,7 +249,7 @@ def fast_eval(inst: Instance, open_idx: np.ndarray, cls: np.ndarray, *, mip_fall
     open_idx = np.asarray(open_idx, dtype=np.int64)
     ev = evaluate(inst, open_idx, cls=np.asarray(cls, dtype=np.int64))
     if not ev.ok:
-        return evaluate(inst, open_idx, gap=1e-2, time_limit=5.0) if mip_fallback else ev
+        return evaluate(inst, open_idx, gap=1e-2, time_limit=max(mip_time, 0.05)) if mip_fallback else ev
     M = approx or ApproxModel(inst)
     s = inst.s
     for _ in range(repair_rounds):

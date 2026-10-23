@@ -442,18 +442,20 @@ class MilpModel:
     def solve(self, *, time_limit: float | None = None, gap: float | None = None, abs_gap: float | None = None,
               start: Solution | None = None, progress_cb: Callable[[dict], None] | None = None,
               cancel_event: threading.Event | None = None, log_interval: float = 0.5,
-              options: dict | None = None, relax: bool = False, isolate: bool = False) -> MilpResult:
+              options: dict | None = None, relax: bool = False, isolate: bool = False,
+              deadline: float | None = None) -> MilpResult:
         """Modeli çözer (ayrı iş parçacığında h.run()). relax=True: LP gevşetmesi (tamsayılık kaldırılır).
 
         isolate=True: çözüm ayrı bir SÜREÇTE yapılır (multiprocessing, spawn); iptal ve süre aşımında süreç sonlandırılır.
         Gerekçe (Faz 3 ölçümü, highspy 1.15.1): MIP'in kök LP'si sırasında kesme geri çağrıları (cbSimplexInterrupt /
         cbMipInterrupt) çağrılmaz; aynı süreçte iptal ancak kök LP bittikten sonra etkili olur (3 km'de ≈140 sn).
-        İzole modda en son bulunan çözüm ve alt sınır kuyruktan alınır; süreç başlatma ek yükü ≈0,5–1 sn.
+        İzole modda alt süreç durdurulunca son çözüm ve alt sınır kuyruktan alınır; süreç başlatma ek yükü ≈0,5–1 sn.
+        deadline (time.perf_counter() cinsinden mutlak an, yalnız izole modda): bu anda çözüm durdurulur (sert sınır).
         """
         if isolate and not relax:
             return self._solve_isolated(time_limit=time_limit, gap=gap, abs_gap=abs_gap, start=start,
                                         progress_cb=progress_cb, cancel_event=cancel_event,
-                                        log_interval=log_interval, options=options)
+                                        log_interval=log_interval, options=options, deadline=deadline)
         h = self.h
         lay = self.lay
         tl = float(time_limit) if time_limit else math.inf
@@ -568,22 +570,28 @@ class MilpModel:
                           model=self.size())
 
     def _solve_isolated(self, *, time_limit, gap, abs_gap, start, progress_cb, cancel_event, log_interval,
-                        options) -> MilpResult:
-        """solve(isolate=True): ayrı süreçte çözüm; iptal/süre aşımında süreç sonlandırılır (bkz. solve)."""
+                        options, deadline=None) -> MilpResult:
+        """solve(isolate=True): ayrı süreçte çözüm; iptal/süre aşımında süreç durdurulur (bkz. solve, IsolatedRun)."""
         run = self.start_isolated(time_limit=time_limit, gap=gap, abs_gap=abs_gap, start=start,
                                   progress_cb=progress_cb, log_interval=log_interval, options=options)
         stop = cancel_event or threading.Event()
-        while not run.done:
-            run.poll(timeout=0.05)
-            if not run.done and (stop.is_set() or time.perf_counter() > run.deadline):
-                run.terminate("Interrupted by user" if stop.is_set() else "Time limit reached")
-        return run.result()
+        hard = run.deadline if deadline is None else min(run.deadline, float(deadline))
+        try:
+            while not run.done:
+                run.poll(timeout=0.05)
+                if not run.done and (stop.is_set() or time.perf_counter() > hard):
+                    run.terminate("Interrupted by user" if stop.is_set() else "Time limit reached")
+            return run.result()
+        finally:
+            run.close()                  # her durumda (istisna dahil) alt süreç sonlandırılır
 
     def start_isolated(self, *, time_limit=None, gap=None, abs_gap=None, start: Solution | None = None,
                        progress_cb: Callable[[dict], None] | None = None, log_interval: float = 0.5,
                        options: dict | None = None) -> "IsolatedRun":
         """Ayrı süreçte çözümü BAŞLATIR ve hemen döner (çağıran aynı anda başka iş yapabilir, ör. Lagrange
-        yinelemeleri); poll() ile olaylar okunur, incumbent() son çözümü verir, terminate() durdurur, result() sonuç."""
+        yinelemeleri); poll() ile olaylar okunur, terminate() kibarca durdurur (son çözüm alınır), result() sonuç,
+        close() süreci her durumda sonlandırır (çağıran finally bloğunda çağırmalı).
+        time_limit duvar saatiyle bu çağrıdan itibaren sayılır (alt sürecin başlama gecikmesi dahil)."""
         tl = float(time_limit) if time_limit else math.inf
         opts = {"time_limit": tl if math.isfinite(tl) else INF, "mip_min_logging_interval": float(log_interval)}
         if gap is not None:
@@ -596,8 +604,24 @@ class MilpModel:
                    "lb": self._lb, "ub": self._ub, "rlo": self._rlo, "rhi": self._rhi,
                    "start_": A.indptr.astype(np.int32), "index": A.indices.astype(np.int32),
                    "value": A.data.astype(float), "integrality": self._integrality, "options": opts,
-                   "start": None if start is None else self.to_vector(start)}
+                   "start": None if start is None else self.to_vector(start),
+                   "wall_deadline": time.time() + tl if math.isfinite(tl) else None}
         return IsolatedRun(self, payload, tl, progress_cb)
+
+
+# Alt süreç yönetimi (Faz 3 doğrulaması F1: ebeveyn öldürülünce HiGHS alt süreci sahipsiz kalıp mp.Queue besleyicisinde
+# — her incumbent mesajı büyük bir vektör taşıyordu — sonsuza dek asılı kalıyordu):
+#  * alt süreçte bekçi iş parçacığı ebeveynin canlılığını (multiprocessing.parent_process(); Windows'ta süreç tutamağı,
+#    POSIX'te boru) izler; ebeveyn yoksa os._exit ile hemen çıkar (kök LP sırasında da: highspy run() GIL'i bırakır);
+#  * durdurma isteği (Event) → HiGHS kesme geri çağrısı (cbMipInterrupt / simpleks / IPM) çözümü keser; HiGHS
+#    CHILD_STOP_GRACE_S içinde dönmezse bekçi eldeki son incumbent'la 'done' gönderip çıkar;
+#  * çözüm sırasında yalnız küçük ilerleme mesajları; çözüm vektörü bir kez, 'done' ile; ardından kuyruk boşaltılır ve
+#    os._exit (yorumlayıcı kapanışında kuyruk iş parçacığı beklenmez);
+#  * ebeveyn: terminate() önce kibar durdurma (STOP_GRACE_S), sonra terminate/kill; close() her durumda süreci biçer.
+STOP_GRACE_S = 0.4          # ebeveyn: durdurma isteğinden sonra 'done' için bekleme (sn); sonra süreç öldürülür
+CHILD_STOP_GRACE_S = 0.2    # alt süreç: HiGHS kesmeye bu sürede yanıt vermezse bekçi son incumbent'la biter
+CHILD_HARD_EXTRA_S = 2.0    # alt süreç: duvar saati süre sınırını bu kadar aşarsa kendini durdurur
+WATCHDOG_PERIOD_S = 0.05
 
 
 class IsolatedRun:
@@ -607,17 +631,23 @@ class IsolatedRun:
         import multiprocessing as mp
         self.model = model
         self.progress_cb = progress_cb
-        ctx = mp.get_context("spawn")
+        ctx = mp.get_context("spawn")           # Windows ile aynı başlatma yöntemi (fork'a özgü hile yok)
         self.q = ctx.Queue()
-        self.proc = ctx.Process(target=_isolated_worker, args=(payload, self.q), daemon=True)
+        self.stop_ev = ctx.Event()
+        self.proc = ctx.Process(target=_isolated_worker, args=(payload, self.q, self.stop_ev), daemon=True)
         self.trace: list[TracePoint] = []
         self.st = {"first_inc": None, "first_dual": None, "interrupted": False, "start_ok": None, "vec": None,
                    "primal": None, "dual": None, "gap": None, "nodes": 0, "status": "Not Set", "t_run0": None}
         self.done = False
         self.n_inc = 0                  # incumbent sayacı (yeni çözüm geldi mi?)
+        self._closed = False
         self.t0 = time.perf_counter()
         self.proc.start()
-        self.deadline = self.t0 + tl + 3.0 if math.isfinite(tl) else math.inf
+        self.deadline = self.t0 + tl + 1.5 if math.isfinite(tl) else math.inf
+
+    @property
+    def pid(self) -> int | None:
+        return self.proc.pid
 
     def _emit(self, tp: TracePoint) -> None:
         self.trace.append(tp)
@@ -641,16 +671,19 @@ class IsolatedRun:
                     if st["status"] == "Not Set":
                         raise RuntimeError("HiGHS alt süreci beklenmedik biçimde sonlandı")
                 break
+            except (EOFError, OSError):
+                self.done = True
+                break
             first = False
             kind = msg[0]
             if kind == "started":
                 st["start_ok"] = msg[1]
                 st["t_run0"] = time.perf_counter() - self.t0
             elif kind == "inc":
-                _, rt, obj, dual, g, nodes, vec = msg
+                _, rt, obj, dual, g, nodes = msg
                 if st["first_inc"] is None:
                     st["first_inc"] = rt
-                st["vec"], st["primal"], st["nodes"] = vec, _tl(obj), nodes
+                st["primal"], st["nodes"] = _tl(obj), nodes
                 st["dual"] = _tl(dual) if _tl(dual) is not None else st["dual"]
                 self.n_inc += 1
                 self._emit(TracePoint(rt, "incumbent", _tl(obj), _tl(dual), _gap(g), nodes))
@@ -672,30 +705,95 @@ class IsolatedRun:
                 st["gap"], st["nodes"] = _gap(g), nodes
                 self.done = True
             elif kind == "error":
-                self.proc.join(5)
                 self.done = True
+                self._reap()
                 raise RuntimeError(f"HiGHS alt süreci hata verdi: {msg[1]}")
 
     def incumbent(self) -> tuple[Solution | None, float | None]:
-        """Şimdiye dek bulunan en iyi çözüm (modelin Solution'ı) ve amaç değeri (TL)."""
+        """Bitmiş çözümün en iyi çözümü (modelin Solution'ı) ve amaç değeri (TL). Çözüm sürerken vektör gönderilmez
+        (yalnız amaç değeri: st['primal']); vektör 'done' mesajıyla gelir."""
         v = self.st["vec"]
         return (self.model.from_vector(v) if v is not None else None), self.st["primal"]
 
-    def terminate(self, status: str = "Interrupted by user") -> None:
+    def request_stop(self) -> None:
+        """Kibar durdurma isteği (beklemeden döner): alt süreç HiGHS'i keser ve son çözümü gönderir."""
+        try:
+            self.stop_ev.set()
+        except Exception:
+            pass
+
+    def terminate(self, status: str = "Interrupted by user", grace: float = STOP_GRACE_S) -> None:
+        """Önce kibar durdurma (en çok grace sn 'done' beklenir: son çözüm vektörü gelir), sonra süreç öldürülür."""
         if self.done:
+            self._reap()
             return
-        self.poll()
-        if self.done:
-            return
+        self.request_stop()
+        t_end = time.perf_counter() + max(grace, 0.0)
+        while not self.done:
+            left = t_end - time.perf_counter()
+            if left <= 0:
+                break
+            try:
+                self.poll(timeout=min(0.05, left))
+            except RuntimeError:
+                break
         self.st["interrupted"] = True
-        self.st["status"] = status
-        self.proc.terminate()
-        self.done = True
+        if not self.done:
+            self.st["status"] = status
+            self.done = True
+        elif self.st["status"] in ("Interrupted by user", "Not Set"):
+            self.st["status"] = status
+        self._reap()
+
+    def _reap(self, timeout: float = 0.5) -> None:
+        """Süreci biçer: 'done' sonrası alt süreç kendisi çıkar; çıkmazsa terminate, sonra kill."""
+        p = self.proc
+        try:
+            p.join(timeout)
+            if p.is_alive():
+                p.terminate()
+                p.join(timeout)
+            if p.is_alive():
+                p.kill()
+                p.join(timeout)
+        except Exception:
+            pass
+
+    def close(self) -> None:
+        """Her durumda (çözüm bitmemiş olsa da) alt süreci sonlandırır ve kuyruğu kapatır; tekrar çağrılabilir."""
+        if self._closed:
+            return
+        if not self.done:
+            self.request_stop()
+            self.done = True
+            self.st["interrupted"] = True
+            if self.st["status"] == "Not Set":
+                self.st["status"] = "Interrupted by user"
+        self._reap(timeout=0.3)
+        try:
+            self.q.close()
+            self.q.cancel_join_thread()
+        except Exception:
+            pass
+        self._closed = True
+
+    def __enter__(self) -> "IsolatedRun":
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
+
+    def __del__(self) -> None:
+        try:
+            if self.proc.is_alive():
+                self.proc.kill()
+        except Exception:
+            pass
 
     def result(self) -> MilpResult:
-        self.proc.join(5)
-        if self.proc.is_alive():
-            self.proc.kill()
+        if not self.done:
+            self.terminate()
+        self._reap()
         st = self.st
         wall = time.perf_counter() - self.t0
         sol = self.model.from_vector(st["vec"]) if st["vec"] is not None else None
@@ -710,14 +808,70 @@ class IsolatedRun:
                           spawn_s=st["t_run0"])
 
 
-def _isolated_worker(payload: dict, q) -> None:
-    """Ayrı süreçte HiGHS MIP çözümü; olayları kuyruğa yazar (yalnız numpy + highspy kullanır)."""
+def _isolated_worker(payload: dict, q, stop_ev=None) -> None:
+    """Ayrı süreçte HiGHS MIP çözümü; küçük olay mesajları kuyruğa, çözüm vektörü yalnız sonda ('done').
+    Yalnız numpy + highspy + standart kütüphane; spawn ile çalışır (giriş noktası modül düzeyinde)."""
+    import os
+    import threading
+    import multiprocessing as mp
+    parent = mp.parent_process()
+    st = {"vec": None, "obj": None, "dual": None, "gap": None, "nodes": 0, "stop": False, "sent": False,
+          "run_done": False}
+    lock = threading.Lock()
+
+    def finish(status, obj, dual, gap, nodes, vec, code: int = 0) -> None:
+        """'done' mesajını bir kez gönderir, kuyruğu boşaltır ve süreci bitirir."""
+        with lock:
+            if st["sent"]:
+                return
+            st["sent"] = True
+        try:
+            q.put(("done", status, obj, dual, gap, nodes, vec))
+            q.close()
+            q.join_thread()             # veri boruya yazılana dek (ebeveyn okur); ebeveyn ölürse bekçi çıkarır
+        finally:
+            os._exit(code)
+
+    def parent_alive() -> bool:
+        try:
+            return parent is None or parent.is_alive()
+        except Exception:
+            return False
+
+    def watchdog(hard: float) -> None:
+        t_stop = None
+        while True:
+            if not parent_alive():
+                try:
+                    q.cancel_join_thread()
+                finally:
+                    os._exit(3)         # sahipsiz kalma: hemen çık
+            now = time.monotonic()
+            if t_stop is None and ((stop_ev is not None and stop_ev.is_set()) or now > hard):
+                st["stop"] = True
+                t_stop = now
+            if t_stop is not None and now - t_stop > CHILD_STOP_GRACE_S and not st["run_done"] and not st["sent"]:
+                # HiGHS kesmeye yanıt vermiyor (ör. uzun bir LP çözümü): eldeki son incumbent'la bitir
+                finish("Interrupted by user", st["obj"], st["dual"], st["gap"], st["nodes"], st["vec"])
+            if parent is not None:
+                parent.join(WATCHDOG_PERIOD_S)        # ebeveyn ölürse hemen döner
+            else:
+                time.sleep(WATCHDOG_PERIOD_S)
+
     try:
         import highspy as hs
+        opts = dict(payload["options"])
+        wd = payload.get("wall_deadline")
+        if wd is not None:
+            # süre sınırı ebeveynin başlattığı andan sayılır (alt süreç başlama gecikmesi düşülür)
+            opts["time_limit"] = max(0.05, min(float(opts.get("time_limit", INF)), wd - time.time()))
+        tl = float(opts.get("time_limit", INF))
+        hard = time.monotonic() + tl + CHILD_HARD_EXTRA_S if tl < 1e30 else math.inf
+        threading.Thread(target=watchdog, args=(hard,), name="highs-bekci", daemon=True).start()
         h = hs.Highs()
         h.setOptionValue("output_flag", True)
         h.setOptionValue("log_to_console", False)
-        for k, v in payload["options"].items():
+        for k, v in opts.items():
             h.setOptionValue(k, v)
         h.passModel(payload["ncol"], payload["nrow"], payload["nnz"], 1, 1, 0.0, payload["cost"], payload["lb"],
                     payload["ub"], payload["rlo"], payload["rhi"], payload["start_"], payload["index"],
@@ -725,27 +879,49 @@ def _isolated_worker(payload: dict, q) -> None:
 
         def on_inc(e):
             d = e.data_out
+            st["vec"] = np.asarray(d.mip_solution, dtype=float).copy()      # yalnız alt süreçte tutulur
+            st["obj"], st["dual"], st["gap"] = d.objective_function_value, d.mip_dual_bound, d.mip_gap
+            st["nodes"] = int(d.mip_node_count)
             q.put(("inc", d.running_time, d.objective_function_value, d.mip_dual_bound, d.mip_gap,
-                   int(d.mip_node_count), np.asarray(d.mip_solution, dtype=float).copy()))
+                   int(d.mip_node_count)))
 
         def on_log(e):
             d = e.data_out
+            st["dual"] = d.mip_dual_bound
             q.put(("log", d.running_time, d.mip_primal_bound, d.mip_dual_bound, d.mip_gap, int(d.mip_node_count)))
+
+        def on_interrupt(e):
+            if st["stop"]:
+                e.interrupt()
 
         h.cbMipImprovingSolution.subscribe(on_inc)
         h.cbMipLogging.subscribe(on_log)
+        for cb in (h.cbMipInterrupt, h.cbSimplexInterrupt, h.cbIpmInterrupt):
+            cb.subscribe(on_interrupt)
         ok = None
         if payload.get("start") is not None:
             n = payload["ncol"]
             ok = h.setSolution(n, np.arange(n, dtype=np.int32), payload["start"]) != hs.HighsStatus.kError
         q.put(("started", ok))
-        h.run()
+        if not st["stop"]:
+            h.run()
+        st["run_done"] = True
         info = h.getInfo()
-        vec = np.asarray(h.getSolution().col_value, dtype=float) if info.primal_solution_status == 2 else None
-        q.put(("done", h.modelStatusToString(h.getModelStatus()), info.objective_function_value,
-               info.mip_dual_bound, info.mip_gap, int(info.mip_node_count), vec))
+        vec = np.asarray(h.getSolution().col_value, dtype=float) if info.primal_solution_status == 2 else st["vec"]
+        status = h.modelStatusToString(h.getModelStatus())
+        if st["stop"] and status in ("Not Set", "Unknown"):
+            status = "Interrupted by user"
+        finish(status, info.objective_function_value if info.primal_solution_status == 2 else st["obj"],
+               info.mip_dual_bound, info.mip_gap, int(info.mip_node_count), vec)
     except BaseException as ex:  # noqa: BLE001
-        q.put(("error", repr(ex)))
+        try:
+            with lock:
+                st["sent"] = True
+            q.put(("error", repr(ex)))
+            q.close()
+            q.join_thread()
+        finally:
+            os._exit(1)
 
 
 def _tl(x) -> float | None:

@@ -1,0 +1,3 @@
+{"km": 5, "src": "baseline", "max_pop_closer": 1313102.0, "p99": 356268.0699999973, "max_cand_pop_closer": 1313102.0, "max_rank": 40}
+{"km": 3, "src": "baseline", "max_pop_closer": 871275.0, "p99": 193152.28999999986, "max_cand_pop_closer": 871275.0, "max_rank": 70}
+{"km": 2, "src": "baseline", "max_pop_closer": 1842279.0, "p99": 398927.219999998, "max_cand_pop_closer": 1832678.0, "max_rank": 168}
