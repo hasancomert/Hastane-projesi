@@ -38,6 +38,9 @@ from .config import (
 from .jobs import JobManager, NotAvailableError, QueueFullError
 from .schemas import BoundsIn, EvaluateIn, SolveIn, translate_errors
 from .task_explain import ExplainIn
+from .task_pareto import ParetoIn
+from .task_sensitivity import SensitivityIn
+from .task_sweep import SweepIn
 from .static import CACHE_REVALIDATE, CACHE_STATIC, file_response, safe_join, spa_response
 
 log = logging.getLogger("hastane.api")
@@ -249,6 +252,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def get_sources():
         return meta_mod.build_sources()
 
+    @app.get("/api/literature")
+    def get_literature():
+        """Kaynakça (data/reference/literatur.yaml; künyeler Crossref vb. ile doğrulanmış) JSON olarak."""
+        return meta_mod.build_literature()
+
     # ------------------------------------------------------------------ veri dosyaları
     @app.get("/api/grid/{km}")
     def grid_cells(km: int, request: Request):
@@ -312,7 +320,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         p = meta_mod.precomputed_path(name.removesuffix(".json"))
         if p is None:
             raise HTTPException(404, "Bu ad önceden çözülmüş dosyalar listesinde yok (izinli: "
-                                     + ", ".join(meta_mod.PRECOMPUTED_NAMES) + ", scenario_<id>_<km>km).")
+                                     + ", ".join(meta_mod.PRECOMPUTED_NAMES) + ", scenario_<id>_<km>km, "
+                                     "explain_[<senaryo>_]<km>km, pareto_[<senaryo>_]<km>km, "
+                                     "tornado_[<senaryo>_]<km>km).")
         return file_response(request, p)
 
     # ------------------------------------------------------------------ işler
@@ -337,8 +347,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.post("/api/explain", status_code=202)
     def post_explain(request: Request, body: ExplainIn):
-        """Şartname 5 POST /api/explain (N − 1 / N + 1, hastane kapatma etkisi) — Faz 6'ya dek 501."""
+        """Şartname 5 POST /api/explain (hastane kapatma etkisi, N − 1 / N + 1, boyut, gölge fiyat, model nedenleri)."""
         return submit(request, "explain", body)
+
+    @app.post("/api/sweep", status_code=202)
+    def post_sweep(request: Request, body: SweepIn):
+        """Şartname 5 POST /api/sweep: p taraması (U eğrisi), arka planda, ilerlemeli."""
+        return submit(request, "sweep", body)
+
+    @app.post("/api/pareto", status_code=202)
+    def post_pareto(request: Request, body: ParetoIn):
+        """Şartname 5 POST /api/pareto: λ taraması (açılış maliyeti – ortalama mesafe)."""
+        return submit(request, "pareto", body)
+
+    @app.post("/api/sensitivity", status_code=202)
+    def post_sensitivity(request: Request, body: SensitivityIn):
+        """Şartname 5 POST /api/sensitivity: tornado (±%20)."""
+        return submit(request, "sensitivity", body)
 
     @app.post("/api/jobs/{type_name}", status_code=202)
     def post_job(type_name: str, request: Request, payload: dict = Body(default_factory=dict)):

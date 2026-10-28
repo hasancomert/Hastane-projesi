@@ -1,0 +1,201 @@
+/*
+ * Bilgi sekmeleri (Faz 6). Renkler Mantine değişkenlerinden (açık/koyu tema otomatik); yazı boyutu projeksiyonda
+ * okunur kalsın diye gövde 1rem (1280 px'te 16 px).
+ */
+
+/* ---- atlama vurgusu (jumps.ts flash) ---- */
+@keyframes info-flash-ring {
+  0% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  12% {
+    box-shadow: 0 0 0 4px var(--mantine-primary-color-filled);
+  }
+  70% {
+    box-shadow: 0 0 0 4px var(--mantine-primary-color-filled);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+.info-flash {
+  animation: info-flash-ring 2.2s ease-out;
+  border-radius: var(--mantine-radius-md);
+}
+@media (prefers-reduced-motion: reduce) {
+  .info-flash {
+    animation: none;
+    outline: 3px solid var(--mantine-primary-color-filled);
+    outline-offset: 2px;
+  }
+}
+
+/* ---- ortak ---- */
+.info-root {
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
+}
+.info-root [id] {
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
+}
+.info-prose {
+  line-height: 1.55;
+  max-width: 82ch;
+}
+.info-prose b,
+.info-num {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.info-kicker {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mantine-color-dimmed);
+}
+.info-table td,
+.info-table th {
+  vertical-align: top;
+}
+.info-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.info-table tr[data-flag='lakes'] td:first-child {
+  border-left: 3px solid var(--mantine-color-blue-filled);
+}
+.info-table tr[data-own] {
+  background: var(--mantine-color-default-hover);
+}
+
+/* ---- Hocanın Listesi ---- */
+.hoca-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 29rem), 1fr));
+  gap: 0.75rem;
+}
+.hoca-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  height: 100%;
+}
+.hoca-check {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mantine-color-teal-light);
+  color: var(--mantine-color-teal-light-color);
+  font-weight: 800;
+}
+.hoca-card .hoca-actions {
+  margin-top: auto;
+}
+
+/* ---- ölçü kutucukları ---- */
+.olcu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14.5rem), 1fr));
+  gap: 0.6rem;
+}
+.olcu-legend-line {
+  display: inline-block;
+  width: 1.6rem;
+  height: 0;
+  border-top: 3px solid var(--mantine-color-text);
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}
+.olcu-legend-line[data-w='secondary'] {
+  border-top-width: 2.5px;
+  border-color: var(--mantine-color-dimmed);
+}
+.olcu-legend-line[data-w='muted'] {
+  border-top-width: 1.5px;
+  border-color: var(--mantine-color-dimmed);
+  opacity: 0.8;
+}
+
+/* ---- Model (KaTeX) ---- */
+.model-eq {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.35rem 0.25rem;
+  font-size: 1.08rem;
+}
+.model-eq .katex-display {
+  margin: 0.2rem 0;
+}
+.model-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 0.25rem 1.25rem;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+.model-row:first-of-type {
+  border-top: 0;
+}
+@media (max-width: 1100px) {
+  .model-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.bound-line {
+  position: relative;
+  height: 4.4rem;
+  margin: 0.4rem 0.6rem 0.2rem;
+}
+.bound-line .axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.05rem;
+  border-top: 2px solid var(--mantine-color-default-border);
+}
+.bound-line .band {
+  position: absolute;
+  top: 1.62rem;
+  height: 0.9rem;
+  border-radius: 3px;
+  background: var(--mantine-primary-color-light);
+  border: 1px solid var(--mantine-primary-color-filled);
+}
+.bound-line .tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: var(--mantine-font-size-xs);
+  white-space: nowrap;
+  line-height: 1.3;
+}
+.bound-line .tick.below {
+  top: 2.85rem;
+}
+
+/* ---- Sınırlılıklar ---- */
+.sinir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+  gap: 0.75rem;
+}
+
+/* ---- Kaynakça ---- */
+.kaynak-row {
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--mantine-radius-sm);
+}
+.kaynak-row + .kaynak-row {
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+.lit-row {
+  padding: 0.55rem 0.6rem;
+  border-left: 3px solid var(--mantine-color-default-border);
+}

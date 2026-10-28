@@ -60,11 +60,15 @@ python -m backend.run [--port 8000] [--no-browser] [--log-level info]
 | `GET /api/boundaries/{il\|ilceler}` | tek GeoJSON dosyası (MapLibre kaynağına doğrudan URL olarak verilebilir) |
 | `GET /api/measures` | `data/processed/ankara_olculer.json` ("Toplam mesafe" kartı) |
 | `GET /api/bounds/{km}` | varsayılan parametrelerle önceden hesaplanmış sınır kartları (`sinir_kartlari.json`) |
-| `GET /api/precomputed/{ad}` | yalnız beyaz liste: `default_2km`, `default_3km`, `default_5km`, `p_sweep_3km`, `p_sweep_5km`, `scenarios` (senaryo dizini) ve `scenario_<id>_<km>km` |
+| `GET /api/precomputed/{ad}` | yalnız beyaz liste: `default_2km`, `default_3km`, `default_5km`, `p_sweep_3km`, `p_sweep_5km`, `scenarios` (senaryo dizini), `scenario_<id>_<km>km` ve Faz 6 açıklamaları `explain_[<senaryo>_]<km>km`, `pareto_<km>km`, `tornado_<km>km` (§11) |
+| `GET /api/literature` | kaynakça (`data/reference/literatur.yaml`, doğrulanmış künyeler) JSON olarak (§11) |
 | `POST /api/solve` | çözüm işi başlatır (202) ya da önbellekten döner (200) |
 | `POST /api/evaluate` | manuel mod: elle seçilen hastaneler için değerlendirme işi |
 | `POST /api/bounds` | verilen parametrelerle sınır kartları işi (süre sınırlı) |
-| `POST /api/explain` | **taslak (Faz 6)**: N − 1 / N + 1 ve "bu hastane kapatılırsa"; şimdilik 501 (§8) |
+| `POST /api/explain` | açıklama işi: "bu hastane kapatılırsa", N − 1 / N + 1, "neden bu boyut?", gölge fiyatlar, model nedenleri (§11) |
+| `POST /api/sweep` | p taraması (U eğrisi), arka planda, nokta nokta ilerlemeli (§11) |
+| `POST /api/pareto` | λ taraması: açılış maliyeti – ortalama mesafe (§11) |
+| `POST /api/sensitivity` | tornado: önemli parametreler ±%20 (§11) |
 | `POST /api/jobs/{tür}` | genel iş gönderimi (kayıtlı her iş türü; Faz 6 türleri dahil) |
 | `GET /api/jobs` | son işlerin özeti (`?client_id=…&limit=50`) |
 | `GET /api/jobs/{id}` | işin durumu ve (bittiyse) sonucu; `?result=false` sonucu çıkarır |
@@ -116,7 +120,9 @@ yanıt vermezse `precomputed/` dosyalarıyla çevrimdışı moda geçer (şartna
   `precomputed_grids`: önceden çözülmüş sonucu olan ızgaralar (aynı istek önbellekten anında döner);
   `live_grids`: önbelleksiz canlı çözümün önerilen süre sınırında olurlu ve fark ≤ %5 bulunduğu ızgaralar
   (ölçüm: `pipeline/34_scenarios.py live`; ortam ve tarih `scenario_live_check`'te).
-- `job_types`: `{ad: {description_tr, url, available, unavailable_tr}}` (`explain` şimdilik `available: false`).
+- `job_types`: `{ad: {description_tr, url, available, unavailable_tr}}` (Faz 6'dan beri yedi tür de `available: true`).
+- `explain` (Faz 6): `{tornado_params: [{id, keys, label_tr, unit, status, base}], tornado_delta, pareto_factors,
+  pareto_lambda_key, precomputed_patterns}`; `grids[].precomputed_explanations`: o ızgaranın açıklama dosyaları.
 - `derived` (λ, bugünkü değer çarpanı, sınıfların sabit/değişken maliyetleri), `classes`, `modes`, `files`.
 
 ### Hazır senaryolar
@@ -390,7 +396,8 @@ Tüm hata yanıtları `{"message_tr": …}` taşır; doğrulama hataları (422) 
 Parametre ve kilit hataları tek yanıtta birlikte döner. Hata yanıtındaki değerler JSON'a çevrilebilir tutulur
 (64 bit dışı tamsayı ve sonsuz değer metin olarak). Diğer kodlar: **400** gövde okunamadı (geçersiz ya da çok derin iç
 içe JSON) ya da geçersiz `Host` başlığı, **404** (iş, dosya, ızgara yok), **413** gövde 2 MB'tan büyük, **429** kuyruk
-dolu (`Retry-After: 5`; toplam 8, istemci başına 4 bekleyen iş), **501** iş türü henüz kullanılamıyor (`explain`),
+dolu (`Retry-After: 5`; toplam 8, istemci başına 4 bekleyen iş), **501** iş türü kullanılamıyor (`available: false`
+olan tür; Faz 6'dan beri yok),
 **500** beklenmeyen sunucu hatası (`{"message_tr": "Sunucu hatası: <tür>."}`; bağlantı açık kalır). Hepsi Türkçe
 `message_tr` taşır.
 
@@ -428,9 +435,9 @@ kancalar: `satisfies`/`rank`/`summarize` (önbellek), `finalize` (sunucuda son i
 sonuç, ör. `precomputed/p_sweep_*`), `warmup` (işçi açılışında; ertelenmiş adımlar döndürebilir), `available`
 (False → istek 501).
 
-**`explain` taslağı** (`backend/app/task_explain.py`, şartname 7.3–7.4): istek modeli, doğrulama, önbellek anahtarı,
-öğe öğe ilerleme, iptal ve sonuç biçimi hazır; Faz 6 yalnız üç hesap fonksiyonunu doldurur ve `available=False`'u
-kaldırır. İstek:
+**`explain` taslağı (Faz 4; Faz 6'da dolduruldu — güncel sözleşme §11)** (`backend/app/task_explain.py`, şartname
+7.3–7.4): istek modeli, doğrulama, önbellek anahtarı, öğe öğe ilerleme, iptal ve sonuç biçimi hazır; Faz 6 yalnız üç
+hesap fonksiyonunu doldurur ve `available=False`'u kaldırır. İstek:
 
 ```json
 {"grid_km": 3, "overrides": {…}, "locks": {…},
@@ -447,7 +454,7 @@ başına senkron hesaplanamaz, arka plan işi olmalı.
 
 **Faz 6'ya bırakılanlar** (ek çözüm gerektirir): `explain` hesapları (N − 1 / N + 1, hastane kapatma), `sweep`
 (p taraması, U eğrisi; varsayılan senaryo `precomputed/p_sweep_{3,5}km.json`'da), `pareto` (λ taraması), `sensitivity`
-(tornado, ±%20).
+(tornado, ±%20). → Faz 6'da yapıldı: §11.
 
 **Çevrimdışı mod (Faz 5/8 notu):** sunucu kapalıyken `/api/precomputed/*` de kapalıdır. Varsayılan çözüm
 (`precomputed/default_3km.json`), ızgara (`data/processed/grid/grid_3km_cells.geojson`) ve sınırlar
@@ -514,3 +521,305 @@ Sonuç boyutu (API yanıtı, ham / gzip): 3 km 481 / 96 KB (katmanlar 145 KB ham
 ile çözüldü (15'i `optimal`; 5 ve 3 km düşük bütçe `sure_doldu`, fark %2,46 / %3,50); yalnız 2 km düşük bütçe 60 sn'de
 %5,47 farkla bitti (olurlu; erişim 31,67 milyar TL) — sonuçlar `precomputed/scenarios.json` → `live_check` (2 km satırları
 yeniden çözümden sonra yeniden ölçüldü), `GET /api/meta` → `scenarios[].live_grids`.
+
+## 11. Faz 6 — açıklama işleri ("neden bu çözüm optimum?")
+
+Dört iş türü (şartname 7.3–7.9) ve kaynakça ucu. Hesaplar motordadır (`backend/model/explain.py`; sunucunun da
+kullandığı hafif parçalar — sabitler, Türkçe biçim, farklar ve özet cümleleri — `backend/model/explain_common.py`),
+iş türleri `backend/app/task_explain.py`, `task_sweep.py`, `task_pareto.py`, `task_sensitivity.py`. Hepsi
+`POST /api/<tür>` ve `POST /api/jobs/<tür>` ile çalışır; ilerleme, iptal, "en son istek kazanır" (`client_id` +
+`replace`) ve önbellek kuralları §4–§7 ile aynıdır. Her sayı çözümden, çözücü sınırlarından ya da kayıttan gelir.
+
+### 11.1 Ortak kavramlar
+
+- **Temel çözüm** (`hospitals`): açıklanan çözümün hastaneleri, sonuçtaki gibi `[{cell_id, class, beds}]`. Sunucu bunu
+  verilen parametrelerle yeniden değerlendirir (sınıf ve yatak verilmişse yalnız atama LP'si: çözümün kendisi).
+- **`base_bounds`** (`{ub_tl, lb_tl}`, isteğe bağlı): çözümün `result.bounds` değerleri. `lb_tl` verilmezse sunucu
+  önbellekteki aynı problemin (parametreler + kilitler) solve kayıtlarının en büyük alt sınırını kullanır
+  (`base.lb_from: "onbellek"`); hiçbiri yoksa yalnız noktaların kendi alt sınırları kullanılır.
+- **"Fark gap içinde"** (`fark_gap_icinde`, Faz 3 raporu §8 ile aynı kural): bir karşılaştırma noktasının ALT sınırı
+  temel çözümün bulunan değerini aşmıyorsa (`lb ≤ ub_temel`) iki çözüm bu sınırlarla ayırt edilemez. Temel çözüm toplam
+  modundaysa onun alt sınırı her sabit p probleminin de alt sınırıdır (serbest problem gevşetmedir): `lb = max(kendi,
+  temel)`; `lb_own_tl` ayrıca saklanır. Gerçek fark `[fark_lo_tl, fark_hi_tl] = [lb(nokta) − ub_temel, ub(nokta) −
+  lb_temel]` aralığındadır. Arayüz bu durumda "fark gap içinde" yazmalı, kesinlik uydurmamalıdır.
+- **Önceden hesaplananlar** (`pipeline/35_explanations.py`, §11.6): aynı parametre özeti (`params.hash()`) + aynı kilitler
+  (+ explain'de aynı temel çözüm) için istenen öğelerin hepsi dosyadaysa yanıt **sunucuda, kuyruğa girmeden** 200 ile
+  döner (`from_cache: true`, `result.precomputed: {name, generated_at, …}`); eksik öğeler işçide hesaplanır.
+  Varsayılan parametrelerde arayüz dosyaları doğrudan da okuyabilir: `GET /api/precomputed/explain_3km` … (çevrimdışı
+  yedeğe gömmek için de bunlar kullanılmalı).
+- **İlerleme olayları** (`progress`): `{phase, phase_tr, done, total, …}`; explain'de her öğe bitince `last` (kısa özet:
+  kind, cell_id, p, feasible, reason, delta_tl, fark_gap_icinde), taramalarda her nokta bitince `point` / `run`
+  (grafiği nokta nokta çizmek için yeterli alanlar). Bir noktanın içindeki motor çözümü sürerken `inner: {lb, ub, gap}`
+  alanlı seyrek olaylar gelir. Son olay `phase: "bitti"`.
+- **İptal**: o ana dek tamamlanan öğe/noktalar `status: "durduruldu"` sonucuyla döner, iş `cancelled` olur; iptal edilen
+  sonuç önbelleğe yazılmaz. Motor çözümleri iptali HiGHS kesme geri çağrısıyla izler (§4).
+- **Süre**: N ± 1, tarama noktası, Pareto noktası ve tornado çalışması başına `time_limit` (yoksa ızgaranın önerilen
+  süresi: 3 ve 5 km 15 sn, 2 km 60 sn); hedef `gap` explain/sweep'te 1e-3, Pareto/tornado'da 2e-3 (süre dolana dek
+  iyileştirir). Bekçi süresi öğe/nokta sayısıyla ölçeklenir.
+
+### 11.2 `POST /api/explain`
+
+```http
+POST /api/explain
+{"grid_km": 3, "overrides": {}, "hospitals": [{"cell_id": "3km_182_1436", "class": "IV-C", "beds": 53.0995}, …],
+ "what": ["hastane_kapat", "n_eksi_1", "n_arti_1", "boyut", "golge_fiyat", "model"],
+ "close": ["3km_141_1460"], "close_all": false, "exact": false, "reoptimize": false,
+ "time_limit": null, "gap": null, "base_bounds": {"ub_tl": 381314289391.98, "lb_tl": 381077855962.55},
+ "client_id": "arayuz-1"}
+```
+
+| Alan | Anlamı |
+|---|---|
+| `what` | öğe türleri (en az 1): `hastane_kapat`, `n_eksi_1`, `n_arti_1`, `boyut`, `golge_fiyat`, `model` |
+| `close` / `close_all` | kapatılacak hastaneler (her biri ayrı öğe) / çözümün tüm hastaneleri |
+| `exact` | kapatmada tüm hastanelerde sınıf seçimli kesin değerlendirme (3 km'de hastane başına ortanca 8,8 sn, en çok 13,8 sn; hızlı tahmin ≈1 sn) |
+| `reoptimize` | kapatmada ayrıca j yasakken tam yeniden çözüm (öğe başına `time_limit`) |
+
+Sonuç: `{ok, status ("tamam" | "durduruldu"), grid_km, mode, params_hash, base: {objective_tl, n_hospitals, ub_tl,
+lb_tl, lb_from, gap, opening_tl, access_tl, pop_weighted_mean_km, count_by_class, mode}, items: […],
+closure_summary (≥ 2 kapatma), p_sweep (varsayılan parametrelerde p taramasının künyesi ve 'düz dip' özeti),
+precomputed?, warnings, times}`. Öğeler (her biri `kind` taşır; Faz 4 taslağındaki alanlar korunur):
+
+**`hastane_kapat`** (şartname 7.4). Hızlı tahmin = evaluate(açık küme − j): konumlar sabit, kalan hastanelerde yeniden
+atama + yeniden boyutlandırma; kapatılan hastaneye kuş uçuşu en yakın 16 hastanede sınıf da yeniden seçilir (küçük
+MIP), diğerlerinde sınıf sabit. `exact: true` ile tüm hastanelerde sınıf seçimi. İkisi de kalan hastanelerle OLURLU bir
+çözümdür: konumlar yeniden optimize edilirse artış ancak daha küçük olabilir — `delta_tl` gerçek artışın **üst
+sınırıdır** (`upper_bound: true`; `tests/test_phase6_explain.py` oyuncak örneklerde kesin MILP ile denetler).
+Alanlar: `cell_id, district, class, beds, feasible, reason, method ("hizli_komsu_sinif" | "kesin_sinif_secimi"),
+objective_tl, delta_tl, delta_pct, quick_objective_tl, opening_tl, access_tl, delta_opening_tl, delta_access_tl,
+base_objective_tl, base_gap_tl, fark_gap_icinde` (artışın üst sınırı bile temel çözümün gap'inden küçükse `true`: bu
+hastanenin gerekliliği kanıtlanamıyor), `displaced_population, displaced_beds, mean_km_before, mean_km_after`
+(kapatılan hastanenin hastalarının ortalama yolu), `absorbers` (hastaları devralanlar: `cell_id, district,
+absorbed_population, absorbed_beds, share, class_before/after, beds_before/after`), `resized` / `n_resized` /
+`n_class_changed`, `message_tr`, isteğe bağlı `reopt` (`status, objective_tl, lb_tl, lb_own_tl, gap, delta_tl,
+delta_lo_tl, delta_hi_tl, n_hospitals, opened, closed, improvement_vs_quick_tl, fark_gap_icinde, message_tr`).
+Olurlu olmayan kapatma: `feasible: false`, `reason`:
+`"R"` (bazı talep hücrelerinin R içinde hiç açık hastanesi kalmaz — hastaneyi R kısıtı zorunlu kılıyor; `uncovered:
+{cells, population, districts, nearest_other_km_max, nearest_other_km_mean, within_R_geometric}`),
+`"k_listesi"` (hücrelerin R içinde başka hastanesi var ama modelin en yakın k = 50 aday listesinin dışında),
+`"kapasite"`, `"kilit"`, `"sayi"`.
+
+Örnek (5 km varsayılan çözüm, `exact`; `precomputed/explain_5km.json`): 5km_84_876 (Polatlı) kapatılırsa toplam
+maliyet en çok 34,8 milyon TL artar (açılış −84,1 milyon, erişim +118,9 milyon TL); hastalarının (29.625 kişi) %89'u
+5km_85_876'ya gider, o hastane IV-C 199 yataktan V-B 292,3 yatağa geçer; bu hastaların ortalama yolu 5,3 → 8,7 km.
+
+**`n_eksi_1` / `n_arti_1`** (şartname 7.3, "neden N?"). sabit_p modunda N ∓ 1 hastaneyle en iyi çözüm; başlangıç
+mevcut çözümden tek tek kapatma/açma ile türetilir (yaklaşık modelin en iyi 8 hamlesi kesin değerlendirilir). Varsayılan
+parametrelerde (kilitsiz) `precomputed/p_sweep_{3,5}km.json`'un uzun çözülmüş noktaları kullanılır (`source:
+"p_taramasi"`; canlı: `"canli"`). Alanlar: `p, ok, status, source, ub_tl (= objective_tl), lb_tl, lb_own_tl, lb_source,
+gap, opening_tl, access_tl, total_tl, count_by_class, pop_weighted_mean_km, fark_tl (= delta_tl), fark_lo_tl,
+fark_hi_tl, fark_gap_icinde, delta_opening_tl, delta_access_tl, delta_mean_km, hospitals, closed_vs_ref,
+opened_vs_ref, message_tr`. Bütçe modunda tanımsız (422 `mod_uyumsuz`).
+
+**`boyut`** (şartname 7.5). `hospitals: [{cell_id, district, class, beds, class_min_beds, class_max_beds,
+assigned_beds, population, occupancy, fixed_tl, per_bed_tl, opening_tl, bed_value_tl, sizing_bed_price_tl,
+next_class: {class, beds, opening_tl, per_bed_tl, jump_tl, extra_beds}, prev_class, same_beds_next_class_tl,
+sole_cover_cells, r_forced_cells, r_forced_population, reason, reason_tr}]`, `counts`, `at_bound_beds` (ör. 3 km'de
+`{"199": 40, "399": 20, "50": 15}`), `summary_tr`, `note_tr`. Neden kodları: `ust_esik` (sınıfın üst sınırında; bir
+yatak daha sınıfı değiştirir, `next_class.jump_tl` sıçramayı verir: 3 km'de 199 → 200 yatak +291,5 milyon TL),
+`ust_sinir` (izinli en büyük boyut), `alt_sinir` (sınıfın en az yatağında; boş yatak ya da çevreden doldurulan yatak),
+`ic_denge` (sınıf içinde; 1 ek yatağın erişim değeri = yatak başı maliyet, LP'nin denge koşulu).
+
+**`golge_fiyat`** (şartname 7.6). Açık hastaneler ve sınıfları sabitken atama/boyutlandırma LP'sinin dual değerleri:
+`demand_cell, marginal_cost_tl, marginal_cost_per_person_tl` (talep hücresi sırası = `layers.demand`),
+`bed_value_tl` + `hospital_cells` (hastane sırası), `per_person: {p5, p25, median, p75, p95, pop_weighted_mean,
+mean_within_10km, mean_beyond_10km, annual_equiv, top_cells}`, `bed_value: {min, median, max, n_zero, n_full,
+median_full, per_bed_cost_by_class, top}`, `interpretation_tr`, `caveat_tr` (dejenere LP'de dual değerler tek
+değildir; tamsayı programın gölge fiyatı değildir; yalnız marjinal yorum).
+
+**`model`**: model düzeyindeki nedenler, sayılar kayıttan ve çözümden: `classes` (sınıf başına `fixed_tl`,
+`per_bed_tl`, `unit_cost_tl_m2`, `m2_per_bed`, `n_chosen`), `splits` (aynı yatağı tek büyük ↔ çok küçük hastanede
+açmanın maliyeti: 398 yatak V-B 7,19 ↔ 2 × IV-C 7,14 milyar TL; 995 yatak V-C 19,13 ↔ 5 × IV-C 17,85; 3.980 yatak
+V-D 100,54 ↔ 20 × IV-C 71,41), `at_upper_bound`, `at_lower_bound`, `r_forced` (R'nin zorladığı hastaneler: hücre,
+ilçe, tek başına kapsanan nüfus, doluluk), `k_list_forced`, `occupancy`, `reasons: [{id, text_tr}]` (`yatak_basi_artiyor`,
+`sabit_kisim`, `bolme`, `esik_yigilma`, `R_zorunlu`, `sehir_hastanesi`, `uzmanlasma`), `summary_tr`.
+
+`closure_summary`: `n, n_feasible, n_r_forced, r_forced_cells, n_k_list_forced, k_list_forced_cells, n_within_gap,
+delta_min_tl, delta_median_tl, delta_max_tl, lowest[5], highest[5], summary_tr`.
+
+### 11.3 `POST /api/sweep` (U eğrisi, şartname 7.7)
+
+```http
+POST /api/sweep
+{"grid_km": 3, "overrides": {…}, "hospitals": [… temel çözüm …], "p_values": [83, 85, 87, 88, 89, 90, 91, 93],
+ "half_width": 6, "step": 1, "time_limit": 15, "base_bounds": {"ub_tl": …, "lb_tl": …}}
+```
+
+`p_values` yoksa `n ± half_width` (adım `step`); en çok 60 nokta. Noktalar `|p − n|` artan sırayla çözülür, her biri en
+yakın çözülmüş p'nin çözümünden tek tek kapatma/açma ile başlar. Varsayılan parametrelerde `p_sweep_{3,5}km.json`'daki
+p'ler çözülmez (`source: "onceden"`); hepsi dosyadaysa ve `base_bounds.ub_tl` verilmişse yanıt kuyruğa girmez.
+Temel çözümün kendisi p = n noktasıdır (`source: "temel_cozum"`, `referans: true`). Sonuç: `{ok, status, points:
+[{p, ok, status, source, ub_tl, lb_tl, lb_own_tl, lb_source, gap, opening_tl, access_tl, total_tl, count_by_class,
+pop_weighted_mean_km, fark_tl, fark_lo_tl, fark_hi_tl, fark_gap_icinde, referans, delta_opening_tl, delta_access_tl,
+hospitals, …}], reference, best_p, best_ub_tl, plateau_p, summary_tr, precomputed?, times}`. Bütçe modunda 422.
+
+### 11.4 `POST /api/pareto` (şartname 7.8)
+
+```http
+POST /api/pareto
+{"grid_km": 3, "overrides": {…}, "factors": [0.25, 0.5, 1, 2, 4], "hospitals": [… mevcut çözüm …],
+ "base_bounds": {…}, "time_limit": 15}
+```
+
+Erişim ağırlığı λ = PV · v · gidiş-dönüş · (c + zaman değeri / hız), kişi başı başvuru sayısı `v`'ye
+(`access.hospital_visits_per_capita`) doğrusal bağlıdır: `v · f` tam olarak `λ · f` verir (yeni parametre yok). Her f
+için toplam modunda çözüm. Noktalar: `{factor, lambda_tl_per_person_km, n_hospitals, count_by_class, opening_tl,
+access_scaled_tl (ölçekli amaçtaki erişim), access_tl (= access_scaled_tl / f, ASIL λ ile), total_tl (= açılış +
+asıl erişim), pop_weighted_mean_km, share_within_10km, max_km, ub_tl, lb_tl, gap (ölçekli problemin), dominated,
+source ("mevcut_cozum" | "canli"), hospitals, classes, time_s}`. `factors` yoksa 0,25 … 4 (12 nokta); 1 her zaman
+eklenir ve `hospitals` verilmişse çözülmeden mevcut çözümle doldurulur (eğri üzerinde işaretlenecek nokta). Asıl toplam
+f = 1'de en küçük olmalıdır (her nokta asıl problem için de olurludur): `current_is_min_total`,
+`current_total_gap_tl`, `best_total_factor`, `summary_tr`. Bütçe modunda 422.
+
+### 11.5 `POST /api/sensitivity` (tornado, şartname 7.9)
+
+```http
+POST /api/sensitivity
+{"grid_km": 3, "overrides": {…}, "keys": ["cost.fixed_per_hospital", "cost.unit"], "delta": 0.2,
+ "hospitals": [… temel çözüm …], "base_bounds": {…}, "time_limit": 15}
+```
+
+Satırlar (`GET /api/meta → explain.tornado_params`; etiketler kayıttan): `cost.fixed_per_hospital`,
+`cost.core_area_m2`, `cost.m2_per_bed.general`, `cost.unit` (IV-C, V-B, V-C, V-D birim maliyetleri birlikte),
+`cost.equipment_ratio`, `cost.infra_ratio`, `cost.vat_rate`, `demand.beds_per_1000`,
+`access.hospital_visits_per_capita`, `access.discount_rate`, `access.horizon_years`, `access.value_of_time_tl_per_h`,
+`access.cost_tl_per_km`, `access.speed_kmh`, `access.circuity_scale`, `access.max_distance_km` (son ikisi yapıyı
+değiştirir). Her satır için iki çalışma — taban × (1 − δ) ve × (1 + δ); modelin tanım kümesi dışına çıkan değer sınıra
+çekilir (`clipped`) — AYNI süre sınırı, AYNI gap ve AYNI sıcak başlangıçla (temel çözüm o parametrelerle yeniden
+değerlendirilir; olurlu değilse çözücünün sezgiseli; `warm_start`). `hospitals` verilmezse temel çözüm de aynı
+ayarlarla çözülür. Sonuç: `{ok, status, delta, base: {objective_tl, lb_tl, n_hospitals, …}, rows: [{id, keys,
+label_tr, unit, status, base, low, high, swing_pct, range_pct}] (en büyük etkiden küçüğe), summary_tr}`; `low`/`high`:
+`{id, side ("dusuk" | "yuksek"), factor, values, clipped, ok, status, objective_tl, lb_tl, gap, n_hospitals,
+count_by_class, opening_tl, access_tl, pop_weighted_mean_km, delta_tl, delta_pct, delta_lo_tl, delta_hi_tl,
+delta_lo_pct, delta_hi_pct, sign_certain, delta_n, warm_start, hospitals, time_s}`. Gerçek fark
+`[L(çalışma) − U(temel), U(çalışma) − L(temel)]` aralığındadır; aralık sıfırı içeriyorsa `sign_certain: false`.
+Hastane sayısındaki küçük değişimler U eğrisinin düz dibinde gap içinde kalabilir (3 km varsayılanda p = 82–96 n* =
+89'dan ayırt edilemiyor).
+
+### 11.6 Önceden hesaplananlar (`pipeline/35_explanations.py`)
+
+```
+.venv/bin/python pipeline/35_explanations.py all --grids 3,5     # explain (tüm senaryolar) → pareto → tornado
+.venv/bin/python pipeline/35_explanations.py reopt --grids 3     # kapatmalara "j yasakken yeniden çözüm" ekler
+```
+
+Kaldığı yerden sürer (öğe sonuçları `cache/precompute_35/*.jsonl`, git dışı). Dosyalar iş türlerinin sonuç
+biçimindedir ve `settings` alanında süre/gap ayarları, her çözümün kendi sınırları kayıtlıdır. Türkçe cümleler
+saklanan sayılardan yeniden yazılır (`explain_common`, `closure_message`): metin düzeltmesi yeniden hesap gerektirmez,
+`all` komutunu yeniden çalıştırmak yeter (denetim noktalarından, birkaç dakika).
+
+Üretilen dosyalar (2026-10-23/24, geliştirme kabı, 4 çekirdek, başka ağır iş yokken; `all` 4.220 sn):
+`explain_{3,5}km` + beş hazır senaryonun `explain_<senaryo>_{3,5}km` dosyaları (12 dosya, açıklama aşaması 32 dk; 3 km
+varsayılan kesin kapatmalar 8,7 dk), `pareto_3km` (7,6 dk), `pareto_5km` (3,2 dk), `tornado_3km` (20,4 dk),
+`tornado_5km` (7,3 dk); `reopt --grids 3` (kesin kapatma + 20 sn yeniden çözüm, hastane başına ≈35 sn) ayrıca. 5 km'de `reopt`
+çalıştırılmadı (süre bütçesi).
+
+### 11.7 Önceden hesaplanan sonuçlar ve ölçümler (geliştirme kabı, 2026-10-23)
+
+Ayarlar dosyaların `settings` alanında: kapatmalar varsayılan senaryoda kesin (`exact`, sınıf seçimli MIP en çok 30 sn),
+senaryolarda hızlı tahmin; senaryolarda N ± 1 canlı (3 km 45 sn, 5 km 20 sn, hedef gap 1e-3), varsayılanda p
+taramasından. Para milyar/milyon TL; "gap içinde" = artışın üst sınırı temel çözümün gap'inden (ub − lb) küçük.
+
+| Dosya | hastane · temel U · gap | R'nin zorladığı / k listesi / olurlu kapatma | kapatma Δ: en az – ortanca – en çok (milyon TL) · gap içinde | N − 1 · N + 1 (fark, gap içinde?) |
+|---|---|---|---|---|
+| `explain_3km` | 89 · 381,314 · %0,062 | 22 / 3 / 64 | 3,9 – 340,2 – 1.136,2 · 21 | 88: +3,9 (evet) · 90: +25,9 (evet) — p taraması |
+| `explain_5km` | 69 · 402,611 · %0 (kanıtlı) | 24 / 0 / 45 | 15,6 – 689,0 – 3.163,2 · 0 | 68: +8,3 (hayır, kanıtlı en az +4,8) · 70: +49,1 (hayır, en az +46,3) |
+| `explain_dusuk_butce_3km` (erişim) | 89 · 35,421 · %1,701 | 22 / 3 / 64 | 87,5 – 341,4 – 1.120,3 · 50 | bütçe modunda tanımsız |
+| `explain_erisim_oncelikli_3km` | 92 · 406,588 · %0,080 | 23 / 2 / 67 | 20,5 – 535,3 – 2.368,6 · 18 | 91: −20,4 · 93: −8,1 (ikisi de gap içinde; canlı çözüm temelden ucuz: temel kanıtlı optimum değil) |
+| `explain_sadece_genel_3km` | 89 · 381,314 · %0,128 | 22 / 3 / 64 | 3,9 – 340,2 – 1.136,2 · 44 | 88: +115,5 · 90: +31,0 (gap içinde) |
+| `explain_sehir_serbest_3km` | 89 · 381,314 · %0,090 | 22 / 3 / 64 | 3,9 – 340,2 – 1.136,2 · 33 | 88: +115,5 · 90: +31,0 (gap içinde) |
+| `explain_nufus_2030_3km` | 90 · 390,655 · %0,153 | 23 / 2 / 65 | 59,9 – 329,2 – 1.150,0 · 50 | 89: +69,9 · 91: −59,4 (gap içinde) |
+| `explain_dusuk_butce_5km` (erişim) | 75 · 65,871 · %1,127 | 25 / 0 / 50 | 97,5 – 1.087,0 – 4.443,0 · 20 | — |
+| `explain_erisim_oncelikli_5km` | 70 · 436,630 · %0,010 | 23 / 0 / 47 | 37,4 – 1.047,2 – 5.392,4 · 1 | 69: +37,4 · 71: +8,5 (gap içinde) |
+| `explain_sadece_genel_5km` | 69 · 402,611 · %0,010 | 24 / 0 / 45 | 15,6 – 689,0 – 3.239,1 · 2 | 68: +8,3 · 70: +49,1 (gap içinde) |
+| `explain_sehir_serbest_5km` | 69 · 402,611 · %0,009 | 24 / 0 / 45 | 15,6 – 689,0 – 3.239,1 · 2 | 68: +8,3 · 70: +49,1 (gap içinde) |
+| `explain_nufus_2030_5km` | 68 · 411,798 · %0,009 | 23 / 0 / 45 | 20,5 – 739,2 – 3.244,1 · 1 | 67: +20,5 · 69: +38,2 (gap içinde) |
+
+Okuma notları: (1) 3 km'de R'nin zorladığı 22 hastanenin kapatılması bazı hücrelerin R = 30 km içinde hiç hastanesi
+kalmaması demek (ör. Şereflikoçhisar: 34 hücre, 1.323 kişi, kalan en yakın hastane 45,3 km; Nallıhan'da üç hastane);
+3'ünde engel yalnız k = 50 aday listesi. (2) Hiçbir hastanenin tek başına kapatılması maliyeti düşürmüyor, ama 3 km'de
+21 hastanede artışın üst sınırı bile çözücü gap'inden (236,4 milyon TL) küçük: bunların gerekliliği kanıtlanamıyor.
+(3) Canlı N ± 1 çözümlerinin farkları (45 sn) çözücü gürültüsü içinde: ör. `sadece_genel` 3 km temel çözümü varsayılanla
+aynı, canlı N − 1 farkı +115,5 milyon TL, p taramasınınki +3,9 milyon TL; hepsi "gap içinde" işaretli.
+(4) Kesin ↔ hızlı kapatma tahmini (3 km varsayılan, 64 olurlu kapatma): 59'unda aynı, 5'inde hızlı tahmin daha yüksek
+(ortalama fark 2,6, en çok 109,4 milyon TL). Süreler: kesin kapatma (hızlı + kesin) hastane başına ortanca 8,8 sn (en
+çok 13,8; 3 km), 3,3 sn (5 km); hızlı tahmin 3 km senaryolarında ortanca 0,9–1,3 sn (en çok 3,3–7,1 sn; bütçe modunda
+2,0 sn), 5 km'de 0,2–0,6 sn.
+
+**Pareto** (`pareto_{3,5}km.json`; nokta başına 3 km 45 sn, 5 km 20 sn, hedef gap 2e-3; f = 1 noktası önceden çözülmüş
+varsayılan çözüm). Açılış maliyeti λ ile artıyor, ortalama yol azalıyor (her iki ızgarada her adımda); asıl λ ile
+toplam f = 1'de en küçük (3 km'de f = 0,85 noktası 381,315 ile aynı, gap içinde). Hastane sayısı tekdüze değil: erişim
+ucuzlayınca model yatağı daha küçük sınıflara bölüyor (3 km f = 0,25: 76 IV-C + 16 V-B = 92 hastane; f = 1: 67 + 22 =
+89; 5 km f = 0,25: V-C hiç yok, f = 1: 8 V-C).
+
+| f (λ çarpanı) | 3 km: hastane · açılış (milyar TL) · ort. yol (km) · asıl toplam | 5 km: hastane · açılış · ort. yol · asıl toplam |
+|---|---|---|
+| 0,25 | 92 · 343,46 · 3,489 · 382,690 | 77 · 345,34 · 6,096 · 413,883 |
+| 0,35 | 89 · 343,62 · 3,455 · 382,474 | 72 · 347,76 · 5,360 · 408,023 |
+| 0,5 | 88 · 344,59 · 3,290 · 381,586 | 73 · 349,73 · 4,903 · 404,873 |
+| 0,7 | 88 · 344,75 · 3,263 · 381,442 | 70 · 352,34 · 4,552 · 403,525 |
+| 0,85 | 89 · 345,26 · 3,206 · 381,315 | 67 · 354,74 · 4,265 · 402,700 |
+| **1 (mevcut)** | **89 · 345,28 · 3,205 · 381,314** | **69 · 355,83 · 4,160 · 402,611** |
+| 1,2 | 89 · 347,08 · 3,059 · 381,481 | 70 · 356,77 · 4,084 · 402,694 |
+| 1,5 | 91 · 348,16 · 2,987 · 381,747 | 70 · 356,93 · 4,073 · 402,737 |
+| 2 | 93 · 349,88 · 2,901 · 382,506 | 70 · 358,89 · 3,976 · 403,597 |
+| 2,5 | 96 · 352,00 · 2,810 · 383,603 | 72 · 360,98 · 3,888 · 404,703 |
+| 3 | 101 · 354,88 · 2,716 · 385,420 | 75 · 366,61 · 3,710 · 408,333 |
+| 4 | 105 · 358,85 · 2,616 · 388,273 | 78 · 370,46 · 3,608 · 411,031 |
+
+Ölçekli problemlerin gap'i 3 km'de %0,075–0,224, 5 km'de %0,061–0,160 (noktaların `gap` alanı).
+
+**Tornado** (`tornado_{3,5}km.json`; çalışma başına 3 km 40 sn, 5 km 15 sn, hedef gap 2e-3, sıcak başlangıç temel
+çözüm; temel = önceden çözülmüş varsayılan çözüm). Toplam maliyet değişimi (%) · hastane sayısı değişimi, 3 km
+(temel 381,314 milyar TL, 89 hastane); çalışmaların gap'i %0,14–0,41, 32 çalışmanın hepsinde farkın işareti kesin
+(gerçek fark aralığı sıfırı içermiyor):
+
+| Parametre (×0,8 / ×1,2) | −%20 | +%20 |
+|---|---|---|
+| 1000 kişiye düşen hastane yatağı | −16,98 · −7 | +17,28 · +9 |
+| Yapı birim maliyetleri (dört sınıf birlikte) | −17,00 · −1 | +16,94 · 0 |
+| Yatak başına kapalı alan — genel hastane | −15,93 · −2 | +15,84 · +2 |
+| Dolambaç profili çarpanı | −3,00 · −7 | +3,80 · +7 |
+| Tıbbi donanım oranı | −3,03 · −1 | +3,03 · 0 |
+| Azami erişim mesafesi R | +2,93 · +10 | −1,12 · −7 |
+| KDV oranı | −2,83 · −1 | +2,82 · 0 |
+| Kişi başı yıllık hastane başvurusu (v) | −1,89 · 0 | +1,85 · 0 |
+| Altyapı + çevre düzenlemesi oranı | −1,82 · −1 | +1,82 · 0 |
+| Araç km başına yakıt maliyeti (c) | −1,34 · 0 | +1,32 · 0 |
+| Hastane başına sabit maliyet F_sabit | −1,17 · 0 | +1,15 · −1 |
+| Planlama ufku T | −1,09 · 0 | +0,85 · 0 |
+| Çekirdek alan A0 | −1,09 · +1 | +1,08 · −1 |
+| Sosyal iskonto oranı r | +1,02 · 0 | −0,88 · 0 |
+| Ortalama yolculuk hızı | +0,69 · 0 | −0,46 · 0 |
+| Yolculuk zamanı değeri | −0,55 · 0 | +0,55 · 0 |
+
+Okuma: toplamın %90,5'i açılış maliyeti olduğundan yatak talebi, birim maliyet ve yatak başı alan ±%20'ye neredeyse
+doğrusal (±%16–17) tepki veriyor; erişim parametreleri ±%0,5–1,9. Hastane sayısındaki 0 / ±1 değişimler süre sınırlı
+(40 sn) çözümlerin temel çözüm çevresinde kalmasıyla tutarlıdır ve U eğrisinin düz dibinde (p = 82–96 n* = 89'dan
+ayırt edilemiyor) anlamlı değildir; sayıyı gerçekten değiştirenler yatak talebi, dolambaç ve R'dir (yapıyı değiştiren
+son ikisi: R = 24 km'de 99, R = 36 km'de 82 hastane).
+
+5 km (temel 402,611 milyar TL, kanıtlı optimum, 69 hastane; çalışmaların gap'i %0,08–0,42; 32 çalışmanın hepsinde
+farkın işareti kesin): yatak talebi −16,90 · −8 / +17,38 · +4; birim maliyetler −16,84 · −1 / +16,80 · 0; yatak başı
+alan −16,05 · −2 / +15,98 · 0; dolambaç −3,43 · −7 / +4,74 · +9; donanım oranı ∓3,00 · 0; KDV ∓2,80 · 0; R +2,62 ·
++10 / −1,04 · −6; başvuru sayısı −2,35 · 0 / +2,30 · +1; altyapı oranı ∓1,80 · 0; yakıt maliyeti −1,67 · −2 / +1,64 ·
++1; ufuk −1,36 · −1 / +1,05 · 0; iskonto +1,26 · 0 / −1,09 · −2; F_sabit −0,86 · +1 / +0,84 · −3; hız +0,84 · 0 /
+−0,56 · 0; A0 −0,81 · 0 / +0,80 · −3; zaman değeri ∓0,68 · 0.
+
+### 11.8 Arayüz için notlar
+
+- **Varsayılan parametreler / hazır senaryolar** (kilitsiz): açıklamalar `GET /api/precomputed/explain_<km>km` ya da
+  `explain_<senaryo>_<km>km` (`meta.grids[].precomputed_explanations`), U eğrisi `p_sweep_<km>km`, Pareto `pareto_<km>km`,
+  tornado `tornado_<km>km` dosyalarından doğrudan okunabilir; aynı istekler `POST /api/explain|sweep|pareto|sensitivity`
+  ile de kuyruğa girmeden döner. Çevrimdışı yedeğe (Faz 5 `build/offline.ts`) en az `explain_3km`, `p_sweep_3km`,
+  `pareto_3km`, `tornado_3km` eklenmeli.
+- **Kullanıcı parametreleri değiştirince**: hastane kartındaki "bu hastane kapatılırsa" tek öğe (`close: [hücre]`,
+  3 km'de ≈1–5 sn); "tüm hastaneler" `close_all: true` (3 km'de ≈1–3 dk, öğe öğe ilerlemeyle); U eğrisi `sweep`
+  (nokta başına ≈ süre sınırı + başlangıç); Pareto/tornado birkaç dakika sürer — "En son istek kazanır" için aynı
+  `client_id` + `replace: true`; tek çözücü işçisi olduğundan yeni bir `solve` işi bekleyen açıklama işini geciktirir.
+- **Dürüst gösterim**: `fark_gap_icinde: true` ise fark sayısı "fark gap içinde" etiketiyle ve aralığıyla
+  (`fark_lo_tl … fark_hi_tl`) gösterilmeli; kapatma `delta_tl` her zaman "en çok" (üst sınır) diye okunmalı;
+  tornado'da `sign_certain: false` ise işaret kesin değildir; hastane sayısındaki küçük değişimler (Δn) düz dipte
+  anlamlı değildir. Gölge fiyatlarda `caveat_tr` gösterilmeli.
+- **Sayılar**: bütün tutarlar TL (2026 fiyatları; erişim 25 yıllık, %5 iskontolu bugünkü değer), mesafeler yol km;
+  `*_tr` alanları Türkçe biçimli hazır cümlelerdir (`1.234,5`, `%0,06`, `−` işareti).

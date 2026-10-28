@@ -53,7 +53,7 @@ def _running(get, jid, min_progress: int = 2, timeout: float = 60.0) -> dict:
 def test_health_with_worker(ctx):
     h = ctx["get"]("/api/health")
     assert h["solver_ready"] and h["worker"]["alive"] and h["restarts"] == 0
-    assert h["seeded"] == {"solve": n_precomputed()}
+    assert h["seeded"]["solve"] == n_precomputed()        # Faz 6 iş türleri de kendi önceden hesaplananlarını ekler
 
 
 def test_first_live_solve_is_seeded_and_has_layers(ctx):

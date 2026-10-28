@@ -44,7 +44,8 @@ export type LayerId =
   | 'flows'
   | 'access'
   | 'rings'
-  | 'shadowPrices';
+  | 'shadowPrices'
+  | 'measures';
 
 export interface LayerDef {
   id: LayerId;
@@ -66,6 +67,7 @@ export const LAYER_DEFS: readonly LayerDef[] = [
   { id: 'access', label: 'Erişim ısı haritası', description: 'En yakın hastaneye yol mesafesi; R dışı vurgulu', defaultVisible: false, phase: 5 },
   { id: 'rings', label: 'R yarıçap halkaları', description: 'Hastanelerin çevresinde kuş uçuşu R karşılığı', defaultVisible: false, phase: 5 },
   { id: 'shadowPrices', label: 'Gölge fiyatlar', description: 'Hücre başına marjinal hizmet maliyeti (dual)', defaultVisible: false, phase: 6 },
+  { id: 'measures', label: 'Ankara ölçüleri', description: 'En uzak iki sınır noktası, Kızılay → en uzak nokta, uç noktalar (info/MeasuresSection)', defaultVisible: false, phase: 6 },
 ];
 
 export type Selection =

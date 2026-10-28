@@ -54,6 +54,10 @@ RECOMMENDED_TIME_LIMIT_S = {str(k): v for k, v in _RTL.items()}
 PRECOMPUTED_NAMES = tuple(f"default_{k}km" for k in GRID_SIZES) + ("p_sweep_3km", "p_sweep_5km",
                                                                     "scenarios")
 SCENARIO_FILE_RE = re.compile(r"^scenario_[a-z0-9_]{1,40}_[235]km$")
+# Faz 6 açıklama katmanının önceden hesaplanmış dosyaları (pipeline/35_explanations.py): varsayılan parametreler
+# explain_3km, pareto_5km …; hazır senaryolar explain_<senaryo>_3km …
+PHASE6_PREFIXES = ("explain", "pareto", "tornado")
+PHASE6_FILE_RE = re.compile(r"^(explain|pareto|tornado)_([a-z0-9_]{1,40}_)?[235]km$")
 SCENARIO_INDEX = PRECOMPUTED_DIR / "scenarios.json"
 
 
@@ -161,6 +165,10 @@ def _grids() -> list[dict]:
             "precomputed_scenarios": {p.stem: f"/api/precomputed/{p.stem}"
                                       for p in sorted(PRECOMPUTED_DIR.glob(f"scenario_*_{km}km.json"))
                                       if SCENARIO_FILE_RE.match(p.stem)},
+            "precomputed_explanations": {p.stem: f"/api/precomputed/{p.stem}"
+                                         for pre in PHASE6_PREFIXES
+                                         for p in sorted(PRECOMPUTED_DIR.glob(f"{pre}_*{km}km.json"))
+                                         if PHASE6_FILE_RE.match(p.stem) and p.stem.endswith(f"_{km}km")},
         })
     return out
 
@@ -202,10 +210,21 @@ def build_meta(job_types: dict) -> dict:
         "job_types": {n: {"description_tr": jt.description_tr, "url": f"/api/jobs/{n}", "available": jt.available,
                           "unavailable_tr": jt.unavailable_tr or None}
                       for n, jt in sorted(job_types.items())},
+        "explain": explain_meta(d),
         "files": {"boundaries": "/api/boundaries", "measures": "/api/measures", "sources": "/api/sources",
                   "basemap": "/basemap/ankara.pmtiles", "glyphs": "/basemap/fonts/{fontstack}/{range}.pbf",
                   "sprites": "/basemap/sprites/v4/"},
     }
+
+
+def explain_meta(d: P.Params) -> dict:
+    """Faz 6 açıklama işlerinin seçenekleri: tornado satırları (etiket kayıttan), Pareto'nun λ çarpanları."""
+    from backend.model import explain_common as X
+    return {"tornado_params": [{k: r[k] for k in ("id", "keys", "label_tr", "unit", "status", "base")}
+                               for r in X.tornado_specs(d)],
+            "tornado_delta": X.TORNADO_DELTA, "pareto_factors": list(X.PARETO_FACTORS),
+            "pareto_lambda_key": X.LAMBDA_KEY,
+            "precomputed_patterns": ["explain_<km>km", "explain_<senaryo>_<km>km", "pareto_<km>km", "tornado_<km>km"]}
 
 
 # ---------------------------------------------------------------------- kaynaklar
@@ -272,9 +291,16 @@ def build_sources() -> dict:
             "n_sources": n, "domains": domains, "literature": literature}
 
 
+def build_literature() -> dict:
+    """GET /api/literature: data/reference/literatur.yaml (kaynakça, doğrulanmış künyeler) JSON olarak."""
+    src = build_sources()
+    return {"generated_from": "data/reference/literatur.yaml", "n": len(src["literature"]),
+            "literature": src["literature"]}
+
+
 def precomputed_path(name: str) -> Path | None:
-    """Beyaz listedeki ya da senaryo ad kalıbına uyan önceden çözülmüş dosya (başka ad → None)."""
-    if name not in PRECOMPUTED_NAMES and not SCENARIO_FILE_RE.match(name):
+    """Beyaz listedeki ya da senaryo / açıklama ad kalıbına uyan önceden çözülmüş dosya (başka ad → None)."""
+    if name not in PRECOMPUTED_NAMES and not SCENARIO_FILE_RE.match(name) and not PHASE6_FILE_RE.match(name):
         return None
     p = PRECOMPUTED_DIR / f"{name}.json"
     return p if p.is_file() else None

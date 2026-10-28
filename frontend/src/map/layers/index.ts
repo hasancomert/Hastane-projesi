@@ -14,6 +14,7 @@ import { candidatesLayer } from './candidates.ts';
 import { flowsLayer } from './flows.ts';
 import { hospitalsLayer } from './hospitals.ts';
 import { locksLayer } from './locks.ts';
+import { measuresLayer } from './measuresLayer.ts';
 import { populationLayer } from './population.ts';
 import { ringsLayer } from './rings.ts';
 import { selectionLayer } from './selection.ts';
@@ -35,6 +36,7 @@ export const LAYER_ORDER: readonly LayerBuilder[] = [
   ringsLayer,
   hospitalsLayer,
   locksLayer,
+  measuresLayer,
   selectionLayer,
 ];
 

@@ -50,7 +50,8 @@ def test_health(client):
     h = client.get("/api/health").json()
     assert h["ok"] is True and h["status_tr"] == "çalışıyor"
     assert set(h["job_types"]) >= {"solve", "evaluate", "bounds"}
-    assert h["seeded"] == {"solve": n_precomputed()} and h["cache"]["entries"] == n_precomputed()
+    # Faz 6: Pareto ve tornado iş türleri de varsayılan önceden hesaplanmış sonuçlarını önbelleğe ekler
+    assert h["seeded"]["solve"] == n_precomputed() and h["cache"]["entries"] == sum(h["seeded"].values())
     assert h["solver_ready"] is False                                  # bu dosyada işçi yok
 
 
@@ -421,14 +422,15 @@ def test_invalid_range_is_ignored(client):
     assert client.get("/basemap/ankara.pmtiles", headers={"Range": "bytes=-0"}).status_code == 416
 
 
-def test_explain_stub_501(client):
+def test_explain_available_and_validated(client):
+    """Faz 6'da 'explain' taslağı dolduruldu (eskiden 501); ayrıntılı testler tests/test_phase6_jobs.py'de."""
     m = client.get("/api/meta").json()
-    assert m["job_types"]["explain"]["available"] is False and m["job_types"]["solve"]["available"] is True
+    assert m["job_types"]["explain"]["available"] is True and m["job_types"]["solve"]["available"] is True
     body = {"grid_km": 5, "hospitals": [{"cell_id": "5km_112_860"}], "what": ["hastane_kapat"],
-            "close": ["5km_112_860"]}
+            "close": ["5km_109_861"]}                                   # kapatılan hücre çözümde değil
     r = client.post("/api/explain", json=body)
-    assert r.status_code == 501 and "Faz 6" in r.json()["message_tr"]
-    assert client.post("/api/jobs/explain", json=body).status_code == 501
+    assert r.status_code == 422 and r.json()["errors"][0]["type"] == "acik_degil"
+    assert client.post("/api/jobs/explain", json=body).status_code == 422
 
 
 def test_sse_after_final_event_returns_204(client):
