@@ -8,7 +8,7 @@
  * `result.trace` (lb, ub, gap, t), maliyet kırılımı `result.costs`. Pareto ve tornado Faz 6 iş türleri.
  * Renkler theme/palette.ts (sınıf rengi = haritadakiyle aynı), sayı biçimleri format/number.ts.
  */
-import { Paper, Tabs, Text } from '@mantine/core';
+import { Anchor, Image, Paper, Tabs, Text } from '@mantine/core';
 import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
 
 import { ErrorBoundary } from '../components/ErrorBoundary.tsx';
@@ -28,14 +28,16 @@ export interface ChartTabDef {
   description: string;
   /** Faz 6'da: () => import('./XChart.tsx') */
   load?: () => Promise<{ default: ComponentType<ChartPanelProps> }>;
+  /** Etkileşimli grafik gelene kadar: önceden hesaplanmış statik görsel (varsayılan parametreler, 3 km) */
+  figure?: { src: string; caption: string };
 }
 
 export const CHART_TABS: ChartTabDef[] = [
-  { id: 'u_egrisi', label: 'U eğrisi', description: 'Hastane sayısı p taraması: toplam = açılış + erişim; optimumda dikey çizgi; bir p’ye tıklayınca harita o çözümü gösterir.' },
-  { id: 'pareto', label: 'Pareto', description: 'Açılış maliyeti – ortalama mesafe ödünleşimi (λ taraması); mevcut çözüm eğri üzerinde işaretli.' },
-  { id: 'tornado', label: 'Tornado', description: 'Önemli parametreler ±%20 → toplam maliyet ve hastane sayısı değişimi.' },
-  { id: 'dal_sinir', label: 'Dal-sınır', description: 'Çözüm sırasında bulunan çözüm (üst sınır) ve alt sınır eğrileri; aralarındaki fark optimallik garantisidir.' },
-  { id: 'maliyet', label: 'Maliyet kırılımı', description: 'İnşaat · donanım · altyapı · KDV · sabit · arsa · işletme · erişim.' },
+  { id: 'u_egrisi', label: 'U eğrisi', description: 'Hastane sayısı p taraması: toplam = açılış + erişim; optimumda dikey çizgi; bir p’ye tıklayınca harita o çözümü gösterir.' , figure: { src: '/figurler/u_egrisi_3km.png', caption: 'Varsayılan parametreler, 3 km: her p için sabit-p modunda çözüm (precomputed/p_sweep_3km.json). En iyi p = 89 = serbest optimum; dipte 82–96 arası farklar çözücü farkının (gap) içinde.' } },
+  { id: 'pareto', label: 'Pareto', description: 'Açılış maliyeti – ortalama mesafe ödünleşimi (λ taraması); mevcut çözüm eğri üzerinde işaretli.' , figure: { src: '/figurler/pareto_3km.png', caption: 'Varsayılan parametreler, 3 km: erişim ağırlığı λ ölçeklenerek çözülen en iyi çözümler (precomputed/pareto_3km.json); kırmızı halka mevcut çözüm.' } },
+  { id: 'tornado', label: 'Tornado', description: 'Önemli parametreler ±%20 → toplam maliyet ve hastane sayısı değişimi.' , figure: { src: '/figurler/tornado_3km.png', caption: 'Varsayılan parametreler, 3 km: her parametre tek başına ±%20 değiştirilip model yeniden çözüldü (precomputed/tornado_3km.json).' } },
+  { id: 'dal_sinir', label: 'Dal-sınır', description: 'Çözüm sırasında bulunan çözüm (üst sınır) ve alt sınır eğrileri; aralarındaki fark optimallik garantisidir.' , figure: { src: '/figurler/dal_sinir_3km.png', caption: 'Varsayılan çözümün canlı çözümü: üst sınır (bulunan çözüm) ve alt sınır (Lagrange gevşetmesi + HiGHS) zamanla yaklaşıyor; aradaki fark optimallik garantisi.' } },
+  { id: 'maliyet', label: 'Maliyet kırılımı', description: 'İnşaat · donanım · altyapı · KDV · sabit · arsa · işletme · erişim.' , figure: { src: '/figurler/maliyet_3km.png', caption: 'Varsayılan çözüm, 3 km (precomputed/default_3km.json); güncel çözümün kırılımı sağdaki Sonuç panelindedir.' } },
 ];
 
 const lazyCache = new Map<ChartTabId, LazyExoticComponent<ComponentType<ChartPanelProps>>>();
@@ -72,6 +74,16 @@ export function ChartTabs({ height = 320 }: { height?: number }) {
                   <C scheme={scheme} height={height} />
                 </Suspense>
               ) : (
+                t.figure ? (
+                  <Paper withBorder p="sm" radius="md">
+                    <Text size="sm" c="dimmed" mb={6}>
+                      {t.figure.caption}
+                    </Text>
+                    <Anchor href={t.figure.src} target="_blank" rel="noopener">
+                      <Image src={t.figure.src} alt={t.label} fit="contain" mah={Math.max(height * 1.6, 420)} />
+                    </Anchor>
+                  </Paper>
+                ) : (
                 <Paper withBorder p="md" mih={height / 2} radius="md">
                   <Text fw={600}>{t.label}</Text>
                   <Text size="sm" c="dimmed">
@@ -81,6 +93,7 @@ export function ChartTabs({ height = 320 }: { height?: number }) {
                     Bu grafik hazırlanıyor.
                   </Text>
                 </Paper>
+                )
               )}
             </ErrorBoundary>
           </Tabs.Panel>
