@@ -21,8 +21,10 @@ aşağıdakiler varsayılan parametreler ve 3 km ızgara içindir.
    (uzmanlaşmanın faydası modellenmedi — Sınırlılıklar).
 5. **Canlı çözüm (1–2 dk).** Önce hazır senaryolar (önbellekte, anında): *Sadece genel hastane*, *Şehir hastanesi serbest*,
    *2030 nüfusu*. Sonra bir parametreyi canlı değiştir: **Azami erişim mesafesi R = 30 → 24 km** (tornado verisine göre
-   ≈ +10 hastane, toplam +%3) — ilerleme çubuğunda alt/üst sınır ve fark canlı akar; sonuçta yeni sertifika cümlesi.
-   *İpucu: canlı çözüm birkaç saniye sürer; beklerken "alt sınırı Lagrange gevşetmesi veriyor" diye anlatın.*
+   ≈ +10 hastane, toplam +%3; temiz kurulumda denendi: **100 hastane, 393,2 milyar TL, optimum, fark %0,63, ≈15 sn**)
+   — ilerleme çubuğunda alt/üst sınır ve fark canlı akar; sonuçta yeni sertifika cümlesi.
+   *İpucu: canlı çözüm 5–15 saniye sürer; beklerken "alt sınırı Lagrange gevşetmesi veriyor" diye anlatın.
+   Sayfayı sunumdan önce bir kez açıp bekletin (ilk açılışta çözücü ısınır).*
 6. **Neden optimum? (2 dk)**
    - **Sertifika:** alt sınır L ≤ optimum ≤ bulunan çözüm U; fark %0,06 → bundan %0,06'dan daha iyi çözüm yok.
      Alt sınır: atama kısıtlarının **Lagrange gevşetmesi** (her aday için sırt çantası alt problemi, alt gradyan/hacim
