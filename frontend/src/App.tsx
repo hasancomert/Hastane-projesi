@@ -26,6 +26,7 @@ import { optimalityLabel, summarySentence } from './panels/optimality.ts';
 import { selectOkResult, selectShowStale, selectUiTargetGap, useApp } from './store/appStore.ts';
 import { STATUS_MANTINE } from './theme/palette.ts';
 import { LAYOUT } from './theme/theme.ts';
+import { startTour, TourCard } from './tour/Tour.tsx';
 
 const FALLBACK_SOURCE_TR: Record<string, string> = {
   'sunucu-onceden': 'sunucudaki önceden çözülmüş sonuç',
@@ -207,13 +208,14 @@ export default function App() {
               Sonuç
             </Button>
           )}
-          <Tooltip label="Hocanın 9 maddesini sırayla anlatan tur (hazırlanıyor)">
+          <Tooltip label="Hocanın 9 maddesini sırayla anlatan tur (← → ile gezin, Esc kapatır)">
             <span>
-              <Button variant="light" size="sm" disabled visibleFrom="sm" data-testid="tour-button">
+              <Button variant="filled" size="sm" visibleFrom="sm" data-testid="tour-button" onClick={startTour}>
                 ▶ Sunum turu
               </Button>
             </span>
           </Tooltip>
+          <TourCard />
           <Tooltip label="Tam ekran, büyük yazı, sade panel (hazırlanıyor)">
             <span>
               <Button variant="light" size="sm" disabled visibleFrom="sm" data-testid="presentation-button">

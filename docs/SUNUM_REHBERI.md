@@ -6,7 +6,8 @@ Sayılar varsayılan parametreler ve 3 km ızgara içindir; hepsi sayfadan ve ve
 - `start.bat` açık, sayfa yüklenmiş olsun; sağ üstte **"canlı çözüm"** rozeti görünmeli.
 - Bir kez **Varsayılan** senaryo kartına tıklayın (anında gelir).
 - Projeksiyonda yazı küçükse tarayıcıda **Ctrl +**.
-- "Sunum turu" ve "Sunum modu" düğmeleri henüz pasif — tıklamayın.
+- "Sunum modu" düğmesi henüz pasif — tıklamayın.
+- **"▶ Sunum turu"** (sağ üst) hocanın 9 maddesini 15 adımda anlatır: her adım haritayı / sekmeyi ilgili yere götürür, kartta o adımın sayıları yazar. **→ / PageDown** ileri, **← / PageUp** geri, **Esc** kapatır (sunum kumandası da çalışır). Kart bir şeyi örterse kartın üstündeki **⇄** ile karşı köşeye alın. Turu aşağıdaki akış yerine ya da onunla birlikte kullanabilirsiniz.
 
 ## Akış
 
